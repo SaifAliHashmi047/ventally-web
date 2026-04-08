@@ -1,0 +1,85 @@
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { AuthLayout } from '../../components/Layout/AuthLayout';
+import { useSelector } from 'react-redux';
+import { ArrowLeft } from 'lucide-react';
+import tickIcon from '../../assets/icons/tick.png';
+
+export const OptionalQuestionsHero = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const user = useSelector((state: any) => state.user.user);
+  const role = user?.role || user?.userType || 'venter';
+
+  const handleSkipAll = () => {
+    if (role === 'listener') {
+      navigate('/signup/listener-training');
+    } else {
+      navigate('/signup/choose-plan');
+    }
+  };
+
+  return (
+    <AuthLayout>
+      <button 
+        onClick={() => navigate(-1)}
+        style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}
+      >
+        <ArrowLeft size={20} /> Back
+      </button>
+
+      <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text-pure)', marginBottom: '16px' }}>
+          {t('OptionalQuestions.title')}
+        </h1>
+        <p style={{ color: 'var(--text-dim)', fontSize: '15px', lineHeight: '1.6' }}>
+          {t('OptionalQuestions.introText')}
+        </p>
+      </div>
+
+      <div style={{ marginBottom: '32px' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '16px' }}>
+          {t('OptionalQuestions.sectionHeader')}
+        </h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {[1, 2, 3].map((num) => (
+            <div key={num} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+              <div className="flex-center" style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'white', marginTop: '2px', flexShrink: 0 }}>
+                <img src={tickIcon} alt="tick" style={{ width: '10px', height: '10px', filter: 'invert(1)' }} />
+              </div>
+              <p style={{ color: 'var(--text-dim)', fontSize: '14px', lineHeight: '1.4' }}>
+                {t(`OptionalQuestions.bullet${num}`)}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <button 
+          onClick={() => navigate('/signup/questions/gender')}
+          className="btn-primary" 
+          style={{ height: '56px', justifyContent: 'center', fontSize: '17px', borderRadius: '16px', width: '100%' }}
+        >
+          {t('OptionalQuestions.continue')}
+        </button>
+        <button 
+          onClick={handleSkipAll}
+          style={{ 
+            height: '56px', 
+            justifyContent: 'center', 
+            fontSize: '17px', 
+            borderRadius: '16px', 
+            width: '100%',
+            background: 'transparent',
+            border: '1px solid rgba(255,255,255,0.2)',
+            color: 'white',
+            cursor: 'pointer'
+          }}
+        >
+          {t('OptionalQuestions.skipAll')}
+        </button>
+      </div>
+    </AuthLayout>
+  );
+};

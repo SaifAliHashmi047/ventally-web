@@ -1,0 +1,7293 @@
+----get profile---------------------------
+
+GET
+/api/v1/auth/profile
+Get user profile
+
+
+Retrieve authenticated user's profile information including wallet balance
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Profile retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "user": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "user@example.com",
+        "phone": "string",
+        "firstName": "string",
+        "lastName": "string",
+        "displayName": "string",
+        "profilePictureUrl": "string",
+        "bio": "string",
+        "dateOfBirth": "2026-02-12",
+        "userType": "venter",
+        "isVerified": true,
+        "isActive": true,
+        "createdAt": "2026-02-12T16:19:06.134Z",
+        "updatedAt": "2026-02-12T16:19:06.134Z"
+    },
+    "preferences": {
+        "genderIdentity": "Man",
+        "culturalBackground": "Black",
+        "ethnicity": "African Diaspora",
+        "ageGroup": "18-24",
+        "lgbtqIdentity": "Gay",
+        "specialTopics": [
+            "Mental Health"
+        ],
+        "faithOrBelief": "Christian",
+        "preferredLanguage": "en"
+    },
+    "wallet": {
+        "balanceMinutes": 0,
+        "balanceCurrency": 0,
+        "autoRechargeEnabled": true
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Profile not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+--------------------------------
+GET
+/api/v1/wallet/balance
+Get wallet balance
+
+
+Retrieve authenticated user's wallet balance and auto-recharge settings
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Wallet information retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "balance": {
+        "minutes": 120.5,
+        "currency": 50,
+        "currencyCode": "USD"
+    },
+    "autoRecharge": {
+        "enabled": true,
+        "threshold": 10,
+        "amount": 20
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Wallet not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/wallet/transactions
+Get transaction history
+
+
+Retrieve user's transaction history with pagination
+
+Parameters
+Try it out
+Name	Description
+limit
+integer
+(query)
+Number of transactions to return
+
+Default value : 50
+
+50
+offset
+integer
+(query)
+Number of transactions to skip
+
+Default value : 0
+
+0
+Responses
+Code	Description	Links
+200	
+Transactions retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "transactions": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "type": "credit_purchase",
+            "amountMinutes": 10.5,
+            "amountCurrency": 5.25,
+            "balanceAfterMinutes": 120.5,
+            "balanceAfterCurrency": 60,
+            "description": "Added 10 calling minutes",
+            "createdAt": "2026-02-09T10:18:37.659Z"
+        }
+    ],
+    "pagination": {
+        "total": 0,
+        "limit": 0,
+        "offset": 0
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/wallet/subscription
+Get subscription status
+
+
+Retrieve user's active subscription details
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Subscription information retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "hasSubscription": true,
+    "message": "string",
+    "subscription": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "planName": "Premium",
+        "status": "active",
+        "includedMinutes": 300,
+        "usedMinutes": 45.5,
+        "remainingMinutes": 254.5,
+        "overageRate": 0.25,
+        "billingCycleStart": "2026-02-09",
+        "billingCycleEnd": "2026-02-09",
+        "monthlyPrice": 29.99,
+        "features": {}
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+PUT
+/api/v1/wallet/auto-recharge
+Update auto-recharge settings
+
+
+Configure automatic wallet recharge when balance falls below threshold
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "enabled": true,
+    "threshold": 10,
+    "amount": 20
+}
+Responses
+Code	Description	Links
+200	
+Auto-recharge settings updated successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "string",
+    "autoRecharge": {
+        "enabled": true,
+        "threshold": 0,
+        "amount": 0
+    }
+}
+No links
+400	
+Bad request - missing required fields
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Forbidden - email not verified
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Wallet not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+Payments
+Payment processing and wallet recharge endpoints
+
+
+
+GET
+/api/v1/payments/credit-packs
+Get available credit packs
+
+Retrieve all available prepaid credit packages for purchasing calling minutes
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Credit packs retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "packs": [
+        {
+            "id": "starter",
+            "name": "Starter Pack - 100 Minutes",
+            "minutes": 100,
+            "price": 10,
+            "pricePerMinute": "0.100"
+        },
+        {
+            "id": "standard",
+            "name": "Standard Pack - 300 Minutes",
+            "minutes": 300,
+            "price": 25,
+            "pricePerMinute": "0.083"
+        }
+    ]
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/payments/subscription-plans
+Get subscription plans
+
+Retrieve all active subscription plans with monthly pricing and included minutes
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Subscription plans retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "plans": [
+        {
+            "id": "123e4567-e89b-12d3-a456-426614174000",
+            "name": "Basic Plan",
+            "price_monthly": 29.99,
+            "included_minutes": 200,
+            "overage_rate": 0.15,
+            "features": {
+                "priority_support": false
+            },
+            "is_active": true,
+            "stripe_price_id": "price_1234567890",
+            "created_at": "2024-01-01T00:00:00Z",
+            "updated_at": "2024-01-01T00:00:00Z"
+        },
+        {
+            "id": "223e4567-e89b-12d3-a456-426614174001",
+            "name": "Premium Plan",
+            "price_monthly": 49.99,
+            "included_minutes": 500,
+            "overage_rate": 0.1,
+            "features": {
+                "priority_support": true,
+                "unlimited_contacts": true
+            },
+            "is_active": true,
+            "stripe_price_id": "price_0987654321",
+            "created_at": "2024-01-01T00:00:00Z",
+            "updated_at": "2024-01-01T00:00:00Z"
+        }
+    ]
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Failed to fetch subscription plans"
+}
+No links
+
+POST
+/api/v1/payments/create-checkout-session
+Create checkout session for credit pack
+
+
+Create a Stripe checkout session for purchasing prepaid credit minutes
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "packType": "standard",
+    "customMinutes": 0,
+    "customPrice": 0
+}
+Responses
+Code	Description	Links
+200	
+Checkout session created successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "sessionId": "string",
+    "url": "string",
+    "credits": 0,
+    "amount": 0
+}
+No links
+400	
+Invalid pack type
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/payments/create-subscription-checkout
+Create checkout session for subscription
+
+
+Create a Stripe checkout session for subscribing to a monthly plan
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "planId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+Responses
+Code	Description	Links
+200	
+Subscription checkout session created successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "sessionId": "string",
+    "url": "string",
+    "planName": "string",
+    "monthlyPrice": 0,
+    "includedMinutes": 0
+}
+No links
+400	
+Invalid or missing plan ID
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Subscription plan not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/payments/verify-checkout
+Verify checkout session
+
+
+Verify the status of a Stripe checkout session after payment completion
+
+Parameters
+Try it out
+Name	Description
+sessionId *
+string
+(query)
+Stripe checkout session ID
+
+Example : cs_test_a1B2c3D4e5F6g7H8i9J0k1L2m3N4o5P6q7R8s9T0
+
+cs_test_a1B2c3D4e5F6g7H8i9J0k1L2m3N4o5P6q7R8s9T0
+Responses
+Code	Description	Links
+200	
+Checkout session verified successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "status": "paid",
+    "amountPaid": 25,
+    "credits": 300
+}
+No links
+400	
+Session ID is required
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Failed to verify checkout session
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/payments/cancel-subscription
+Cancel active subscription
+
+
+Cancel the user's active subscription. The subscription will remain active until the end of the current billing period.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Subscription cancelled successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Subscription will be canceled at the end of the billing period",
+    "cancelAt": "2026-02-09T10:18:37.681Z"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+No active subscription found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "No active subscription found"
+}
+No links
+500	
+Failed to cancel subscription
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+Notifications
+Push notification management via Firebase Cloud Messaging (FCM)
+GET
+/api/v1/notifications/settings
+Get notification settings
+
+
+Get notification preferences for the authenticated user
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Settings retrieved successfully
+
+No links
+401	
+Unauthorized
+
+No links
+
+PUT
+/api/v1/notifications/settings
+Update notification settings
+
+
+Update notification preferences including all notifications, channel toggles, reminder time, and quiet hours in UTC
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "allNotifications": true,
+    "messageNotifications": true,
+    "callNotifications": true,
+    "reminderNotifications": true,
+    "soundVibration": true,
+    "inAppAlerts": true,
+    "remindMeAtUtc": "20:00",
+    "quietHoursStartUtc": "22:00",
+    "quietHoursEndUtc": "07:00"
+}
+Responses
+Code	Description	Links
+200	
+Settings updated successfully
+
+No links
+400	
+Validation error
+
+No links
+401	
+Unauthorized
+
+
+GET
+/api/v1/notifications/status
+Get Firebase Cloud Messaging status
+
+Check if Firebase is initialized and configured
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Firebase status retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "firebase": {
+        "initialized": true,
+        "credentialsConfigured": true,
+        "status": "string",
+        "message": "string"
+    },
+    "features": {
+        "pushNotifications": true,
+        "deviceTokenRegistration": true,
+        "notificationHistory": true
+    }
+}
+No links
+
+POST
+/api/v1/notifications/register
+Register a device token for push notifications
+
+
+Register FCM device token to receive push notifications
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "token": "fcm_token_12345...",
+    "device_type": "android",
+    "device_info": {
+        "model": "Pixel 6",
+        "os_version": "Android 13",
+        "app_version": "1.0.0"
+    }
+}
+Responses
+Code	Description	Links
+200	
+Device token registered successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "message": "string"
+}
+No links
+400	
+Invalid request
+
+No links
+401	
+Unauthorized
+
+No links
+
+DELETE
+/api/v1/notifications/register
+Unregister a device token
+
+
+Remove device token from receiving push notifications
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "token": "string"
+}
+Responses
+Code	Description	Links
+200	
+Device token unregistered successfully
+
+No links
+400	
+Invalid request
+
+No links
+401	
+Unauthorized
+
+No links
+
+POST
+/api/v1/notifications/send
+Send a push notification to a specific user
+
+
+Send push notification to all devices of a specific user
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "user_id": 123,
+    "title": "New Message",
+    "body": "You have received a new message",
+    "data": {
+        "type": "message",
+        "message_id": "456"
+    },
+    "image_url": "https://example.com/image.jpg"
+}
+Responses
+Code	Description	Links
+200	
+Notification sent successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "message": "string",
+    "result": {
+        "successCount": 0,
+        "failureCount": 0
+    }
+}
+No links
+400	
+Invalid request
+
+No links
+401	
+Unauthorized
+
+No links
+404	
+No active devices found
+
+No links
+503	
+Firebase not configured
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "message": "Firebase not configured - notification saved but not sent"
+}
+No links
+
+POST
+/api/v1/notifications/send-bulk
+Send a push notification to multiple users
+
+
+Send same notification to multiple users at once
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "user_ids": [
+        123,
+        456,
+        789
+    ],
+    "title": "System Maintenance",
+    "body": "Scheduled maintenance tonight",
+    "data": {},
+    "image_url": "string"
+}
+Responses
+Code	Description	Links
+200	
+Bulk notification sent successfully
+
+No links
+400	
+Invalid request
+
+No links
+401	
+Unauthorized
+
+No links
+404	
+No active devices found
+
+No links
+503	
+Firebase not configured
+
+No links
+
+POST
+/api/v1/notifications/send-topic
+Send a push notification to a topic
+
+
+Send notification to all devices subscribed to a topic
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "topic": "promotions",
+    "title": "Special Offer!",
+    "body": "Get 50% off today",
+    "data": {},
+    "image_url": "string"
+}
+Responses
+Code	Description	Links
+200	
+Topic notification sent successfully
+
+No links
+400	
+Invalid request
+
+No links
+401	
+Unauthorized
+
+No links
+503	
+Firebase not configured
+
+No links
+
+POST
+/api/v1/notifications/subscribe
+Subscribe user's devices to a topic
+
+
+Subscribe all user devices to receive topic notifications
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "topic": "promotions"
+}
+Responses
+Code	Description	Links
+200	
+Subscribed to topic successfully
+
+No links
+400	
+Invalid request
+
+No links
+401	
+Unauthorized
+
+No links
+404	
+No active devices found
+
+No links
+
+POST
+/api/v1/notifications/unsubscribe
+Unsubscribe user's devices from a topic
+
+
+Unsubscribe all user devices from topic notifications
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "topic": "promotions"
+}
+Responses
+Code	Description	Links
+200	
+Unsubscribed from topic successfully
+
+No links
+400	
+Invalid request
+
+No links
+401	
+Unauthorized
+
+No links
+404	
+No active devices found
+
+No links
+
+GET
+/api/v1/notifications/history
+Get notification history for the authenticated user
+
+
+Retrieve paginated notification history with read/unread status
+
+Parameters
+Try it out
+Name	Description
+limit
+integer
+(query)
+Maximum number of notifications to return
+
+Default value : 50
+
+50
+offset
+integer
+(query)
+Number of notifications to skip
+
+Default value : 0
+
+0
+Responses
+Code	Description	Links
+200	
+Notification history retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "data": [
+        {
+            "id": 0,
+            "title": "string",
+            "body": "string",
+            "data": {},
+            "type": "string",
+            "status": "string",
+            "created_at": "2026-02-09T10:23:22.058Z",
+            "read_at": "2026-02-09T10:23:22.058Z"
+        }
+    ],
+    "total": 0,
+    "limit": 0,
+    "offset": 0
+}
+No links
+401	
+Unauthorized
+
+No links
+
+PUT
+/api/v1/notifications/{id
+}/read
+Mark a notification as read
+
+
+Update notification read status
+
+Parameters
+Try it out
+Name	Description
+id *
+integer
+(path)
+Notification ID
+
+id
+Responses
+Code	Description	Links
+200	
+Notification marked as read
+
+No links
+401	
+Unauthorized
+
+No links
+404	
+Notification not found or already read
+
+No links
+
+GET
+/api/v1/notifications/unread-count
+Get unread notification count
+
+
+Get the count of unread notifications for the user
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Unread count retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "unreadCount": 5
+}
+No links
+401	
+Unauthorized
+
+No links
+Mood
+Daily mood logging and tracking for venter profiles
+
+
+
+POST
+/api/v1/mood/log
+Log mood for today
+
+
+Log a mood entry for the current day. Only one entry per day is allowed. Only available for venter profiles.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "mood_type": "Happy",
+    "category": "Work",
+    "notes": "Had a great day at work today!"
+}
+Responses
+Code	Description	Links
+201	
+Mood logged successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Mood logged successfully",
+    "mood": {
+        "id": "550e8400-e29b-41d4-a716-446655440000",
+        "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "mood_type": "Happy",
+        "category": "Work",
+        "notes": "Had a productive day",
+        "logged_date": "2026-02-05",
+        "created_at": "2026-02-09T10:23:22.061Z",
+        "updated_at": "2026-02-09T10:23:22.061Z"
+    }
+}
+No links
+400	
+Validation error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized - No valid authentication token
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Forbidden - Only venter profiles can log moods
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+409	
+Conflict - Mood already logged for today
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string",
+    "message": "string",
+    "mood_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+No links
+
+GET
+/api/v1/mood/today
+Get today's mood
+
+
+Retrieve the mood entry for today if it exists
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Today's mood retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Today's mood retrieved successfully",
+    "logged": true,
+    "mood": {
+        "id": "550e8400-e29b-41d4-a716-446655440000",
+        "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "mood_type": "Happy",
+        "category": "Work",
+        "notes": "Had a productive day",
+        "logged_date": "2026-02-05",
+        "created_at": "2026-02-09T10:23:22.063Z",
+        "updated_at": "2026-02-09T10:23:22.063Z"
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+No mood logged for today
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "message": "No mood logged for today",
+    "logged": false
+}
+No links
+
+PUT
+/api/v1/mood/today
+Update today's mood
+
+
+Update the mood entry for today. Only available for venter profiles.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "mood_type": "Neutral",
+    "category": "Family",
+    "notes": "Feeling better after talking with family"
+}
+Responses
+Code	Description	Links
+200	
+Mood updated successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Mood updated successfully",
+    "mood": {
+        "id": "550e8400-e29b-41d4-a716-446655440000",
+        "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "mood_type": "Happy",
+        "category": "Work",
+        "notes": "Had a productive day",
+        "logged_date": "2026-02-05",
+        "created_at": "2026-02-09T10:23:22.064Z",
+        "updated_at": "2026-02-09T10:23:22.064Z"
+    }
+}
+No links
+400	
+Validation error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Forbidden - Only venter profiles can update moods
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+No mood logged for today to update
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/mood/history
+Get mood history
+
+
+Retrieve mood history with pagination and optional date filtering
+
+Parameters
+Try it out
+Name	Description
+limit
+integer
+(query)
+Number of entries to return
+
+Default value : 30
+
+30
+offset
+integer
+(query)
+Number of entries to skip
+
+Default value : 0
+
+0
+start_date
+string($date)
+(query)
+Filter moods from this date onwards (YYYY-MM-DD)
+
+2026-01-01
+end_date
+string($date)
+(query)
+Filter moods up to this date (YYYY-MM-DD)
+
+2026-01-31
+Responses
+Code	Description	Links
+200	
+Mood history retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Mood history retrieved successfully",
+    "moods": [
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "mood_type": "Happy",
+            "category": "Work",
+            "notes": "Had a productive day",
+            "logged_date": "2026-02-05",
+            "created_at": "2026-02-09T10:23:22.067Z",
+            "updated_at": "2026-02-09T10:23:22.067Z"
+        }
+    ],
+    "pagination": {
+        "total": 45,
+        "limit": 30,
+        "offset": 0,
+        "has_more": true
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/mood/stats
+Get mood statistics
+
+
+Get mood distribution, trends, and streaks for the logged-in user
+
+Parameters
+Try it out
+Name	Description
+days
+integer
+(query)
+Number of days to include in statistics
+
+Default value : 30
+
+30
+Responses
+Code	Description	Links
+200	
+Mood statistics retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Mood statistics retrieved successfully",
+    "period_days": 30,
+    "total_entries": 25,
+    "mood_distribution": [
+        {
+            "mood_type": "Happy",
+            "count": "10"
+        }
+    ],
+    "category_distribution": [
+        {
+            "category": "Work",
+            "count": "8"
+        }
+    ],
+    "streaks": {
+        "current": 5,
+        "longest": 12
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+DELETE
+/api/v1/mood/{moodId
+}
+Delete a mood entry
+
+
+Delete a specific mood entry. Users can only delete their own entries. Only available for venter profiles.
+
+Parameters
+Try it out
+Name	Description
+moodId *
+string($uuid)
+(path)
+The mood entry ID
+
+550e8400-e29b-41d4-a716-446655440000
+Responses
+Code	Description	Links
+200	
+Mood deleted successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Mood deleted successfully",
+    "mood_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Forbidden - Only venter profiles can delete moods
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Mood entry not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+
+Availability
+Listener availability and presence management
+
+
+
+POST
+/api/v1/availability/online
+Go online as listener
+
+
+Mark listener as available to receive chat/call requests. Creates or updates listener profile.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Successfully went online
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "You are now online",
+    "profile": {
+        "listenerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "ratePerMinute": 0.5,
+        "totalSessions": 42,
+        "averageRating": 4.5,
+        "bioAnonymous": "I'm here to listen and support you",
+        "specialties": [
+            "anxiety",
+            "relationships",
+            "stress"
+        ]
+    }
+}
+No links
+403	
+Only listeners can go online
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/availability/offline
+Go offline as listener
+
+
+Mark listener as unavailable and remove from available listeners list.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Successfully went offline
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "You are now offline"
+}
+No links
+403	
+Only listeners can go offline
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/availability/heartbeat
+Send presence heartbeat
+
+
+Updates listener's last seen timestamp. Should be sent every 30 seconds.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Heartbeat received
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Heartbeat updated",
+    "lastSeen": "2026-02-09T10:29:17.712Z"
+}
+No links
+403	
+Only listeners can send heartbeats
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/availability/listeners
+Get available listeners
+
+
+Get list of online listeners who are not currently busy. Returns anonymous profiles only.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+List of available listeners
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "listeners": [
+        {
+            "listenerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "ratePerMinute": 0.5,
+            "totalSessions": 42,
+            "averageRating": 4.5,
+            "bioAnonymous": "I'm here to listen and support you",
+            "specialties": [
+                "anxiety",
+                "relationships",
+                "stress"
+            ]
+        }
+    ],
+    "total": 5
+}
+No links
+
+PUT
+/api/v1/availability/rate
+Update listener rate
+
+
+Update per-minute rate for chat/call sessions. Must be between $0 and $10.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "ratePerMinute": 0.75
+}
+Responses
+Code	Description	Links
+200	
+Rate updated successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Rate updated successfully",
+    "profile": {
+        "listenerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "ratePerMinute": 0.5,
+        "totalSessions": 42,
+        "averageRating": 4.5,
+        "bioAnonymous": "I'm here to listen and support you",
+        "specialties": [
+            "anxiety",
+            "relationships",
+            "stress"
+        ]
+    }
+}
+No links
+400	
+Invalid rate
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Only listeners can update rate
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/availability/status
+Get current availability status
+
+
+Get listener's current online/offline/busy status.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Current availability status
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "status": "online",
+    "isBusy": false,
+    "lastSeen": "2026-02-09T10:29:17.717Z"
+}
+No links
+403	
+Only listeners can check status
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/availability/profile
+Get listener profile
+
+
+Get listener's complete profile including rate, ratings, and stats.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Listener profile
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "profile": {
+        "listenerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "ratePerMinute": 0.5,
+        "totalSessions": 42,
+        "averageRating": 4.5,
+        "bioAnonymous": "I'm here to listen and support you",
+        "specialties": [
+            "anxiety",
+            "relationships",
+            "stress"
+        ]
+    }
+}
+No links
+403	
+Only listeners can view profile
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Profile not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+Chat
+Anonymous text chat between venters and listeners
+
+
+
+POST
+/api/v1/conversations
+Create chat conversation
+
+
+Venter requests a text chat with an available listener. Requires sufficient wallet balance.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "listenerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+Responses
+Code	Description	Links
+201	
+Conversation created, waiting for listener acceptance
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Chat request sent",
+    "conversation": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "pending",
+        "otherParticipant": {
+            "anonymousName": "Swift Fox",
+            "avatarSeed": "a1b2c3d4e5f6"
+        },
+        "ratePerMinute": 0.5,
+        "durationMinutes": 15,
+        "totalCost": 7.5,
+        "createdAt": "2026-02-09T10:29:17.720Z",
+        "startedAt": "2026-02-09T10:29:17.720Z",
+        "endedAt": "2026-02-09T10:29:17.720Z"
+    }
+}
+No links
+400	
+Validation error or listener unavailable
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Only venters can create conversations
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/conversations
+Get conversation history
+
+
+Get list of all conversations for current user (venter or listener).
+
+Parameters
+Try it out
+Name	Description
+status
+string
+(query)
+Filter by status
+
+Available values : pending, active, ended, declined
+
+
+--
+Responses
+Code	Description	Links
+200	
+List of conversations
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "conversations": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "status": "pending",
+            "otherParticipant": {
+                "anonymousName": "Swift Fox",
+                "avatarSeed": "a1b2c3d4e5f6"
+            },
+            "ratePerMinute": 0.5,
+            "durationMinutes": 15,
+            "totalCost": 7.5,
+            "createdAt": "2026-02-09T10:29:17.722Z",
+            "startedAt": "2026-02-09T10:29:17.722Z",
+            "endedAt": "2026-02-09T10:29:17.722Z"
+        }
+    ],
+    "total": 10
+}
+No links
+
+GET
+/api/v1/conversations/{conversationId
+}
+Get conversation details
+
+
+Get details of a specific conversation including anonymous identities.
+
+Parameters
+Try it out
+Name	Description
+conversationId *
+string($uuid)
+(path)
+conversationId
+Responses
+Code	Description	Links
+200	
+Conversation details
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "conversation": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "pending",
+        "otherParticipant": {
+            "anonymousName": "Swift Fox",
+            "avatarSeed": "a1b2c3d4e5f6"
+        },
+        "ratePerMinute": 0.5,
+        "durationMinutes": 15,
+        "totalCost": 7.5,
+        "createdAt": "2026-02-09T10:29:17.724Z",
+        "startedAt": "2026-02-09T10:29:17.724Z",
+        "endedAt": "2026-02-09T10:29:17.724Z"
+    }
+}
+No links
+403	
+Not a participant in this conversation
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Conversation not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/conversations/{conversationId
+}/accept
+Accept chat request
+
+
+Listener accepts pending chat request. Marks conversation as active.
+
+Parameters
+Try it out
+Name	Description
+conversationId *
+string($uuid)
+(path)
+conversationId
+Responses
+Code	Description	Links
+200	
+Chat request accepted
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Chat accepted",
+    "conversation": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "pending",
+        "otherParticipant": {
+            "anonymousName": "Swift Fox",
+            "avatarSeed": "a1b2c3d4e5f6"
+        },
+        "ratePerMinute": 0.5,
+        "durationMinutes": 15,
+        "totalCost": 7.5,
+        "createdAt": "2026-02-09T10:29:17.726Z",
+        "startedAt": "2026-02-09T10:29:17.727Z",
+        "endedAt": "2026-02-09T10:29:17.727Z"
+    }
+}
+No links
+403	
+Only assigned listener can accept
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Conversation not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/conversations/{conversationId
+}/decline
+Decline chat request
+
+
+Listener declines pending chat request.
+
+Parameters
+Try it out
+Name	Description
+conversationId *
+string($uuid)
+(path)
+conversationId
+Responses
+Code	Description	Links
+200	
+Chat request declined
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Chat declined"
+}
+No links
+403	
+Only assigned listener can decline
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/conversations/{conversationId
+}/end
+End conversation
+
+
+End active conversation. Calculates duration, deducts from wallet, creates earnings for listener.
+
+Parameters
+Try it out
+Name	Description
+conversationId *
+string($uuid)
+(path)
+conversationId
+Responses
+Code	Description	Links
+200	
+Conversation ended successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Conversation ended",
+    "durationMinutes": 15,
+    "totalCost": 7.5,
+    "earnings": 6
+}
+No links
+403	
+Not a participant in this conversation
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Conversation not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/conversations/{conversationId
+}/messages
+Get conversation messages
+
+
+Get paginated messages for a conversation with anonymous sender identities.
+
+Parameters
+Try it out
+Name	Description
+conversationId *
+string($uuid)
+(path)
+conversationId
+limit
+integer
+(query)
+Number of messages to return (default: 50)
+
+Default value : 50
+
+50
+before
+string($uuid)
+(query)
+Message ID to fetch messages before (for pagination)
+
+before
+Responses
+Code	Description	Links
+200	
+List of messages
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "messages": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "content": "Hello, how can I help?",
+            "sender": {
+                "anonymousName": "Swift Fox",
+                "avatarSeed": "a1b2c3d4e5f6",
+                "isMe": true
+            },
+            "deliveredAt": "2026-02-09T10:29:17.731Z",
+            "readAt": "2026-02-09T10:29:17.731Z",
+            "createdAt": "2026-02-09T10:29:17.731Z"
+        }
+    ],
+    "total": 42,
+    "hasMore": true
+}
+No links
+403	
+Not a participant in this conversation
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+================================
+Calls
+Anonymous voice calls via Twilio Programmable Voice
+
+
+
+POST
+/api/v1/calls
+Create voice call request
+
+
+Venter creates a voice call request with an available listener. Requires sufficient wallet balance (minimum 5 minutes). Notifies the listener via Socket.io.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "listenerId": "550e8400-e29b-41d4-a716-446655440000"
+}
+Responses
+Code	Description	Links
+200	
+Call request created successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "call": {
+        "id": "650e8400-e29b-41d4-a716-446655440001",
+        "status": "requesting",
+        "listener": {
+            "anonymousName": "Swift Fox",
+            "avatarSeed": "a1b2c3d4e5f6"
+        },
+        "ratePerMinute": 0.5,
+        "createdAt": "2026-02-10T10:04:34.565Z"
+    }
+}
+No links
+400	
+Validation error or listener unavailable
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+402	
+Insufficient balance
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string",
+    "message": "string",
+    "balance": 0,
+    "required": 0
+}
+No links
+404	
+Listener not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/calls/active
+Get active call
+
+
+Get currently active or pending call for user (if any). Includes requesting, ringing, or active calls.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Active call details or null if no active call
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "activeCall": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "requesting",
+        "otherParticipant": {
+            "anonymousName": "Swift Fox",
+            "avatarSeed": "a1b2c3d4e5f6"
+        },
+        "roomName": "string",
+        "ratePerMinute": 0,
+        "createdAt": "2026-02-10T10:04:34.567Z",
+        "startedAt": "2026-02-10T10:04:34.567Z"
+    }
+}
+No links
+
+GET
+/api/v1/calls/history
+Get call history
+
+
+Get list of ended voice calls for current user with pagination. Only returns calls with status 'ended'.
+
+Parameters
+Try it out
+Name	Description
+limit
+integer
+(query)
+Number of calls to return
+
+Default value : 20
+
+20
+offset
+integer
+(query)
+Number of calls to skip
+
+Default value : 0
+
+0
+Responses
+Code	Description	Links
+200	
+List of voice calls
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "count": 8,
+    "calls": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "status": "ended",
+            "otherParticipant": {
+                "anonymousName": "Swift Fox",
+                "avatarSeed": "a1b2c3d4e5f6"
+            },
+            "ratePerMinute": 0,
+            "durationSeconds": 0,
+            "durationMinutes": 0,
+            "totalCost": 0,
+            "createdAt": "2026-02-10T10:04:34.569Z",
+            "startedAt": "2026-02-10T10:04:34.569Z",
+            "endedAt": "2026-02-10T10:04:34.569Z"
+        }
+    ]
+}
+No links
+
+GET
+/api/v1/calls/{callId
+}
+Get call details
+
+
+Get details of a specific voice call. Only accessible by participants.
+
+Parameters
+Try it out
+Name	Description
+callId *
+string($uuid)
+(path)
+The call ID
+
+callId
+Responses
+Code	Description	Links
+200	
+Call details
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "call": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "requesting",
+        "otherParticipant": {
+            "anonymousName": "Swift Fox",
+            "avatarSeed": "a1b2c3d4e5f6"
+        },
+        "roomName": "string",
+        "ratePerMinute": 0,
+        "durationSeconds": 0,
+        "totalCost": 0,
+        "createdAt": "2026-02-10T10:04:34.571Z",
+        "startedAt": "2026-02-10T10:04:34.571Z",
+        "endedAt": "2026-02-10T10:04:34.571Z"
+    }
+}
+No links
+403	
+Not a participant in this call
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Call not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/calls/{callId
+}/accept
+Accept call request (listener only)
+
+
+Listener accepts pending call request. Creates Twilio room, generates tokens for both participants, and notifies venter via Socket.io.
+
+Parameters
+Try it out
+Name	Description
+callId *
+string($uuid)
+(path)
+The call ID
+
+callId
+Responses
+Code	Description	Links
+200	
+Call accepted successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "call": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "ringing",
+        "roomName": "string",
+        "token": "string",
+        "venter": {
+            "anonymousName": "Swift Fox",
+            "avatarSeed": "a1b2c3d4e5f6"
+        }
+    }
+}
+No links
+400	
+Invalid call status
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Only assigned listener can accept
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Call not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+503	
+Twilio service unavailable
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/calls/{callId
+}/decline
+Decline call request (listener only)
+
+
+Listener declines pending call request. Notifies venter via Socket.io.
+
+Parameters
+Try it out
+Name	Description
+callId *
+string($uuid)
+(path)
+The call ID
+
+callId
+Responses
+Code	Description	Links
+200	
+Call request declined
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "message": "Call declined"
+}
+No links
+400	
+Invalid call status
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Only assigned listener can decline
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Call not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/calls/{callId
+}/end
+End voice call
+
+
+End active or ringing call. Calculates duration and cost, deducts from venter wallet, creates listener earnings, and notifies both participants via Socket.io.
+
+Parameters
+Try it out
+Name	Description
+callId *
+string($uuid)
+(path)
+The call ID
+
+callId
+Responses
+Code	Description	Links
+200	
+Call ended successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "call": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "ended",
+        "durationSeconds": 900,
+        "durationMinutes": 15,
+        "totalCost": 7.5,
+        "endedAt": "2026-02-10T10:04:34.577Z"
+    }
+}
+No links
+400	
+Invalid call status
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Not a participant in this call
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Call not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/calls/{callId
+}/token
+Get Twilio access token
+
+
+Get Twilio access token for joining an accepted call. Call must be in 'ringing' or 'active' status.
+
+Parameters
+Try it out
+Name	Description
+callId *
+string($uuid)
+(path)
+The call ID
+
+callId
+Responses
+Code	Description	Links
+200	
+Twilio access token
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "token": "string",
+    "roomName": "string"
+}
+No links
+400	
+Room not ready - call not yet accepted
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Not a participant in this call
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Call not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+503	
+Twilio service unavailable
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/calls/voice
+Twilio voice webhook
+
+Webhook endpoint called by Twilio when a call is initiated from the mobile app. Returns TwiML response for call routing. No authentication required - Twilio validates the request.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/x-www-form-urlencoded
+To
+string
+Call ID or session ID
+
+From
+string
+Caller phone number or client identity
+
+CallSid
+string
+Twilio call SID
+
+Responses
+Code	Description	Links
+200	
+TwiML response
+
+Media type
+
+text/xml
+Controls Accept header.
+Example Value
+Schema
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML example cannot be generated; root element name is undefined -->
+No links
+
+
+
+
+
+==========================Earnings
+Listener earnings and payout management
+
+
+Reviews
+Anonymous session reviews and ratings
+
+
+Reports
+User reporting and moderation system
+
+
+Blocking
+User blocking functionality
+
+
+Admin
+Administrative endpoints (admin only)
+
+
+System
+System health and monitoring endpoints
+
+
+
+GET
+/health
+Health check endpoint
+
+Check the health status of the API and its dependencies (PostgreSQL and Redis)
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+All services are healthy
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "status": "healthy",
+    "timestamp": "2026-02-09T10:29:17.807Z",
+    "services": {
+        "postgres": "connected",
+        "redis": "connected"
+    }
+}
+No links
+503	
+One or more services are unhealthy
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "status": "unhealthy",
+    "error": "string"
+}
+No links
+Webhooks
+External webhook endpoints for Stripe and Twilio integrations
+
+
+
+POST
+/api/v1/webhooks/stripe
+Stripe webhook endpoint
+
+Receives and processes Stripe webhook events for payments, subscriptions, and checkout sessions. Requires valid Stripe signature for security.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "id": "string",
+    "type": "checkout.session.completed",
+    "data": {}
+}
+Responses
+Code	Description	Links
+200	
+Webhook received and processed successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "received": true,
+    "duplicate": true
+}
+No links
+400	
+Invalid signature or webhook error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/webhooks/twilio/call-status/{sessionId
+}
+Twilio call status webhook
+
+Receives call status updates from Twilio (completed, failed, busy, no-answer). Updates session status accordingly.
+
+Parameters
+Try it out
+Name	Description
+sessionId *
+string($uuid)
+(path)
+Session ID to update
+
+sessionId
+Request body
+
+application/x-www-form-urlencoded
+CallSid
+string
+Twilio call SID
+
+CallStatus
+string
+Call status
+
+CallDuration
+integer
+Call duration in seconds
+
+From
+string
+Caller phone number
+
+To
+string
+Callee phone number
+
+Direction
+string
+Call direction
+
+Responses
+Code	Description	Links
+200	
+Webhook processed successfully
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+OK
+No links
+
+POST
+/api/v1/webhooks/twilio/conference/{sessionId
+}
+Twilio conference TwiML generator
+
+Generates TwiML instructions for conference calls. Called by Twilio when a participant joins a conference.
+
+Parameters
+Try it out
+Name	Description
+sessionId *
+string($uuid)
+(path)
+Session ID for the conference
+
+sessionId
+participant
+string
+(query)
+Participant type (venter is host)
+
+Available values : venter, listener
+
+
+--
+Responses
+Code	Description	Links
+200	
+TwiML response generated
+
+Media type
+
+text/xml
+Controls Accept header.
+Example Value
+Schema
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML example cannot be generated; root element name is undefined -->
+No links
+
+POST
+/api/v1/webhooks/twilio/conference/status
+Twilio conference status webhook
+
+Receives conference status updates from Twilio (participant-join, participant-leave, conference-start, conference-end).
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/x-www-form-urlencoded
+ConferenceSid
+string
+Twilio conference SID
+
+FriendlyName
+string
+Conference name
+
+StatusCallbackEvent
+string
+Event type
+
+Timestamp
+string
+Event timestamp
+
+Responses
+Code	Description	Links
+200	
+Webhook processed successfully
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+OK
+No links
+
+POST
+/api/v1/webhooks/twilio/recording
+Twilio recording status webhook
+
+Receives recording status updates from Twilio. Stores recording information in the database.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/x-www-form-urlencoded
+RecordingSid
+string
+Twilio recording SID
+
+RecordingUrl
+string
+URL to access the recording
+
+RecordingStatus
+string
+Recording status
+
+RecordingDuration
+integer
+Recording duration in seconds
+
+CallSid
+string
+Associated call SID
+
+Responses
+Code	Description	Links
+200	
+Webhook processed successfully
+
+Media type
+
+text/plain
+Controls Accept header.
+Example Value
+Schema
+OK
+No links
+Biometric
+
+
+POST
+/api/v1/auth/biometric/register
+Register biometric authentication (Face ID / Fingerprint)
+
+
+Register Face ID or Fingerprint authentication for the authenticated user. The mobile app should generate a public/private key pair and send the public key along with device information.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...",
+    "deviceId": "iPhone12,1_A1B2C3D4E5F6",
+    "deviceName": "iPhone 13 Pro"
+}
+Responses
+Code	Description	Links
+200	
+Biometric authentication registered successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Biometric authentication registered successfully",
+    "biometric": {
+        "enabled": true,
+        "deviceName": "iPhone 13 Pro",
+        "registeredAt": "2026-01-30T12:00:00.000Z"
+    }
+}
+No links
+400	
+Invalid input data
+
+Media type
+
+application/json
+Examples
+
+invalidPublicKey
+Example Value
+Schema
+{
+    "error": "Invalid public key",
+    "message": "Public key must be a valid base64 encoded string"
+}
+No links
+401	
+Unauthorized - valid JWT token required
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+User not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/auth/biometric/login
+Login with biometric authentication
+
+Authenticate user using Face ID or Fingerprint. The mobile app must sign a challenge with the private key and send the signature for verification.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "email": "user@example.com",
+    "deviceId": "iPhone12,1_A1B2C3D4E5F6",
+    "challenge": "1706616000000",
+    "signature": "SGVsbG8gV29ybGQhIFRoaXMgaXMgYSBzaWduYXR1cmU="
+}
+Responses
+Code	Description	Links
+200	
+Biometric login successful
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Biometric login successful",
+    "user": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "user@example.com",
+        "userType": "venter",
+        "phone": "string",
+        "isVerified": true,
+        "isActive": true,
+        "createdAt": "2026-02-09T10:29:17.763Z"
+    },
+    "tokens": {
+        "accessToken": "string",
+        "refreshToken": "string"
+    }
+}
+No links
+400	
+Invalid input data
+
+Media type
+
+application/json
+Examples
+
+missingFields
+Example Value
+Schema
+{
+    "error": "Missing required fields",
+    "message": "Device ID, signature, challenge, and email are required"
+}
+No links
+401	
+Authentication failed
+
+Media type
+
+application/json
+Examples
+
+notRegistered
+Example Value
+Schema
+{
+    "error": "Authentication failed",
+    "message": "Biometric authentication not registered or device not recognized"
+}
+No links
+403	
+Account disabled
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/auth/biometric/disable
+Disable biometric authentication
+
+
+Disable Face ID / Fingerprint authentication for the authenticated user
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Biometric authentication disabled successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Biometric authentication disabled successfully",
+    "biometric": {
+        "enabled": false
+    }
+}
+No links
+401	
+Unauthorized - valid JWT token required
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+User not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/auth/biometric/status
+Get biometric authentication status
+
+
+Check if biometric authentication is enabled and get device information
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Biometric status retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "biometric": {
+        "enabled": true,
+        "deviceName": "iPhone 13 Pro",
+        "registeredAt": "2026-01-30T12:00:00.000Z"
+    }
+}
+No links
+401	
+Unauthorized - valid JWT token required
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+User not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+Sessions
+
+
+POST
+/api/v1/sessions
+Create a new call session
+
+
+Create a new call session between venter and listener. Validates wallet balance and payment method before creation.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "listenerId": "123e4567-e89b-12d3-a456-426614174000"
+}
+Responses
+Code	Description	Links
+201	
+Session created successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "string",
+    "session": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "venterId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "listenerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "pending",
+        "ratePerMinute": 0.5,
+        "estimatedCost": 2.5,
+        "createdAt": "2026-02-09T10:29:17.768Z"
+    }
+}
+No links
+400	
+Invalid request or insufficient balance
+
+No links
+402	
+Payment required - insufficient balance
+
+No links
+403	
+Forbidden - account not verified or invalid user type
+
+No links
+404	
+Listener not found
+
+No links
+409	
+Active session already exists
+
+No links
+
+GET
+/api/v1/sessions/active
+Get active sessions
+
+
+Retrieve all active sessions for the authenticated user (venter or listener)
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Active sessions retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "sessions": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "venterId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "venterEmail": "string",
+            "listenerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "listenerEmail": "string",
+            "status": "pending",
+            "ratePerMinute": 0,
+            "createdAt": "2026-02-09T10:29:17.770Z",
+            "acceptedAt": "2026-02-09T10:29:17.770Z",
+            "startedAt": "2026-02-09T10:29:17.770Z"
+        }
+    ],
+    "count": 0
+}
+No links
+401	
+Unauthorized
+
+No links
+
+GET
+/api/v1/sessions/{sessionId
+}
+Get session details
+
+
+Retrieve detailed information about a specific session
+
+Parameters
+Try it out
+Name	Description
+sessionId *
+string($uuid)
+(path)
+Session ID
+
+sessionId
+Responses
+Code	Description	Links
+200	
+Session details retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "session": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "venterId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "listenerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "string",
+        "twilioCallSid": "string",
+        "durationSeconds": 0,
+        "ratePerMinute": 0,
+        "estimatedCost": 0,
+        "finalCost": 0,
+        "createdAt": "2026-02-09T10:29:17.771Z",
+        "acceptedAt": "2026-02-09T10:29:17.771Z",
+        "startedAt": "2026-02-09T10:29:17.771Z",
+        "endedAt": "2026-02-09T10:29:17.771Z"
+    }
+}
+No links
+401	
+Unauthorized
+
+No links
+403	
+Forbidden - not authorized to view this session
+
+No links
+404	
+Session not found
+
+No links
+
+POST
+/api/v1/sessions/{sessionId
+}/accept
+Accept a call session
+
+
+Accept a pending call session and initiate the Twilio call (listener only)
+
+Parameters
+Try it out
+Name	Description
+sessionId *
+string($uuid)
+(path)
+Session ID
+
+sessionId
+Responses
+Code	Description	Links
+200	
+Session accepted and call initiated
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "string",
+    "session": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "active",
+        "twilioCallSid": "string",
+        "startedAt": "2026-02-09T10:29:17.773Z"
+    }
+}
+No links
+400	
+Invalid session status
+
+No links
+403	
+Unauthorized - not the assigned listener
+
+No links
+404	
+Session not found
+
+No links
+500	
+Call initiation failed
+
+No links
+
+POST
+/api/v1/sessions/{sessionId
+}/end
+End a call session
+
+
+End an active call session and calculate final cost (venter or listener)
+
+Parameters
+Try it out
+Name	Description
+sessionId *
+string($uuid)
+(path)
+Session ID
+
+sessionId
+Responses
+Code	Description	Links
+200	
+Session ended successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "string",
+    "session": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "ended",
+        "durationSeconds": 0,
+        "finalCost": 0,
+        "endedAt": "2026-02-09T10:29:17.774Z"
+    }
+}
+No links
+400	
+Invalid session status
+
+No links
+403	
+Unauthorized - not a participant in this session
+
+No links
+404	
+Session not found
+
+ Reflections
+Daily reflection entries linked to moods for venter profiles
+
+
+
+POST
+/api/v1/reflections/save
+Save or update reflection for today
+
+
+Save a reflection entry for the current day. Only one reflection per day is allowed. If a reflection already exists for today, it will be updated. Automatically links to today's mood if available. Only available for venter profiles.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "reflection_text": "Today I reflected on my goals and felt grateful for the progress I've made. I realize I need to focus more on self-care."
+}
+Responses
+Code	Description	Links
+200	
+Reflection updated successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Reflection updated successfully",
+    "reflection": {
+        "id": "550e8400-e29b-41d4-a716-446655440000",
+        "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "mood_log_id": "650e8400-e29b-41d4-a716-446655440001",
+        "reflection_text": "Today I reflected on my progress and felt grateful for how far I've come.",
+        "reflection_date": "2026-02-10",
+        "created_at": "2026-02-10T09:29:03.919Z",
+        "updated_at": "2026-02-10T09:29:03.919Z"
+    }
+}
+No links
+201	
+Reflection saved successfully
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "message": "Reflection saved successfully",
+    "reflection": {
+        "id": "550e8400-e29b-41d4-a716-446655440000",
+        "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "mood_log_id": "650e8400-e29b-41d4-a716-446655440001",
+        "reflection_text": "Today I reflected on my progress and felt grateful for how far I've come.",
+        "reflection_date": "2026-02-10",
+        "created_at": "2026-02-10T09:29:03.920Z",
+        "updated_at": "2026-02-10T09:29:03.920Z"
+    }
+}
+No links
+400	
+Validation error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized - No valid authentication token
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Forbidden - Only venter profiles can save reflections
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/reflections/today
+Get today's reflection
+
+
+Retrieve the reflection entry for today if it exists, including linked mood information
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Today's reflection retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Today's reflection retrieved successfully",
+    "saved": true,
+    "reflection": {
+        "id": "550e8400-e29b-41d4-a716-446655440000",
+        "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "mood_log_id": "650e8400-e29b-41d4-a716-446655440001",
+        "reflection_text": "Today I reflected on my progress and felt grateful for how far I've come.",
+        "reflection_date": "2026-02-10",
+        "mood_type": "Happy",
+        "category": "Work",
+        "created_at": "2026-02-10T09:29:03.922Z",
+        "updated_at": "2026-02-10T09:29:03.922Z"
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+No reflection saved for today
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "message": "No reflection saved for today",
+    "saved": false
+}
+No links
+
+GET
+/api/v1/reflections/history
+Get reflection history
+
+
+Retrieve reflection history with pagination and optional date filtering, including linked mood information
+
+Parameters
+Try it out
+Name	Description
+limit
+integer
+(query)
+Number of entries to return
+
+Default value : 30
+
+30
+offset
+integer
+(query)
+Number of entries to skip
+
+Default value : 0
+
+0
+start_date
+string($date)
+(query)
+Filter reflections from this date onwards (YYYY-MM-DD)
+
+2026-01-01
+end_date
+string($date)
+(query)
+Filter reflections up to this date (YYYY-MM-DD)
+
+2026-01-31
+Responses
+Code	Description	Links
+200	
+Reflection history retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Reflection history retrieved successfully",
+    "reflections": [
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "mood_log_id": "650e8400-e29b-41d4-a716-446655440001",
+            "reflection_text": "Today I reflected on my progress and felt grateful for how far I've come.",
+            "reflection_date": "2026-02-10",
+            "mood_type": "Happy",
+            "category": "Work",
+            "created_at": "2026-02-10T09:29:03.925Z",
+            "updated_at": "2026-02-10T09:29:03.925Z"
+        }
+    ],
+    "pagination": {
+        "total": 45,
+        "limit": 30,
+        "offset": 0
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+PUT
+/api/v1/reflections/{reflectionId
+}
+Update a specific reflection
+
+
+Update the text content of a specific reflection entry. Users can only update their own reflections. Only available for venter profiles.
+
+Parameters
+Try it out
+Name	Description
+reflectionId *
+string($uuid)
+(path)
+The reflection entry ID
+
+550e8400-e29b-41d4-a716-446655440000
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "reflection_text": "Updated reflection: I've been thinking more about my progress and I'm proud of how far I've come."
+}
+Responses
+Code	Description	Links
+200	
+Reflection updated successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Reflection updated successfully",
+    "reflection": {
+        "id": "550e8400-e29b-41d4-a716-446655440000",
+        "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "mood_log_id": "650e8400-e29b-41d4-a716-446655440001",
+        "reflection_text": "Today I reflected on my progress and felt grateful for how far I've come.",
+        "reflection_date": "2026-02-10",
+        "created_at": "2026-02-10T09:29:03.927Z",
+        "updated_at": "2026-02-10T09:29:03.927Z"
+    }
+}
+No links
+400	
+Validation error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Forbidden - Only venter profiles can update reflections
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Reflection entry not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+DELETE
+/api/v1/reflections/{reflectionId
+}
+Delete a reflection entry
+
+
+Delete a specific reflection entry. Users can only delete their own reflections. Only available for venter profiles.
+
+Parameters
+Try it out
+Name	Description
+reflectionId *
+string($uuid)
+(path)
+The reflection entry ID
+
+550e8400-e29b-41d4-a716-446655440000
+Responses
+Code	Description	Links
+200	
+Reflection deleted successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Reflection deleted successfully",
+    "reflection_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Forbidden - Only venter profiles can delete reflections
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Reflection entry not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+
+Admin
+Administrative endpoints (admin only)
+
+
+
+GET
+/api/v1/reports/admin/all
+Get all reports (Admin)
+
+
+Get all reports in the system with filtering. Admin only.
+
+Parameters
+Try it out
+Name	Description
+limit
+integer
+(query)
+Default value : 50
+
+50
+offset
+integer
+(query)
+Default value : 0
+
+0
+status
+string
+(query)
+Available values : pending, reviewing, resolved, dismissed
+
+
+--
+reason
+string
+(query)
+Available values : disruptive_behavior, bullying_or_harassment, danger_to_self_or_others, inappropriate_or_unsafe_response
+
+
+--
+Responses
+Code	Description	Links
+200	
+List of all reports with statistics
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "reports": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "reporterId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "reportedId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "sessionType": "call",
+            "sessionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "reason": "harassment",
+            "description": "string",
+            "status": "pending",
+            "adminNotes": "string",
+            "reviewedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "reviewedAt": "2026-02-10T19:32:32.341Z",
+            "createdAt": "2026-02-10T19:32:32.341Z",
+            "reporter_email": "user@example.com",
+            "reported_email": "user@example.com"
+        }
+    ],
+    "stats": {
+        "pending": 0,
+        "reviewing": 0,
+        "resolved": 0,
+        "dismissed": 0
+    },
+    "pagination": {
+        "limit": 20,
+        "offset": 0,
+        "total": 100
+    }
+}
+No links
+403	
+Admin access required
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/reports/admin/stats
+Get report statistics (Admin)
+
+
+Get comprehensive statistics about reports. Admin only.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Report statistics
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "stats": {
+        "byStatus": {
+            "additionalProp1": 0,
+            "additionalProp2": 0,
+            "additionalProp3": 0
+        },
+        "byReason": {
+            "additionalProp1": 0,
+            "additionalProp2": 0,
+            "additionalProp3": 0
+        },
+        "last30Days": [
+            {
+                "date": "2026-02-10",
+                "count": 0
+            }
+        ],
+        "topReportedUsers": [
+            {
+                "reported_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                "email": "user@example.com",
+                "user_type": "string",
+                "report_count": 0
+            }
+        ]
+    }
+}
+No links
+
+GET
+/api/v1/reports/admin/{reportId
+}
+Get report details (Admin)
+
+
+Get detailed information about a specific report. Admin only.
+
+Parameters
+Try it out
+Name	Description
+reportId *
+string($uuid)
+(path)
+reportId
+Responses
+Code	Description	Links
+200	
+Report details
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "report": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reporterId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reportedId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "sessionType": "call",
+        "sessionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reason": "harassment",
+        "description": "string",
+        "status": "pending",
+        "adminNotes": "string",
+        "reviewedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reviewedAt": "2026-02-10T19:32:32.348Z",
+        "createdAt": "2026-02-10T19:32:32.348Z",
+        "reporter_email": "user@example.com",
+        "reporter_type": "string",
+        "reported_email": "user@example.com",
+        "reported_type": "string",
+        "reviewer_email": "user@example.com"
+    }
+}
+No links
+404	
+Report not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+PUT
+/api/v1/reports/admin/{reportId
+}
+Update report status (Admin)
+
+
+Update the status and add admin notes to a report. Admin only.
+
+Parameters
+Try it out
+Name	Description
+reportId *
+string($uuid)
+(path)
+reportId
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "status": "resolved",
+    "adminNotes": "Investigated and took appropriate action"
+}
+Responses
+Code	Description	Links
+200	
+Report updated successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "report": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reporterId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reportedId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "sessionType": "call",
+        "sessionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reason": "harassment",
+        "description": "string",
+        "status": "pending",
+        "adminNotes": "string",
+        "reviewedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reviewedAt": "2026-02-10T19:32:32.352Z",
+        "createdAt": "2026-02-10T19:32:32.352Z"
+    }
+}
+No links
+
+----------------------
+User Management
+
+
+POST
+/api/v1/users/switch-role
+Switch user's active role
+
+
+Switch between available roles. Users can be both venter and listener, but only one role is active at a time. Role switching is blocked during active sessions.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "targetRole": "listener"
+}
+Responses
+Code	Description	Links
+200	
+Role switched successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Successfully switched to listener role",
+    "tokens": {
+        "accessToken": "string",
+        "refreshToken": "string"
+    },
+    "user": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "user@example.com",
+        "activeRole": "listener",
+        "availableRoles": [
+            "venter",
+            "listener"
+        ],
+        "userType": "string"
+    }
+}
+No links
+400	
+Invalid role
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Invalid role",
+    "message": "string"
+}
+No links
+403	
+Role not available to user
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Role not available",
+    "message": "You don't have access to the listener role. Available roles: venter"
+}
+No links
+409	
+Active session prevents role switch
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Active session",
+    "message": "Cannot switch roles while you have an active call. Please end your current session first.",
+    "activeSession": {
+        "type": "call",
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "in-progress"
+    }
+}
+No links
+
+GET
+/api/v1/users/roles
+Get user's current role configuration
+
+
+Returns the user's active role and all available roles they can switch to
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+User role configuration
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "availableRoles": [
+        "venter",
+        "listener"
+    ],
+    "activeRole": "venter",
+    "userType": "venter"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+PUT
+/api/v1/users/available-roles
+Add or remove roles from user's available roles
+
+
+Allows users to add or remove roles from their available roles. Cannot remove currently active role. Cannot add admin role via this endpoint.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "rolesToAdd": [
+        "listener"
+    ],
+    "rolesToRemove": []
+}
+Responses
+Code	Description	Links
+200	
+Roles updated successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Available roles updated successfully",
+    "tokens": {
+        "accessToken": "string",
+        "refreshToken": "string"
+    },
+    "user": {
+        "availableRoles": [
+            "venter",
+            "listener"
+        ],
+        "activeRole": "venter"
+    }
+}
+No links
+400	
+Invalid operation (e.g., removing active role)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Invalid operation",
+    "message": "Cannot remove your currently active role. Please switch roles first."
+}
+No links
+403	
+Forbidden (e.g., attempting to add admin role)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Forbidden",
+    "message": "Cannot add admin role via this endpoint"
+}
+No links
+
+--------------------------------listener earnings----------------------------
+Earnings
+Listener earnings and payout management
+
+
+
+GET
+/api/v1/earnings/summary
+Get listener earnings summary
+
+
+Get overview of listener's earnings including pending, available, and paid balances. Only accessible by listeners.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Earnings summary retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "pendingBalance": 45.5,
+    "availableBalance": 123.75,
+    "totalPaid": 1250,
+    "lifetimeEarnings": 1419.25,
+    "pendingSessions": 12,
+    "totalSessions": 87
+}
+No links
+401	
+Unauthorized - Invalid or missing token
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Forbidden - Only listeners can access earnings
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Permission denied",
+    "message": "Only listeners can view earnings"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/earnings
+Get listener earnings transactions
+
+
+Get detailed list of listener's earnings from individual sessions with pagination and filtering. Only accessible by listeners.
+
+Parameters
+Try it out
+Name	Description
+limit
+integer
+(query)
+Number of transactions to return
+
+Default value : 50
+
+50
+offset
+integer
+(query)
+Number of transactions to skip for pagination
+
+Default value : 0
+
+0
+status
+string
+(query)
+Filter by earning status
+
+Available values : pending, available, paid, cancelled
+
+
+--
+sessionType
+string
+(query)
+Filter by session type
+
+Available values : call, chat
+
+
+--
+Responses
+Code	Description	Links
+200	
+Earnings transactions retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "earnings": [
+        {
+            "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            "sessionType": "call",
+            "sessionId": "b2c3d4e5-f6g7-8901-bcde-f12345678901",
+            "grossAmount": 15,
+            "platformFee": 3,
+            "netAmount": 12,
+            "platformFeePercentage": 0.2,
+            "status": "available",
+            "payoutId": null,
+            "createdAt": "2026-02-12T10:30:00.000Z"
+        }
+    ],
+    "pagination": {
+        "total": 87,
+        "limit": 50,
+        "offset": 0,
+        "hasMore": true
+    }
+}
+No links
+401	
+Unauthorized - Invalid or missing token
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Forbidden - Only listeners can access earnings
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/earnings/payouts
+Get listener payout history
+
+
+Get list of all payouts made to the listener with pagination and filtering. Only accessible by listeners.
+
+Parameters
+Try it out
+Name	Description
+limit
+integer
+(query)
+Number of payouts to return
+
+Default value : 50
+
+50
+offset
+integer
+(query)
+Number of payouts to skip for pagination
+
+Default value : 0
+
+0
+status
+string
+(query)
+Filter by payout status
+
+Available values : pending, processing, completed, failed, cancelled
+
+
+--
+Responses
+Code	Description	Links
+200	
+Payout history retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "payouts": [
+        {
+            "id": "c3d4e5f6-g7h8-9012-cdef-123456789012",
+            "amount": 250,
+            "stripeTransferId": "tr_1234567890abcdef",
+            "status": "completed",
+            "failureReason": null,
+            "processedAt": "2026-02-10T15:45:00.000Z",
+            "createdAt": "2026-02-10T14:30:00.000Z"
+        }
+    ],
+    "pagination": {
+        "total": 15,
+        "limit": 50,
+        "offset": 0,
+        "hasMore": false
+    }
+}
+No links
+401	
+Unauthorized - Invalid or missing token
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Forbidden - Only listeners can access payouts
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+======================signatures===============
+Signatures
+
+
+POST
+/api/v1/signatures
+Upload or update user signature
+
+
+Upload a signature image (PNG, JPEG, or SVG) for the authenticated user. If a signature already exists, it will be replaced and the old file will be deleted from S3.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+multipart/form-data
+signature *
+string($binary)
+Signature image file (PNG, JPEG, or SVG, max 5MB)
+
+Responses
+Code	Description	Links
+200	
+Signature uploaded successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Signature uploaded successfully",
+    "signature": {
+        "url": "https://ventally-uploads.s3.us-east-1.amazonaws.com/signatures/user-uuid/file-uuid.png",
+        "fileName": "abc123-uuid.png",
+        "uploadedAt": "2026-02-11T23:45:00.000Z"
+    }
+}
+No links
+400	
+Invalid file or missing file
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Invalid file",
+    "message": "Invalid file type. Only PNG, JPEG, and SVG files are allowed."
+}
+No links
+401	
+Unauthorized - Invalid or missing token
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Access denied",
+    "message": "No token provided"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Upload failed",
+    "message": "Failed to upload signature. Please try again."
+}
+----------------------auth api -----------------
+GET
+/api/v1/auth/security/2fa
+Get two-factor authentication settings
+
+
+Get the authenticated user's 2FA configuration
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+2FA settings retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "twoFactorAuthentication": {
+        "enabled": true,
+        "method": "authenticator_app"
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+
+PUT
+/api/v1/auth/security/2fa
+Update two-factor authentication settings
+
+
+Enable or disable 2FA and choose a single active method (sms, email, authenticator_app)
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "enabled": true,
+    "method": "email"
+}
+Responses
+Code	Description	Links
+200	
+2FA settings updated successfully
+
+No links
+400	
+Validation error
+
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+
+
+POST
+/api/v1/auth/refresh
+Refresh access token
+
+Get a new access token using refresh token
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "refreshToken": "string"
+}
+Responses
+Code	Description	Links
+200	
+Token refreshed successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "accessToken": "string"
+}
+No links
+401	
+Invalid refresh token
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+
+POST
+/api/v1/auth/change-password
+Change password
+
+
+Change authenticated user's password using current password verification
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "currentPassword": "CurrentSecurePass123!",
+    "newPassword": "NewSecurePass123!"
+}
+Responses
+Code	Description	Links
+200	
+Password changed successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Password changed successfully. Please login again."
+}
+No links
+400	
+Missing fields, weak password, or invalid new password
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized or invalid current password
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+User not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Internal server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/auth/change-email/request-otp
+Request OTP to change email
+
+
+Send a 4-digit OTP to the new email address for authenticated email change
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "newEmail": "new.email@example.com"
+}
+Responses
+Code	Description	Links
+200	
+Verification code sent
+
+No links
+400	
+Missing or invalid email
+
+No links
+401	
+Unauthorized
+
+No links
+409	
+Email already in use
+
+No links
+
+POST
+/api/v1/auth/change-email/verify-otp
+Verify OTP and change email
+
+
+Verify 4-digit OTP for authenticated email change and update the email address
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "newEmail": "new.email@example.com",
+    "otp": "1234"
+}
+Responses
+Code	Description	Links
+200	
+Email updated successfully
+
+No links
+400	
+Invalid OTP, expired OTP, or missing request
+
+No links
+401	
+Unauthorized
+
+No links
+409	
+Email already in use
+
+No links
+
+POST
+/api/v1/auth/change-phone/request-otp
+Request OTP to change phone
+
+
+Send a 4-digit OTP to the new phone number for authenticated phone change
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "newPhone": "+15551234567"
+}
+Responses
+Code	Description	Links
+200	
+Verification code sent
+
+No links
+400	
+Missing or invalid phone number
+
+No links
+401	
+Unauthorized
+
+No links
+
+POST
+/api/v1/auth/change-phone/verify-otp
+Verify OTP and change phone
+
+
+Verify 4-digit OTP for authenticated phone change and update the phone number
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "newPhone": "+15551234567",
+    "otp": "1234"
+}
+Responses
+Code	Description	Links
+200	
+Phone number updated successfully
+
+No links
+400	
+Invalid OTP, expired OTP, or missing request
+
+No links
+401	
+Unauthorized
+
+No links
+
+---------------------------recovery apis----------------------
+Sobriety
+Sobriety streak tracking and event timeline for venters
+
+
+
+GET
+/api/v1/sobriety/status
+Get sobriety status
+
+
+Get current sobriety tracking status, days sober, and achieved milestones for the authenticated venter.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Sobriety status retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "string",
+    "tracking_enabled": true,
+    "status": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "sober_start_date": "2026-02-01",
+        "last_relapse_date": "2026-01-31",
+        "notes": "string",
+        "days_sober": 14,
+        "achievements": [
+            {
+                "code": "milestone_14",
+                "label": "14 Days",
+                "days_required": 14,
+                "achieved": true
+            }
+        ],
+        "created_at": "2026-02-24T20:13:03.596Z",
+        "updated_at": "2026-02-24T20:13:03.596Z"
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Forbidden - Only venter profiles can access
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/sobriety/start
+Start or update sobriety tracking
+
+
+Creates or updates sobriety profile with a streak start date and optional notes.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "sober_start_date": "2026-02-01",
+    "notes": "Starting fresh today"
+}
+Responses
+Code	Description	Links
+201	
+Sobriety tracking updated successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "string",
+    "status": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "sober_start_date": "2026-02-01",
+        "last_relapse_date": "2026-01-31",
+        "notes": "string",
+        "days_sober": 14,
+        "achievements": [
+            {
+                "code": "milestone_14",
+                "label": "14 Days",
+                "days_required": 14,
+                "achieved": true
+            }
+        ],
+        "created_at": "2026-02-24T20:13:03.599Z",
+        "updated_at": "2026-02-24T20:13:03.599Z"
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Forbidden - Only venter profiles can access
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/sobriety/relapse
+Log relapse
+
+
+Logs a relapse event and resets sober start date to restart_date (or relapse_date when omitted).
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "relapse_date": "2026-02-20",
+    "restart_date": "2026-02-20",
+    "notes": "Tough day, restarting immediately"
+}
+Responses
+Code	Description	Links
+200	
+Relapse logged and sobriety streak reset successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "string",
+    "status": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "sober_start_date": "2026-02-01",
+        "last_relapse_date": "2026-01-31",
+        "notes": "string",
+        "days_sober": 14,
+        "achievements": [
+            {
+                "code": "milestone_14",
+                "label": "14 Days",
+                "days_required": 14,
+                "achieved": true
+            }
+        ],
+        "created_at": "2026-02-24T20:13:03.601Z",
+        "updated_at": "2026-02-24T20:13:03.601Z"
+    }
+}
+No links
+404	
+Sobriety tracking not configured
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/sobriety/history
+Get sobriety history
+
+
+Get sobriety events timeline for the authenticated venter.
+
+Parameters
+Try it out
+Name	Description
+limit
+integer
+(query)
+Default value : 30
+
+30
+offset
+integer
+(query)
+Default value : 0
+
+0
+Responses
+Code	Description	Links
+200	
+Sobriety history retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "string",
+    "events": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "event_type": "relapse",
+            "event_date": "2026-02-20",
+            "restart_date": "2026-02-20",
+            "notes": "string",
+            "created_at": "2026-02-24T20:13:03.604Z"
+        }
+    ],
+    "pagination": {
+        "total": 0,
+        "limit": 0,
+        "offset": 0,
+        "has_more": true
+    }
+}
+
+GET
+/api/v1/home/summary
+Get venter home summary
+
+
+Returns progress, highlights, achievements, and merged recent entries (mood + reflections) for the venter home screen.
+
+Parameters
+Try it out
+Name	Description
+limit
+integer
+(query)
+Maximum number of recent entries to return
+
+Default value : 10
+
+10
+Responses
+Code	Description	Links
+200	
+Venter home summary retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "string",
+    "progress": {
+        "tracking_enabled": true,
+        "days_sober": 0,
+        "sober_start_date": "2026-02-24",
+        "last_relapse_date": "2026-02-24"
+    },
+    "highlights": {
+        "feeling": "string",
+        "latest_mood_date": "2026-02-24",
+        "achievements_count": 0
+    },
+    "achievements": [
+        {
+            "code": "milestone_14",
+            "label": "14 Days",
+            "days_required": 14,
+            "achieved": true
+        }
+    ],
+    "recent_entries": [
+        {
+            "id": "string",
+            "entry_type": "mood",
+            "entry_date": "2026-02-24",
+            "created_at": "2026-02-24T20:13:03.607Z",
+            "title": "Happy",
+            "content": "string",
+            "category": "string",
+            "mood_type": "string",
+            "mood_log_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        }
+    ]
+}
+No links
+403	
+Forbidden - Only venter profiles can access
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+
+
+---------------------------verification for listener --------------
+Listener Verification
+Listener verification document upload and review flows
+
+
+
+POST
+/api/v1/listener-verifications
+Submit verification document
+
+
+Listener uploads a verification document for admin review. Accepts PDF, PNG, JPG, and JPEG files up to 10MB.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+multipart/form-data
+document *
+string($binary)
+Verification document file. Allowed MIME: application/pdf, image/png, image/jpeg, image/jpg. Max size: 10MB.
+
+Responses
+Code	Description	Links
+201	
+Verification document submitted
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "verification": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "pending",
+        "createdAt": "2026-02-25T10:20:30.000Z"
+    }
+}
+No links
+400	
+Validation error or invalid file upload
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Invalid file",
+    "message": "Invalid file type for verification document. Received: text/plain"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (listener role required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Forbidden",
+    "message": "Access denied. This endpoint is for listener users only."
+}
+No links
+409	
+Pending verification already exists
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Pending verification exists",
+    "message": "You already have a pending verification document. Please wait for admin review."
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Submission failed",
+    "message": "Failed to upload verification document"
+}
+No links
+
+GET
+/api/v1/listener-verifications/me
+Get my verification submissions
+
+
+List verification document submissions for the authenticated listener
+
+Parameters
+Try it out
+Name	Description
+limit
+integer
+(query)
+Maximum number of submissions to return
+
+Default value : 10
+
+10
+offset
+integer
+(query)
+Number of submissions to skip
+
+Default value : 0
+
+0
+Responses
+Code	Description	Links
+200	
+Verification submissions retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "submissions": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "status": "pending",
+            "admin_notes": "Please upload a clearer scan",
+            "reviewed_at": "2026-02-24T21:45:42.876Z",
+            "created_at": "2026-02-24T21:45:42.876Z"
+        }
+    ]
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (listener role required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Forbidden",
+    "message": "Access denied. This endpoint is for listener users only."
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Fetch failed",
+    "message": "Failed to fetch verification submissions"
+}
+No links
+
+GET
+/api/v1/listener-verifications/admin/all
+List listener verification submissions (admin)
+
+
+Admin endpoint to list listener verification submissions with optional status filtering
+
+Parameters
+Try it out
+Name	Description
+status
+string
+(query)
+Filter by submission status
+
+Available values : pending, approved, rejected
+
+
+--
+limit
+integer
+(query)
+Maximum number of submissions to return
+
+Default value : 50
+
+50
+offset
+integer
+(query)
+Number of submissions to skip
+
+Default value : 0
+
+0
+Responses
+Code	Description	Links
+200	
+Verification submissions retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "submissions": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "listener_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "listener_email": "listener@example.com",
+            "status": "pending",
+            "mime_type": "application/pdf",
+            "original_file_name": "license.pdf",
+            "created_at": "2026-02-24T21:45:42.880Z",
+            "reviewed_at": "2026-02-24T21:45:42.880Z",
+            "reviewed_by": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        }
+    ]
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin role required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Forbidden",
+    "message": "Access denied. This endpoint is for admin users only."
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Fetch failed",
+    "message": "Failed to fetch submissions"
+}
+No links
+
+GET
+/api/v1/listener-verifications/admin/{verificationId
+}
+Get verification submission detail (admin)
+
+
+Admin endpoint to fetch one verification submission, including document access URL
+
+Parameters
+Try it out
+Name	Description
+verificationId *
+string($uuid)
+(path)
+Verification submission ID
+
+verificationId
+Responses
+Code	Description	Links
+200	
+Verification submission retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "submission": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "listener_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "listener_email": "listener@example.com",
+        "status": "pending",
+        "s3_key": "listener-verification/8b5f9f57-a56a-457d-95a6-85023d53a7f7/21de7047-cf31-4f4d-bde2-225a4c74c4d2-license.pdf",
+        "file_url": "https://bucket.s3.amazonaws.com/listener-verification/...",
+        "mime_type": "application/pdf",
+        "original_file_name": "license.pdf",
+        "file_size_bytes": 542111,
+        "admin_notes": "Document verified successfully",
+        "reviewed_by": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reviewed_at": "2026-02-24T21:45:42.884Z",
+        "s3_deleted_at": "2026-02-24T21:45:42.884Z",
+        "created_at": "2026-02-24T21:45:42.884Z",
+        "updated_at": "2026-02-24T21:45:42.884Z",
+        "document_url": "https://bucket.s3.amazonaws.com/listener-verification/...presigned"
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin role required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Forbidden",
+    "message": "Access denied. This endpoint is for admin users only."
+}
+No links
+404	
+Submission not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Not found",
+    "message": "Verification submission not found"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Fetch failed",
+    "message": "Failed to fetch submission"
+}
+No links
+
+PUT
+/api/v1/listener-verifications/admin/{verificationId
+}
+Review verification submission (admin)
+
+
+Admin approves or rejects a pending listener verification submission
+
+Parameters
+Try it out
+Name	Description
+verificationId *
+string($uuid)
+(path)
+Verification submission ID
+
+verificationId
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "status": "verified",
+    "adminNotes": "Document is valid and approved."
+}
+Responses
+Code	Description	Links
+200	
+Submission reviewed
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "submission": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "listener_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "approved",
+        "reviewed_at": "2026-02-24T21:45:42.890Z",
+        "s3_deleted_at": "2026-02-24T21:45:42.890Z"
+    }
+}
+No links
+400	
+Validation error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Validation error",
+    "message": "status must be one of: verified, rejected"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin role required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Forbidden",
+    "message": "Access denied. This endpoint is for admin users only."
+}
+No links
+404	
+Submission not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Not found",
+    "message": "Verification submission not found"
+}
+No links
+409	
+Submission is not pending
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Invalid state",
+    "message": "Only pending submissions can be reviewed. Current status: rejected"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Review failed",
+    "message": "Failed to review verification submission"
+}
+No links
+----------------------------Support-------------------
+User support endpoints for appeals and feedback
+
+POST
+/api/v1/support/listener-appeals
+Submit listener appeal with document
+
+
+Listener-only endpoint to submit an appeal including contact info, report reference, summary, and a required PDF/DOC/DOCX document
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+multipart/form-data
+contact *
+string
+Listener email or phone number
+
+reportId *
+string
+Report identifier tied to this appeal
+
+summary *
+string
+document *
+string($binary)
+Appeal document file (PDF, DOC, DOCX up to 10MB)
+
+Responses
+Code	Description	Links
+201	
+Listener appeal submitted successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "appeal": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "submitted",
+        "contact": "princesskaguya@gmail.com",
+        "reportId": "RPT-2026-00129",
+        "summary": "I want to appeal this report and provide additional context.",
+        "documentUrl": "https://example-bucket.s3.us-east-1.amazonaws.com/support-appeals/user/file.pdf",
+        "createdAt": "2026-02-25T09:30:00.000Z"
+    }
+}
+No links
+400	
+Validation error or invalid file
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Validation error",
+    "message": "contact is required"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (listener role required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Forbidden",
+    "message": "This action requires listener role. Your current role is venter"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Server error",
+    "message": "Failed to submit listener appeal"
+}
+No links
+
+
+
+POST
+/api/v1/support/appeals
+Submit an appeal
+
+
+Submit a platform appeal with reason, description, and optional attachment references
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "reason": "account_restriction",
+    "description": "I would like this moderation decision reviewed.",
+    "attachments": [
+        "https://example.com/attachment-1.png",
+        "https://example.com/attachment-2.pdf"
+    ]
+}
+Responses
+Code	Description	Links
+201	
+Appeal submitted successfully
+
+No links
+400	
+Validation error
+
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+
+POST
+/api/v1/support/feedback
+Submit platform feedback
+
+
+Submit generic product feedback with a rating and optional comment
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "rating": 5,
+    "comment": "Great app experience overall."
+}
+Responses
+Code	Description	Links
+201	
+Feedback submitted successfully
+
+No links
+400	
+Validation error
+
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+
+
+------------block user ---------
+Blocking
+User blocking functionality
+
+
+
+POST
+/users/{userId
+}/block
+Block a user
+
+
+Block a user to prevent them from initiating calls or chats with you. Blocked users won't be matched in the system.
+
+Parameters
+Try it out
+Name	Description
+userId *
+string($uuid)
+(path)
+ID of the user to block
+
+userId
+Responses
+Code	Description	Links
+201	
+User blocked successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "User blocked successfully",
+    "block": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "blockedAt": "2026-03-04T12:12:09.984Z"
+    }
+}
+No links
+400	
+Validation error (e.g., trying to block yourself)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+User not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+409	
+User is already blocked
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+DELETE
+/users/{userId
+}/block
+Unblock a user
+
+
+Remove a user from your blocked list, allowing them to interact with you again.
+
+Parameters
+Try it out
+Name	Description
+userId *
+string($uuid)
+(path)
+ID of the user to unblock
+
+userId
+Responses
+Code	Description	Links
+200	
+User unblocked successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "User unblocked successfully"
+}
+No links
+404	
+Block relationship not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/users/{userId
+}/blocked
+Check if user is blocked
+
+
+Check the block status between you and another user (both directions).
+
+Parameters
+Try it out
+Name	Description
+userId *
+string($uuid)
+(path)
+ID of the user to check
+
+userId
+Responses
+Code	Description	Links
+200	
+Block status
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "isBlocked": true,
+    "blockType": "you_blocked",
+    "blockedAt": "2026-03-04T12:12:09.985Z"
+}
+No links
+
+GET
+/users/blocked
+Get blocked users list
+
+
+Retrieve a paginated list of users you have blocked.
+
+Parameters
+Try it out
+Name	Description
+page
+integer
+(query)
+Page number (starts from 1)
+
+Default value : 1
+
+1
+limit
+integer
+(query)
+Number of items per page
+
+Default value : 20
+
+20
+Responses
+Code	Description	Links
+200	
+List of blocked users
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "blockedUsers": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "blocked_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "username": "user123",
+            "role": "listener",
+            "blocked_at": "2026-03-04T12:12:09.986Z"
+        }
+    ],
+    "pagination": {
+        "limit": 20,
+        "offset": 0,
+        "total": 100
+    }
+}
+------------reviews ----------------
+Reviews
+Anonymous session reviews and ratings
+
+
+
+POST
+/api/v1/reviews
+Submit a review
+
+
+Submit a rating and optional comment for another user after a call or chat session. Both users must have been participants in the session, which must be ended.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "sessionType": "call",
+    "sessionId": "123e4567-e89b-12d3-a456-426614174000",
+    "revieweeId": "987e6543-e21b-34d5-a678-426614174111",
+    "rating": 5,
+    "comment": "Great listener, very helpful!"
+}
+Responses
+Code	Description	Links
+201	
+Review submitted successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "review": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "sessionType": "call",
+        "sessionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reviewerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "revieweeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "rating": 5,
+        "comment": "Great listener, very helpful!",
+        "createdAt": "2026-03-06T22:37:09.238Z"
+    }
+}
+No links
+400	
+Validation error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Not authorized to review this session
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+409	
+Already reviewed this session
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/reviews/{userId
+}
+Get user reviews
+
+Get all reviews received by a specific user (typically a listener). Includes rating statistics and distribution.
+
+Parameters
+Try it out
+Name	Description
+userId *
+string($uuid)
+(path)
+User ID to get reviews for
+
+userId
+limit
+integer
+(query)
+Number of reviews to return
+
+Default value : 20
+
+20
+offset
+integer
+(query)
+Offset for pagination
+
+Default value : 0
+
+0
+Responses
+Code	Description	Links
+200	
+User reviews with statistics
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "reviews": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "sessionType": "call",
+            "sessionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "reviewerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "revieweeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "rating": 5,
+            "comment": "Great listener, very helpful!",
+            "createdAt": "2026-03-06T22:37:09.241Z"
+        }
+    ],
+    "stats": {
+        "averageRating": 4.5,
+        "totalReviews": 42,
+        "distribution": {
+            "1": 0,
+            "2": 1,
+            "3": 3,
+            "4": 8,
+            "5": 30
+        }
+    },
+    "pagination": {
+        "limit": 0,
+        "offset": 0,
+        "total": 0
+    }
+}
+No links
+
+GET
+/api/v1/reviews/session/{sessionType
+}/{sessionId
+}
+Get session reviews
+
+
+Get all reviews for a specific session (both directions if mutual review).
+
+Parameters
+Try it out
+Name	Description
+sessionType *
+string
+(path)
+Available values : call, chat
+
+
+call
+sessionId *
+string($uuid)
+(path)
+sessionId
+Responses
+Code	Description	Links
+200	
+Session reviews
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "reviews": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "sessionType": "call",
+            "sessionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "reviewerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "revieweeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "rating": 5,
+            "comment": "Great listener, very helpful!",
+            "createdAt": "2026-03-06T22:37:09.244Z",
+            "is_my_review": true
+        }
+    ]
+}
+No links
+
+GET
+/api/v1/reviews/can-review/{sessionType
+}/{sessionId
+}
+Check if can review session
+
+
+Check if the authenticated user can submit a review for a specific session.
+
+Parameters
+Try it out
+Name	Description
+sessionType *
+string
+(path)
+Available values : call, chat
+
+
+call
+sessionId *
+string($uuid)
+(path)
+sessionId
+Responses
+Code	Description	Links
+200	
+Review eligibility status
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "canReview": true,
+    "reason": "Session must be ended before you can review",
+    "otherUserId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}

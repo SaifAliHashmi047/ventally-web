@@ -1,0 +1,3894 @@
+Reports
+User reporting and moderation system
+
+
+
+POST
+/api/v1/reports
+Submit a user report
+
+
+Report a user for inappropriate behavior, harassment, or other violations. Optionally link to a specific session.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "reportedId": "987e6543-e21b-34d5-a678-426614174111",
+    "sessionType": "call",
+    "sessionId": "123e4567-e89b-12d3-a456-426614174000",
+    "reason": "bullying_or_harassment",
+    "description": "User made repeated inappropriate comments during the call"
+}
+Responses
+Code	Description	Links
+201	
+Report submitted successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "report": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reporterId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reportedId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "sessionType": "call",
+        "sessionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reason": "harassment",
+        "description": "string",
+        "status": "pending",
+        "adminNotes": "string",
+        "reviewedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reviewedAt": "2026-02-28T14:58:42.857Z",
+        "createdAt": "2026-02-28T14:58:42.857Z"
+    }
+}
+No links
+400	
+Validation error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/reports/my-reports
+Get my submitted reports
+
+
+Get all reports submitted by the authenticated user.
+
+Parameters
+Try it out
+Name	Description
+limit
+integer
+(query)
+Default value : 20
+
+20
+offset
+integer
+(query)
+Default value : 0
+
+0
+status
+string
+(query)
+Filter by report status
+
+Available values : pending, reviewing, resolved, dismissed
+
+
+--
+Responses
+Code	Description	Links
+200	
+List of submitted reports
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "reports": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "reporterId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "reportedId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "sessionType": "call",
+            "sessionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "reason": "harassment",
+            "description": "string",
+            "status": "pending",
+            "adminNotes": "string",
+            "reviewedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "reviewedAt": "2026-02-28T14:58:42.860Z",
+            "createdAt": "2026-02-28T14:58:42.860Z"
+        }
+    ],
+    "pagination": {
+        "limit": 0,
+        "offset": 0,
+        "total": 0
+    }
+}
+No links
+
+
+
+GET
+/api/v1/listener-verifications/admin/all
+List listener verification submissions (admin)
+
+
+Admin endpoint to list listener verification submissions with optional status filtering
+
+Parameters
+Try it out
+Name	Description
+status
+string
+(query)
+Filter by submission status
+
+Available values : pending, approved, rejected
+
+
+--
+limit
+integer
+(query)
+Maximum number of submissions to return
+
+Default value : 50
+
+50
+offset
+integer
+(query)
+Number of submissions to skip
+
+Default value : 0
+
+0
+Responses
+Code	Description	Links
+200	
+Verification submissions retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "submissions": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "listener_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "listener_email": "listener@example.com",
+            "status": "pending",
+            "mime_type": "application/pdf",
+            "original_file_name": "license.pdf",
+            "created_at": "2026-02-28T14:56:22.793Z",
+            "reviewed_at": "2026-02-28T14:56:22.793Z",
+            "reviewed_by": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        }
+    ]
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin role required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Forbidden",
+    "message": "Access denied. This endpoint is for admin users only."
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Fetch failed",
+    "message": "Failed to fetch submissions"
+}
+No links
+
+GET
+/api/v1/listener-verifications/admin/{verificationId
+}
+Get verification submission detail (admin)
+
+
+Admin endpoint to fetch one verification submission, including document access URL
+
+Parameters
+Try it out
+Name	Description
+verificationId *
+string($uuid)
+(path)
+Verification submission ID
+
+verificationId
+Responses
+Code	Description	Links
+200	
+Verification submission retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "submission": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "listener_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "listener_email": "listener@example.com",
+        "status": "pending",
+        "s3_key": "listener-verification/8b5f9f57-a56a-457d-95a6-85023d53a7f7/21de7047-cf31-4f4d-bde2-225a4c74c4d2-license.pdf",
+        "file_url": "https://bucket.s3.amazonaws.com/listener-verification/...",
+        "mime_type": "application/pdf",
+        "original_file_name": "license.pdf",
+        "file_size_bytes": 542111,
+        "admin_notes": "Document verified successfully",
+        "reviewed_by": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reviewed_at": "2026-02-28T14:56:22.797Z",
+        "s3_deleted_at": "2026-02-28T14:56:22.797Z",
+        "created_at": "2026-02-28T14:56:22.797Z",
+        "updated_at": "2026-02-28T14:56:22.797Z",
+        "document_url": "https://bucket.s3.amazonaws.com/listener-verification/...presigned"
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin role required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Forbidden",
+    "message": "Access denied. This endpoint is for admin users only."
+}
+No links
+404	
+Submission not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Not found",
+    "message": "Verification submission not found"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Fetch failed",
+    "message": "Failed to fetch submission"
+}
+No links
+
+PUT
+/api/v1/listener-verifications/admin/{verificationId
+}
+Review verification submission (admin)
+
+
+Admin approves or rejects a pending listener verification submission
+
+Parameters
+Try it out
+Name	Description
+verificationId *
+string($uuid)
+(path)
+Verification submission ID
+
+verificationId
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "status": "verified",
+    "adminNotes": "Document is valid and approved."
+}
+Responses
+Code	Description	Links
+200	
+Submission reviewed
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "submission": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "listener_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "approved",
+        "reviewed_at": "2026-02-28T14:56:22.801Z",
+        "s3_deleted_at": "2026-02-28T14:56:22.801Z"
+    }
+}
+No links
+400	
+Validation error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Validation error",
+    "message": "status must be one of: verified, rejected"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin role required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Forbidden",
+    "message": "Access denied. This endpoint is for admin users only."
+}
+No links
+404	
+Submission not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Not found",
+    "message": "Verification submission not found"
+}
+No links
+409	
+Submission is not pending
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Invalid state",
+    "message": "Only pending submissions can be reviewed. Current status: rejected"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Review failed",
+    "message": "Failed to review verification submission"
+}
+No links
+
+Admin
+Administrative endpoints (admin only)
+
+
+
+GET
+/api/v1/reports/admin/all
+Get all reports (Admin)
+
+
+Get all reports in the system with filtering. Admin only.
+
+Parameters
+Try it out
+Name	Description
+limit
+integer
+(query)
+Default value : 50
+
+50
+offset
+integer
+(query)
+Default value : 0
+
+0
+status
+string
+(query)
+Available values : pending, reviewing, resolved, dismissed
+
+
+--
+reason
+string
+(query)
+Available values : disruptive_behavior, bullying_or_harassment, danger_to_self_or_others, inappropriate_or_unsafe_response
+
+
+--
+Responses
+Code	Description	Links
+200	
+List of all reports with statistics
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "reports": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "reporterId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "reportedId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "sessionType": "call",
+            "sessionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "reason": "harassment",
+            "description": "string",
+            "status": "pending",
+            "adminNotes": "string",
+            "reviewedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "reviewedAt": "2026-02-28T15:01:51.087Z",
+            "createdAt": "2026-02-28T15:01:51.087Z",
+            "reporter_email": "user@example.com",
+            "reported_email": "user@example.com"
+        }
+    ],
+    "stats": {
+        "pending": 0,
+        "reviewing": 0,
+        "resolved": 0,
+        "dismissed": 0
+    },
+    "pagination": {
+        "limit": 20,
+        "offset": 0,
+        "total": 100
+    }
+}
+No links
+403	
+Admin access required
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/reports/admin/stats
+Get report statistics (Admin)
+
+
+Get comprehensive statistics about reports. Admin only.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Report statistics
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "stats": {
+        "byStatus": {
+            "additionalProp1": 0,
+            "additionalProp2": 0,
+            "additionalProp3": 0
+        },
+        "byReason": {
+            "additionalProp1": 0,
+            "additionalProp2": 0,
+            "additionalProp3": 0
+        },
+        "last30Days": [
+            {
+                "date": "2026-02-28",
+                "count": 0
+            }
+        ],
+        "topReportedUsers": [
+            {
+                "reported_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                "email": "user@example.com",
+                "user_type": "string",
+                "report_count": 0
+            }
+        ],
+        "applicationStatus24h": {
+            "window": "last_24_hours",
+            "generatedAt": "2026-02-28T15:01:51.089Z",
+            "cards": {
+                "activeUsers": {
+                    "value": 7265,
+                    "changePercent": 11.01
+                },
+                "monthlySessions": {
+                    "value": 3671,
+                    "changePercent": -0.03
+                },
+                "newSignups": {
+                    "value": 256,
+                    "changePercent": 15.03
+                },
+                "listenerOnlineMinutes": {
+                    "value": 2318,
+                    "changePercent": 6.08
+                }
+            },
+            "userProgressEngagementRatio": [
+                {
+                    "hour": "2026-02-28T15:01:51.089Z",
+                    "activeUsers": 3140,
+                    "sessions": 1020,
+                    "engagementRatio": 3.08
+                }
+            ]
+        }
+    }
+}
+No links
+
+GET
+/api/v1/reports/admin/{reportId
+}
+Get report details (Admin)
+
+
+Get detailed information about a specific report. Admin only.
+
+Parameters
+Try it out
+Name	Description
+reportId *
+string($uuid)
+(path)
+reportId
+Responses
+Code	Description	Links
+200	
+Report details
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "report": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reporterId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reportedId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "sessionType": "call",
+        "sessionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reason": "harassment",
+        "description": "string",
+        "status": "pending",
+        "adminNotes": "string",
+        "reviewedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reviewedAt": "2026-02-28T15:01:51.091Z",
+        "createdAt": "2026-02-28T15:01:51.091Z",
+        "reporter_email": "user@example.com",
+        "reporter_type": "string",
+        "reported_email": "user@example.com",
+        "reported_type": "string",
+        "reviewer_email": "user@example.com"
+    }
+}
+No links
+404	
+Report not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+PUT
+/api/v1/reports/admin/{reportId
+}
+Update report status (Admin)
+
+
+Update the status and add admin notes to a report. Admin only.
+
+Parameters
+Try it out
+Name	Description
+reportId *
+string($uuid)
+(path)
+reportId
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "status": "resolved",
+    "adminNotes": "Investigated and took appropriate action"
+}
+Responses
+Code	Description	Links
+200	
+Report updated successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "report": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reporterId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reportedId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "sessionType": "call",
+        "sessionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reason": "harassment",
+        "description": "string",
+        "status": "pending",
+        "adminNotes": "string",
+        "reviewedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reviewedAt": "2026-02-28T15:01:51.108Z",
+        "createdAt": "2026-02-28T15:01:51.108Z"
+    }
+}
+No links
+
+
+GET
+/api/v1/sub-admins
+List sub-admin accounts
+
+
+Get all sub-admin users and their permission profiles.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Sub-admin list retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "subAdmins": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "email": "user@example.com",
+            "phone": "string",
+            "userType": "sub_admin",
+            "activeRole": "sub_admin",
+            "availableRoles": [
+                "sub_admin"
+            ],
+            "isVerified": true,
+            "isActive": true,
+            "status": "pending",
+            "permissions": {
+                "view": true,
+                "edit": true,
+                "delete": true,
+                "suspend": true,
+                "accessAdminPanel": true
+            },
+            "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "createdAt": "2026-02-28T23:24:10.324Z",
+            "updatedAt": "2026-02-28T23:24:10.324Z"
+        }
+    ]
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Forbidden (admin role required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/sub-admins
+Create sub-admin account
+
+
+Create a new sub-admin account with initial feature permissions. Newly created sub-admins start with pending status.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "email": "subadmin@example.com",
+    "password": "SubAdmin123",
+    "phone": "+15551234567",
+    "permissions": {
+        "view": true,
+        "edit": true,
+        "delete": false,
+        "suspend": false,
+        "accessAdminPanel": true
+    }
+}
+Responses
+Code	Description	Links
+201	
+Sub-admin created
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Sub-admin created successfully",
+    "subAdmin": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "user@example.com",
+        "status": "pending",
+        "permissions": {
+            "view": true,
+            "edit": true,
+            "delete": true,
+            "suspend": true,
+            "accessAdminPanel": true
+        }
+    }
+}
+No links
+400	
+Validation error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+409	
+Conflict (email already exists)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/sub-admins/pending
+List pending sub-admin requests
+
+
+Get sub-admin accounts currently in pending onboarding status.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Pending sub-admin requests retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "pendingRequests": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "email": "user@example.com",
+            "status": "pending",
+            "permissions": {
+                "view": true,
+                "edit": true,
+                "delete": true,
+                "suspend": true,
+                "accessAdminPanel": true
+            }
+        }
+    ]
+}
+No links
+
+GET
+/api/v1/sub-admins/{subAdminId
+}
+Get sub-admin profile
+
+
+Fetch one sub-admin account with permission profile.
+
+Parameters
+Try it out
+Name	Description
+subAdminId *
+string($uuid)
+(path)
+subAdminId
+Responses
+Code	Description	Links
+200	
+Sub-admin profile retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "subAdmin": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "user@example.com",
+        "status": "pending",
+        "permissions": {
+            "view": true,
+            "edit": true,
+            "delete": true,
+            "suspend": true,
+            "accessAdminPanel": true
+        }
+    }
+}
+No links
+404	
+Sub-admin not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+PUT
+/api/v1/sub-admins/{subAdminId
+}
+Update sub-admin permissions
+
+
+Replace sub-admin feature-level permission toggles (view/edit/delete/suspend/accessAdminPanel).
+
+Parameters
+Try it out
+Name	Description
+subAdminId *
+string($uuid)
+(path)
+subAdminId
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "permissions": {
+        "view": true,
+        "edit": false,
+        "delete": false,
+        "suspend": true,
+        "accessAdminPanel": true
+    }
+}
+Responses
+Code	Description	Links
+200	
+Sub-admin permissions updated
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Sub-admin updated successfully",
+    "subAdmin": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "permissions": {
+            "view": true,
+            "edit": true,
+            "delete": true,
+            "suspend": true,
+            "accessAdminPanel": true
+        }
+    }
+}
+No links
+400	
+Invalid permissions payload
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Sub-admin not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+DELETE
+/api/v1/sub-admins/{subAdminId
+}
+Delete sub-admin account
+
+
+Delete a sub-admin account and its permission profile.
+
+Parameters
+Try it out
+Name	Description
+subAdminId *
+string($uuid)
+(path)
+subAdminId
+Responses
+Code	Description	Links
+200	
+Sub-admin deleted
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Sub-admin deleted successfully"
+}
+No links
+404	
+Sub-admin not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+PUT
+/api/v1/sub-admins/{subAdminId
+}/status
+Update sub-admin status
+
+
+Update sub-admin lifecycle status (pending, active, suspended).
+
+Parameters
+Try it out
+Name	Description
+subAdminId *
+string($uuid)
+(path)
+subAdminId
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "status": "active"
+}
+Responses
+Code	Description	Links
+200	
+Sub-admin status updated
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Sub-admin status updated successfully",
+    "subAdmin": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "pending",
+        "isActive": true
+    }
+}
+No links
+400	
+Invalid status
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Sub-admin not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/admin/users
+List users for admin moderation
+
+
+List non-privileged users for admin moderation screens with search, role filtering, and pagination. Accessible by admin and active sub-admin users with admin-panel view permission.
+
+Parameters
+Try it out
+Name	Description
+search
+string
+(query)
+Search by user email or user ID
+
+search
+role
+string
+(query)
+Filter by account role composition
+
+Available values : venter, listener, both
+
+
+--
+limit
+integer
+(query)
+Maximum number of users to return
+
+Default value : 20
+
+20
+offset
+integer
+(query)
+Number of users to skip
+
+Default value : 0
+
+0
+Responses
+Code	Description	Links
+200	
+Users retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "users": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "email": "user@example.com",
+            "activeRole": "string",
+            "availableRoles": [
+                "string"
+            ],
+            "accountType": "venter",
+            "isActive": true,
+            "stats": {
+                "totalSessions": 42,
+                "totalMinutes": 318,
+                "totalPayout": 64.5
+            },
+            "createdAt": "2026-02-28T23:24:10.334Z"
+        }
+    ],
+    "pagination": {
+        "total": 125,
+        "limit": 20,
+        "offset": 0
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin or eligible sub-admin required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/admin/users/{userId
+}
+Get user detail for moderation
+
+
+Get detailed user profile, listener attributes, engagement stats, and verification history for admin moderation screens. Accessible by admin and active sub-admin users with admin-panel view permission.
+
+Parameters
+Try it out
+Name	Description
+userId *
+string($uuid)
+(path)
+userId
+Responses
+Code	Description	Links
+200	
+User detail retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "user": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "user@example.com",
+        "phone": "string",
+        "userType": "string",
+        "activeRole": "string",
+        "availableRoles": [
+            "string"
+        ],
+        "accountType": "venter",
+        "isVerified": true,
+        "isActive": true,
+        "stats": {
+            "totalSessions": 0,
+            "totalMinutes": 0,
+            "totalPayout": 0
+        },
+        "listenerInfo": {
+            "genderIdentity": "string",
+            "language": "string",
+            "ethnicity": "string",
+            "ageGroup": "string",
+            "lgbtqIdentity": "string",
+            "specialTopics": [
+                "string"
+            ],
+            "faithOrBelief": "string",
+            "verificationStatus": "pending"
+        },
+        "verificationDocuments": [
+            {
+                "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                "status": "string",
+                "original_file_name": "string",
+                "mime_type": "string",
+                "file_size_bytes": 0,
+                "created_at": "2026-02-28T23:24:10.336Z",
+                "reviewed_at": "2026-02-28T23:24:10.336Z",
+                "admin_notes": "string"
+            }
+        ],
+        "createdAt": "2026-02-28T23:24:10.336Z"
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin or eligible sub-admin required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+User not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+DELETE
+/api/v1/admin/users/{userId
+}
+Delete user account
+
+
+Delete a non-privileged user account. Admin and sub-admin users cannot be deleted by this endpoint. Accessible by admin and active sub-admin users with admin-panel delete permission.
+
+Parameters
+Try it out
+Name	Description
+userId *
+string($uuid)
+(path)
+userId
+Responses
+Code	Description	Links
+200	
+User deleted
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "User deleted successfully",
+    "user": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "user@example.com"
+    }
+}
+No links
+400	
+Invalid operation (self-delete attempted)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin/sub-admin target or insufficient permission)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+User not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+PUT
+/api/v1/admin/users/{userId
+}/suspend
+Suspend or reactivate a user
+
+
+Suspend or reactivate a non-privileged user account by toggling isActive. Accessible by admin and active sub-admin users with admin-panel suspend permission.
+
+Parameters
+Try it out
+Name	Description
+userId *
+string($uuid)
+(path)
+userId
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "suspended": true
+}
+Responses
+Code	Description	Links
+200	
+User suspension state updated
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "User suspended successfully",
+    "user": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "user@example.com",
+        "isActive": true
+    }
+}
+No links
+400	
+Invalid operation (self-suspend attempted)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin/sub-admin target or insufficient permission)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+User not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/admin/listener-requests
+List listener requests (admin alias)
+
+
+Alias endpoint for listing listener verification submissions for admin moderation screens. Response matches /api/v1/listener-verifications/admin/all.
+
+Parameters
+Try it out
+Name	Description
+status
+string
+(query)
+Available values : pending, approved, rejected
+
+
+--
+limit
+integer
+(query)
+Default value : 50
+
+50
+offset
+integer
+(query)
+Default value : 0
+
+0
+Responses
+Code	Description	Links
+200	
+Listener requests retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "submissions": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "listener_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "listener_email": "user@example.com",
+            "gender_identity": "string",
+            "preferred_language": "string",
+            "ethnicity": "string",
+            "age_group": "string",
+            "lgbtq_identity": "string",
+            "special_topics": [
+                "string"
+            ],
+            "faith_or_belief": "string",
+            "status": "pending",
+            "mime_type": "string",
+            "original_file_name": "string",
+            "created_at": "2026-02-28T23:24:10.343Z",
+            "reviewed_at": "2026-02-28T23:24:10.343Z",
+            "reviewed_by": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        }
+    ]
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin or eligible sub-admin required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/admin/listener-requests/{verificationId
+}
+Get listener request detail (admin alias)
+
+
+Alias endpoint for retrieving one listener verification submission and related verification history for moderation screens.
+
+Parameters
+Try it out
+Name	Description
+verificationId *
+string($uuid)
+(path)
+verificationId
+Responses
+Code	Description	Links
+200	
+Listener request detail retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "submission": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "listener_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "listener_email": "user@example.com",
+        "gender_identity": "string",
+        "preferred_language": "string",
+        "ethnicity": "string",
+        "age_group": "string",
+        "lgbtq_identity": "string",
+        "special_topics": [
+            "string"
+        ],
+        "faith_or_belief": "string",
+        "status": "pending",
+        "file_url": "string",
+        "original_file_name": "string",
+        "mime_type": "string",
+        "file_size_bytes": 0,
+        "admin_notes": "string",
+        "reviewed_by": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reviewed_at": "2026-02-28T23:24:10.346Z",
+        "document_url": "string",
+        "verificationDocuments": [
+            {
+                "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                "status": "pending",
+                "original_file_name": "string",
+                "mime_type": "string",
+                "file_size_bytes": 0,
+                "created_at": "2026-02-28T23:24:10.346Z",
+                "reviewed_at": "2026-02-28T23:24:10.346Z",
+                "admin_notes": "string"
+            }
+        ]
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin or eligible sub-admin required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Submission not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+PUT
+/api/v1/admin/listener-requests/{verificationId
+}
+Review listener request (admin alias)
+
+
+Alias endpoint to approve or reject pending listener verification submissions. Accessible by admin and active sub-admin users with admin-panel edit permission.
+
+Parameters
+Try it out
+Name	Description
+verificationId *
+string($uuid)
+(path)
+verificationId
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "status": "verified",
+    "adminNotes": "string"
+}
+Responses
+Code	Description	Links
+200	
+Listener request reviewed
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "submission": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "listener_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "approved",
+        "reviewed_at": "2026-02-28T23:24:10.349Z",
+        "s3_deleted_at": "2026-02-28T23:24:10.349Z"
+    }
+}
+No links
+400	
+Validation error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin or eligible sub-admin required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Submission not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+409	
+Submission is not pending
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+Sub Admin Management
+Admin-managed sub-admin account and permission lifecycle
+
+
+
+GET
+/api/v1/sub-admins
+List sub-admin accounts
+
+
+Get all sub-admin users and their permission profiles.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Sub-admin list retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "subAdmins": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "email": "user@example.com",
+            "phone": "string",
+            "userType": "sub_admin",
+            "activeRole": "sub_admin",
+            "availableRoles": [
+                "sub_admin"
+            ],
+            "isVerified": true,
+            "isActive": true,
+            "status": "pending",
+            "permissions": {
+                "view": true,
+                "edit": true,
+                "delete": true,
+                "suspend": true,
+                "accessAdminPanel": true
+            },
+            "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "createdAt": "2026-02-28T23:24:10.351Z",
+            "updatedAt": "2026-02-28T23:24:10.351Z"
+        }
+    ]
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+403	
+Forbidden (admin role required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+POST
+/api/v1/sub-admins
+Create sub-admin account
+
+
+Create a new sub-admin account with initial feature permissions. Newly created sub-admins start with pending status.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "email": "subadmin@example.com",
+    "password": "SubAdmin123",
+    "phone": "+15551234567",
+    "permissions": {
+        "view": true,
+        "edit": true,
+        "delete": false,
+        "suspend": false,
+        "accessAdminPanel": true
+    }
+}
+Responses
+Code	Description	Links
+201	
+Sub-admin created
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Sub-admin created successfully",
+    "subAdmin": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "user@example.com",
+        "status": "pending",
+        "permissions": {
+            "view": true,
+            "edit": true,
+            "delete": true,
+            "suspend": true,
+            "accessAdminPanel": true
+        }
+    }
+}
+No links
+400	
+Validation error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+409	
+Conflict (email already exists)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/sub-admins/pending
+List pending sub-admin requests
+
+
+Get sub-admin accounts currently in pending onboarding status.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Pending sub-admin requests retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "pendingRequests": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "email": "user@example.com",
+            "status": "pending",
+            "permissions": {
+                "view": true,
+                "edit": true,
+                "delete": true,
+                "suspend": true,
+                "accessAdminPanel": true
+            }
+        }
+    ]
+}
+No links
+
+GET
+/api/v1/sub-admins/{subAdminId
+}
+Get sub-admin profile
+
+
+Fetch one sub-admin account with permission profile.
+
+Parameters
+Try it out
+Name	Description
+subAdminId *
+string($uuid)
+(path)
+subAdminId
+Responses
+Code	Description	Links
+200	
+Sub-admin profile retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "subAdmin": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "user@example.com",
+        "status": "pending",
+        "permissions": {
+            "view": true,
+            "edit": true,
+            "delete": true,
+            "suspend": true,
+            "accessAdminPanel": true
+        }
+    }
+}
+No links
+404	
+Sub-admin not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+PUT
+/api/v1/sub-admins/{subAdminId
+}
+Update sub-admin permissions
+
+
+Replace sub-admin feature-level permission toggles (view/edit/delete/suspend/accessAdminPanel).
+
+Parameters
+Try it out
+Name	Description
+subAdminId *
+string($uuid)
+(path)
+subAdminId
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "permissions": {
+        "view": true,
+        "edit": false,
+        "delete": false,
+        "suspend": true,
+        "accessAdminPanel": true
+    }
+}
+Responses
+Code	Description	Links
+200	
+Sub-admin permissions updated
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Sub-admin updated successfully",
+    "subAdmin": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "permissions": {
+            "view": true,
+            "edit": true,
+            "delete": true,
+            "suspend": true,
+            "accessAdminPanel": true
+        }
+    }
+}
+No links
+400	
+Invalid permissions payload
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Sub-admin not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+DELETE
+/api/v1/sub-admins/{subAdminId
+}
+Delete sub-admin account
+
+
+Delete a sub-admin account and its permission profile.
+
+Parameters
+Try it out
+Name	Description
+subAdminId *
+string($uuid)
+(path)
+subAdminId
+Responses
+Code	Description	Links
+200	
+Sub-admin deleted
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Sub-admin deleted successfully"
+}
+No links
+404	
+Sub-admin not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+PUT
+/api/v1/sub-admins/{subAdminId
+}/status
+Update sub-admin status
+
+
+Update sub-admin lifecycle status (pending, active, suspended).
+
+Parameters
+Try it out
+Name	Description
+subAdminId *
+string($uuid)
+(path)
+subAdminId
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "status": "active"
+}
+Responses
+Code	Description	Links
+200	
+Sub-admin status updated
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "Sub-admin status updated successfully",
+    "subAdmin": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "pending",
+        "isActive": true
+    }
+}
+No links
+400	
+Invalid status
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+Sub-admin not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+-----ai settings of admin -------------
+Settings
+
+
+GET
+/api/v1/admin-settings/ai
+Get AI admin settings
+
+
+Fetch current AI settings used by the Admin Settings AI screen. Accessible by admin and active sub-admin users with admin-panel view permission.
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+AI settings retrieved successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "settings": {
+        "ai_enabled": false,
+        "ai_crisis_detection_enabled": false,
+        "ai_crisis_sensitivity": 0.7,
+        "ai_auto_escalation_enabled": false
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin or eligible sub-admin required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Forbidden",
+    "message": "This action requires admin or sub-admin access"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Server error",
+    "message": "Failed to fetch AI settings"
+}
+No links
+
+PUT
+/api/v1/admin-settings/ai
+Update AI admin settings
+
+
+Update one or more AI settings used by the Admin Settings AI screen. Accessible by admin and active sub-admin users with admin-panel edit permission.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "ai_enabled": true,
+    "ai_crisis_detection_enabled": true,
+    "ai_crisis_sensitivity": 0.85,
+    "ai_auto_escalation_enabled": true
+}
+Responses
+Code	Description	Links
+200	
+AI settings updated successfully
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "success": true,
+    "message": "AI settings updated successfully",
+    "settings": {
+        "ai_enabled": true,
+        "ai_crisis_detection_enabled": true,
+        "ai_crisis_sensitivity": 0.85,
+        "ai_auto_escalation_enabled": true
+    }
+}
+No links
+400	
+Validation error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Validation error",
+    "message": "ai_crisis_sensitivity must be less than or equal to 1"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin or eligible sub-admin required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Forbidden",
+    "message": "Insufficient permissions"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "Server error",
+    "message": "Failed to update AI settings"
+}
+No links
+-----------------admin settngss --------------
+
+GET
+/api/v1/admin/integrations
+List exports and integrations users
+
+
+List non-privileged users for admin exports/integrations screens with search, role, status, and pagination.
+
+Parameters
+Try it out
+Name	Description
+search
+string
+(query)
+search
+role
+string
+(query)
+Available values : venter, listener, both
+
+
+--
+status
+string
+(query)
+Available values : exported, pending, not_exported
+
+
+--
+limit
+integer
+(query)
+Default value : 20
+
+20
+offset
+integer
+(query)
+Default value : 0
+
+0
+Responses
+Code	Description	Links
+200	
+Integrations list retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "items": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "email": "user@example.com",
+            "accountType": "venter",
+            "stats": {
+                "totalSessions": 0,
+                "totalMinutes": 0,
+                "totalPayout": 0
+            },
+            "exportStatus": "exported",
+            "exportedAt": "2026-03-06T09:25:08.410Z"
+        }
+    ],
+    "pagination": {
+        "total": 0,
+        "limit": 0,
+        "offset": 0
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin or eligible sub-admin required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/admin/integrations/export/pdf
+Export integrations as PDF
+
+
+Export admin integrations list to a downloadable PDF. Supports the same filters as list integrations.
+
+Parameters
+Try it out
+Name	Description
+search
+string
+(query)
+search
+role
+string
+(query)
+Available values : venter, listener, both
+
+
+--
+status
+string
+(query)
+Available values : exported, pending, not_exported
+
+
+--
+maxRows
+integer
+(query)
+Default value : 250
+
+250
+Responses
+Code	Description	Links
+200	
+PDF file generated
+
+Media type
+
+application/pdf
+Controls Accept header.
+Example Value
+Schema
+string
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin or eligible sub-admin required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+PUT
+/api/v1/admin/integrations/{userId
+}/export-status
+Update user export status
+
+
+Update export status for a non-privileged user in admin exports/integrations screens.
+
+Parameters
+Try it out
+Name	Description
+userId *
+string($uuid)
+(path)
+userId
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "exported": true
+}
+Responses
+Code	Description	Links
+200	
+Export status updated
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "string",
+    "integration": {
+        "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "user@example.com",
+        "exportStatus": "exported"
+    }
+}
+No links
+400	
+Validation error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+User not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/admin/payments/history
+List payment history
+
+
+List checkout payment history across users for admin payment history screens.
+
+Parameters
+Try it out
+Name	Description
+search
+string
+(query)
+search
+userId
+string($uuid)
+(query)
+userId
+status
+string
+(query)
+Available values : pending, completed, expired, failed
+
+
+--
+from
+string($date-time)
+(query)
+from
+to
+string($date-time)
+(query)
+to
+limit
+integer
+(query)
+Default value : 20
+
+20
+offset
+integer
+(query)
+Default value : 0
+
+0
+Responses
+Code	Description	Links
+200	
+Payment history retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "payments": [
+        {
+            "id": "string",
+            "amount": 0,
+            "currency": "string",
+            "status": "string",
+            "mode": "string",
+            "createdAt": "2026-03-06T09:25:08.419Z",
+            "completedAt": "2026-03-06T09:25:08.419Z",
+            "user": {
+                "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                "email": "user@example.com"
+            }
+        }
+    ],
+    "pagination": {
+        "total": 0,
+        "limit": 0,
+        "offset": 0
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/admin/payments/history/export/pdf
+Export payment history as PDF
+
+
+Export admin payment history to a downloadable PDF. Supports the same filters as payment history list.
+
+Parameters
+Try it out
+Name	Description
+search
+string
+(query)
+search
+userId
+string($uuid)
+(query)
+userId
+status
+string
+(query)
+Available values : pending, completed, expired, failed
+
+
+--
+from
+string($date-time)
+(query)
+from
+to
+string($date-time)
+(query)
+to
+maxRows
+integer
+(query)
+Default value : 250
+
+250
+Responses
+Code	Description	Links
+200	
+PDF file generated
+
+Media type
+
+application/pdf
+Controls Accept header.
+Example Value
+Schema
+string
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/admin/users
+List users for admin moderation
+
+
+List non-privileged users for admin moderation screens with search, role filtering, and pagination. Accessible by admin and active sub-admin users with admin-panel view permission.
+
+Parameters
+Try it out
+Name	Description
+search
+string
+(query)
+Search by user email or user ID
+
+search
+role
+string
+(query)
+Filter by account role composition
+
+Available values : venter, listener, both
+
+
+--
+limit
+integer
+(query)
+Maximum number of users to return
+
+Default value : 20
+
+20
+offset
+integer
+(query)
+Number of users to skip
+
+Default value : 0
+
+0
+Responses
+Code	Description	Links
+200	
+Users retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "users": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "email": "user@example.com",
+            "activeRole": "string",
+            "availableRoles": [
+                "string"
+            ],
+            "accountType": "venter",
+            "isActive": true,
+            "stats": {
+                "totalSessions": 42,
+                "totalMinutes": 318,
+                "totalPayout": 64.5
+            },
+            "createdAt": "2026-03-06T09:25:08.425Z"
+        }
+    ],
+    "pagination": {
+        "total": 125,
+        "limit": 20,
+        "offset": 0
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin or eligible sub-admin required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+DELETE
+/api/v1/admin/users
+Bulk delete users
+
+
+Delete multiple non-privileged users in one request. Accessible by admin and active sub-admin users with admin-panel delete permission.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "userIds": [
+        "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    ]
+}
+Responses
+Code	Description	Links
+200	
+Users deleted
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "string",
+    "deletedCount": 0
+}
+No links
+400	
+Validation error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+User not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+PUT
+/api/v1/admin/users/roles
+Bulk change user roles
+
+
+Update available roles for multiple non-privileged users. targetRole supports venter, listener, or both.
+
+Parameters
+Try it out
+No parameters
+
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "userIds": [
+        "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    ],
+    "targetRole": "venter"
+}
+Responses
+Code	Description	Links
+200	
+User roles updated
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "string",
+    "updatedCount": 0
+}
+No links
+400	
+Validation error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+User not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+GET
+/api/v1/admin/users/{userId
+}
+Get comprehensive user detail for moderation
+
+
+Get comprehensive non-sensitive user profile data, listener attributes, engagement stats, and document metadata for admin moderation screens, including verification document links/states and signature document state. Response includes both the new documents object and backward-compatible verificationDocuments array. Accessible by admin and active sub-admin users with admin-panel view permission.
+
+Parameters
+Try it out
+Name	Description
+userId *
+string($uuid)
+(path)
+userId
+Responses
+Code	Description	Links
+200	
+User detail retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "user": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "user@example.com",
+        "phone": "string",
+        "firstName": "string",
+        "lastName": "string",
+        "displayName": "string",
+        "profilePictureUrl": "string",
+        "bio": "string",
+        "dateOfBirth": "2026-03-06",
+        "userType": "string",
+        "activeRole": "string",
+        "availableRoles": [
+            "string"
+        ],
+        "accountType": "venter",
+        "isVerified": true,
+        "isActive": true,
+        "listenerSignature": "string",
+        "security": {
+            "twoFactorAuthentication": {
+                "enabled": true,
+                "method": "sms"
+            }
+        },
+        "stats": {
+            "totalSessions": 0,
+            "totalMinutes": 0,
+            "totalPayout": 0
+        },
+        "listenerInfo": {
+            "genderIdentity": "string",
+            "culturalBackground": "string",
+            "language": "string",
+            "ethnicity": "string",
+            "ageGroup": "string",
+            "lgbtqIdentity": "string",
+            "specialTopics": [
+                "string"
+            ],
+            "faithOrBelief": "string",
+            "verificationStatus": "not_submitted"
+        },
+        "documents": {
+            "verification": [
+                {
+                    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                    "status": "pending",
+                    "state": "pending",
+                    "fileUrl": "string",
+                    "originalFileName": "string",
+                    "mimeType": "string",
+                    "fileSizeBytes": 0,
+                    "reviewedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                    "reviewedAt": "2026-03-06T09:25:08.436Z",
+                    "adminNotes": "string",
+                    "isDeleted": true,
+                    "deletedAt": "2026-03-06T09:25:08.436Z",
+                    "createdAt": "2026-03-06T09:25:08.436Z"
+                }
+            ],
+            "signature": {
+                "type": "signature",
+                "status": "available",
+                "state": "available",
+                "fileUrl": "string",
+                "createdAt": "2026-03-06T09:25:08.436Z",
+                "updatedAt": "2026-03-06T09:25:08.436Z"
+            }
+        },
+        "verificationDocuments": [
+            {
+                "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                "status": "pending",
+                "state": "pending",
+                "fileUrl": "string",
+                "originalFileName": "string",
+                "mimeType": "string",
+                "fileSizeBytes": 0,
+                "reviewedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                "reviewedAt": "2026-03-06T09:25:08.436Z",
+                "adminNotes": "string",
+                "isDeleted": true,
+                "deletedAt": "2026-03-06T09:25:08.436Z",
+                "createdAt": "2026-03-06T09:25:08.436Z"
+            }
+        ],
+        "createdAt": "2026-03-06T09:25:08.436Z",
+        "updatedAt": "2026-03-06T09:25:08.436Z"
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin or eligible sub-admin required)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+User not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+DELETE
+/api/v1/admin/users/{userId
+}
+Delete user account
+
+
+Delete a non-privileged user account. Admin and sub-admin users cannot be deleted by this endpoint. Accessible by admin and active sub-admin users with admin-panel delete permission.
+
+Parameters
+Try it out
+Name	Description
+userId *
+string($uuid)
+(path)
+userId
+Responses
+Code	Description	Links
+200	
+User deleted
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "User deleted successfully",
+    "user": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "user@example.com"
+    }
+}
+No links
+400	
+Invalid operation (self-delete attempted)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin/sub-admin target or insufficient permission)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+User not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+
+PUT
+/api/v1/admin/users/{userId
+}/suspend
+Suspend or reactivate a user
+
+
+Suspend or reactivate a non-privileged user account by toggling isActive. Accessible by admin and active sub-admin users with admin-panel suspend permission.
+
+Parameters
+Try it out
+Name	Description
+userId *
+string($uuid)
+(path)
+userId
+Request body
+
+application/json
+Example Value
+Schema
+{
+    "suspended": true
+}
+Responses
+Code	Description	Links
+200	
+User suspension state updated
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "message": "User suspended successfully",
+    "user": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "email": "user@example.com",
+        "isActive": true
+    }
+}
+No links
+400	
+Invalid operation (self-suspend attempted)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden (admin/sub-admin target or insufficient permission)
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+404	
+User not found
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+GET
+/api/v1/admin/payments/stats
+Get admin finance payment stats
+
+
+Returns admin finance stats for dashboard cards/charts: weekly revenue increase (last 7 days vs previous 7 days), next expected revenue (next 7 days), and weekly sales trend (last 8 weeks).
+
+Parameters
+Try it out
+No parameters
+
+Responses
+Code	Description	Links
+200	
+Admin payment stats retrieved
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+    "generatedAt": "2026-03-06T16:32:05.497Z",
+    "currency": "USD",
+    "weeklyRevenueIncrease": {
+        "windowDays": 7,
+        "currentRevenue": 1234.56,
+        "previousRevenue": 1120.12,
+        "increasePercent": 10.22
+    },
+    "nextExpectedRevenue": {
+        "windowDays": 7,
+        "totalRevenue": 1500,
+        "subscriptionCount": 18,
+        "stripeInvoiceCount": 15,
+        "fallbackEstimateCount": 3,
+        "fromDate": "2026-03-06T16:32:05.497Z",
+        "toDate": "2026-03-06T16:32:05.497Z"
+    },
+    "weeklySalesData": {
+        "windowWeeks": 8,
+        "series": [
+            {
+                "weekStart": "2026-03-06T16:32:05.497Z",
+                "weekEnd": "2026-03-06T16:32:05.497Z",
+                "revenue": 2450.75
+            }
+        ]
+    }
+}
+No links
+401	
+Unauthorized
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "success": false,
+    "error_type": "token_expired",
+    "message": "Authentication token has expired",
+    "action_required": "refresh_token"
+}
+No links
+403	
+Forbidden
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
+No links
+500	
+Server error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+    "error": "string"
+}
