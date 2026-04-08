@@ -35,8 +35,11 @@
     "logIn": "Log In",
     "dontHaveAccount": "Don't have an account?",
     "signUp": "Sign Up",
-    "continueWith": "Continue with",
+    "continueWith": "Or continue with",
     "biometric": "Or "
+  },
+  "ForgotPasswordWeb": {
+    "emailOnlyHint": "Please use your email address to reset your password on the web."
   },
   "Nickname": {
     "title": "Add Your Nickname",

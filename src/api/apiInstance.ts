@@ -67,18 +67,19 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
-// Socket URL derived from API base (remove /api/v1/ suffix)
-export const SOCKET_URL = 'https://api.dev.ventally.co';
-// export const SOCKET_URL = 'https://electric-equal-pony.ngrok-free.app';
-//Live
-export const BASE_URL = 'https://api.dev.ventally.co/api/v1/';
-//NG
-// export const BASE_URL = 'https://electric-equal-pony.ngrok-free.app/api/v1/';
+const envBase =
+  typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_BASE_URL
+    ? String(import.meta.env.VITE_API_BASE_URL).replace(/\/?$/, '/')
+    : 'https://api.dev.ventally.co/api/v1/';
 
+export const BASE_URL = envBase;
+
+/** Socket host (strip `/api/v1/` from API base). */
+export const SOCKET_URL = BASE_URL.replace(/\/api\/v1\/?$/, '').replace(/\/$/, '') || 'https://api.dev.ventally.co';
 
 const apiInstance: AxiosInstance = axios.create({
-  baseURL: BASE_URL, // Replace with your actual base URL
-  timeout: 10000,
+  baseURL: BASE_URL,
+  timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
     // Accept: 'application/json',

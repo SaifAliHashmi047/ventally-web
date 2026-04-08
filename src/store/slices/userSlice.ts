@@ -17,6 +17,7 @@ export interface User {
   image?: string;
   /** Venter wallet balance in dollars */
   balance?: number;
+  preferredLanguage?: string;
   /** Optional onboarding / profile answers */
   gender?: string;
   ageGroup?: string;

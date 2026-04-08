@@ -1,23 +1,72 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
+import { PasswordField } from '../../components/Auth/PasswordField';
+import { register, setTokens, mapApiUserToStore } from '../../api';
+import { setIsVenter, updateUser } from '../../store/slices/userSlice';
 import chatIcon from '../../assets/icons/chat.png';
 import googleIcon from '../../assets/icons/google.png';
 import appleIcon from '../../assets/icons/appleLogin.png';
 import fbIcon from '../../assets/icons/fb.png';
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export const SignUpWeb = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const dispatch = useDispatch();
+  const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('venter');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleCreateAccount = (e: React.FormEvent) => {
+  const handleCreateAccount = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, logic would go here
-    navigate('/signup/otp', { state: { email } });
+    setError('');
+    setLoading(true);
+    try {
+      const trimmed = emailOrPhone.trim();
+      const isEmail = emailRegex.test(trimmed);
+      const payload: {
+        password: string;
+        userType: string;
+        email?: string;
+        phoneNumber?: string;
+      } = {
+        password,
+        userType: role,
+      };
+      if (isEmail) {
+        payload.email = trimmed;
+      } else {
+        payload.phoneNumber = trimmed;
+      }
+
+      const response = await register(payload);
+      if (response.success && response.data) {
+        const data = response.data as Record<string, any>;
+        if (data.access_token && data.refresh_token) {
+          await setTokens(data.access_token, data.refresh_token);
+        } else if (data.tokens?.accessToken && data.tokens?.refreshToken) {
+          await setTokens(data.tokens.accessToken, data.tokens.refreshToken);
+        }
+        if (data.user) {
+          dispatch(updateUser(mapApiUserToStore(data.user)));
+          dispatch(setIsVenter(data.user?.userType === 'venter'));
+        }
+        navigate('/signup/otp', { state: { email: trimmed } });
+      } else {
+        setError((response as { error?: string }).error || t('Common.error') || 'Sign up failed');
+      }
+    } catch (err: unknown) {
+      const e = err as { error?: string };
+      setError(e?.error || t('Common.error') || 'Sign up failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -42,25 +91,22 @@ export const SignUpWeb = () => {
           <input 
             type="text" 
             placeholder={t('SignUp.emailOrPhone')}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={emailOrPhone}
+            onChange={(e) => setEmailOrPhone(e.target.value)}
             style={{ width: '100%', height: '52px' }}
             required
           />
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <label style={{ fontSize: '15px', fontWeight: 500, color: 'var(--text-main)' }}>{t('SignUp.password')}</label>
-          <input 
-            type="password" 
-            placeholder={t('SignUp.password')}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ width: '100%', height: '52px' }}
-            required
-          />
-          <p style={{ fontSize: '12px', color: 'var(--text-dim)', margin: '4px 0 0 4px' }}>{t('SignUp.passwordHint')}</p>
-        </div>
+        <PasswordField
+          label={t('SignUp.password')}
+          placeholder={t('SignUp.password')}
+          value={password}
+          onChange={setPassword}
+          autoComplete="new-password"
+          required
+          hint={t('SignUp.passwordHint')}
+        />
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <label style={{ fontSize: '15px', fontWeight: 500, color: 'var(--text-main)' }}>{t('SignUp.howWillYouUse')}</label>
@@ -74,8 +120,10 @@ export const SignUpWeb = () => {
           </select>
         </div>
 
-        <button type="submit" className="btn-primary" style={{ height: '56px', justifyContent: 'center', fontSize: '17px', marginTop: '8px', borderRadius: '16px' }}>
-          {t('SignUp.createAccount')}
+        {error ? <p style={{ color: '#f87171', fontSize: '14px', margin: 0 }}>{error}</p> : null}
+
+        <button type="submit" className="btn-primary" disabled={loading} style={{ height: '56px', justifyContent: 'center', fontSize: '17px', marginTop: '8px', borderRadius: '16px' }}>
+          {loading ? '…' : t('SignUp.createAccount')}
         </button>
       </form>
 
@@ -91,9 +139,9 @@ export const SignUpWeb = () => {
       <div className="divider-text">{t('SignUp.continueWith')}</div>
 
       <div className="social-buttons">
-        <button className="social-btn"><img src={googleIcon} alt="Google" /></button>
-        <button className="social-btn"><img src={fbIcon} alt="Facebook" /></button>
-        <button className="social-btn"><img src={appleIcon} alt="Apple" /></button>
+        <button type="button" className="social-btn"><img src={googleIcon} alt="Google" /></button>
+        <button type="button" className="social-btn"><img src={fbIcon} alt="Facebook" /></button>
+        <button type="button" className="social-btn"><img src={appleIcon} alt="Apple" /></button>
       </div>
     </AuthLayout>
   );

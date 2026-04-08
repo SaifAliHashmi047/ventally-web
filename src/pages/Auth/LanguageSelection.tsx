@@ -2,8 +2,9 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPreferredLanguage } from '../../store/slices/appSlice';
-import { setUser } from '../../store/slices/userSlice';
+import { setPreferredLanguage, type PreferredLanguage } from '../../store/slices/appSlice';
+import { updateUser } from '../../store/slices/userSlice';
+import { updateProfile } from '../../api';
 import { ArrowLeft } from 'lucide-react';
 
 import en1 from '../../assets/icons/english1.png';
@@ -26,16 +27,22 @@ export const LanguageSelection = () => {
   const user = useSelector((state: any) => state.user.user);
   const name = user?.displayName || user?.email?.split('@')[0] || 'User';
 
-  const languages = [
+  const languages: { id: Exclude<PreferredLanguage, null>; name: string; flags: string[] }[] = [
     { id: 'en', name: t('LanguageSelection.languages.english'), flags: [en1, en2, en3] },
     { id: 'pt', name: t('LanguageSelection.languages.portuguese'), flags: [pt1, pt2, pt3] },
     { id: 'fr', name: t('LanguageSelection.languages.french'), flags: [fr1, fr2, fr3] },
     { id: 'es', name: t('LanguageSelection.languages.spanish'), flags: [es1, es2, es3] },
   ];
 
-  const handleSelect = async (langId: any) => {
+  const handleSelect = async (langId: PreferredLanguage) => {
+    if (!langId) return;
+    try {
+      await updateProfile({ preferredLanguage: langId });
+    } catch {
+      /* still allow local preference if API fails */
+    }
     dispatch(setPreferredLanguage(langId));
-    dispatch(setUser({ ...user, preferredLanguage: langId }));
+    dispatch(updateUser({ preferredLanguage: langId }));
     await i18n.changeLanguage(langId);
     navigate('/signup/terms');
   };

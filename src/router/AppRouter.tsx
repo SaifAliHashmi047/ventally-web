@@ -2,6 +2,10 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { WebLayout } from '../components/Layout/WebLayout';
 import { LoginWeb } from '../pages/Auth/LoginWeb';
+import { ResetPasswordWeb } from '../pages/Auth/ResetPasswordWeb';
+import { EmailVerificationWeb } from '../pages/Auth/EmailVerificationWeb';
+import { CreateNewPasswordWeb } from '../pages/Auth/CreateNewPasswordWeb';
+import { ResetSuccessfulWeb } from '../pages/Auth/ResetSuccessfulWeb';
 import { SignUpWeb } from '../pages/Auth/SignUpWeb';
 import { SignUpOTP } from '../pages/Auth/SignUpOTP';
 import { NicknameScreen } from '../pages/Auth/NicknameScreen';
@@ -27,6 +31,11 @@ const AppRouter = () => {
       {!isAuthenticated ? (
         <>
           <Route path="/login" element={<LoginWeb />} />
+          <Route path="/forgot-password" element={<ResetPasswordWeb />} />
+          <Route path="/forgot-password/verify-email" element={<EmailVerificationWeb />} />
+          <Route path="/forgot-password/new-password" element={<CreateNewPasswordWeb />} />
+          <Route path="/forgot-password/done" element={<ResetSuccessfulWeb />} />
+          <Route path="/forgetPassword" element={<Navigate to="/forgot-password" replace />} />
           <Route path="/signup" element={<SignUpWeb />} />
           <Route path="/signup/otp" element={<SignUpOTP />} />
           <Route path="/signup/nickname" element={<NicknameScreen />} />
