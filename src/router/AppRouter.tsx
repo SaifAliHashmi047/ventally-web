@@ -1,11 +1,9 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { WebLayout } from '../components/Layout/WebLayout';
+import type { RootState } from '../store/store';
+
+// Auth Pages
 import { LoginWeb } from '../pages/Auth/LoginWeb';
-import { ResetPasswordWeb } from '../pages/Auth/ResetPasswordWeb';
-import { EmailVerificationWeb } from '../pages/Auth/EmailVerificationWeb';
-import { CreateNewPasswordWeb } from '../pages/Auth/CreateNewPasswordWeb';
-import { ResetSuccessfulWeb } from '../pages/Auth/ResetSuccessfulWeb';
 import { SignUpWeb } from '../pages/Auth/SignUpWeb';
 import { SignUpOTP } from '../pages/Auth/SignUpOTP';
 import { NicknameScreen } from '../pages/Auth/NicknameScreen';
@@ -17,25 +15,33 @@ import { ChoosePlan } from '../pages/Auth/ChoosePlan';
 import { ListenerTraining } from '../pages/Auth/ListenerTraining';
 import { ListenerLegalFlow } from '../pages/Auth/ListenerLegalFlow';
 import { ListenerVerification } from '../pages/Auth/ListenerVerification';
-import { Dashboard } from '../pages/Dashboard/Dashboard';
-import { DummyPage } from '../pages/DummyPage';
-import { MessagePage } from '../pages/MessagePage';
-import { NotificationPage } from '../pages/NotificationPage';
-import { SettingsPage } from '../pages/SettingsPage';
+import { ResetPasswordWeb } from '../pages/Auth/ResetPasswordWeb';
+import { EmailVerificationWeb } from '../pages/Auth/EmailVerificationWeb';
+import { CreateNewPasswordWeb } from '../pages/Auth/CreateNewPasswordWeb';
+import { ResetSuccessfulWeb } from '../pages/Auth/ResetSuccessfulWeb';
+
+// Role Routers
+import { VenterRouter } from './VenterRouter';
+import { ListenerRouter } from './ListenerRouter';
+import { AdminRouter } from './AdminRouter';
 
 const AppRouter = () => {
-  const isAuthenticated = useSelector((state: any) => state.user.isAuthenticated);
+  const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
+  const userType = useSelector((state: RootState) => (state.user.user as any)?.userType);
+
+  // Determine post-login redirect based on role
+  const getRoleHome = () => {
+    if (userType === 'listener') return '/listener';
+    if (userType === 'admin' || userType === 'sub_admin') return '/admin';
+    return '/venter'; // default: venter
+  };
 
   return (
     <Routes>
       {!isAuthenticated ? (
         <>
+          {/* Auth Routes */}
           <Route path="/login" element={<LoginWeb />} />
-          <Route path="/forgot-password" element={<ResetPasswordWeb />} />
-          <Route path="/forgot-password/verify-email" element={<EmailVerificationWeb />} />
-          <Route path="/forgot-password/new-password" element={<CreateNewPasswordWeb />} />
-          <Route path="/forgot-password/done" element={<ResetSuccessfulWeb />} />
-          <Route path="/forgetPassword" element={<Navigate to="/forgot-password" replace />} />
           <Route path="/signup" element={<SignUpWeb />} />
           <Route path="/signup/otp" element={<SignUpOTP />} />
           <Route path="/signup/nickname" element={<NicknameScreen />} />
@@ -47,17 +53,38 @@ const AppRouter = () => {
           <Route path="/signup/listener-training" element={<ListenerTraining />} />
           <Route path="/signup/listener-legal" element={<ListenerLegalFlow />} />
           <Route path="/signup/verification" element={<ListenerVerification />} />
+          <Route path="/forgot-password" element={<ResetPasswordWeb />} />
+          <Route path="/forgot-password/verify-email" element={<EmailVerificationWeb />} />
+          <Route path="/forgot-password/new-password" element={<CreateNewPasswordWeb />} />
+          <Route path="/forgot-password/done" element={<ResetSuccessfulWeb />} />
+          {/* Catch-all → login */}
           <Route path="*" element={<Navigate to="/login" replace />} />
         </>
       ) : (
-        <Route element={<WebLayout><Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/test" element={<DummyPage />} />
-          <Route path="/chat" element={<MessagePage />} />
-          <Route path="/notifications" element={<NotificationPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes></WebLayout>} path="*" />
+        <>
+          {/* Venter Routes */}
+          <Route path="/venter/*" element={
+            userType === 'listener' ? <Navigate to="/listener" replace /> :
+            userType === 'admin' || userType === 'sub_admin' ? <Navigate to="/admin" replace /> :
+            <VenterRouter />
+          } />
+
+          {/* Listener Routes */}
+          <Route path="/listener/*" element={
+            userType !== 'listener' ? <Navigate to={getRoleHome()} replace /> :
+            <ListenerRouter />
+          } />
+
+          {/* Admin Routes */}
+          <Route path="/admin/*" element={
+            userType !== 'admin' && userType !== 'sub_admin' ? <Navigate to={getRoleHome()} replace /> :
+            <AdminRouter />
+          } />
+
+          {/* Root redirect based on role */}
+          <Route path="/" element={<Navigate to={getRoleHome()} replace />} />
+          <Route path="*" element={<Navigate to={getRoleHome()} replace />} />
+        </>
       )}
     </Routes>
   );

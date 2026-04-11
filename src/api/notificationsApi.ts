@@ -11,3 +11,7 @@ export async function getNotificationSettings() {
 export async function getUnreadNotificationCount() {
   return apiInstance.get('notifications/unread-count') as Promise<ApiResponse>;
 }
+
+export async function updateNotificationSettings(data: any) {
+  return apiInstance.put('notifications/settings', data) as Promise<ApiResponse>;
+}
