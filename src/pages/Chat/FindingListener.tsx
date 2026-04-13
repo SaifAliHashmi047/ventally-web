@@ -60,7 +60,7 @@ export const FindingListener = () => {
 
         {status === 'searching' && (
           <>
-            <h1 className="text-2xl font-bold text-white mb-2">Finding a Listener{dots}</h1>
+            <h1 className="text-xl font-bold text-white mb-2">Finding a Listener{dots}</h1>
             <p className="text-gray-500 mb-8">We're connecting you with an available listener for your {type} session.</p>
             <Button variant="glass" onClick={handleCancel} leftIcon={<X size={16} />}>
               Cancel
@@ -70,7 +70,7 @@ export const FindingListener = () => {
 
         {status === 'timeout' && (
           <>
-            <h1 className="text-2xl font-bold text-white mb-2">No Listeners Available</h1>
+            <h1 className="text-xl font-bold text-white mb-2">No Listeners Available</h1>
             <p className="text-gray-500 mb-8">All listeners are currently busy. Please try again in a few minutes.</p>
             <div className="space-y-3">
               <Button variant="primary" fullWidth onClick={() => setStatus('searching')}>Try Again</Button>

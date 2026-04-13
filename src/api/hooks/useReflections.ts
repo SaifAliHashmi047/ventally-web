@@ -12,7 +12,7 @@ export const useReflections = () => {
   };
 
   const addReflection = async (text: string) => {
-    const res = await apiInstance.post('reflections', { reflection_text: text });
+    const res = await apiInstance.post('reflections/save', { reflection_text: text, reflection_date: new Date().toISOString() });
     return res.data;
   };
 

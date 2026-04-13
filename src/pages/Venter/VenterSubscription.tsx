@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
@@ -8,6 +9,7 @@ import { useWallet } from '../../api/hooks/useWallet';
 import { CheckCircle, Crown } from 'lucide-react';
 
 export const VenterSubscription = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { getMySubscription, getSubscriptionPlans, createSubscription } = useWallet();
   const [subscription, setSubscription] = useState<any>(null);
@@ -36,18 +38,18 @@ export const VenterSubscription = () => {
 
   return (
     <div className="page-wrapper animate-fade-in">
-      <PageHeader title="My Subscription" />
+      <PageHeader title={t('VenterMySubscription.title')} />
 
       {/* Current Plan */}
       {subscription && (
         <GlassCard bordered accent>
           <div className="flex items-center gap-3 mb-2">
             <Crown size={20} className="text-accent" />
-            <p className="text-base font-bold text-white">Current Plan: {subscription.planName}</p>
+            <p className="text-base font-bold text-white">{t('VenterMySubscription.currentBilling')}: {subscription.planName}</p>
           </div>
           <Badge variant="success" dot>Active</Badge>
           <p className="text-xs text-gray-500 mt-2">
-            Renews: {new Date(subscription.renewalDate).toLocaleDateString('en-US', { dateStyle: 'medium' })}
+            {t('VenterMySubscription.endsIn')}: {new Date(subscription.renewalDate).toLocaleDateString('en-US', { dateStyle: 'medium' })}
           </p>
         </GlassCard>
       )}
@@ -66,7 +68,7 @@ export const VenterSubscription = () => {
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <p className="text-lg font-bold text-white">{plan.name}</p>
-                      <p className="text-2xl font-bold text-white mt-1">
+                      <p className="text-xl font-bold text-white mt-1">
                         ${plan.price}<span className="text-sm font-normal text-gray-500">/{plan.interval}</span>
                       </p>
                     </div>
@@ -97,7 +99,7 @@ export const VenterSubscription = () => {
           </div>
         ) : (
           <GlassCard>
-            <p className="text-sm text-gray-500 text-center">No plans available at this time.</p>
+            <p className="text-sm text-gray-500 text-center">{t('ChoosePlan.noPlansDescription')}</p>
           </GlassCard>
         )}
       </div>

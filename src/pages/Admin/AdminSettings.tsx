@@ -50,7 +50,7 @@ export const AdminSettings = () => {
       {/* Profile Card */}
       <GlassCard bordered>
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full glass flex items-center justify-center text-2xl font-bold text-white">
+          <div className="w-16 h-16 rounded-full glass flex items-center justify-center text-xl font-bold text-white">
             {(user?.firstName?.[0] || 'A').toUpperCase()}
           </div>
           <div className="flex-1">

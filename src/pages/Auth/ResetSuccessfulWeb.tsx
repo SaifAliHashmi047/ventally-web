@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AuthLayout } from '../../components/Layout/AuthLayout';
+import { Button } from '../../components/ui/Button';
 import { CheckCircle2 } from 'lucide-react';
 
 export const ResetSuccessfulWeb = () => {
@@ -14,18 +14,27 @@ export const ResetSuccessfulWeb = () => {
   }, [navigate]);
 
   return (
-    <AuthLayout>
-      <div style={{ textAlign: 'center', padding: '16px 8px 32px' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-          <CheckCircle2 size={64} color="#4ade80" strokeWidth={1.5} />
+    <div className="auth-container">
+      <div className="auth-card animate-slide-up relative text-center">
+        <div className="w-20 h-20 rounded-full bg-success/20 flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(50,215,75,0.2)]">
+          <CheckCircle2 size={40} className="text-success" />
         </div>
-        <h1 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-pure)', margin: '0 0 12px' }}>{t('ResetSuccessful.title')}</h1>
-        <p style={{ fontSize: '15px', color: 'var(--text-dim)', margin: '0 0 28px', lineHeight: 1.5 }}>{t('ResetSuccessful.description')}</p>
-        <button type="button" className="btn-primary" onClick={() => navigate('/login', { replace: true })} style={{ width: '100%', height: '52px', borderRadius: '16px', justifyContent: 'center' }}>
+        
+        <h2 className="text-2xl font-bold text-white mb-2">{t('ResetSuccessful.title')}</h2>
+        <p className="text-base text-gray-400 leading-relaxed mb-10">
+          {t('ResetSuccessful.description')}
+        </p>
+        
+        <Button 
+          variant="primary" 
+          size="lg" 
+          fullWidth 
+          onClick={() => navigate('/login', { replace: true })}
+        >
           {t('ResetSuccessful.continue')}
-        </button>
-        <p style={{ fontSize: '13px', color: 'var(--text-dim)', marginTop: '16px' }}>Redirecting to log in…</p>
+        </Button>
+        <p className="text-xs text-gray-500 mt-4">Redirecting to log in…</p>
       </div>
-    </AuthLayout>
+    </div>
   );
 };

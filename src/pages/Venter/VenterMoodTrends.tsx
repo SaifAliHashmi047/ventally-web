@@ -53,7 +53,7 @@ export const VenterMoodTrends = () => {
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         <GlassCard>
           <p className="text-xs text-gray-500 mb-1">Total Logs</p>
-          <p className="text-2xl font-bold text-white">{total}</p>
+          <p className="text-xl font-bold text-white">{total}</p>
         </GlassCard>
         {topMood.label && (
           <GlassCard className="sm:col-span-2">

@@ -39,7 +39,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         </button>
       )}
       <div className="flex-1 min-w-0">
-        <h1 className="text-2xl font-bold text-white truncate">{title}</h1>
+        <h1 className="text-xl font-bold text-white truncate">{title}</h1>
         {subtitle && (
           <p className="text-sm text-gray-500 mt-0.5">{subtitle}</p>
         )}

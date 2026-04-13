@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useAuth } from '../../api/hooks/useAuth';
 import { PageHeader } from '../../components/ui/PageHeader';
@@ -9,6 +10,7 @@ import type { RootState } from '../../store/store';
 import { User, Mail, Phone, Calendar, ChevronRight, MapPin, Edit } from 'lucide-react';
 
 export const ProfileScreen = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.user as any);
   const role = user?.userType || 'venter';
@@ -39,11 +41,11 @@ export const ProfileScreen = () => {
   return (
     <div className="page-wrapper animate-fade-in">
       <PageHeader
-        title="Profile"
+        title={t('Profile.title')}
         onBack={() => navigate(-1)}
         rightContent={
           <Button variant="glass" size="sm" leftIcon={<Edit size={14} />} onClick={() => navigate(`${basePath}/profile/edit`)}>
-            Edit
+            {t('Profile.editProfile')}
           </Button>
         }
       />
@@ -65,7 +67,7 @@ export const ProfileScreen = () => {
                 (user?.firstName?.[0] || user?.displayName?.[0] || 'U').toUpperCase()
               )}
             </div>
-            <h2 className="text-2xl font-bold text-white">{user?.displayName || `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'User'}</h2>
+            <h2 className="text-xl font-bold text-white">{user?.displayName || `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'User'}</h2>
             {user?.nickname && <p className="text-sm text-accent mt-1">@{user.nickname}</p>}
             <p className="text-sm text-gray-500 mt-0.5 capitalize">{user?.userType || 'User'}</p>
           </>
@@ -99,9 +101,9 @@ export const ProfileScreen = () => {
       <div className="space-y-2">
         <GlassCard padding="none" rounded="2xl">
           {[
-            { label: 'Sessions History', path: `${basePath}/sessions` },
-            { label: 'Security Settings', path: `${basePath}/security` },
-            { label: 'Legal & Policies', path: `${basePath}/legal` },
+            { label: t('SessionsHistory.title'), path: `${basePath}/sessions` },
+            { label: t('Security.title'), path: `${basePath}/security` },
+            { label: t('Legal.title', 'Legal & Policies'), path: `${basePath}/legal` },
           ].map(({ label, path }, i) => (
             <div
               key={path}

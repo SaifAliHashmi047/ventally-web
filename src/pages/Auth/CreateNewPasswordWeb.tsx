@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AuthLayout } from '../../components/Layout/AuthLayout';
-import { AuthStepHeader } from '../../components/Auth/AuthStepHeader';
-import { PasswordField } from '../../components/Auth/PasswordField';
+import { Input } from '../../components/ui/Input';
+import { Button } from '../../components/ui/Button';
+import { Lock, ArrowLeft } from 'lucide-react';
 import { resetPasswordWithOtp } from '../../api';
 import chatIcon from '../../assets/icons/chat.png';
 
@@ -67,46 +67,47 @@ export const CreateNewPasswordWeb = () => {
   }
 
   return (
-    <AuthLayout>
-      <AuthStepHeader backTo="/forgot-password/verify-email" />
-      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-        <div
-          className="flex-center"
-          style={{
-            width: '64px',
-            height: '64px',
-            borderRadius: '20px',
-            margin: '0 auto 16px',
-            border: '1px solid rgba(255,255,255,0.2)',
-            padding: '12px',
-          }}
+    <div className="auth-container">
+      <div className="auth-card animate-slide-up relative">
+        <button 
+          onClick={() => navigate('/forgot-password/verify-email', { state })}
+          className="text-gray-500 hover:text-white flex items-center gap-2 mb-6 transition-colors"
         >
-          <img src={chatIcon} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-        </div>
-        <h1 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-pure)', margin: 0 }}>{t('CreateNewPassword.title')}</h1>
-      </div>
-
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-        <PasswordField
-          label={t('CreateNewPassword.newPassword')}
-          placeholder={t('CreateNewPassword.newPassword')}
-          value={newPassword}
-          onChange={setNewPassword}
-          autoComplete="new-password"
-          hint={t('CreateNewPassword.passwordHint')}
-        />
-        <PasswordField
-          label={t('CreateNewPassword.confirmPassword')}
-          placeholder={t('CreateNewPassword.confirmPassword')}
-          value={confirmPassword}
-          onChange={setConfirmPassword}
-          autoComplete="new-password"
-        />
-        {error ? <p style={{ color: '#f87171', fontSize: '14px', margin: 0 }}>{error}</p> : null}
-        <button type="submit" className="btn-primary" disabled={loading} style={{ height: '56px', borderRadius: '16px', justifyContent: 'center', marginTop: '8px' }}>
-          {loading ? '…' : t('CreateNewPassword.update')}
+          <ArrowLeft size={20} /> {t('Common.back', 'Back')}
         </button>
-      </form>
-    </AuthLayout>
+
+        <div className="flex flex-col items-center mb-6">
+          <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 p-3 shadow-sm">
+            <img src={chatIcon} alt="" className="w-full h-full object-contain" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">{t('CreateNewPassword.title')}</h2>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <Input
+            label={t('CreateNewPassword.newPassword')}
+            isPassword
+            placeholder={t('CreateNewPassword.newPassword')}
+            value={newPassword}
+            onChange={(e) => { setNewPassword(e.target.value); setError(''); }}
+            error={error && error !== 'Passwords do not match' ? error : undefined}
+            leftIcon={<Lock size={16} />}
+          />
+          <Input
+            label={t('CreateNewPassword.confirmPassword')}
+            isPassword
+            placeholder={t('CreateNewPassword.confirmPassword')}
+            value={confirmPassword}
+            onChange={(e) => { setConfirmPassword(e.target.value); setError(''); }}
+            error={error === 'Passwords do not match' ? error : undefined}
+            leftIcon={<Lock size={16} />}
+          />
+          
+          <Button type="submit" variant="primary" size="lg" fullWidth disabled={loading} loading={loading}>
+            {t('CreateNewPassword.update')}
+          </Button>
+        </form>
+      </div>
+    </div>
   );
 };

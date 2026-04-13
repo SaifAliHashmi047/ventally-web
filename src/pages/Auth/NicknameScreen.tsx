@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AuthLayout } from '../../components/Layout/AuthLayout';
+
 import { useDispatch } from 'react-redux';
 import { updateUser } from '../../store/slices/userSlice';
 import { updateProfile } from '../../api';
@@ -22,70 +22,59 @@ export const NicknameScreen = () => {
     setLoading(true);
     try {
       const response = await updateProfile({ displayName: nickname.trim() });
-      if (response.success) {
+      if ((response as any).success !== false) {
         dispatch(updateUser({ displayName: nickname.trim(), name: nickname.trim() }));
         navigate('/signup/language');
       } else {
-        setError((response as { error?: string }).error || t('Common.error') || 'Failed to save');
+        setError((response as any)?.error || t('Common.error') || 'Failed to save');
       }
-    } catch (err: unknown) {
-      const e = err as { error?: string };
-      setError(e?.error || t('Common.error') || 'Failed to save');
+    } catch (err: any) {
+      setError(err?.error || t('Common.error') || 'Failed to save');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <AuthLayout>
-      <button 
-        type="button"
-        onClick={() => navigate(-1)}
-        style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}
-      >
-        <ArrowLeft size={20} /> Back
-      </button>
+    <div className="auth-container py-8">
+      <div className="auth-card animate-slide-up w-full max-w-md">
+        <button 
+          type="button"
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors mb-6"
+        >
+          <ArrowLeft size={16} /> Back
+        </button>
 
-      <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 700, color: 'var(--text-pure)', marginBottom: '16px' }}>
-          {t('Nickname.title')}
-        </h1>
-      </div>
-
-      <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
-        <div className="flex-center">
-          <input 
-            type="text" 
-            placeholder={t('Nickname.placeholder')}
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-            autoFocus
-            style={{ 
-              width: '100%', 
-              background: 'transparent', 
-              border: 'none', 
-              borderBottom: '2px solid var(--border)', 
-              borderRadius: '0',
-              fontSize: '28px', 
-              textAlign: 'center', 
-              padding: '12px 0',
-              color: 'white',
-              outline: 'none'
-            }}
-          />
+        <div className="text-center mb-12">
+          <h1 className="text-xl font-bold text-white">
+            {t('Nickname.title')}
+          </h1>
         </div>
 
-        {error ? <p style={{ color: '#f87171', fontSize: '14px', textAlign: 'center', margin: 0 }}>{error}</p> : null}
+        <form onSubmit={handleSave} className="flex flex-col gap-12">
+          <div className="flex-center">
+            <input 
+              type="text" 
+              placeholder={t('Nickname.placeholder')}
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              autoFocus
+              className="w-full bg-transparent border-none border-b-2 border-white/10 rounded-none text-[28px] text-center py-3 text-white outline-none focus:border-primary transition-colors"
+            />
+          </div>
 
-        <button 
-          type="submit" 
-          className="btn-primary" 
-          disabled={loading || nickname.trim().length < 3}
-          style={{ height: '56px', justifyContent: 'center', fontSize: '17px', borderRadius: '16px', width: '100%' }}
-        >
-          {loading ? '…' : t('Nickname.save')}
-        </button>
-      </form>
-    </AuthLayout>
+          {error ? <p className="text-sm text-error bg-error/8 border border-error/20 rounded-xl px-3 py-2 text-center">{error}</p> : null}
+
+          <button 
+            type="submit" 
+            className="btn-primary w-full h-14 justify-center text-[17px] rounded-2xl" 
+            disabled={loading || nickname.trim().length < 3}
+          >
+            {loading ? '…' : t('Nickname.save')}
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };

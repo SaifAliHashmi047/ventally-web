@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AuthLayout } from '../../components/Layout/AuthLayout';
+import { Button } from '../../components/ui/Button';
 import { OTPInput } from '../../components/Shared/OTPInput';
 import { ArrowLeft } from 'lucide-react';
 import { verifyEmail, resendVerificationEmail } from '../../api';
@@ -23,75 +23,80 @@ export const SignUpOTP = () => {
     setLoading(true);
     try {
       const response = await verifyEmail(email, code);
-      if (response.success) {
+      if ((response as any).success !== false) {
         navigate('/signup/nickname');
       } else {
-        setError((response as { error?: string }).error || t('Common.error') || 'Verification failed');
+        setError((response as any)?.message || (response as any)?.error || t('Common.error') || 'Verification failed');
       }
-    } catch (err: unknown) {
-      const er = err as { error?: string };
-      setError(er?.error || t('Common.error') || 'Verification failed');
+    } catch (err: any) {
+      setError(err?.error || t('Common.error') || 'Verification failed');
     } finally {
       setLoading(false);
     }
   };
 
   const handleResend = async () => {
-    if (!email) return;
+    if (!email) {
+      setError('Email address is missing. Please restart signup.');
+      return;
+    }
     setResendLoading(true);
     setError('');
     try {
       await resendVerificationEmail(email);
-    } catch (err: unknown) {
-      const er = err as { error?: string };
-      setError(er?.error || 'Could not resend');
+    } catch (err: any) {
+      setError(err?.error || 'Could not resend');
     } finally {
       setResendLoading(false);
     }
   };
 
   return (
-    <AuthLayout>
-      <button 
-        type="button"
-        onClick={() => navigate(-1)}
-        style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}
-      >
-        <ArrowLeft size={20} /> Back
-      </button>
+    <div className="auth-container py-8">
+      <div className="auth-card animate-slide-up w-full max-w-md">
+        <button 
+          type="button"
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors mb-6"
+        >
+          <ArrowLeft size={16} /> Back
+        </button>
 
-      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 700, color: 'var(--text-pure)', marginBottom: '12px' }}>
-          {t('EmailVerification.title')}
-        </h1>
-        <p style={{ color: 'var(--text-dim)', fontSize: '15px', lineHeight: '1.5' }}>
-          {t('EmailVerification.subtitle')} {email ? <span style={{ color: 'var(--text-main)' }}>{email}</span> : null}
-        </p>
-      </div>
-
-      <form onSubmit={handleVerify} style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-        <OTPInput value={code} onChange={setCode} cellCount={4} />
-
-        {error ? <p style={{ color: '#f87171', fontSize: '14px', textAlign: 'center', margin: 0 }}>{error}</p> : null}
-
-        <div style={{ textAlign: 'center' }}>
-          <p style={{ color: 'var(--text-dim)', fontSize: '15px' }}>
-            {t('EmailVerification.didntReceive')}{' '}
-            <button type="button" disabled={resendLoading} onClick={handleResend} style={{ background: 'none', border: 'none', color: 'var(--text-pure)', textDecoration: 'underline', fontWeight: 600, cursor: 'pointer' }}>
-              {t('EmailVerification.resend')}
-            </button>
+        <div className="text-center mb-8">
+          <h1 className="text-xl font-bold text-white mb-2">
+            {t('EmailVerification.title')}
+          </h1>
+          <p className="text-sm text-gray-400">
+            {t('EmailVerification.subtitle')} {email ? <span className="text-primary">{email}</span> : null}
           </p>
         </div>
 
-        <button 
-          type="submit" 
-          className="btn-primary" 
-          style={{ height: '56px', justifyContent: 'center', fontSize: '17px', borderRadius: '16px', width: '100%' }}
-          disabled={code.length !== 4 || loading}
-        >
-          {loading ? '…' : t('EmailVerification.verifyAccount')}
-        </button>
-      </form>
-    </AuthLayout>
+        <form onSubmit={handleVerify} className="space-y-6">
+          <OTPInput value={code} onChange={setCode} cellCount={4} />
+
+          {error ? <p className="text-sm text-error bg-error/8 border border-error/20 rounded-xl px-3 py-2 text-center">{error}</p> : null}
+
+          <div className="text-center mt-6">
+            <p className="text-sm text-gray-500">
+              {t('EmailVerification.didntReceive')}{' '}
+              <button type="button" disabled={resendLoading} onClick={handleResend} className="text-primary hover:text-primary-hover font-medium transition-colors">
+                {t('EmailVerification.resend')}
+              </button>
+            </p>
+          </div>
+
+          <Button 
+            variant="primary"
+            size="lg"
+            fullWidth
+            type="submit"
+            loading={loading}
+            disabled={code.length !== 4}
+          >
+            {t('EmailVerification.verifyAccount')}
+          </Button>
+        </form>
+      </div>
+    </div>
   );
 };

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Toggle } from '../../components/ui/Toggle';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { EmptyState } from '../../components/ui/EmptyState';
@@ -13,6 +14,7 @@ import { Phone, MessageSquare, ChevronRight, DollarSign, Clock, TrendingUp, Bell
 import { cn } from '../../utils/cn';
 
 export const ListenerDashboard = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.user as any);
   const requests = useReduxSelector((state: RootState) => state.listener.requests);
@@ -58,14 +60,14 @@ export const ListenerDashboard = () => {
     }
   };
 
-  const firstName = user?.firstName || user?.displayName?.split(' ')[0] || 'Listener';
+  const firstName = user?.firstName || user?.displayName?.split(' ')[0] || t('ListenerHome.listener', 'Listener');
 
   return (
     <div className="page-wrapper animate-fade-in">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-gray-500 mb-1">Welcome back,</p>
+          <p className="text-sm text-gray-500 mb-1">{t('ListenerHome.welcomeBack', 'Welcome back,')}</p>
           <h1 className="text-3xl font-bold text-white tracking-tight">{firstName} 🎧</h1>
         </div>
         <button
@@ -77,40 +79,42 @@ export const ListenerDashboard = () => {
       </div>
 
       {/* Availability Toggle */}
-      <GlassCard bordered>
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-base font-semibold text-white">Availability</p>
-            <p className="text-sm text-gray-500 mt-0.5">
-              {isAvailable ? 'You are accepting new sessions' : 'You are currently offline'}
-            </p>
+      <div className="mt-6">
+        <GlassCard bordered>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-base font-semibold text-white">{t('ListenerHome.availability', 'Availability')}</p>
+              <p className="text-sm text-gray-500 mt-0.5">
+                {isAvailable ? t('ListenerHome.acceptingSessions', 'You are accepting new sessions') : t('ListenerHome.offlineStatus', 'You are currently offline')}
+              </p>
+            </div>
+            <Toggle
+              checked={isAvailable}
+              onChange={handleAvailabilityToggle}
+              disabled={loadingToggle}
+              color="accent"
+            />
           </div>
-          <Toggle
-            checked={isAvailable}
-            onChange={handleAvailabilityToggle}
-            disabled={loadingToggle}
-            color="accent"
-          />
-        </div>
-        {isAvailable && (
-          <div className="mt-3 flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-success animate-pulse-soft" />
-            <span className="text-xs text-success font-medium">Online and ready</span>
-          </div>
-        )}
-      </GlassCard>
+          {isAvailable && (
+            <div className="mt-3 flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-success animate-pulse-soft" />
+              <span className="text-xs text-success font-medium">{t('ListenerHome.onlineReady', 'Online and ready')}</span>
+            </div>
+          )}
+        </GlassCard>
+      </div>
 
       {/* Earnings Overview */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6">
         <StatCard
-          label="Available Balance"
+          label={t('ListenerHome.availableBalance', 'Available Balance')}
           value={`${earnings?.availableBalance ?? '0.00'}`}
           icon={<DollarSign size={20} />}
           iconColor="#32D74B"
           className="sm:col-span-2"
         />
         <StatCard
-          label="Sessions This Month"
+          label={t('ListenerHome.sessionsThisMonth', 'Sessions This Month')}
           value={earnings?.totalSessions ?? 0}
           icon={<Clock size={20} />}
           iconColor="#C2AEBF"
@@ -118,23 +122,23 @@ export const ListenerDashboard = () => {
       </div>
 
       {/* Incoming Requests */}
-      <div>
+      <div className="mt-6">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="section-title">Incoming Requests</h2>
+          <h2 className="section-title">{t('ListenerHome.incomingRequests', 'Incoming Requests')}</h2>
           {requests.length > 0 && (
             <button
               onClick={() => navigate('/listener/requests')}
               className="text-xs text-gray-500 hover:text-white transition-colors flex items-center gap-1"
             >
-              View All <ChevronRight size={12} />
+              {t('Common.viewAll', 'View All')} <ChevronRight size={12} />
             </button>
           )}
         </div>
 
         {requests.length === 0 ? (
           <EmptyState
-            title="No incoming requests"
-            description="Be the first to connect with someone seeking support."
+            title={t('ListenerHome.noRequests', 'No incoming requests')}
+            description={t('ListenerHome.noRequestsDesc', 'Be the first to connect with someone seeking support.')}
             icon={<Sparkles size={22} />}
           />
         ) : (
@@ -155,7 +159,7 @@ export const ListenerDashboard = () => {
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-white">
-                      {item.type === 'call' ? 'Call Session' : 'Chat Session'}
+                      {item.type === 'call' ? t('ListenerHome.callSession', 'Call Session') : t('ListenerHome.chatSession', 'Chat Session')}
                     </p>
                     <p className="text-xs text-gray-500 mt-0.5">{item.title}</p>
                   </div>
@@ -168,12 +172,12 @@ export const ListenerDashboard = () => {
       </div>
 
       {/* Quick Actions */}
-      <div>
-        <h2 className="section-title mb-3">Quick Access</h2>
+      <div className="mt-6 mb-8">
+        <h2 className="section-title mb-3">{t('ListenerHome.quickAccess', 'Quick Access')}</h2>
         <div className="grid grid-cols-2 gap-3">
           {[
-            { label: 'Earnings History', icon: TrendingUp, path: '/listener/wallet' },
-            { label: 'Session History', icon: Clock, path: '/listener/sessions' },
+            { label: t('ListenerHome.earningsHistory', 'Earnings History'), icon: TrendingUp, path: '/listener/wallet' },
+            { label: t('ListenerHome.sessionHistory', 'Session History'), icon: Clock, path: '/listener/sessions' },
           ].map(({ label, icon: Icon, path }) => (
             <GlassCard
               key={path}

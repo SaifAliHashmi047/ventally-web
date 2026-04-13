@@ -86,7 +86,7 @@ export const ChoosePlan = () => {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '40px' }}>Loading plans...</div>
+          <div style={{ textAlign: 'center', padding: '40px' }}>{t('Common.loading', 'Loading...')}</div>
         ) : (
           plans.map((plan) => {
             const isSelected = selectedPlan === plan.id;
@@ -107,8 +107,8 @@ export const ChoosePlan = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
                   <h3 style={{ fontSize: '18px', fontWeight: 600 }}>{plan.name}</h3>
                   <div style={{ textAlign: 'right' }}>
-                    <p style={{ fontSize: '20px', fontWeight: 700 }}>${price}</p>
-                    <p style={{ fontSize: '12px', color: 'var(--text-dim)' }}>/{planType === 'monthly' ? 'mo' : 'yr'}</p>
+                    <p style={{ fontSize: '20px', fontWeight: 700 }}>{price}</p>
+                    <p style={{ fontSize: '12px', color: 'var(--text-dim)' }}>/{planType === 'monthly' ? t('ChoosePlan.monthly') : t('ChoosePlan.annual')}</p>
                   </div>
                 </div>
                 <p style={{ fontSize: '14px', color: 'var(--text-dim)', lineHeight: '1.4' }}>{plan.description || 'Access to premium features'}</p>

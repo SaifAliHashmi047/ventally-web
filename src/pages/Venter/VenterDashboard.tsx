@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Phone, MessageSquare, BookOpen, TrendingUp, ChevronRight, PenLine, Sparkles } from 'lucide-react';
 import type { RootState } from '../../store/store';
 import { GlassCard } from '../../components/ui/GlassCard';
@@ -12,6 +13,7 @@ import { useReflections } from '../../api/hooks/useReflections';
 import { MoodBarChart } from '../../components/charts/MoodBarChart';
 
 export const VenterDashboard = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.user as any);
   const { getTodayMood, getMoodStats } = useMood();
@@ -28,9 +30,9 @@ export const VenterDashboard = () => {
 
   const greeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return t('Greeting.goodMorning');
+    if (hour < 17) return t('Greeting.goodAfternoon');
+    return t('Greeting.goodEvening');
   };
 
   useEffect(() => {
@@ -107,7 +109,7 @@ export const VenterDashboard = () => {
         <div>
           <p className="text-sm text-gray-500 mb-1">{greeting()},</p>
           <h1 className="text-3xl font-bold text-white tracking-tight">{firstName} 👋</h1>
-          <p className="text-gray-500 mt-1 text-sm">How are you feeling today?</p>
+          <p className="text-gray-500 mt-1 text-sm">{t('VenterHome.subtitle')}</p>
         </div>
         <div className="flex gap-2">
           <button
@@ -134,7 +136,7 @@ export const VenterDashboard = () => {
             </div>
             <div>
               <p className="text-sm font-semibold text-white">
-                {reflection ? 'Today\'s Reflection' : 'Add a Reflection'}
+                {reflection ? t('VenterHome.todaysReflection') : t('VenterHome.addReflection')}
               </p>
               {reflection && (
                 <p className="text-xs text-gray-500 mt-0.5 truncate max-w-xs">{reflection.reflection_text}</p>
@@ -147,7 +149,7 @@ export const VenterDashboard = () => {
 
       {/* Let's Vent */}
       <div>
-        <h2 className="section-title mb-3">Let's Vent</h2>
+        <h2 className="section-title mb-3">{t('VenterHome.letsVent')}</h2>
         <div className="grid grid-cols-2 gap-3">
           <Button
             variant="glass"
@@ -157,7 +159,7 @@ export const VenterDashboard = () => {
             onClick={() => navigate('/venter/finding-listener', { state: { type: 'call' } })}
             className="justify-center"
           >
-            Call Session
+            {t('VenterHome.call')}
           </Button>
           <Button
             variant="glass"
@@ -167,7 +169,7 @@ export const VenterDashboard = () => {
             onClick={() => navigate('/venter/finding-listener', { state: { type: 'chat' } })}
             className="justify-center"
           >
-            Chat Session
+            {t('VenterHome.chat')}
           </Button>
         </div>
       </div>
@@ -175,12 +177,12 @@ export const VenterDashboard = () => {
       {/* Mood Check-In */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="section-title">Daily Mood Check-In</h2>
+          <h2 className="section-title">{t('VenterHome.moodCheckIn')}</h2>
           <button
             onClick={() => navigate('/venter/mood')}
             className="text-xs text-gray-500 hover:text-white transition-colors flex items-center gap-1"
           >
-            View All <ChevronRight size={12} />
+            {t('VenterHome.seeAll')} <ChevronRight size={12} />
           </button>
         </div>
         <MoodSelector
@@ -196,22 +198,22 @@ export const VenterDashboard = () => {
           <div className="flex items-center gap-3 mb-1">
             <span className="text-2xl">😊</span>
             <div>
-              <p className="text-sm font-medium text-gray-500">Happy Days This Month</p>
-              <p className="text-2xl font-bold text-white">{happyDays}</p>
+              <p className="text-sm font-medium text-gray-500">{t('VenterHome.happyDays')}</p>
+              <p className="text-xl font-bold text-white">{happyDays}</p>
             </div>
           </div>
         </GlassCard>
         <GlassCard>
-          <p className="text-xs text-gray-500 mb-1">Current Streak</p>
-          <p className="text-2xl font-bold text-white">{streaks.current}</p>
-          <p className="text-xs text-gray-500 mt-1">days 🔥</p>
+          <p className="text-xs text-gray-500 mb-1">{t('VenterHome.currentStreak')}</p>
+          <p className="text-xl font-bold text-white">{streaks.current}</p>
+          <p className="text-xs text-gray-500 mt-1">{t('VenterHome.days')} {t('VenterHome.fire')}</p>
         </GlassCard>
       </div>
 
       {/* Mood Chart */}
       {chartData.length > 0 && (
         <div>
-          <h2 className="section-title mb-3">Mood Overview</h2>
+          <h2 className="section-title mb-3">{t('VenterHome.moodOverTime')}</h2>
           <GlassCard>
             <MoodBarChart data={chartData} />
           </GlassCard>
@@ -221,12 +223,12 @@ export const VenterDashboard = () => {
       {/* Recent Reflections */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="section-title">Reflections</h2>
+          <h2 className="section-title">{t('VenterHome.reflections')}</h2>
           <button
             onClick={() => navigate('/venter/reflections')}
             className="text-xs text-gray-500 hover:text-white transition-colors flex items-center gap-1"
           >
-            See All <ChevronRight size={12} />
+            {t('VenterHome.seeAll')} <ChevronRight size={12} />
           </button>
         </div>
 
@@ -256,12 +258,12 @@ export const VenterDashboard = () => {
           </div>
         ) : (
           <EmptyState
-            title="No reflections yet"
-            description="Add your first reflection to start your journey."
+            title={t('VenterHome.noReflections')}
+            description={t('VenterHome.noReflectionsDesc')}
             icon={<BookOpen size={22} />}
             action={
               <Button variant="accent" size="sm" onClick={() => navigate('/venter/reflections/add')}>
-                Add Reflection
+                {t('VenterHome.addReflection')}
               </Button>
             }
           />
@@ -270,14 +272,14 @@ export const VenterDashboard = () => {
 
       {/* Quick Actions */}
       <div>
-        <h2 className="section-title mb-3">Quick Access</h2>
+        <h2 className="section-title mb-3">{t('VenterHome.quickAccess')}</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: 'Recovery', icon: TrendingUp, path: '/venter/recovery' },
-            { label: 'Mood Trends', icon: TrendingUp, path: '/venter/mood/trends' },
-            { label: 'My Wallet', icon: MessageSquare, path: '/venter/wallet' },
-            { label: 'Subscription', icon: Sparkles, path: '/venter/subscription' },
-          ].map(({ label, icon: Icon, path }) => (
+            { labelKey: 'VenterRecovery.dashboard.title', icon: TrendingUp, path: '/venter/recovery' },
+            { labelKey: 'VenterHome.moodTrends', icon: TrendingUp, path: '/venter/mood/trends' },
+            { labelKey: 'Navigation.tabs.wallet', icon: MessageSquare, path: '/venter/wallet' },
+            { labelKey: 'Subscription.title', icon: Sparkles, path: '/venter/subscription' },
+          ].map(({ labelKey, icon: Icon, path }) => (
             <GlassCard
               key={path}
               hover
@@ -289,7 +291,7 @@ export const VenterDashboard = () => {
               <div className="w-10 h-10 glass rounded-2xl flex items-center justify-center text-primary">
                 <Icon size={18} />
               </div>
-              <p className="text-xs font-medium text-gray-400 text-center">{label}</p>
+              <p className="text-xs font-medium text-gray-400 text-center">{t(labelKey)}</p>
             </GlassCard>
           ))}
         </div>

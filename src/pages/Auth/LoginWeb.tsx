@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { GlassCard } from '../../components/ui/GlassCard';
+import { setTokens } from '../../api';
 import apiInstance from '../../api/apiInstance';
 import { setUser, setAuthenticated } from '../../store/slices/userSlice';
 import { Mail, Lock } from 'lucide-react';
 
 export const LoginWeb = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [form, setForm] = useState({ email: '', password: '' });
@@ -17,8 +20,8 @@ export const LoginWeb = () => {
 
   const validate = () => {
     const errs: any = {};
-    if (!form.email.includes('@')) errs.email = 'Enter a valid email';
-    if (!form.password) errs.password = 'Password is required';
+    if (!form.email.includes('@')) errs.email = t('LogIn.error.validEmail', 'Enter a valid email');
+    if (!form.password) errs.password = t('LogIn.error.passwordRequired', 'Password is required');
     return errs;
   };
 
@@ -28,13 +31,14 @@ export const LoginWeb = () => {
     setLoading(true);
     try {
       const res = await apiInstance.post('auth/login', form);
-      const { token, refreshToken, user } = res.data;
-      localStorage.setItem('token', token);
-      if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
+      const { tokens, user } = res.data || {};
+      if (tokens?.accessToken) {
+        await setTokens(tokens.accessToken, tokens.refreshToken || '');
+      }
       dispatch(setUser(user));
       dispatch(setAuthenticated(true));
     } catch (e: any) {
-      setErrors({ general: e?.response?.data?.message || 'Invalid credentials. Please try again.' });
+      setErrors({ general: e?.error || t('LogIn.error.general', 'Invalid credentials. Please try again.') });
     } finally {
       setLoading(false);
     }
@@ -48,15 +52,15 @@ export const LoginWeb = () => {
           <div className="w-10 h-10 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-glow-primary">
             <div className="w-3 h-3 border-2 border-white rounded-full" />
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Ventally</h1>
+          <h1 className="text-xl font-bold text-white tracking-tight">Ventally</h1>
         </div>
 
-        <h2 className="text-2xl font-bold text-white mb-1">Welcome back</h2>
-        <p className="text-sm text-gray-500 mb-8">Sign in to continue your journey</p>
+        <h2 className="text-xl font-bold text-white mb-1">{t('LogIn.title')}</h2>
+        <p className="text-sm text-gray-500 mb-8">{t('LogIn.subtitle', 'Sign in to continue your journey')}</p>
 
         <div className="space-y-4">
           <Input
-            label="Email"
+            label={t('LogIn.emailOrPhone')}
             type="email"
             placeholder="you@example.com"
             value={form.email}
@@ -65,7 +69,7 @@ export const LoginWeb = () => {
             leftIcon={<Mail size={16} />}
           />
           <Input
-            label="Password"
+            label={t('LogIn.password')}
             isPassword
             placeholder="••••••••"
             value={form.password}
@@ -80,7 +84,7 @@ export const LoginWeb = () => {
 
           <div className="flex justify-end">
             <Link to="/forgot-password" className="text-sm text-gray-500 hover:text-white transition-colors">
-              Forgot password?
+              {t('LogIn.forgotPassword')}
             </Link>
           </div>
 
@@ -92,16 +96,16 @@ export const LoginWeb = () => {
             onClick={handleLogin}
             id="login-submit-btn"
           >
-            Sign In
+            {t('LogIn.logIn')}
           </Button>
         </div>
 
-        <div className="divider-text mt-6 mb-6 text-xs">or</div>
+        <div className="divider-text mt-6 mb-6 text-xs">{t('LogIn.biometric', 'Or continue with').trim().toLowerCase()}</div>
 
         <p className="text-center text-sm text-gray-500">
-          Don't have an account?{' '}
+          {t('LogIn.dontHaveAccount')}{' '}
           <Link to="/signup" className="text-primary hover:text-primary-hover font-medium transition-colors">
-            Sign up
+            {t('LogIn.signUp')}
           </Link>
         </p>
       </div>

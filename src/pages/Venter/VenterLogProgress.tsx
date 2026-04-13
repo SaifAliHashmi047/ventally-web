@@ -1,24 +1,45 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
 import { useRecovery } from '../../api/hooks/useRecovery';
 
 const STATUSES = ['success', 'slip', 'partial'];
 
 export const VenterLogProgress = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  const { logProgress } = useRecovery();
+  const { id } = useParams();
+  const location = useLocation();
+  const { startSobriety, logRelapse } = useRecovery();
   const [status, setStatus] = useState('');
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
+  const isEditMode = !!id || location.state?.editMode;
+
+  // Pre-fill if editing
+  useEffect(() => {
+    if (location.state?.status) {
+      setStatus(location.state.status);
+    }
+    if (location.state?.notes) {
+      setNotes(location.state.notes);
+    }
+  }, [location.state]);
 
   const handleSave = async () => {
     if (!status) return;
     setSaving(true);
     try {
-      await logProgress({ date: new Date().toISOString().split('T')[0], status, notes });
+      const today = new Date().toISOString().split('T')[0];
+      
+      if (status === 'slip') {
+        await logRelapse({ relapse_date: today, note: notes, trigger: '' });
+      } else {
+        await startSobriety({ sobriety_date: today, addiction_type: 'general', note: notes });
+      }
+      
       navigate(-1);
     } catch { /* ignore */ } finally {
       setSaving(false);
@@ -26,15 +47,15 @@ export const VenterLogProgress = () => {
   };
 
   const statusConfig: Record<string, { color: string; emoji: string; label: string }> = {
-    success: { color: 'text-success border-success/30 bg-success/10', emoji: '✅', label: 'Successful Day' },
-    partial: { color: 'text-warning border-warning/30 bg-warning/10', emoji: '⚠️', label: 'Partial' },
-    slip: { color: 'text-error border-error/30 bg-error/10', emoji: '❌', label: 'Slip' },
+    success: { color: 'text-success border-success/30 bg-success/10', emoji: '✅', label: t('VenterRecovery.log.success', 'Successful Day') },
+    partial: { color: 'text-warning border-warning/30 bg-warning/10', emoji: '⚠️', label: t('VenterRecovery.log.partial', 'Partial') },
+    slip: { color: 'text-error border-error/30 bg-error/10', emoji: '❌', label: t('VenterRecovery.log.slip', 'Slip') },
   };
 
   return (
     <div className="page-wrapper animate-fade-in">
-      <PageHeader title="Log Progress" onBack={() => navigate(-1)} />
-      <p className="section-label mb-3">How was today?</p>
+      <PageHeader title={isEditMode ? t('VenterRecovery.log.editTitle', 'Edit Progress') : t('VenterRecovery.log.title', 'Log Progress')} onBack={() => navigate(-1)} />
+      <p className="section-label mb-3">{t('VenterRecovery.log.howWasToday', 'How was today?')}</p>
       <div className="grid grid-cols-3 gap-3">
         {STATUSES.map(s => {
           const conf = statusConfig[s];
@@ -47,13 +68,15 @@ export const VenterLogProgress = () => {
           );
         })}
       </div>
-      <div>
-        <p className="section-label mb-2">Notes (optional)</p>
-        <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="What happened today?" className="input-field w-full h-28 resize-none" />
+      <div className="mt-6">
+        <p className="section-label mb-2">{t('VenterRecovery.log.notes', 'Notes (optional)')}</p>
+        <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder={t('VenterRecovery.log.notesPlaceholder', 'What happened today?')} className="input-field w-full h-32 resize-none" />
       </div>
-      <Button variant="primary" size="lg" fullWidth loading={saving} disabled={!status} onClick={handleSave}>
-        Save Entry
-      </Button>
+      <div className="mt-6">
+        <Button variant="primary" size="lg" fullWidth loading={saving} disabled={!status} onClick={handleSave}>
+          {t('VenterRecovery.log.saveEntry', 'Save Entry')}
+        </Button>
+      </div>
     </div>
   );
 };

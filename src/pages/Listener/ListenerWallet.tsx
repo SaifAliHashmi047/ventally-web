@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { StatCard } from '../../components/ui/StatCard';
 import { Button } from '../../components/ui/Button';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { useEarnings } from '../../api/hooks/useEarnings';
-import { DollarSign, ArrowUpRight, TrendingUp, CreditCard, ChevronRight } from 'lucide-react';
-import { Badge } from '../../components/ui/Badge';
+import { DollarSign, ArrowUpRight, TrendingUp, CreditCard, ChevronRight, Building } from 'lucide-react';
 
 export const ListenerWallet = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { getEarningsSummary, getEarningsHistory, requestPayout } = useEarnings();
   const [summary, setSummary] = useState<any>(null);
@@ -43,42 +44,66 @@ export const ListenerWallet = () => {
 
   return (
     <div className="page-wrapper animate-fade-in">
-      <PageHeader title="Earnings" />
+      <PageHeader title={t('ListenerWallet.title', 'Earnings')} />
 
-      <GlassCard bordered className="bg-gradient-to-br from-accent/10 to-transparent">
-        <p className="text-sm text-gray-500 mb-1">Available Balance</p>
-        <p className="text-4xl font-bold text-white tracking-tight">
-          ${loading ? '--' : summary?.availableBalance?.toFixed(2) ?? '0.00'}
+      <GlassCard bordered className="bg-gradient-to-br from-accent/10 to-transparent mb-4">
+        <p className="text-sm text-gray-500 mb-1">{t('ListenerWallet.availableBalance', 'Available Balance')}</p>
+        <p className="text-4xl font-bold text-white tracking-tight flex items-baseline gap-1">
+          {loading ? '--' : summary?.availableBalance?.toFixed(2) ?? '0.00'}
         </p>
-        <Button
-          variant="accent"
-          size="md"
-          fullWidth
-          leftIcon={<CreditCard size={16} />}
-          className="mt-5"
-          loading={payoutLoading}
-          disabled={!summary?.availableBalance || summary.availableBalance < 1}
-          onClick={handlePayout}
-        >
-          Request Payout
-        </Button>
+        <div className="grid grid-cols-2 gap-3 mt-5">
+          <Button
+            variant="accent"
+            size="md"
+            fullWidth
+            leftIcon={<CreditCard size={16} />}
+            loading={payoutLoading}
+            disabled={!summary?.availableBalance || summary.availableBalance < 1}
+            onClick={handlePayout}
+          >
+            {t('ListenerWallet.requestPayout', 'Request Payout')}
+          </Button>
+          <Button
+            variant="glass"
+            size="md"
+            fullWidth
+            leftIcon={<Building size={16} />}
+            onClick={() => navigate('/listener/payout-method')}
+          >
+            {t('ListenerWallet.managePayout', 'Payout Methods')}
+          </Button>
+        </div>
       </GlassCard>
 
-      <div className="grid grid-cols-2 gap-3">
-        <StatCard label="Total Earned" value={`$${summary?.totalEarned?.toFixed(2) ?? '0.00'}`} icon={<DollarSign size={18} />} iconColor="#32D74B" />
-        <StatCard label="This Month" value={`$${summary?.monthlyEarnings?.toFixed(2) ?? '0.00'}`} icon={<TrendingUp size={18} />} iconColor="#C2AEBF" />
+      <div className="grid grid-cols-2 gap-3 mb-6">
+        <StatCard 
+          label={t('ListenerWallet.totalEarned', 'Total Earned')} 
+          value={`${summary?.totalEarned?.toFixed(2) ?? '0.00'}`} 
+          icon={<DollarSign size={18} />} 
+          iconColor="#32D74B" 
+        />
+        <StatCard 
+          label={t('ListenerWallet.thisMonth', 'This Month')} 
+          value={`${summary?.monthlyEarnings?.toFixed(2) ?? '0.00'}`} 
+          icon={<TrendingUp size={18} />} 
+          iconColor="#C2AEBF" 
+        />
       </div>
 
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="section-title">Earning History</h2>
-          <button className="text-xs text-gray-500 hover:text-white flex items-center gap-1">
-            View All <ChevronRight size={12} />
+          <h2 className="section-title">{t('ListenerWallet.earningHistory', 'Earning History')}</h2>
+          <button className="text-xs text-gray-500 hover:text-white flex items-center gap-1 transition-colors">
+            {t('Common.viewAll', 'View All')} <ChevronRight size={12} />
           </button>
         </div>
 
         {history.length === 0 ? (
-          <EmptyState title="No earnings yet" description="Complete sessions to start earning." icon={<DollarSign size={22} />} />
+          <EmptyState 
+            title={t('ListenerWallet.noEarnings', 'No earnings yet')} 
+            description={t('ListenerWallet.noEarningsDesc', 'Complete sessions to start earning.')} 
+            icon={<DollarSign size={22} />} 
+          />
         ) : (
           <GlassCard padding="none" rounded="2xl">
             {history.map((e: any, i: number) => (
@@ -87,10 +112,10 @@ export const ListenerWallet = () => {
                   <ArrowUpRight size={16} className="text-success" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-white">Session Earning</p>
-                  <p className="text-xs text-gray-500">{new Date(e.createdAt).toLocaleDateString('en-US', { dateStyle: 'medium' })}</p>
+                  <p className="text-sm font-medium text-white">{t('ListenerWallet.sessionEarning', 'Session Earning')}</p>
+                  <p className="text-xs text-gray-500">{new Date(e.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}</p>
                 </div>
-                <p className="text-sm font-bold text-success">+${e.amount?.toFixed(2)}</p>
+                <p className="text-sm font-bold text-success">+{e.amount?.toFixed(2)}</p>
               </div>
             ))}
           </GlassCard>

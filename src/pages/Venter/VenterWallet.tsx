@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { StatCard } from '../../components/ui/StatCard';
@@ -10,6 +11,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Wallet, Plus, ChevronRight, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 
 export const VenterWallet = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { getWallet, getTransactions } = useWallet();
   const [wallet, setWallet] = useState<any>(null);
@@ -31,18 +33,18 @@ export const VenterWallet = () => {
 
   return (
     <div className="page-wrapper animate-fade-in">
-      <PageHeader title="Wallet" />
+      <PageHeader title={t('VenterWallet.title', 'Wallet')} />
 
       {/* Balance Card */}
-      <GlassCard bordered className="bg-gradient-to-br from-primary/10 to-transparent">
+      <GlassCard bordered className="bg-gradient-to-br from-primary/10 to-transparent mb-4">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm text-gray-500 mb-1">Available Balance</p>
+            <p className="text-sm text-gray-500 mb-1">{t('VenterWallet.availableBalance', 'Available Balance')}</p>
             <p className="text-4xl font-bold text-white tracking-tight">
-              {loading ? '--' : `$${wallet?.balance?.toFixed(2) ?? '0.00'}`}
+              {loading ? '--' : `${wallet?.balance?.toFixed(2) ?? '0.00'}`}
             </p>
             <p className="text-sm text-gray-500 mt-2">
-              {wallet?.credits ?? 0} credits remaining
+              {wallet?.credits ?? 0} {t('VenterWallet.credits', 'credits remaining')}
             </p>
           </div>
           <div className="w-12 h-12 rounded-2xl bg-primary/15 flex items-center justify-center">
@@ -57,23 +59,26 @@ export const VenterWallet = () => {
           className="mt-5"
           onClick={() => navigate('/venter/wallet/add-funds')}
         >
-          Add Funds
+          {t('VenterWallet.addFunds', 'Add Funds')}
         </Button>
       </GlassCard>
 
       {/* Recent Transactions */}
-      <div>
+      <div className="mb-4">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="section-title">Recent Transactions</h2>
-          <button onClick={() => navigate('/venter/wallet/transactions')} className="text-xs text-gray-500 hover:text-white flex items-center gap-1">
-            View All <ChevronRight size={12} />
+          <h2 className="section-title">{t('VenterWallet.recentTransactions', 'Recent Transactions')}</h2>
+          <button onClick={() => navigate('/venter/wallet/transactions')} className="text-xs text-gray-500 hover:text-white flex items-center gap-1 transition-colors">
+            {t('Common.viewAll', 'View All')} <ChevronRight size={12} />
           </button>
         </div>
 
         {loading ? (
           <div className="space-y-2">{[...Array(3)].map((_, i) => <div key={i} className="skeleton h-16 rounded-2xl" />)}</div>
         ) : transactions.length === 0 ? (
-          <EmptyState title="No transactions yet" description="Add funds to get started." />
+          <EmptyState 
+            title={t('VenterWallet.noTransactions', 'No transactions yet')} 
+            description={t('VenterWallet.noTransactionsDesc', 'Add funds to get started.')} 
+          />
         ) : (
           <GlassCard padding="none" rounded="2xl">
             {transactions.map((tx: any, i: number) => {
@@ -85,10 +90,10 @@ export const VenterWallet = () => {
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-white capitalize">{tx.type?.replace(/_/g, ' ')}</p>
-                    <p className="text-xs text-gray-500">{new Date(tx.createdAt).toLocaleDateString('en-US', { dateStyle: 'medium' })}</p>
+                    <p className="text-xs text-gray-500">{new Date(tx.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}</p>
                   </div>
                   <p className={`text-sm font-bold ${isCredit ? 'text-success' : 'text-error'}`}>
-                    {isCredit ? '+' : '-'}${Math.abs(tx.amount).toFixed(2)}
+                    {isCredit ? '+' : '-'}{Math.abs(tx.amount).toFixed(2)}
                   </p>
                 </div>
               );
@@ -101,8 +106,8 @@ export const VenterWallet = () => {
       <GlassCard accent hover onClick={() => navigate('/venter/subscription')} className="cursor-pointer">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-semibold text-white">My Subscription</p>
-            <p className="text-xs text-gray-500 mt-0.5">Manage your plan and billing</p>
+            <p className="text-sm font-semibold text-white">{t('VenterWallet.subscription', 'My Subscription')}</p>
+            <p className="text-xs text-gray-500 mt-0.5">{t('VenterWallet.subscriptionDesc', 'Manage your plan and billing')}</p>
           </div>
           <ChevronRight size={16} className="text-gray-500" />
         </div>

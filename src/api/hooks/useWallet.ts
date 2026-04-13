@@ -2,7 +2,7 @@ import apiInstance from '../apiInstance';
 
 export const useWallet = () => {
   const getWallet = async () => {
-    const res = await apiInstance.get('wallet');
+    const res = await apiInstance.get('wallet/balance');
     return res.data;
   };
 
@@ -27,7 +27,12 @@ export const useWallet = () => {
   };
 
   const getMySubscription = async () => {
-    const res = await apiInstance.get('payments/my-subscription');
+    const res = await apiInstance.get('wallet/subscription');
+    return res.data;
+  };
+
+  const updateAutoRecharge = async (payload: { enabled: boolean; amount?: number }) => {
+    const res = await apiInstance.put('wallet/auto-recharge', payload);
     return res.data;
   };
 
@@ -38,5 +43,6 @@ export const useWallet = () => {
     getSubscriptionPlans,
     createSubscription,
     getMySubscription,
+    updateAutoRecharge,
   };
 };

@@ -4,9 +4,16 @@
     "quote": "\"Sometimes the most honest conversations\nhappen when no one\nknows your name.\"",
     "fetchingData": "Fetching Data...",
     "voiceRules": "Your voice. Your rules.",
-    "stayAnonymous": "Stay anonymous, stay connected",
+    "stayAnonymous": "Stay Anonymous",
+    "anonymousDesc": "Your identity is always protected. No names, no profiles, just support.",
+    "voiceDesc": "Connect on your terms. Voice or text, whenever you need it.",
+    "guidedSupport": "Guided Support",
+    "guidedDesc": "Trained listeners ready to provide compassionate, moderated support.",
+    "safeSpace": "A Safe Space",
+    "safeDesc": "Built on privacy, respect, and community guidelines.",
     "getStarted": "Get Started",
-    "enterSafeSpace": "Enter Safe Space"
+    "enterSafeSpace": "Enter Safe Space",
+    "byContinuing": "By continuing, you agree to our"
   },
   "SignUp": {
     "title": "Sign Up",
@@ -35,11 +42,8 @@
     "logIn": "Log In",
     "dontHaveAccount": "Don't have an account?",
     "signUp": "Sign Up",
-    "continueWith": "Or continue with",
+    "continueWith": "Continue with",
     "biometric": "Or "
-  },
-  "ForgotPasswordWeb": {
-    "emailOnlyHint": "Please use your email address to reset your password on the web."
   },
   "Nickname": {
     "title": "Add Your Nickname",
@@ -2653,5 +2657,269 @@
   },
   "ChatStatusBar": {
     "messaging": "Session in progress"
+  },
+  "VenterHome": {
+    "subtitle": "How are you feeling today?",
+    "letsVent": "Let's Vent",
+    "call": "Call",
+    "chat": "Chat",
+    "moodCheckIn": "Mood Check-In",
+    "seeAll": "See All",
+    "moodOverTime": "Mood Over Time",
+    "reflections": "Reflections",
+    "addReflection": "Add a Reflection",
+    "todaysReflection": "Today's Reflection",
+    "findListener": "Find a Listener",
+    "quickAccess": "Quick Access",
+    "happyDays": "Happy Days This Month",
+    "currentStreak": "Current Streak",
+    "days": "days",
+    "fire": "🔥",
+    "noReflections": "No reflections yet",
+    "noReflectionsDesc": "Add your first reflection to start your journey."
+  },
+  "Navigation": {
+    "tabs": {
+      "home": "Home",
+      "messages": "Messages",
+      "wallet": "Wallet",
+      "settings": "Settings"
+    }
+  },
+  "ListenerWallet": {
+    "title": "Earnings",
+    "availableBalance": "Available Balance",
+    "requestPayout": "Request Payout",
+    "managePayout": "Payout Methods",
+    "totalEarned": "Total Earned",
+    "thisMonth": "This Month",
+    "earningHistory": "Earning History",
+    "viewAll": "View All",
+    "noEarnings": "No earnings yet",
+    "noEarningsDesc": "Complete sessions to start earning.",
+    "sessionEarning": "Session Earning",
+    "transferHistory": "Transfer History",
+    "transfersDescription": "Your transfer history will appear here. Transfers are processed securely through your account."
+  },
+  "ListenerAccount": {
+    "switchRole": "Switch Role",
+    "switchConfirm": "Switch to Venter Account?",
+    "switchDesc": "You are currently a Listener. Switching to a Venter account allows you to seek support. Your listener profile and earnings will remain intact.",
+    "switchWarning": "You will be logged out of your active listener sessions and unavailable until you switch back.",
+    "confirmSwitch": "Yes, Switch to Venter",
+    "cancel": "Cancel"
+  },
+  "ListenerHome": {
+    "listener": "Listener",
+    "incomingRequests": "Incoming Requests",
+    "noRequests": "No pending requests",
+    "noRequestsDesc": "New requests will appear here when venters seek support.",
+    "callSession": "Call Session",
+    "chatSession": "Chat Session"
+  },
+  "ListenerRequests": {
+    "subtitle": "Accept or decline venter connection requests",
+    "pending": "Pending",
+    "accept": "Accept",
+    "decline": "Decline"
+  },
+  "Profile": {
+    "title": "Profile",
+    "settings": "Settings",
+    "logout": "Logout",
+    "general": "General",
+    "notifications": "Notifications",
+    "security": "Security",
+    "support": "Support",
+    "appearance": "Appearance",
+    "account": "Account",
+    "edit": "Edit Profile",
+    "displayName": "Display Name",
+    "email": "Email"
+  },
+  "Security": {
+    "title": "Security",
+    "changePassword": "Change Password",
+    "twoFactor": "Two-Factor Authentication",
+    "sessions": "Active Sessions",
+    "devices": "Trusted Devices"
+  },
+  "Common": {
+    "anonymous": "Anonymous",
+    "loading": "Loading...",
+    "loadMore": "Load More",
+    "cancel": "Cancel",
+    "viewAll": "View All",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "done": "Done",
+    "continue": "Continue",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "close": "Close",
+    "retry": "Retry",
+    "error": "Something went wrong. Please try again.",
+    "noResults": "No results found",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "all": "All",
+    "none": "None",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "confirm": "Confirm"
+  },
+  "AdminDashboard": {
+    "title": "Dashboard",
+    "platformOverview": "Platform Overview — Last 24 Hours",
+    "activeUsers": "Active Users",
+    "monthlySessions": "Monthly Sessions",
+    "newSignups": "New Signups",
+    "listenerMinutes": "Listener Minutes",
+    "userEngagement": "User Engagement",
+    "sessionTraffic": "Session Traffic",
+    "quickActions": "Quick Actions",
+    "manageUsers": "Manage Users",
+    "listenerRequests": "Listener Requests",
+    "viewReports": "View Reports",
+    "financialStats": "Financial Stats",
+    "week": "Week",
+    "month": "Month"
+  },
+  "Greeting": {
+    "goodMorning": "Good morning",
+    "goodAfternoon": "Good afternoon",
+    "goodEvening": "Good evening"
+  },
+  "VenterCall": {
+    "allCallsTitle": "All Calls",
+    "allCallsSubtitle": "Your call history",
+    "noRecentCalls": "No recent calls",
+    "noRecentCallsDescription": "Your call history will appear here",
+    "callEntry": {
+      "lastCall": "Last call"
+    }
+  },
+  "VenterRecovery": {
+    "dashboard": {
+      "title": "Recovery Dashboard"
+    }
+  },
+  "Notifications": {
+    "title": "Notifications",
+    "push": "Push Notifications",
+    "email": "Email Notifications",
+    "sms": "SMS Notifications",
+    "markAllRead": "Mark all as read",
+    "noNotifications": "No notifications",
+    "noNotificationsDesc": "You don't have any notifications at the moment."
+  },
+  "VenterSettings": {
+    "general": "General",
+    "notifications": "Notifications",
+    "security": "Security",
+    "support": "Support",
+    "appearance": "Appearance",
+    "account": "Account"
+  },
+  "Mood": {
+    "happy": "Happy",
+    "neutral": "Neutral",
+    "sad": "Sad",
+    "anxious": "Anxious",
+    "mad": "Mad",
+    "selectMood": "How are you feeling?",
+    "logMood": "Log Your Mood",
+    "moodHistory": "Mood History",
+    "moodTrends": "Mood Trends",
+    "streak": "Streak",
+    "currentStreak": "Current Streak",
+    "longestStreak": "Longest Streak"
+  },
+  "Reflection": {
+    "title": "Reflection",
+    "addTitle": "Add Reflection",
+    "placeholder": "Write your thoughts here...",
+    "save": "Save Reflection",
+    "history": "Reflection History",
+    "noReflections": "No reflections yet",
+    "noReflectionsDesc": "Start tracking your reflections to see patterns over time."
+  },
+  "Crisis": {
+    "title": "Crisis Support",
+    "warning": "If you're in immediate danger, please contact emergency services.",
+    "safe": "You are safe",
+    "disclaimer": "Ventally is not a substitute for professional mental health services.",
+    "immediateHelp": "Immediate Help",
+    "988Support": "988 Suicide & Crisis Lifeline",
+    "call988": "Call 988",
+    "text988": "Text 988",
+    "resources": "Crisis Resources",
+    "notAlone": "You are not alone",
+    "reachOut": "Reach out for support"
+  },
+  "Wallet": {
+    "title": "Wallet",
+    "balance": "Balance",
+    "addFunds": "Add Funds",
+    "transactions": "Transactions",
+    "noTransactions": "No transactions yet",
+    "noTransactionsDesc": "Your transaction history will appear here."
+  },
+  "Subscription": {
+    "title": "Subscription",
+    "currentPlan": "Current Plan",
+    "upgrade": "Upgrade Plan",
+    "cancel": "Cancel Subscription",
+    "renewal": "Renewal Date",
+    "paymentMethod": "Payment Method",
+    "billingHistory": "Billing History"
+  },
+  "Session": {
+    "title": "Session",
+    "inProgress": "Session in Progress",
+    "waiting": "Waiting for listener...",
+    "connecting": "Connecting...",
+    "ended": "Session Ended",
+    "duration": "Duration",
+    "feedback": "Session Feedback",
+    "rateSession": "Rate this session",
+    "skip": "Skip"
+  },
+  "Report": {
+    "title": "Report",
+    "submit": "Submit Report",
+    "reason": "Reason for report",
+    "details": "Additional details",
+    "success": "Report submitted successfully",
+    "myReports": "My Reports",
+    "noReports": "No reports submitted",
+    "noReportsDesc": "You haven't submitted any reports yet."
+  },
+  "Admin": {
+    "users": "Users",
+    "userDetail": "User Details",
+    "subAdmins": "Sub-Admins",
+    "reports": "Reports",
+    "reportDetail": "Report Details",
+    "takeAction": "Take Action",
+    "viewChat": "View Chat",
+    "listenerRequests": "Listener Requests",
+    "reviewRequest": "Review Request",
+    "financialStats": "Financial Statistics",
+    "paymentHistory": "Payment History",
+    "rolesPermissions": "Roles & Permissions",
+    "crisisConfig": "Crisis Configuration",
+    "exports": "Data Exports",
+    "addSubAdmin": "Add Sub-Admin",
+    "selectPermissions": "Select Permissions",
+    "securitySettings": "Security Settings",
+    "changeEmail": "Change Email/Phone",
+    "verifyOTP": "Verify OTP",
+    "resetPassword": "Reset Password",
+    "securitySuccess": "Security Update Successful"
   }
 }

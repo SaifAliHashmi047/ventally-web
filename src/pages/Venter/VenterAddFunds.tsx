@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
@@ -10,6 +11,7 @@ import { DollarSign, CreditCard } from 'lucide-react';
 const PRESET_AMOUNTS = [5, 10, 20, 50, 100];
 
 export const VenterAddFunds = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { addFunds } = useWallet();
   const [amount, setAmount] = useState('');
@@ -32,7 +34,7 @@ export const VenterAddFunds = () => {
         navigate('/venter/wallet');
       }
     } catch (e: any) {
-      setError(e?.response?.data?.message || 'Payment processing failed. Please try again.');
+      setError(e?.error || 'Payment processing failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -40,14 +42,14 @@ export const VenterAddFunds = () => {
 
   return (
     <div className="page-wrapper animate-fade-in">
-      <PageHeader title="Add Funds" onBack={() => navigate('/venter/wallet')} />
+      <PageHeader title={t('Wallet.addFunds')} onBack={() => navigate('/venter/wallet')} />
 
       <GlassCard bordered>
         <div className="text-center mb-6">
           <div className="w-16 h-16 rounded-full bg-primary/15 flex items-center justify-center mx-auto mb-3">
             <DollarSign size={28} className="text-primary" />
           </div>
-          <p className="text-sm text-gray-500">Choose an amount to add to your wallet</p>
+          <p className="text-sm text-gray-500">{t('Wallet.selectAmount')}</p>
         </div>
 
         {/* Preset Amounts */}
@@ -69,9 +71,9 @@ export const VenterAddFunds = () => {
 
         {/* Custom Amount */}
         <Input
-          label="Custom Amount"
+          label={t('Wallet.selectAmount')}
           type="number"
-          placeholder="Enter amount..."
+          placeholder="0.00"
           value={amount}
           onChange={e => { setAmount(e.target.value); setError(''); }}
           error={error}
@@ -103,11 +105,11 @@ export const VenterAddFunds = () => {
         leftIcon={<CreditCard size={18} />}
         onClick={handleAddFunds}
       >
-        Proceed to Payment
+        {t('Wallet.confirm')}
       </Button>
 
       <p className="text-xs text-gray-600 text-center">
-        Payments are processed securely via Stripe. Your card details are never stored.
+        Payments are processed securely. Your card details are never stored.
       </p>
     </div>
   );

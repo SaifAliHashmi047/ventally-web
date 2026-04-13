@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { ReactNode } from 'react';
 import {
   Home, MessageSquare, Bell, Settings, LogOut, Menu, X,
@@ -18,14 +19,14 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { path: '/venter/home', label: 'Home', icon: Home },
-  { path: '/venter/chat', label: 'Messages', icon: MessageSquare },
-  { path: '/venter/mood', label: 'Mood & Wellness', icon: Brain },
-  { path: '/venter/reflections', label: 'Reflections', icon: BookOpen },
-  { path: '/venter/recovery', label: 'Recovery', icon: TrendingUp },
-  { path: '/venter/wallet', label: 'Wallet', icon: Wallet },
-  { path: '/venter/notifications', label: 'Notifications', icon: Bell },
-  { path: '/venter/settings', label: 'Settings', icon: Settings },
+  { path: '/venter/home', label: 'Navigation.tabs.home', icon: Home },
+  { path: '/venter/chat', label: 'Navigation.tabs.messages', icon: MessageSquare },
+  { path: '/venter/mood', label: 'VenterHome.moodCheckIn', icon: Brain },
+  { path: '/venter/reflections', label: 'VenterHome.reflections', icon: BookOpen },
+  { path: '/venter/recovery', label: 'VenterRecovery.dashboard.title', icon: TrendingUp },
+  { path: '/venter/wallet', label: 'Navigation.tabs.wallet', icon: Wallet },
+  { path: '/venter/notifications', label: 'Notifications.title', icon: Bell },
+  { path: '/venter/settings', label: 'Navigation.tabs.settings', icon: Settings },
 ];
 
 interface VenterLayoutProps {
@@ -33,6 +34,7 @@ interface VenterLayoutProps {
 }
 
 export const VenterLayout = ({ children }: VenterLayoutProps) => {
+  const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -91,7 +93,7 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
                 className={cn('nav-link', active && 'active')}
               >
                 <Icon size={18} />
-                <span>{item.label}</span>
+                <span>{t(item.label)}</span>
                 {item.badge ? (
                   <span className="ml-auto badge badge-error text-xs">{item.badge}</span>
                 ) : active ? (
@@ -110,7 +112,7 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
             className={cn('nav-link', isActive('/venter/profile') && 'active')}
           >
             <User size={18} />
-            <span>{user?.displayName || user?.firstName || 'My Profile'}</span>
+            <span>{t('Profile.title')}</span>
           </Link>
           <Link
             to="/venter/security"
@@ -118,14 +120,14 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
             className={cn('nav-link', isActive('/venter/security') && 'active')}
           >
             <Shield size={18} />
-            <span>Security</span>
+            <span>{t('Security.title')}</span>
           </Link>
           <button
             onClick={handleLogout}
             className="nav-link w-full text-left text-red-400 hover:text-red-300 hover:bg-red-500/8"
           >
             <LogOut size={18} />
-            <span>Log Out</span>
+            <span>{t('Profile.logout')}</span>
           </button>
         </div>
       </aside>

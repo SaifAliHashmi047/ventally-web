@@ -25,6 +25,10 @@ import { ChatScreen } from '../pages/Chat/ChatScreen';
 import { SessionFeedback } from '../pages/Chat/SessionFeedback';
 import { SessionRating } from '../pages/Chat/SessionRating';
 import { ListenerActiveCall } from '../pages/Listener/ListenerActiveCall';
+import { PayoutMethodScreen } from '../pages/Listener/PayoutMethodScreen';
+import { LinkBankAccountScreen } from '../pages/Listener/LinkBankAccountScreen';
+import { ListenerCrisisEscalation } from '../pages/Listener/ListenerCrisisEscalation';
+import { ListenerChangeAccountType } from '../pages/Listener/ListenerChangeAccountType';
 
 export const ListenerRouter = () => {
   return (
@@ -51,6 +55,10 @@ export const ListenerRouter = () => {
         <Route path="chat/:id" element={<ChatScreen />} />
         <Route path="session/:id/feedback" element={<SessionFeedback />} />
         <Route path="session/:id/rating" element={<SessionRating />} />
+        <Route path="payout-method" element={<PayoutMethodScreen />} />
+        <Route path="bank-account" element={<LinkBankAccountScreen />} />
+        <Route path="crisis-escalation" element={<ListenerCrisisEscalation />} />
+        <Route path="change-account-type" element={<ListenerChangeAccountType />} />
         <Route path="*" element={<Navigate to="home" replace />} />
       </Routes>
     </ListenerLayout>

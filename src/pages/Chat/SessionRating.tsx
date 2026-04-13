@@ -36,7 +36,7 @@ export const SessionRating = () => {
           <div className="w-20 h-20 rounded-full bg-success/15 flex items-center justify-center mx-auto mb-4">
             <CheckCircle size={36} className="text-success" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Thank You!</h2>
+          <h2 className="text-xl font-bold text-white mb-2">Thank You!</h2>
           <p className="text-gray-500 mb-6">Your rating helps us improve the Ventally experience.</p>
           <Button variant="primary" onClick={() => navigate(`/${role}/home`)}>Back to Home</Button>
         </div>
@@ -48,7 +48,7 @@ export const SessionRating = () => {
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm animate-fade-in">
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-white">Rate Your Listener</h2>
+          <h2 className="text-xl font-bold text-white">Rate Your Listener</h2>
           <p className="text-gray-500 mt-1">How was your experience?</p>
         </div>
 

@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '../store/store';
 
 // Auth Pages
+import { Onboarding } from '../pages/Auth/Onboarding';
 import { LoginWeb } from '../pages/Auth/LoginWeb';
 import { SignUpWeb } from '../pages/Auth/SignUpWeb';
 import { SignUpOTP } from '../pages/Auth/SignUpOTP';
@@ -25,6 +26,11 @@ import { VenterRouter } from './VenterRouter';
 import { ListenerRouter } from './ListenerRouter';
 import { AdminRouter } from './AdminRouter';
 
+import { PaymentMethodsScreen } from '../pages/Auth/PaymentMethodsScreen';
+import { AddPaymentMethodScreen } from '../pages/Auth/AddPaymentMethodScreen';
+import { PaymentMethodSavedScreen } from '../pages/Auth/PaymentMethodSavedScreen';
+import { SubscriptionSuccessScreen } from '../pages/Auth/SubscriptionSuccessScreen';
+
 const AppRouter = () => {
   const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
   const userType = useSelector((state: RootState) => (state.user.user as any)?.userType);
@@ -41,6 +47,8 @@ const AppRouter = () => {
       {!isAuthenticated ? (
         <>
           {/* Auth Routes */}
+          <Route path="/" element={<Onboarding />} />
+          <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/login" element={<LoginWeb />} />
           <Route path="/signup" element={<SignUpWeb />} />
           <Route path="/signup/otp" element={<SignUpOTP />} />
@@ -50,6 +58,13 @@ const AppRouter = () => {
           <Route path="/signup/questions" element={<OptionalQuestionsHero />} />
           <Route path="/signup/questions/:stepId" element={<VenterQuestionsFlow />} />
           <Route path="/signup/choose-plan" element={<ChoosePlan />} />
+          
+          {/* Auth Payment Routes */}
+          <Route path="/signup/payment" element={<PaymentMethodsScreen />} />
+          <Route path="/signup/payment/add" element={<AddPaymentMethodScreen />} />
+          <Route path="/signup/payment/saved" element={<PaymentMethodSavedScreen />} />
+          <Route path="/signup/success" element={<SubscriptionSuccessScreen />} />
+
           <Route path="/signup/listener-training" element={<ListenerTraining />} />
           <Route path="/signup/listener-legal" element={<ListenerLegalFlow />} />
           <Route path="/signup/verification" element={<ListenerVerification />} />
@@ -57,8 +72,8 @@ const AppRouter = () => {
           <Route path="/forgot-password/verify-email" element={<EmailVerificationWeb />} />
           <Route path="/forgot-password/new-password" element={<CreateNewPasswordWeb />} />
           <Route path="/forgot-password/done" element={<ResetSuccessfulWeb />} />
-          {/* Catch-all → login */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          {/* Catch-all → onboarding */}
+          <Route path="*" element={<Navigate to="/onboarding" replace />} />
         </>
       ) : (
         <>

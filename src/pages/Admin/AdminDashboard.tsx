@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAdmin } from '../../api/hooks/useAdmin';
 import { StatCard } from '../../components/ui/StatCard';
 import { GlassCard } from '../../components/ui/GlassCard';
@@ -17,10 +18,10 @@ const formatNumber = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(1)}K` : St
 const formatChange = (pct: number) => `${pct >= 0 ? '+' : ''}${pct.toFixed(2)}%`;
 
 const FALLBACK_CARDS = [
-  { key: 'activeUsers', label: 'Active Users', value: '--', change: '--', positive: true },
-  { key: 'monthlySessions', label: 'Monthly Sessions', value: '--', change: '--', positive: false },
-  { key: 'newSignups', label: 'New Signups', value: '--', change: '--', positive: true },
-  { key: 'listenerOnlineMinutes', label: 'Listener Minutes', value: '--', change: '--', positive: true },
+  { key: 'activeUsers', labelKey: 'AdminDashboard.activeUsers', value: '--', change: '--', positive: true },
+  { key: 'monthlySessions', labelKey: 'AdminDashboard.monthlySessions', value: '--', change: '--', positive: false },
+  { key: 'newSignups', labelKey: 'AdminDashboard.newSignups', value: '--', change: '--', positive: true },
+  { key: 'listenerOnlineMinutes', labelKey: 'AdminDashboard.listenerMinutes', value: '--', change: '--', positive: true },
 ];
 
 const STAT_ICONS = [Users, BarChart3, UserPlus, Clock];
@@ -39,6 +40,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export const AdminDashboard = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { getReportStats } = useAdmin();
   const [loading, setLoading] = useState(true);
@@ -58,25 +60,25 @@ export const AdminDashboard = () => {
         if (cards24h) {
           setCards([
             {
-              key: 'activeUsers', label: 'Active Users',
+              key: 'activeUsers', labelKey: 'AdminDashboard.activeUsers',
               value: formatNumber(cards24h.activeUsers?.value ?? 0),
               change: formatChange(cards24h.activeUsers?.changePercent ?? 0),
               positive: (cards24h.activeUsers?.changePercent ?? 0) >= 0,
             },
             {
-              key: 'monthlySessions', label: 'Monthly Sessions',
+              key: 'monthlySessions', labelKey: 'AdminDashboard.monthlySessions',
               value: formatNumber(cards24h.monthlySessions?.value ?? 0),
               change: formatChange(cards24h.monthlySessions?.changePercent ?? 0),
               positive: (cards24h.monthlySessions?.changePercent ?? 0) >= 0,
             },
             {
-              key: 'newSignups', label: 'New Signups',
+              key: 'newSignups', labelKey: 'AdminDashboard.newSignups',
               value: formatNumber(cards24h.newSignups?.value ?? 0),
               change: formatChange(cards24h.newSignups?.changePercent ?? 0),
               positive: (cards24h.newSignups?.changePercent ?? 0) >= 0,
             },
             {
-              key: 'listenerOnlineMinutes', label: 'Listener Minutes',
+              key: 'listenerOnlineMinutes', labelKey: 'AdminDashboard.listenerMinutes',
               value: formatNumber(cards24h.listenerOnlineMinutes?.value ?? 0),
               change: formatChange(cards24h.listenerOnlineMinutes?.changePercent ?? 0),
               positive: (cards24h.listenerOnlineMinutes?.changePercent ?? 0) >= 0,
@@ -114,8 +116,8 @@ export const AdminDashboard = () => {
     <div className="page-wrapper animate-fade-in">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">Dashboard</h1>
-        <p className="text-gray-500 mt-1">Platform Overview — Last 24 Hours</p>
+        <h1 className="text-3xl font-bold text-white tracking-tight">{t('AdminDashboard.title')}</h1>
+        <p className="text-gray-500 mt-1">{t('AdminDashboard.platformOverview')}</p>
       </div>
 
       {/* Stats Grid */}
@@ -129,7 +131,7 @@ export const AdminDashboard = () => {
             return (
               <StatCard
                 key={card.key}
-                label={card.label}
+                label={t(card.labelKey)}
                 value={card.value}
                 change={card.change}
                 changePositive={card.positive}
@@ -145,7 +147,7 @@ export const AdminDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* User Progress Line Chart */}
         <GlassCard>
-          <h2 className="text-base font-semibold text-white mb-4">User Engagement</h2>
+          <h2 className="text-base font-semibold text-white mb-4">{t('AdminDashboard.userEngagement')}</h2>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={lineData.length ? lineData : [{ value: 0, label: '--' }]}>
               <CartesianGrid stroke="rgba(255,255,255,0.05)" strokeDasharray="4 4" />
@@ -167,7 +169,7 @@ export const AdminDashboard = () => {
         {/* Session Traffic Bar Chart */}
         <GlassCard>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-white">Session Traffic</h2>
+            <h2 className="text-base font-semibold text-white">{t('AdminDashboard.sessionTraffic')}</h2>
             <div className="flex gap-1">
               {(['week', 'month'] as const).map(p => (
                 <button
@@ -179,7 +181,7 @@ export const AdminDashboard = () => {
                       : 'text-gray-500 hover:text-white'
                   }`}
                 >
-                  {p.charAt(0).toUpperCase() + p.slice(1)}
+                  {p === 'week' ? t('AdminDashboard.week') : t('AdminDashboard.month')}
                 </button>
               ))}
             </div>
@@ -197,14 +199,14 @@ export const AdminDashboard = () => {
 
       {/* Quick Admin Links */}
       <div>
-        <h2 className="section-title mb-3">Quick Actions</h2>
+        <h2 className="section-title mb-3">{t('AdminDashboard.quickActions')}</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {[
-            { label: 'Manage Users', path: '/admin/users', icon: Users },
-            { label: 'Listener Requests', path: '/admin/listener-requests', icon: UserPlus },
-            { label: 'View Reports', path: '/admin/reports', icon: BarChart3 },
-            { label: 'Financial Stats', path: '/admin/financial', icon: TrendingUp },
-          ].map(({ label, path, icon: Icon }) => (
+            { labelKey: 'AdminDashboard.manageUsers', path: '/admin/users', icon: Users },
+            { labelKey: 'AdminDashboard.listenerRequests', path: '/admin/listener-requests', icon: UserPlus },
+            { labelKey: 'AdminDashboard.viewReports', path: '/admin/reports', icon: BarChart3 },
+            { labelKey: 'AdminDashboard.financialStats', path: '/admin/financial', icon: TrendingUp },
+          ].map(({ labelKey, path, icon: Icon }) => (
             <GlassCard
               key={path}
               hover
@@ -217,7 +219,7 @@ export const AdminDashboard = () => {
                 <Icon size={16} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">{label}</p>
+                <p className="text-sm font-medium text-white truncate">{t(labelKey)}</p>
               </div>
               <ChevronRight size={14} className="text-gray-500 flex-shrink-0" />
             </GlassCard>

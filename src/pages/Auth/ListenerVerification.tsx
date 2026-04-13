@@ -23,11 +23,11 @@ export const ListenerVerification = () => {
         </p>
 
         <div className="glass" style={{ padding: '24px', borderRadius: '24px', marginBottom: '40px', textAlign: 'left' }}>
-          <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'white', marginBottom: '12px' }}>What happens next?</h3>
-          <ul style={{ color: 'var(--text-dim)', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
-            <li>Our team verifies your legal documents.</li>
-            <li>We review your training completion status.</li>
-            <li>Once approved, you will get access to the Listener Dashboard.</li>
+          <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'white', marginBottom: '12px' }}>{t('VerificationInProgress.nextSteps', 'What happens next?')}</h3>
+          <ul style={{ color: 'var(--text-dim)', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px', listStyleType: 'disc' }}>
+            <li>{t('VerificationInProgress.step1', 'Our team verifies your legal documents.')}</li>
+            <li>{t('VerificationInProgress.step2', 'We review your training completion status.')}</li>
+            <li>{t('VerificationInProgress.step3', 'Once approved, you will get access to the Listener Dashboard.')}</li>
           </ul>
         </div>
 

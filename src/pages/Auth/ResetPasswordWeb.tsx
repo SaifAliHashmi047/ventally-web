@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AuthLayout } from '../../components/Layout/AuthLayout';
-import { AuthStepHeader } from '../../components/Auth/AuthStepHeader';
 import { requestPasswordReset } from '../../api';
+import { Input } from '../../components/ui/Input';
+import { Button } from '../../components/ui/Button';
+import { Mail, ArrowLeft } from 'lucide-react';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -41,52 +42,34 @@ export const ResetPasswordWeb = () => {
   };
 
   return (
-    <AuthLayout>
-      <AuthStepHeader backTo="/login" />
-      <div
-        style={{
-          padding: '20px 8px',
-          borderRadius: '20px',
-          background: 'rgba(0,0,0,0.2)',
-          border: '1px solid var(--border)',
-          marginBottom: '20px',
-        }}
-      >
-        <h1
-          style={{
-            fontSize: '22px',
-            fontWeight: 700,
-            color: 'var(--text-pure)',
-            textAlign: 'center',
-            margin: '0 0 8px',
-          }}
+    <div className="auth-container">
+      <div className="auth-card animate-slide-up relative">
+        <button 
+          onClick={() => navigate('/login')}
+          className="text-gray-500 hover:text-white flex items-center gap-2 mb-6 transition-colors"
         >
-          {t('ResetPassword.title')}
-        </h1>
-        <p style={{ fontSize: '15px', color: 'var(--text-dim)', textAlign: 'center', margin: '0 0 20px', lineHeight: 1.5 }}>
-          {t('ResetPassword.subtitle')}
-        </p>
+          <ArrowLeft size={20} /> {t('Common.back', 'Back')}
+        </button>
 
-        <form onSubmit={handleSend} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <label style={{ fontSize: '15px', fontWeight: 500, color: 'var(--text-main)' }}>{t('LogIn.emailOrPhone')}</label>
-            <input
-              type="email"
-              autoComplete="email"
-              placeholder={t('SignUp.emailOrPhone')}
-              value={emailOrPhone}
-              onChange={(e) => setEmailOrPhone(e.target.value)}
-              style={{ width: '100%', height: '52px' }}
-            />
-          </div>
-          {error ? (
-            <p style={{ color: '#f87171', fontSize: '14px', margin: 0 }}>{error}</p>
-          ) : null}
-          <button type="submit" className="btn-primary" disabled={loading} style={{ height: '52px', borderRadius: '16px', justifyContent: 'center' }}>
-            {loading ? '…' : t('ResetPassword.sendOTP')}
-          </button>
+        <h2 className="text-2xl font-bold text-white mb-2">{t('ResetPassword.title')}</h2>
+        <p className="text-sm text-gray-500 mb-8">{t('ResetPassword.subtitle')}</p>
+
+        <form onSubmit={handleSend} className="space-y-4">
+          <Input
+            label={t('LogIn.emailOrPhone')}
+            type="email"
+            placeholder={t('SignUp.emailOrPhone')}
+            value={emailOrPhone}
+            onChange={(e) => { setEmailOrPhone(e.target.value); setError(''); }}
+            error={error}
+            leftIcon={<Mail size={16} />}
+          />
+
+          <Button type="submit" variant="primary" size="lg" fullWidth disabled={loading} loading={loading}>
+            {t('ResetPassword.sendOTP')}
+          </Button>
         </form>
       </div>
-    </AuthLayout>
+    </div>
   );
 };

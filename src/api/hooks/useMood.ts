@@ -16,7 +16,7 @@ export const useMood = () => {
     notes?: string;
     category?: string;
   }) => {
-    const res = await apiInstance.post('mood', payload);
+    const res = await apiInstance.post('mood/log', payload);
     return res.data;
   };
 
@@ -25,7 +25,8 @@ export const useMood = () => {
     notes?: string;
     category?: string;
   }) => {
-    const res = await apiInstance.put(`mood/${id}`, payload);
+    // Note: id is not used in the url, it updates the today's mood
+    const res = await apiInstance.put(`mood/today`, payload);
     return res.data;
   };
 
@@ -39,6 +40,11 @@ export const useMood = () => {
     return res.data;
   };
 
+  const deleteMood = async (id: string) => {
+    const res = await apiInstance.delete(`mood/${id}`);
+    return res.data;
+  };
+
   return {
     getTodayMood,
     getMoodStats,
@@ -46,5 +52,6 @@ export const useMood = () => {
     updateMood,
     getMoodHistory,
     getMonthlyMoods,
+    deleteMood,
   };
 };

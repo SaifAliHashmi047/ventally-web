@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { VenterLayout } from '../components/Layout/VenterLayout';
+import { VenterMoodDetails } from '../pages/Venter/VenterMoodDetails';
 
 // Venter Pages
 import { VenterDashboard } from '../pages/Venter/VenterDashboard';
@@ -17,9 +18,19 @@ import { VenterRecoveryDashboard } from '../pages/Venter/VenterRecoveryDashboard
 import { VenterJourneyDashboard } from '../pages/Venter/VenterJourneyDashboard';
 import { VenterLogProgress } from '../pages/Venter/VenterLogProgress';
 import { VenterProgressSummary } from '../pages/Venter/VenterProgressSummary';
+import { VenterRecoveryCalendar } from '../pages/Venter/VenterRecoveryCalendar';
 import { VenterSettings } from '../pages/Venter/VenterSettings';
 import { VenterCrisisFlow } from '../pages/Venter/VenterCrisisFlow';
+import { VenterCrisisWarning } from '../pages/Venter/VenterCrisisWarning';
+import { VenterCrisisSafe } from '../pages/Venter/VenterCrisisSafe';
+import { VenterCrisisDisclaimer } from '../pages/Venter/VenterCrisisDisclaimer';
+import { VenterCrisisImmediateHelp } from '../pages/Venter/VenterCrisisImmediateHelp';
+import { VenterCrisis988Support } from '../pages/Venter/VenterCrisis988Support';
 import { VenterSubscription } from '../pages/Venter/VenterSubscription';
+import { SubscriptionDetailsScreen } from '../pages/Venter/SubscriptionDetailsScreen';
+import { VenterPaymentCheckScreen } from '../pages/Venter/VenterPaymentCheckScreen';
+import { VenterNoCreditScreen } from '../pages/Venter/VenterNoCreditScreen';
+import { VenterAllCallsScreen } from '../pages/Venter/VenterAllCallsScreen';
 
 // Common Pages
 import { ProfileScreen } from '../pages/Common/ProfileScreen';
@@ -54,6 +65,9 @@ export const VenterRouter = () => {
         <Route path="mood/log" element={<VenterMoodLog />} />
         <Route path="mood/trends" element={<VenterMoodTrends />} />
         <Route path="mood/history" element={<VenterMoodHistory />} />
+        <Route path="mood/:id" element={<VenterMoodDetails />} />
+        <Route path="mood/monthly" element={<VenterMoodTrends />} />
+        <Route path="mood/variation" element={<VenterMoodTrends />} />
         <Route path="reflections" element={<VenterReflections />} />
         <Route path="reflections/add" element={<VenterAddReflection />} />
         <Route path="reflections/:id" element={<VenterReflectionDetail />} />
@@ -61,9 +75,21 @@ export const VenterRouter = () => {
         <Route path="recovery/journey" element={<VenterJourneyDashboard />} />
         <Route path="recovery/log" element={<VenterLogProgress />} />
         <Route path="recovery/summary" element={<VenterProgressSummary />} />
+        <Route path="recovery/calendar" element={<VenterRecoveryCalendar />} />
+        <Route path="recovery/:id" element={<VenterRecoveryDashboard />} />
+        <Route path="recovery/edit/:id" element={<VenterLogProgress />} />
         <Route path="crisis" element={<VenterCrisisFlow />} />
+        <Route path="crisis-warning" element={<VenterCrisisWarning />} />
+        <Route path="crisis-safe" element={<VenterCrisisSafe />} />
+        <Route path="crisis-disclaimer" element={<VenterCrisisDisclaimer />} />
+        <Route path="crisis-immediate-help" element={<VenterCrisisImmediateHelp />} />
+        <Route path="crisis-988-support" element={<VenterCrisis988Support />} />
         <Route path="subscription" element={<VenterSubscription />} />
+        <Route path="subscription/details" element={<SubscriptionDetailsScreen />} />
         <Route path="settings" element={<VenterSettings />} />
+        <Route path="payment-check" element={<VenterPaymentCheckScreen />} />
+        <Route path="no-credit" element={<VenterNoCreditScreen />} />
+        <Route path="all-calls" element={<VenterAllCallsScreen />} />
         {/* Common */}
         <Route path="profile" element={<ProfileScreen />} />
         <Route path="profile/edit" element={<EditProfile />} />

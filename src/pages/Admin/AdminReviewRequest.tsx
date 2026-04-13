@@ -65,7 +65,7 @@ export const AdminReviewRequest = () => {
       {/* Applicant Info */}
       <GlassCard bordered>
         <div className="flex items-center gap-4 mb-6">
-          <div className="w-16 h-16 rounded-full glass flex items-center justify-center text-2xl font-bold text-white">
+          <div className="w-16 h-16 rounded-full glass flex items-center justify-center text-xl font-bold text-white">
             {(user?.firstName?.[0] || 'L').toUpperCase()}
           </div>
           <div>

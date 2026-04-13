@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
@@ -11,6 +12,7 @@ import { useAuth } from '../../api/hooks/useAuth';
 import { Trash2, AlertTriangle } from 'lucide-react';
 
 export const DeleteAccount = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { deleteAccount } = useAuth();
   const dispatch = useDispatch();
@@ -27,7 +29,7 @@ export const DeleteAccount = () => {
       dispatch(logout() as any);
       navigate('/login');
     } catch (e: any) {
-      setError(e?.response?.data?.message || 'Failed to delete account. Check your password.');
+      setError(e?.error || 'Failed to delete account. Check your password.');
     } finally {
       setDeleting(false);
     }
@@ -35,55 +37,59 @@ export const DeleteAccount = () => {
 
   return (
     <div className="page-wrapper animate-fade-in">
-      <PageHeader title="Delete Account" onBack={() => navigate(-1)} />
+      <PageHeader title={t('DeleteAccount.title')} onBack={() => navigate(-1)} />
 
-      <GlassCard bordered className="border-error/20 bg-error/5">
-        <div className="flex items-start gap-3 mb-4">
-          <div className="w-10 h-10 rounded-2xl bg-error/15 flex items-center justify-center flex-shrink-0">
-            <AlertTriangle size={18} className="text-error" />
+      <GlassCard bordered className="border-error/30">
+        <div className="flex items-start gap-4 mb-6">
+          <div className="w-12 h-12 rounded-2xl bg-error/15 flex items-center justify-center flex-shrink-0">
+            <AlertTriangle className="text-error" size={24} />
           </div>
           <div>
-            <p className="text-sm font-bold text-error">Warning: This action cannot be undone</p>
-            <p className="text-xs text-gray-400 mt-1">Deleting your account will permanently remove all your data including sessions, mood logs, reflections, and wallet balance.</p>
+            <h3 className="text-lg font-bold text-white mb-2">{t('DeleteAccount.warning')}</h3>
+            <p className="text-sm text-gray-400 leading-relaxed whitespace-pre-wrap">
+              {t('DeleteAccount.description')}
+            </p>
           </div>
         </div>
 
-        <ul className="space-y-2">
-          {['All sessions and history', 'Mood logs and reflections', 'Recovery progress', 'Wallet balance', 'Account profile'].map(item => (
-            <li key={item} className="flex items-center gap-2 text-sm text-gray-400">
-              <div className="w-1.5 h-1.5 rounded-full bg-error" />
-              {item}
-            </li>
-          ))}
-        </ul>
+        <div className="space-y-4">
+          <Input 
+            label={t('DeleteAccount.password')}
+            isPassword 
+            value={password} 
+            onChange={e => { setPassword(e.target.value); setError(''); }} 
+          />
+          {error && <p className="text-sm text-error bg-error/8 border border-error/20 rounded-xl px-3 py-2">{error}</p>}
+        </div>
       </GlassCard>
 
-      <Button
-        variant="danger"
-        size="lg"
-        fullWidth
+      <Button 
+        variant="danger" 
+        size="lg" 
+        fullWidth 
+        disabled={!password}
         leftIcon={<Trash2 size={18} />}
         onClick={() => setConfirmModal(true)}
       >
-        Delete My Account
+        {t('DeleteAccount.button')}
       </Button>
 
-      <Modal isOpen={confirmModal} onClose={() => setConfirmModal(false)} title="Confirm Account Deletion" size="sm">
+      <Modal isOpen={confirmModal} onClose={() => setConfirmModal(false)} title={t('DeleteAccount.title')} size="sm">
         <p className="text-sm text-gray-400 mb-4">
-          Enter your password to permanently delete your account. This cannot be undone.
+          {t('DeleteAccount.confirmDelete')}
         </p>
         <Input
-          label="Your Password"
+          label={t('DeleteAccount.password')}
           isPassword
           value={password}
           onChange={e => { setPassword(e.target.value); setError(''); }}
           error={error}
-          placeholder="Enter your password..."
+          placeholder="********"
         />
         <div className="flex gap-3 mt-4">
           <Button variant="glass" fullWidth onClick={() => setConfirmModal(false)}>Cancel</Button>
           <Button variant="danger" fullWidth loading={deleting} onClick={handleDelete}>
-            Delete Account
+            {t('DeleteAccount.button')}
           </Button>
         </div>
       </Modal>

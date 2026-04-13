@@ -26,7 +26,8 @@ export const ContactUs = () => {
     try {
       await apiInstance.post('contact-us', form);
       setSent(true);
-    } catch { setError('Failed to send. Please try again.'); } finally {
+    } catch (e: any) {
+      setError(e?.error || 'Failed to send. Please try again.'); } finally {
       setSending(false);
     }
   };

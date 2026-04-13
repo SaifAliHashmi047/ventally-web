@@ -183,7 +183,7 @@ Follow best practices:
 
 1. Analyze React Native app:
 
-   * Extract screens, flows, roles, APIs
+   * Extract screens, flows, roles, APIs 
 2. Audit existing web app:
 
    * Identify gaps and inconsistencies

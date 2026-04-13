@@ -137,7 +137,10 @@ apiInstance.interceptors.response.use(
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
     console.log("Original Request:", { error, errorMessage: (error?.response?.data as any)?.message });
     // Handle 401 Unauthorized - Token expired or invalid
-    if (error.response?.status === 401 && (error?.response?.data as any)?.message === "No token provided" && !originalRequest._retry && !originalRequest.url?.includes('auth/login')) {
+    if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes('auth/login') && !originalRequest.url?.includes('auth/refresh')) {
+      // Set _retry immediately to prevent any recursive retry loops
+      originalRequest._retry = true;
+
       if (isRefreshing) {
         // If already refreshing, queue this request
         return new Promise((resolve, reject) => {
@@ -154,70 +157,57 @@ apiInstance.interceptors.response.use(
           });
       }
 
-      originalRequest._retry = true;
       isRefreshing = true;
 
       try {
         const refreshToken = await getRefreshToken();
 
         if (!refreshToken) {
-          // No refresh token available, clear tokens and reject
           await clearTokens();
           processQueue(new Error('No refresh token available'), null);
           isRefreshing = false;
 
-          const errorResponse: ApiResponse = {
+          return Promise.reject({
             success: false,
             statusCode: 401,
             error: 'Authentication required. Please login again.',
-          };
-          return Promise.reject(errorResponse);
+          } as ApiResponse);
         }
 
         // Attempt to refresh the token
         const refreshResponse = await axios.post(
           `${apiInstance.defaults.baseURL}auth/refresh`,
           { refreshToken: refreshToken },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
+          { headers: { 'Content-Type': 'application/json' } }
         );
 
         const { accessToken, refreshToken: newRefreshToken } = refreshResponse.data;
 
         if (accessToken) {
-          // Save new tokens (fallback to existing refresh token if not provided in response)
           const updatedRefreshToken = newRefreshToken || refreshToken;
           await setTokens(accessToken, updatedRefreshToken);
 
-          // Update the original request with new token
           if (originalRequest.headers) {
             originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           }
 
-          // Process queued requests
           processQueue(null, accessToken);
           isRefreshing = false;
 
-          // Retry the original request
           return apiInstance(originalRequest);
         } else {
           throw new Error('Invalid refresh token response');
         }
       } catch (refreshError: any) {
-        // Refresh failed, clear tokens and reject
         await clearTokens();
         processQueue(refreshError, null);
         isRefreshing = false;
 
-        const errorResponse: ApiResponse = {
+        return Promise.reject({
           success: false,
           statusCode: 401,
           error: 'Session expired. Please login again.',
-        };
-        return Promise.reject(errorResponse);
+        } as ApiResponse);
       }
     }
 
@@ -225,7 +215,8 @@ apiInstance.interceptors.response.use(
     const errorResponse: ApiResponse = {
       success: false,
       statusCode: error.response?.status,
-      error: (error.response?.data as any)?.message || error.message || 'Something went wrong',
+      error: (error.response?.data as any)?.message || (error.response?.data as any)?.error || error.message || 'Something went wrong',
+      data: error.response?.data,
     };
 
     return Promise.reject(errorResponse);

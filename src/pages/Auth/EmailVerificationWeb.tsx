@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AuthLayout } from '../../components/Layout/AuthLayout';
-import { AuthStepHeader } from '../../components/Auth/AuthStepHeader';
+import { Button } from '../../components/ui/Button';
+import { ArrowLeft } from 'lucide-react';
 
 export const EmailVerificationWeb = () => {
   const { t } = useTranslation();
@@ -51,28 +51,24 @@ export const EmailVerificationWeb = () => {
   }
 
   return (
-    <AuthLayout>
-      <AuthStepHeader backTo="/forgot-password" />
-      <div
-        style={{
-          padding: '20px 8px',
-          borderRadius: '20px',
-          background: 'rgba(0,0,0,0.2)',
-          border: '1px solid var(--border)',
-          marginBottom: '20px',
-        }}
-      >
-        <h1 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-pure)', textAlign: 'center', margin: '0 0 8px' }}>
-          {t('EmailVerification.title')}
-        </h1>
-        <p style={{ fontSize: '15px', color: 'var(--text-dim)', textAlign: 'center', margin: '0 0 20px', lineHeight: 1.5 }}>
+    <div className="auth-container">
+      <div className="auth-card animate-slide-up relative text-center">
+        <button 
+          onClick={() => navigate('/forgot-password')}
+          className="text-gray-500 hover:text-white flex items-center gap-2 mb-6 transition-colors absolute top-0 left-0"
+        >
+          <ArrowLeft size={20} /> {t('Common.back', 'Back')}
+        </button>
+
+        <h2 className="text-2xl font-bold text-white mb-2 mt-10">{t('EmailVerification.title')}</h2>
+        <p className="text-sm text-gray-500 mb-8 leading-relaxed">
           {t('EmailVerification.subtitle')}
           <br />
-          <span style={{ color: 'var(--text-main)', fontWeight: 500 }}>{email}</span>
+          <span className="text-gray-300 font-medium">{email}</span>
         </p>
 
-        <form onSubmit={handleVerify} style={{ display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center' }}>
-          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+        <form onSubmit={handleVerify} className="space-y-6">
+          <div className="flex gap-3 justify-center mb-6">
             {code.map((digit, i) => (
               <input
                 key={i}
@@ -83,28 +79,23 @@ export const EmailVerificationWeb = () => {
                 value={digit}
                 onChange={(e) => handleDigit(i, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(i, e)}
-                style={{
-                  width: '52px',
-                  height: '56px',
-                  textAlign: 'center',
-                  fontSize: '22px',
-                  fontWeight: 600,
-                  borderRadius: '14px',
-                }}
+                className="w-14 h-14 text-center text-xl font-bold rounded-2xl bg-white/5 border border-white/10 text-white focus:border-primary focus:bg-white/10 transition-colors outline-none"
               />
             ))}
           </div>
-          <p style={{ fontSize: '14px', color: 'var(--text-dim)', margin: 0 }}>
+          
+          <p className="text-sm text-gray-500">
             {t('EmailVerification.didntReceive')}{' '}
-            <button type="button" style={{ background: 'none', border: 'none', color: 'var(--text-pure)', textDecoration: 'underline', cursor: 'pointer', fontWeight: 600 }}>
+            <button type="button" className="text-white hover:text-primary transition-colors font-semibold underline">
               {t('EmailVerification.resend')}
             </button>
           </p>
-          <button type="submit" className="btn-primary" disabled={loading || code.join('').length !== 4} style={{ width: '100%', height: '52px', borderRadius: '16px', justifyContent: 'center' }}>
+          
+          <Button type="submit" variant="primary" size="lg" fullWidth disabled={loading || code.join('').length !== 4}>
             {t('EmailVerification.verifyAccount')}
-          </button>
+          </Button>
         </form>
       </div>
-    </AuthLayout>
+    </div>
   );
 };

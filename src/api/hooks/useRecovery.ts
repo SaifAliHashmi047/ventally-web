@@ -1,35 +1,40 @@
 import apiInstance from '../apiInstance';
 
 export const useRecovery = () => {
-  const getDashboard = async () => {
-    const res = await apiInstance.get('recovery/dashboard');
+  const getSobrietyStatus = async () => {
+    const res = await apiInstance.get('sobriety/status');
     return res.data;
   };
 
-  const logProgress = async (payload: {
-    date: string;
-    status: string;
-    notes?: string;
-    milestone?: string;
+  const startSobriety = async (payload: {
+    sobriety_date: string;
+    addiction_type: string;
+    note?: string;
   }) => {
-    const res = await apiInstance.post('recovery/progress', payload);
+    const res = await apiInstance.post('sobriety/start', payload);
     return res.data;
   };
 
-  const getProgressHistory = async (limit = 30, offset = 0) => {
-    const res = await apiInstance.get('recovery/history', { params: { limit, offset } });
+  const logRelapse = async (payload: {
+    relapse_date: string;
+    trigger?: string;
+    note?: string;
+  }) => {
+    const res = await apiInstance.post('sobriety/relapse', payload);
     return res.data;
   };
 
-  const updateProgress = async (id: string, payload: any) => {
-    const res = await apiInstance.put(`recovery/progress/${id}`, payload);
+  const getSobrietyHistory = async (limit = 30, offset = 0) => {
+    const res = await apiInstance.get('sobriety/history', { params: { limit, offset } });
     return res.data;
   };
 
-  const getSummary = async (period: 'week' | 'month' | 'year' = 'month') => {
-    const res = await apiInstance.get('recovery/summary', { params: { period } });
+  // We are missing `getVenterHomeSummary` in `useRecovery.ts` native side it actually comes from useHomeSummary, 
+  // but if needed we can add it here or somewhere else, for now we match sobriety APIs.
+  const getVenterHomeSummary = async () => {
+    const res = await apiInstance.get('home/summary');
     return res.data;
   };
 
-  return { getDashboard, logProgress, getProgressHistory, updateProgress, getSummary };
+  return { getSobrietyStatus, startSobriety, logRelapse, getSobrietyHistory, getVenterHomeSummary };
 };

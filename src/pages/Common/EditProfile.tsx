@@ -6,10 +6,12 @@ import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import type { RootState } from '../../store/store';
-import apiInstance from '../../api/apiInstance';
+import { useAuth } from '../../api/hooks/useAuth';
 
 export const EditProfile = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { updateProfile } = useAuth();
   const user = useSelector((state: RootState) => state.user.user as any);
 
   const [form, setForm] = useState({
@@ -38,10 +40,10 @@ export const EditProfile = () => {
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setSaving(true);
     try {
-      await apiInstance.put('auth/update-profile', form);
+      await updateProfile(form);
       navigate(-1);
     } catch (e: any) {
-      setErrors({ general: e?.response?.data?.message || 'Failed to update profile.' });
+      setErrors({ general: e?.error || 'Failed to update profile.' });
     } finally {
       setSaving(false);
     }
@@ -53,7 +55,7 @@ export const EditProfile = () => {
 
       {/* Avatar Placeholder */}
       <div className="flex flex-col items-center py-4">
-        <div className="w-20 h-20 rounded-full glass flex items-center justify-center text-2xl font-bold text-white border-2 border-white/20 cursor-pointer hover:border-primary/40 transition-colors">
+        <div className="w-20 h-20 rounded-full glass flex items-center justify-center text-xl font-bold text-white border-2 border-white/20 cursor-pointer hover:border-primary/40 transition-colors">
           {(form.firstName[0] || 'U').toUpperCase()}
         </div>
         <p className="text-xs text-gray-500 mt-2">Tap to change photo</p>
