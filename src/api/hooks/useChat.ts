@@ -17,6 +17,28 @@ export interface SessionInfo {
   status: string;
 }
 
+export interface ChatConversation {
+  id: string;
+  createdAt: string;
+  durationMinutes?: number;
+  otherParticipant?: {
+    anonymousName?: string;
+    displayName?: string;
+  };
+  lastMessage?: {
+    content: string;
+  };
+  status?: string;
+}
+
+export interface ConversationsResponse {
+  conversations: ChatConversation[];
+  pagination?: {
+    hasMore: boolean;
+    total: number;
+  };
+}
+
 export interface ChatHistoryResponse {
   messages: ChatMessage[];
   sessionInfo: SessionInfo;
@@ -60,8 +82,16 @@ export const useChat = () => {
     return res.data;
   }, []);
 
+  const getConversations = async (status?: string, limit = 20, offset = 0): Promise<ConversationsResponse> => {
+    const res = await apiInstance.get('chat/conversations', {
+      params: { limit, offset, ...(status ? { status } : {}) },
+    });
+    return res.data;
+  };
+
   return {
     getChatHistory,
+    getConversations,
     getRecentChats,
     flagMessage,
     addAdminNote,

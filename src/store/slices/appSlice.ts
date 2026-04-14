@@ -11,6 +11,7 @@ export interface CustomBackground {
 
 interface AppState {
   isLoading: boolean;
+  isDarkMode: boolean;
   user: {
     name: string;
     email: string;
@@ -22,6 +23,7 @@ interface AppState {
 
 const initialState: AppState = {
   isLoading: false,
+  isDarkMode: true,
   user: null,
   preferredLanguage: null,
   customBackgrounds: [],
@@ -58,6 +60,9 @@ const appSlice = createSlice({
     setSelectedBackgroundId: (state, action: PayloadAction<string | null>) => {
       state.selectedBackgroundId = action.payload;
     },
+    toggleDarkMode: (state) => {
+      state.isDarkMode = !state.isDarkMode;
+    },
   },
 });
 
@@ -67,6 +72,7 @@ export const {
   setPreferredLanguage,
   addCustomBackground,
   removeCustomBackground,
-  setSelectedBackgroundId
+  setSelectedBackgroundId,
+  toggleDarkMode,
 } = appSlice.actions;
 export default appSlice.reducer;

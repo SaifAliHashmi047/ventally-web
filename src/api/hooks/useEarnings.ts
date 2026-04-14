@@ -1,5 +1,13 @@
 import apiInstance from '../apiInstance';
 
+export interface Payout {
+  id: string;
+  amount: number;
+  status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
+  createdAt: string;
+  processedAt?: string;
+}
+
 export const useEarnings = () => {
   const getEarningsSummary = async () => {
     const res = await apiInstance.get('earnings/summary');
@@ -16,5 +24,13 @@ export const useEarnings = () => {
     return res.data;
   };
 
-  return { getEarningsSummary, getEarningsHistory, requestPayout };
+  const getPayouts = async (limit = 20, offset = 0): Promise<{
+    payouts: Payout[];
+    pagination?: { hasMore: boolean; total: number; };
+  }> => {
+    const res = await apiInstance.get('earnings/payouts', { params: { limit, offset } });
+    return res.data;
+  };
+
+  return { getEarningsSummary, getEarningsHistory, requestPayout, getPayouts };
 };

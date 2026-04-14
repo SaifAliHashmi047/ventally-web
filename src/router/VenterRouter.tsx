@@ -31,6 +31,12 @@ import { SubscriptionDetailsScreen } from '../pages/Venter/SubscriptionDetailsSc
 import { VenterPaymentCheckScreen } from '../pages/Venter/VenterPaymentCheckScreen';
 import { VenterNoCreditScreen } from '../pages/Venter/VenterNoCreditScreen';
 import { VenterAllCallsScreen } from '../pages/Venter/VenterAllCallsScreen';
+import { VenterGeneralSettings } from '../pages/Venter/VenterGeneralSettings';
+import { VenterNotificationsSettings } from '../pages/Venter/VenterNotificationsSettings';
+import { VenterQuietHours } from '../pages/Venter/VenterQuietHours';
+import { VenterChangeBackground } from '../pages/Venter/VenterChangeBackground';
+import { VenterSubmitFeedback } from '../pages/Venter/VenterSubmitFeedback';
+import { VenterChangeAccountType } from '../pages/Venter/VenterChangeAccountType';
 
 // Common Pages
 import { ProfileScreen } from '../pages/Common/ProfileScreen';
@@ -43,6 +49,15 @@ import { ContactUs } from '../pages/Common/ContactUs';
 import { DeleteAccount } from '../pages/Common/DeleteAccount';
 import { Notifications } from '../pages/Common/Notifications';
 import { NotificationDetail } from '../pages/Common/NotificationDetail';
+import { UpdateEmail } from '../pages/Common/UpdateEmail';
+import { PayoutSettings } from '../pages/Common/PayoutSettings';
+import { GenderIdentitySelect } from '../pages/Common/GenderIdentitySelect';
+import { RacialIdentitySelect } from '../pages/Common/RacialIdentitySelect';
+import { EthnicitySelect } from '../pages/Common/EthnicitySelect';
+import { AgeGroupSelect } from '../pages/Common/AgeGroupSelect';
+import { LGBTQSelect } from '../pages/Common/LGBTQSelect';
+import { FaithOrBeliefSelect } from '../pages/Common/FaithOrBeliefSelect';
+import { SpecialTopicsSelect } from '../pages/Common/SpecialTopicsSelect';
 
 // Chat Pages
 import { RecentChats } from '../pages/Chat/RecentChats';
@@ -90,12 +105,28 @@ export const VenterRouter = () => {
         <Route path="payment-check" element={<VenterPaymentCheckScreen />} />
         <Route path="no-credit" element={<VenterNoCreditScreen />} />
         <Route path="all-calls" element={<VenterAllCallsScreen />} />
+        {/* Settings Sub-screens */}
+        <Route path="general-settings" element={<VenterGeneralSettings />} />
+        <Route path="general-settings/change-background" element={<VenterChangeBackground />} />
+        <Route path="general-settings/submit-feedback" element={<VenterSubmitFeedback />} />
+        <Route path="notifications-settings" element={<VenterNotificationsSettings />} />
+        <Route path="notifications/quiet-hours" element={<VenterQuietHours />} />
+        <Route path="change-account-type" element={<VenterChangeAccountType />} />
         {/* Common */}
         <Route path="profile" element={<ProfileScreen />} />
         <Route path="profile/edit" element={<EditProfile />} />
         <Route path="sessions" element={<SessionsHistory />} />
         <Route path="security" element={<SecuritySettings />} />
         <Route path="security/change-password" element={<ChangePassword />} />
+        <Route path="update-email" element={<UpdateEmail />} />
+        {/* Profile Selector Sub-pages */}
+        <Route path="profile/gender" element={<GenderIdentitySelect />} />
+        <Route path="profile/racial-identity" element={<RacialIdentitySelect />} />
+        <Route path="profile/ethnicity" element={<EthnicitySelect />} />
+        <Route path="profile/age-group" element={<AgeGroupSelect />} />
+        <Route path="profile/lgbtq" element={<LGBTQSelect />} />
+        <Route path="profile/faith" element={<FaithOrBeliefSelect />} />
+        <Route path="profile/special-topics" element={<SpecialTopicsSelect />} />
         <Route path="legal" element={<LegalPolicies />} />
         <Route path="contact" element={<ContactUs />} />
         <Route path="delete-account" element={<DeleteAccount />} />
