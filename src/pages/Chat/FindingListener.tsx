@@ -1,17 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { GlassCard } from '../../components/ui/GlassCard';
+import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../../components/ui/Button';
-import { Loader2, Search, X, Headphones } from 'lucide-react';
-import apiInstance from '../../api/apiInstance';
+import { X, Phone, MessageSquare, Wallet } from 'lucide-react';
+import socketService from '../../api/socketService';
+import { useWallet } from '../../api/hooks/useWallet';
+import { sessionStarted, chatSessionStarted, setSessionType } from '../../store/slices/callSlice';
+import { setSessionInfo } from '../../store/slices/sessionSlice';
 
 export const FindingListener = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const type = location.state?.type || 'call';
+  const dispatch = useDispatch();
+  const type = (location.state?.type || 'call') as 'call' | 'chat';
+  const { getWallet } = useWallet();
 
-  const [status, setStatus] = useState<'searching' | 'found' | 'timeout'>('searching');
+  const [status, setStatus] = useState<'searching' | 'found' | 'timeout' | 'lowBalance'>('searching');
   const [dots, setDots] = useState('');
+  const [timerKey, setTimerKey] = useState(0);
+  const hasNavigated = useRef(false);
+
+  const isCall = type === 'call';
+  const isChat = type === 'chat';
 
   // Animated dots
   useEffect(() => {
@@ -19,29 +31,154 @@ export const FindingListener = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Timeout after 60 seconds
-  useEffect(() => {
-    const timeout = setTimeout(() => setStatus('timeout'), 60000);
-    return () => clearTimeout(timeout);
-  }, []);
-
+  // Check balance and broadcast request
   useEffect(() => {
     const init = async () => {
       try {
-        await apiInstance.post('sessions/request', { sessionType: type });
-      } catch (e) {
-        console.error('Session request failed:', e);
+        const balanceRes = await getWallet();
+        const hasBalance = balanceRes?.balance?.currency > 0 || balanceRes?.balance?.minutes > 0;
+
+        if (!hasBalance) {
+          setStatus('lowBalance');
+          return;
+        }
+
+        // Store session type in Redux
+        dispatch(setSessionType(type));
+
+        // Connect socket and broadcast request
+        await socketService.connect();
+        socketService.emit('requests:broadcast', { type });
+        console.log('[FindingListener] Broadcasted request:', type);
+      } catch (error) {
+        console.error('[FindingListener] Init error:', error);
       }
     };
-    init();
-  }, [type]);
 
-  const handleCancel = async () => {
-    try {
-      await apiInstance.post('sessions/cancel-request');
-    } catch { /* ignore */ }
+    init();
+
+    // Cleanup: cancel request if unmounting without match
+    return () => {
+      if (!hasNavigated.current && status === 'searching') {
+        socketService.emit('requests:cancel', { type });
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type, timerKey]);
+
+  // Listen for socket events
+  useEffect(() => {
+    // Insufficient balance event
+    socketService.on('requests:broadcast:insufficient-balance', () => {
+      console.log('[FindingListener] Insufficient balance');
+      setStatus('lowBalance');
+    });
+
+    interface AcceptedData {
+      id?: string;
+      callId?: string;
+      venterId?: string;
+      listenerId?: string;
+      token?: string;
+      channelName?: string;
+    }
+
+    // Call accepted
+    socketService.on('call:accepted', (data: AcceptedData) => {
+      console.log('[FindingListener] Call accepted:', data);
+      if (hasNavigated.current) return;
+
+      dispatch(sessionStarted({ sessionId: data.id || data.callId }));
+      dispatch(setSessionInfo({
+        sessionId: data.id || data.callId || null,
+        requestId: data.id || data.callId || null,
+        venterId: data.venterId || null,
+        listenerId: data.listenerId || null,
+        sessionType: 'call',
+        data,
+      }));
+
+      hasNavigated.current = true;
+      navigate('/venter/call/active', {
+        state: {
+          call: {
+            ...data,
+            token: data?.token,
+            channelName: data?.channelName,
+            roomName: data?.channelName,
+            uid: 0,
+          },
+        },
+      });
+    });
+
+    interface ChatAcceptedData {
+      conversationId?: string;
+      conversation?: { id?: string; venterId?: string };
+      listenerId?: string;
+      listener?: { id?: string };
+    }
+
+    // Chat accepted
+    socketService.on('chat:accepted', (data: ChatAcceptedData) => {
+      console.log('[FindingListener] Chat accepted:', data);
+      if (hasNavigated.current) return;
+
+      dispatch(chatSessionStarted({
+        chatData: data,
+        chatStartTime: Date.now(),
+        conversationId: data.conversationId || data.conversation?.id,
+      }));
+      dispatch(setSessionInfo({
+        sessionId: data.conversationId || data.conversation?.id || null,
+        requestId: data.conversationId || data.conversation?.id || null,
+        venterId: data.conversation?.venterId || null,
+        listenerId: data.listenerId || data.listener?.id || null,
+        sessionType: 'chat',
+        data,
+      }));
+
+      hasNavigated.current = true;
+      navigate('/venter/chat/session', { state: { chat: data } });
+    });
+
+    return () => {
+      socketService.off('requests:broadcast:insufficient-balance');
+      socketService.off('call:accepted');
+      socketService.off('chat:accepted');
+    };
+  }, [dispatch, navigate]);
+
+  // 60-second timeout
+  useEffect(() => {
+    if (status !== 'searching') return;
+
+    const timeout = setTimeout(() => {
+      setStatus('timeout');
+    }, 60000);
+
+    return () => clearTimeout(timeout);
+  }, [status, timerKey]);
+
+  const handleCancel = useCallback(() => {
+    socketService.emit('requests:cancel', { type });
     navigate(-1);
-  };
+  }, [type, navigate]);
+
+  const handleRetry = useCallback(() => {
+    setStatus('searching');
+    setTimerKey(prev => prev + 1); // Reset timer
+  }, []);
+
+  const handleAddFunds = useCallback(() => {
+    navigate('/venter/wallet');
+  }, [navigate]);
+
+  const icon = isCall ? <Phone size={32} className="text-accent" /> : <MessageSquare size={32} className="text-accent" />;
+  const title = isCall
+    ? t('VenterFindingListener.title', 'Finding a Listener')
+    : t('VenterFindingListener.chatTitle', 'Finding a Chat Listener');
+  const chatTitle = t('VenterFindingListener.chatTitle', 'Finding a Chat Listener');
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
@@ -53,28 +190,60 @@ export const FindingListener = () => {
           <div className="absolute inset-8 rounded-full border-2 border-accent/40 animate-ping" style={{ animationDelay: '0.6s' }} />
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-20 h-20 rounded-full glass-accent flex items-center justify-center">
-              <Headphones size={32} className="text-accent" />
+              {icon}
             </div>
           </div>
         </div>
 
         {status === 'searching' && (
           <>
-            <h1 className="text-xl font-bold text-white mb-2">Finding a Listener{dots}</h1>
-            <p className="text-gray-500 mb-8">We're connecting you with an available listener for your {type} session.</p>
+            <h1 className="text-xl font-bold text-white mb-2">{isChat ? chatTitle : title}{dots}</h1>
+            <p className="text-gray-500 mb-8">
+              {t('VenterFindingListener.description', "We're connecting you with an available listener for your {{type}} session.", { type })}
+            </p>
             <Button variant="glass" onClick={handleCancel} leftIcon={<X size={16} />}>
-              Cancel
+              {t('VenterFindingListener.buttonText', 'Cancel')}
             </Button>
           </>
         )}
 
         {status === 'timeout' && (
           <>
-            <h1 className="text-xl font-bold text-white mb-2">No Listeners Available</h1>
-            <p className="text-gray-500 mb-8">All listeners are currently busy. Please try again in a few minutes.</p>
+            <h1 className="text-xl font-bold text-white mb-2">
+              {t('VenterFindingListener.timeoutTitle', 'No Match Found')}
+            </h1>
+            <p className="text-gray-500 mb-8">
+              {t('VenterFindingListener.timeoutMessage', "We couldn't find an available listener at this moment. Would you like to try again?")}
+            </p>
             <div className="space-y-3">
-              <Button variant="primary" fullWidth onClick={() => setStatus('searching')}>Try Again</Button>
-              <Button variant="glass" fullWidth onClick={() => navigate(-1)}>Go Back</Button>
+              <Button variant="primary" fullWidth onClick={handleRetry}>
+                {t('Common.retry', 'Retry')}
+              </Button>
+              <Button variant="glass" fullWidth onClick={() => navigate(-1)}>
+                {t('Common.cancel', 'Cancel')}
+              </Button>
+            </div>
+          </>
+        )}
+
+        {status === 'lowBalance' && (
+          <>
+            <div className="w-20 h-20 rounded-full glass-accent flex items-center justify-center mx-auto mb-6">
+              <Wallet size={32} className="text-warning" />
+            </div>
+            <h1 className="text-xl font-bold text-white mb-2">
+              {t('VenterPaymentCheck.insufficientTitle', 'Insufficient Balance')}
+            </h1>
+            <p className="text-gray-500 mb-8">
+              {t('VenterPaymentCheck.insufficientMessage', 'You need to add funds to start a session.')}
+            </p>
+            <div className="space-y-3">
+              <Button variant="primary" fullWidth onClick={handleAddFunds} leftIcon={<Wallet size={16} />}>
+                {t('VenterPaymentCheck.addFunds', 'Add Funds')}
+              </Button>
+              <Button variant="glass" fullWidth onClick={() => navigate(-1)}>
+                {t('VenterFindingListener.buttonText', 'Go Back')}
+              </Button>
             </div>
           </>
         )}

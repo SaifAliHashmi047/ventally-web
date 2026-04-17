@@ -55,7 +55,7 @@ export const VenterTransactions = () => {
                   </div>
                   <div className="text-right">
                     <p className={`text-sm font-bold ${isCredit ? 'text-success' : 'text-error'}`}>
-                      {isCredit ? '+' : '-'}${Math.abs(tx.amount).toFixed(2)}
+                      {isCredit ? '+' : '-'}${Math.abs(tx.amountCurrency ?? 0).toFixed(2)}
                     </p>
                     <Badge variant={tx.status === 'success' ? 'success' : 'error'} size="sm" className="mt-1">{tx.status}</Badge>
                   </div>

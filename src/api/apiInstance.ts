@@ -67,6 +67,7 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
+// Ensure base URL ends with exactly one trailing slash, no double v1/
 const envBase =
   typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_BASE_URL
     ? String(import.meta.env.VITE_API_BASE_URL).replace(/\/?$/, '/')
@@ -80,9 +81,14 @@ export const SOCKET_URL = BASE_URL.replace(/\/api\/v1\/?$/, '').replace(/\/$/, '
 const apiInstance: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   timeout: 15000,
+  maxRedirects: 0, // Prevent redirect loops that cause v1 duplication
   headers: {
     'Content-Type': 'application/json',
     // Accept: 'application/json',
+  },
+  validateStatus: (status) => {
+    // Accept 2xx and 3xx status codes - we'll handle redirects manually
+    return status >= 200 && status < 400;
   },
 });
 
@@ -94,13 +100,14 @@ apiInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    console.log("interceptor request:", {
-      baseURL: apiInstance.defaults.baseURL,
+    
+    // Debug: Log full URL to diagnose v1 duplication
+    const fullUrl = new URL(config.url || '', config.baseURL || apiInstance.defaults.baseURL).toString();
+    console.log("[API Request]", {
+      fullUrl,
+      baseURL: config.baseURL || apiInstance.defaults.baseURL,
       url: config.url,
       method: config.method,
-      headers: config.headers,
-      params: config.params,
-      data: config.data,
     });
 
     return config;
@@ -113,13 +120,11 @@ apiInstance.interceptors.request.use(
 // Response Interceptor
 apiInstance.interceptors.response.use(
   (response: AxiosResponse): any => {
-    console.log("interceptor response:", {
-      baseURL: apiInstance.defaults.baseURL,
-      url: response.config.url,
+    const fullUrl = new URL(response.config.url || '', response.config.baseURL || apiInstance.defaults.baseURL).toString();
+    console.log("[API Response]", {
+      fullUrl,
+      status: response.status,
       method: response.config.method,
-      headers: response.config.headers,
-      params: response.config.params,
-      data: response?.data,
     });
     return {
       success: true,
@@ -128,14 +133,28 @@ apiInstance.interceptors.response.use(
     };
   },
   async (error: AxiosError): Promise<any> => {
-    console.log("interceptor error:", {
-      error,
-      message: error.message,
-      response: error.response,
-      request: error.request,
-    });
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
-    console.log("Original Request:", { error, errorMessage: (error?.response?.data as any)?.message });
+    const fullUrl = originalRequest ? new URL(originalRequest.url || '', originalRequest.baseURL || apiInstance.defaults.baseURL).toString() : 'unknown';
+    
+    // Log redirect errors specifically
+    const status = error.response?.status;
+    if (status && status >= 300 && status < 400) {
+      console.error("[API Redirect Error]", {
+        status,
+        fullUrl,
+        originalUrl: originalRequest?.url,
+        baseURL: originalRequest?.baseURL,
+        location: error.response?.headers?.location,
+        message: "Server is redirecting with v1 duplication - check API server configuration",
+      });
+    } else {
+      console.log("[API Error]", {
+        status,
+        fullUrl,
+        message: error.message,
+        errorMessage: (error?.response?.data as any)?.message,
+      });
+    }
     // Handle 401 Unauthorized - Token expired or invalid
     if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes('auth/login') && !originalRequest.url?.includes('auth/refresh')) {
       // Set _retry immediately to prevent any recursive retry loops

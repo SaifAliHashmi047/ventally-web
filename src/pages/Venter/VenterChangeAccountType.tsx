@@ -1,42 +1,128 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
-import apiInstance from '../../api/apiInstance';
+import { useRoles } from '../../api/hooks/useRoles';
+import { setTokens } from '../../api/apiInstance';
 import { setUser, setIsVenter } from '../../store/slices/userSlice';
-import { Headphones, User2, AlertCircle, RefreshCw } from 'lucide-react';
+import { Headphones, User2, AlertCircle, RefreshCw, Loader2 } from 'lucide-react';
 
 export const VenterChangeAccountType = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const { getUserRoles, switchRole } = useRoles();
 
-  const handleSwitch = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const res = await apiInstance.post('users/switch-role', { targetRole: 'listener' }) as any;
-      if (res?.tokens) {
-        // Update auth tokens
-        localStorage.setItem('accessToken', res.tokens.accessToken);
-        localStorage.setItem('refreshToken', res.tokens.refreshToken);
+  const [loading, setLoading] = useState(true);
+  const [switching, setSwitching] = useState(false);
+  const [error, setError] = useState('');
+  const [rolesConfig, setRolesConfig] = useState<{
+    availableRoles: string[];
+    activeRole: string;
+  } | null>(null);
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        setLoading(true);
+        const res = await getUserRoles();
+        if (res) {
+          setRolesConfig({
+            availableRoles: res.availableRoles,
+            activeRole: res.activeRole,
+          });
+          // Initialize selected role to the one that is NOT active
+          if (res.activeRole === 'venter') {
+            setSelectedRole('listener');
+          } else {
+            setSelectedRole('venter');
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching roles:', error);
+        setError(t('ChangeAccount.failedToFetch', 'Failed to fetch account roles'));
+      } finally {
+        setLoading(false);
       }
-      dispatch(setIsVenter(false));
-      if (res?.user) dispatch(setUser(res.user as any));
-      window.location.href = '/listener/home';
-    } catch (e: any) {
-      // Fallback navigate if API not ready
-      dispatch(setIsVenter(false));
-      window.location.href = '/listener/home';
+    };
+    fetchRoles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSwitchRole = async () => {
+    if (!selectedRole) return;
+
+    // If selection is the active role, do nothing
+    if (selectedRole.toLowerCase() === rolesConfig?.activeRole.toLowerCase()) {
+      return;
+    }
+
+    setSwitching(true);
+    try {
+      const res = await switchRole({ targetRole: selectedRole });
+      if (res) {
+        // Update tokens
+        if (res.tokens) {
+          await setTokens(res.tokens.accessToken, res.tokens.refreshToken);
+        }
+        setError('');
+
+        // Map response user to User slice structure
+        const updatedUser = {
+          ...res.user,
+          role: res.user?.activeRole?.toLowerCase() || selectedRole.toLowerCase(),
+        };
+
+        dispatch(setUser(updatedUser as Parameters<typeof setUser>[0]));
+        dispatch(setIsVenter(selectedRole.toLowerCase() === 'venter'));
+
+        // Navigate to appropriate home
+        if (selectedRole.toLowerCase() === 'listener') {
+          window.location.href = '/listener/home';
+        } else {
+          window.location.href = '/venter/home';
+        }
+      }
+    } catch (error: unknown) {
+      console.error('Error switching role:', error);
+      const err = error as { message?: string; error?: string };
+      setError(err?.message || err?.error || t('ChangeAccount.failedToSwitch', 'Failed to switch role'));
     } finally {
-      setLoading(false);
+      setSwitching(false);
     }
   };
+
+  const handleNext = () => {
+    if (!selectedRole) return;
+
+    // Check if user already owns the role
+    const isOwned = rolesConfig?.availableRoles.some(r => r.toLowerCase() === selectedRole.toLowerCase());
+
+    if (isOwned) {
+      handleSwitchRole();
+    } else {
+      // User doesn't have this role, needs onboarding
+      if (selectedRole.toLowerCase() === 'listener') {
+        // Navigate to listener training
+        navigate('/listener/training', { state: { accountTypeChanging: true } });
+      } else {
+        // Navigate to choose plan (subscription)
+        navigate('/venter/subscription', { state: { accountTypeChanging: true } });
+      }
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="page-wrapper animate-fade-in flex items-center justify-center">
+        <Loader2 size={32} className="animate-spin text-accent" />
+      </div>
+    );
+  }
 
   return (
     <div className="page-wrapper animate-fade-in">
@@ -73,12 +159,14 @@ export const VenterChangeAccountType = () => {
         </GlassCard>
 
         {error && (
-          <p className="text-sm text-error mb-3">{error}</p>
+          <div className="w-full bg-error/10 border border-error/30 text-error px-4 py-3 rounded-2xl mb-4 text-sm">
+            {error}
+          </div>
         )}
 
         <div className="w-full space-y-3">
-          <Button variant="primary" fullWidth loading={loading} onClick={handleSwitch}>
-            {t('Common.next', 'Switch to Support Guide')}
+          <Button variant="primary" fullWidth loading={switching} onClick={handleNext}>
+            {t('Common.next', 'Next')}
           </Button>
           <Button variant="ghost" fullWidth onClick={() => navigate(-1)}>
             {t('Common.cancel', 'Cancel')}

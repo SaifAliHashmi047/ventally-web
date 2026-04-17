@@ -16,7 +16,12 @@ export const useMood = () => {
     notes?: string;
     category?: string;
   }) => {
-    const res = await apiInstance.post('mood/log', payload);
+    // Capitalize mood_type to match API expectations: 'happy' → 'Happy'
+    const normalizedPayload = {
+      ...payload,
+      mood_type: payload.mood_type.charAt(0).toUpperCase() + payload.mood_type.slice(1).toLowerCase(),
+    };
+    const res = await apiInstance.post('mood/log', normalizedPayload);
     return res.data;
   };
 
@@ -25,8 +30,15 @@ export const useMood = () => {
     notes?: string;
     category?: string;
   }) => {
+    // Capitalize mood_type if present: 'happy' → 'Happy'
+    const normalizedPayload = payload.mood_type
+      ? {
+          ...payload,
+          mood_type: payload.mood_type.charAt(0).toUpperCase() + payload.mood_type.slice(1).toLowerCase(),
+        }
+      : payload;
     // Note: id is not used in the url, it updates the today's mood
-    const res = await apiInstance.put(`mood/today`, payload);
+    const res = await apiInstance.put(`mood/today`, normalizedPayload);
     return res.data;
   };
 

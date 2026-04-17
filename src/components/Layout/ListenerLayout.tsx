@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import {
@@ -7,8 +7,10 @@ import {
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/slices/userSlice';
+import { setRequests, clearRequests } from '../../store/slices/listenerSlice';
 import type { RootState } from '../../store/store';
 import { cn } from '../../utils/cn';
+import socketService from '../../api/socketService';
 
 const NAV_ITEMS = [
   { path: '/listener/home', label: 'Home', icon: Home },
@@ -33,11 +35,50 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
 
   const handleLogout = () => {
     dispatch(logout() as any);
+    socketService.disconnect();
     navigate('/login');
   };
 
+  // Socket connection for real-time requests
+  useEffect(() => {
+    const setupSocket = async () => {
+      try {
+        await socketService.connect();
+        console.log('[ListenerLayout] Socket connected');
+
+        // Listen for incoming requests
+        socketService.on('requests:latest', (data: any) => {
+          console.log('[Socket] requests:latest:', data);
+          const requests = data?.requests?.map((item: any) => ({
+            id: item.requestId,
+            type: item.requestType === 'call' ? 'call' : 'message',
+            title: item.requester?.anonymousName ?? 'Anonymous',
+            requestType: item.requestType ?? null,
+            requestId: item.requestId ?? null,
+            venterId: item.requester?.id ?? null,
+            listenerId: item.listenerId ?? null,
+            ratePerMinute: item.ratePerMinute ?? null,
+          }));
+          dispatch(setRequests(requests));
+        });
+      } catch (error) {
+        console.error('[ListenerLayout] Socket connection failed:', error);
+      }
+    };
+
+    setupSocket();
+
+    return () => {
+      socketService.off('requests:latest');
+      dispatch(clearRequests());
+    };
+  }, [dispatch]);
+
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(path + '/');
+
+  // Get incoming requests count from Redux store
+  const requestCount = useSelector((state: RootState) => state.listener.requests.length);
 
   return (
     <div className="flex min-h-screen bg-bg-deep">
@@ -81,6 +122,7 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
           {NAV_ITEMS.map((item) => {
             const active = isActive(item.path);
             const Icon = item.icon;
+            const isRequests = item.path === '/listener/requests';
             return (
               <Link
                 key={item.path}
@@ -90,7 +132,12 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
               >
                 <Icon size={18} />
                 <span>{item.label}</span>
-                {active && <ChevronRight size={14} className="ml-auto opacity-50" />}
+                {isRequests && requestCount > 0 && (
+                  <span className="ml-auto bg-accent text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                    {requestCount}
+                  </span>
+                )}
+                {active && <ChevronRight size={14} className={cn("ml-auto opacity-50", isRequests && requestCount > 0 && "hidden")} />}
               </Link>
             );
           })}

@@ -12,9 +12,8 @@ import { Mail, Lock } from 'lucide-react';
 
 export const LoginWeb = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [form, setForm] = useState({ email: '', password: '' });
+   const dispatch = useDispatch();
+  const [form, setForm] = useState({ email: 'm47@yopmail.com', password: 'Hello@123' });
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState(false);
 

@@ -27,7 +27,9 @@ export interface SubscriptionPlansResponse {
 }
 
 export interface CreateCheckoutSessionPayload {
-  creditPackId: string;
+  packType: string;
+  customMinutes?: number;
+  customPrice?: number;
   successUrl?: string;
   cancelUrl?: string;
 }
