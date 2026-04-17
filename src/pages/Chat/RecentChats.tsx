@@ -1,22 +1,39 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { MessageSquare, Clock, ChevronRight } from 'lucide-react';
-import apiInstance from '../../api/apiInstance';
+import { useChat } from '../../api/hooks/useChat';
+
+interface ChatItem {
+  id: string;
+  venter?: { firstName?: string; displayName?: string; isOnline?: boolean };
+  listener?: { firstName?: string; displayName?: string; isOnline?: boolean };
+  unreadCount?: number;
+  lastMessage?: { content?: string; createdAt?: string };
+}
 
 export const RecentChats = () => {
   const navigate = useNavigate();
-  const [chats, setChats] = useState<any[]>([]);
+  const { getConversations } = useChat();
+  const [chats, setChats] = useState<ChatItem[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const loadConversations = useCallback(async () => {
+    try {
+      const res = await getConversations(undefined, 20, 0);
+      setChats(res.conversations ?? []);
+    } catch {
+      // Silently fail
+    } finally {
+      setLoading(false);
+    }
+  }, [getConversations]);
+
   useEffect(() => {
-    apiInstance.get('chat/recent')
-      .then(res => setChats(res.data?.chats ?? []))
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
+    loadConversations();
+  }, [loadConversations]);
 
   return (
     <div className="page-wrapper animate-fade-in">

@@ -7,11 +7,12 @@ import { GlassCard } from '../../components/ui/GlassCard';
 import { Toggle } from '../../components/ui/Toggle';
 import { ChevronRight, Shield, Lock, Mail, Fingerprint } from 'lucide-react';
 import type { RootState } from '../../store/store';
-import apiInstance from '../../api/apiInstance';
+import { useCredentialsChange } from '../../api/hooks/useCredentialsChange';
 
 export const SecuritySettings = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { getTwoFactorSettings, updateTwoFactorSettings } = useCredentialsChange();
   const user = useSelector((state: RootState) => state.user.user as any);
   const role = user?.userType || 'venter';
   const basePath = `/${role}`;
@@ -20,20 +21,26 @@ export const SecuritySettings = () => {
   const [loading2FA, setLoading2FA] = useState(false);
   const [loadingInit, setLoadingInit] = useState(true);
 
+  const loadTwoFactorSettings = useCallback(async () => {
+    try {
+      const res = await getTwoFactorSettings();
+      setTwoFactorEnabled(res?.enabled || false);
+    } catch {
+      // Silently fail
+    } finally {
+      setLoadingInit(false);
+    }
+  }, [getTwoFactorSettings]);
+
   useEffect(() => {
-    apiInstance.get('security/two-factor')
-      .then((res: any) => {
-        setTwoFactorEnabled(res?.twoFactorAuthentication?.enabled || false);
-      })
-      .catch(() => {})
-      .finally(() => setLoadingInit(false));
-  }, []);
+    loadTwoFactorSettings();
+  }, [loadTwoFactorSettings]);
 
   const handleTwoFactorToggle = async () => {
     setLoading2FA(true);
     try {
       const newStatus = !twoFactorEnabled;
-      await apiInstance.put('security/two-factor', {
+      await updateTwoFactorSettings({
         enabled: newStatus,
         method: newStatus ? 'email' : undefined,
       });

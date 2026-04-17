@@ -82,12 +82,12 @@ export const useChat = () => {
     return res.data;
   }, []);
 
-  const getConversations = async (status?: string, limit = 20, offset = 0): Promise<ConversationsResponse> => {
-    const res = await apiInstance.get('chat/conversations', {
+  const getConversations = useCallback(async (status?: string, limit = 20, offset = 0): Promise<ConversationsResponse> => {
+    const res = await apiInstance.get('conversations', {
       params: { limit, offset, ...(status ? { status } : {}) },
     });
     return res.data;
-  };
+  }, []);
 
   return {
     getChatHistory,
