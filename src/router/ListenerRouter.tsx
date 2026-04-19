@@ -33,6 +33,8 @@ import { LinkBankAccountScreen } from '../pages/Listener/LinkBankAccountScreen';
 import { ListenerCrisisEscalation } from '../pages/Listener/ListenerCrisisEscalation';
 import { ListenerChangeAccountType } from '../pages/Listener/ListenerChangeAccountType';
 import { ListenerNotificationsSettings } from '../pages/Listener/ListenerNotificationsSettings';
+import { ListenerSessionFeedback } from '../pages/Listener/ListenerSessionFeedback';
+import { ListenerSessionRating } from '../pages/Listener/ListenerSessionRating';
 import { UpdateEmail } from '../pages/Common/UpdateEmail';
 import { PayoutSettings } from '../pages/Common/PayoutSettings';
 import { GenderIdentitySelect } from '../pages/Common/GenderIdentitySelect';
@@ -70,8 +72,9 @@ export const ListenerRouter = () => {
         <Route path="notifications/:id" element={<NotificationDetail />} />
         <Route path="chat" element={<RecentChats />} />
         <Route path="chat/:id" element={<ChatScreen />} />
-        <Route path="session/:id/feedback" element={<SessionFeedback />} />
-        <Route path="session/:id/rating" element={<SessionRating />} />
+        <Route path="session/:id/feedback" element={<ListenerSessionFeedback />} />
+        <Route path="session/:id/rating" element={<ListenerSessionRating />} />
+        <Route path="session/:id/report" element={<ReportScreen />} />
         <Route path="report" element={<ReportScreen />} />
         <Route path="payout" element={<PayoutSettings />} />
         {/* Profile Selector Sub-pages */}

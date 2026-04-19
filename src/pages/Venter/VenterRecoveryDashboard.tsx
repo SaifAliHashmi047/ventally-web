@@ -1,146 +1,225 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
-import { StatCard } from '../../components/ui/StatCard';
 import { Button } from '../../components/ui/Button';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { useRecovery } from '../../api/hooks/useRecovery';
-import { TrendingUp, Calendar, Target, ChevronRight, Plus, Flame, Award } from 'lucide-react';
+import { Calendar } from 'lucide-react';
+
+// Milestone for full circle — matches native app (365 days)
+const MILESTONE = 365;
+const SIZE = 160; // px
+const STROKE = 10;
+const RADIUS = (SIZE - STROKE) / 2;
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 export const VenterRecoveryDashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { getSobrietyStatus, getSobrietyHistory } = useRecovery();
+
   const [status, setStatus] = useState<any>(null);
   const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        const [statRes, histRes] = await Promise.allSettled([
-          getSobrietyStatus(),
-          getSobrietyHistory(5, 0)
-        ]);
-        if (statRes.status === 'fulfilled') setStatus(statRes.value);
-        if (histRes.status === 'fulfilled') setHistory(histRes.value?.history || []);
-      } catch { /* ignore */ } finally {
-        setLoading(false);
-      }
-    };
-    fetch();
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [statRes, histRes] = await Promise.allSettled([
+        getSobrietyStatus(),
+        getSobrietyHistory(5, 0),
+      ]);
+      // Native uses statusRes.status  and historyRes.events
+      if (statRes.status === 'fulfilled') setStatus(statRes.value?.status ?? statRes.value);
+      if (histRes.status === 'fulfilled') setHistory(histRes.value?.events ?? histRes.value?.history ?? []);
+    } catch {
+      /* ignore */
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  // Calculate progress circle stroke
-  const currentDays = status?.current_sobriety_streak_days || 0;
-  const maxGoal = 30; // default visual goal
-  const progressPercent = Math.min((currentDays / maxGoal) * 100, 100);
-  const dashOffset = 283 - (283 * progressPercent) / 100;
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  // Match native: days_sober / MILESTONE for progress ring
+  const daysSober = status?.days_sober ?? 0;
+  const progress = Math.min(daysSober / MILESTONE, 1);
+  const strokeDashoffset = CIRCUMFERENCE * (1 - progress);
+
+  const formatEventDate = (dateString: string) => {
+    if (!dateString) return '';
+    return new Date(dateString).toLocaleDateString(undefined, {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+  };
+
+  const achievementsCount = status?.achievements?.filter((a: any) => a.achieved).length ?? 0;
 
   return (
-    <div className="page-wrapper animate-fade-in">
+    <div className="page-wrapper animate-fade-in pb-24">
       <PageHeader
-        title={t('VenterRecovery.dashboard.title', 'Recovery Dashboard')}
-        subtitle={t('VenterRecovery.dashboard.subtitle', 'Track your journey to wellness')}
+        title={t('VenterRecovery.dashboard.title', 'Your Recovery')}
+        onBack={() => navigate(-1)}
         rightContent={
-          <Button variant="primary" size="sm" leftIcon={<Plus size={16} />} onClick={() => navigate('/venter/recovery/log')}>
-            {t('VenterRecovery.dashboard.logProgress', 'Log Progress')}
-          </Button>
+          <button
+            onClick={() => navigate('/venter/recovery/calendar')}
+            className="w-10 h-10 glass rounded-xl flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+          >
+            <Calendar size={18} />
+          </button>
         }
       />
 
       {loading ? (
-        <div className="space-y-4">{[...Array(3)].map((_, i) => <div key={i} className="skeleton h-28 rounded-3xl" />)}</div>
+        <div className="space-y-4">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="skeleton h-28 rounded-3xl" />
+          ))}
+        </div>
       ) : (
         <>
-          {/* Progress Circular SVG Visual */}
-          <GlassCard className="flex flex-col items-center justify-center p-6 mb-4">
-            <div className="relative w-32 h-32 mb-3">
-              <svg className="w-full h-full transform -rotate-90">
-                <circle cx="64" cy="64" r="45" fill="none" strokeWidth="8" className="stroke-white/10" />
-                <circle cx="64" cy="64" r="45" fill="none" strokeWidth="8" strokeDasharray="283" strokeDashoffset={dashOffset} className="stroke-success stroke-cap-round transition-all duration-1000 ease-out" />
+          {/* ── Circular progress — matches native SVG arc ── */}
+          <div className="flex flex-col items-center mt-6 mb-6">
+            <button
+              onClick={() =>
+                navigate('/venter/recovery/summary', {
+                  state: { daysSober, soberStartDate: status?.sober_start_date },
+                })
+              }
+              className="relative flex items-center justify-center"
+              style={{ width: SIZE, height: SIZE }}
+            >
+              <svg
+                width={SIZE}
+                height={SIZE}
+                viewBox={`0 0 ${SIZE} ${SIZE}`}
+                style={{ transform: 'rotate(-90deg)' }}
+              >
+                {/* Background track */}
+                <circle
+                  cx={SIZE / 2}
+                  cy={SIZE / 2}
+                  r={RADIUS}
+                  stroke="rgba(255,255,255,0.15)"
+                  strokeWidth={STROKE}
+                  fill="none"
+                />
+                {/* Progress arc */}
+                <circle
+                  cx={SIZE / 2}
+                  cy={SIZE / 2}
+                  r={RADIUS}
+                  stroke="rgba(255,255,255,0.65)"
+                  strokeWidth={STROKE}
+                  fill="none"
+                  strokeDasharray={`${CIRCUMFERENCE} ${CIRCUMFERENCE}`}
+                  strokeDashoffset={strokeDashoffset}
+                  strokeLinecap="round"
+                />
               </svg>
+              {/* Center text */}
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <p className="text-3xl font-bold text-white">{currentDays}</p>
-                <p className="text-xs text-gray-500 uppercase tracking-widest">{t('VenterRecovery.dashboard.daysSober', 'Days')}</p>
+                <span
+                  className="font-bold text-white leading-none"
+                  style={{ fontSize: 52 }}
+                >
+                  {daysSober}
+                </span>
+                <span className="text-xs text-white/70 mt-1">
+                  {t('VenterRecovery.dashboard.daysSober', 'Days Sober')}
+                </span>
+              </div>
+            </button>
+          </div>
+
+          {/* ── Log Progress button — centered, half-width, matches native ── */}
+          <div className="flex justify-center mb-8">
+            <Button
+              variant="glass"
+              size="sm"
+              onClick={() => navigate('/venter/recovery/log')}
+              className="px-8"
+            >
+              {t('VenterRecovery.dashboard.logProgress', 'LOG PROGRESS')}
+            </Button>
+          </div>
+
+          {/* ── Stats row — matches native 3-column glass card ── */}
+          <GlassCard className="mb-8" style={{ background: 'rgba(255,255,255,0.07)' }}>
+            <div className="grid grid-cols-3 divide-x divide-white/10">
+              {/* Reflections / Notes */}
+              <div className="flex flex-col items-center py-3 px-2">
+                <span className="text-sm font-medium text-white/80 truncate max-w-full">
+                  {status?.notes || '--'}
+                </span>
+                <span className="text-xs text-white/55 mt-1">
+                  {t('VenterRecovery.dashboard.stats.reflections', 'Reflections')}
+                </span>
+              </div>
+              {/* Days sober as "End" */}
+              <div className="flex flex-col items-center py-3 px-2">
+                <span className="text-sm font-medium text-white/80">
+                  {daysSober != null ? `${daysSober}d` : '--'}
+                </span>
+                <span className="text-xs text-white/55 mt-1">
+                  {t('VenterRecovery.dashboard.stats.end', 'End')}
+                </span>
+              </div>
+              {/* Achievements */}
+              <div className="flex flex-col items-center py-3 px-2">
+                <span className="text-sm font-medium text-white/80">{achievementsCount}</span>
+                <span className="text-xs text-white/55 mt-1">
+                  {t('VenterRecovery.dashboard.stats.achievements', 'Achievements')}
+                </span>
               </div>
             </div>
-            {status?.milestone && (
-              <div className="flex items-center gap-2 bg-success/15 px-3 py-1.5 rounded-full border border-success/30">
-                <Award size={14} className="text-success" />
-                <p className="text-xs font-semibold text-success">{status.milestone} Reached!</p>
-              </div>
-            )}
           </GlassCard>
 
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            <StatCard
-              label={t('VenterRecovery.dashboard.streak', 'Current Streak')}
-              value={`${currentDays} days`}
-              icon={<Flame size={20} />}
-              iconColor="#FF6B35"
-            />
-            <StatCard
-              label={t('VenterRecovery.dashboard.longest', 'Longest Streak')}
-              value={status?.longest_streak_days || 0}
-              icon={<Target size={20} />}
-              iconColor="#32D74B"
-            />
-          </div>
+          {/* ── Recent Entries — matches native ── */}
+          <p className="text-base font-semibold text-white mb-4">
+            {t('VenterRecovery.dashboard.recentEntries', 'Recent Entries')}
+          </p>
 
-          {history.length > 0 ? (
-            <div className="mb-4">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="section-title">{t('VenterRecovery.dashboard.recentEntries', 'Recent Progress')}</h2>
-                <button onClick={() => navigate('/venter/recovery/journey')} className="text-xs text-gray-500 hover:text-white flex items-center gap-1">
-                  {t('VenterRecovery.dashboard.fullJourney', 'Full Journey')} <ChevronRight size={12} />
-                </button>
-              </div>
-              <div className="space-y-3">
-                {history.map((p: any) => {
-                  const isRelapse = p.event_type === 'relapse';
-                  return (
-                    <GlassCard key={p.id} padding="sm" rounded="2xl" onClick={() => navigate(`/venter/recovery/${p.id}`)}>
-                      <div className="flex items-center gap-3">
-                        <div className={`w-3 h-3 rounded-full flex-shrink-0 ${isRelapse ? 'bg-error' : 'bg-success'}`} />
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-white capitalize">{isRelapse ? t('VenterRecovery.relapse', 'Slip') : t('VenterRecovery.success', 'Success')}</p>
-                          {p.note && <p className="text-xs text-gray-500 truncate">{p.note}</p>}
-                        </div>
-                        <p className="text-xs text-gray-600">
-                          {new Date(p.logged_date || p.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                        </p>
-                      </div>
-                    </GlassCard>
-                  );
-                })}
-              </div>
-            </div>
+          {history.length === 0 ? (
+            <EmptyState
+              title=""
+              description={t(
+                'VenterRecovery.dashboard.noentries',
+                'Start logging your recovery journey to see your progress here.'
+              )}
+            />
           ) : (
-            <div className="mb-4">
-              <EmptyState
-                title={t('VenterRecovery.dashboard.noProgress', 'No progress logged yet')}
-                description={t('VenterRecovery.dashboard.noProgressDesc', 'Start logging your recovery journey!')}
-                icon={<TrendingUp size={22} />}
-                action={
-                  <Button variant="accent" size="sm" onClick={() => navigate('/venter/recovery/log')}>
-                    {t('VenterRecovery.dashboard.logProgress', 'Log First Entry')}
-                  </Button>
-                }
-              />
-            </div>
+            <GlassCard>
+              {history.map((entry: any, index: number) => (
+                <button
+                  key={entry.id ?? index}
+                  onClick={() =>
+                    navigate(`/venter/recovery/details/${entry.id}`, { state: { entry } })
+                  }
+                  className="w-full flex items-center justify-between py-3 text-left hover:bg-white/5 transition-colors rounded-xl px-1"
+                  style={{
+                    borderBottom:
+                      index < history.length - 1 ? '1px solid rgba(255,255,255,0.07)' : undefined,
+                  }}
+                >
+                  <span className="text-sm font-medium text-white">
+                    {formatEventDate(entry.event_date)}
+                  </span>
+                  <span className="text-sm text-white/60 ml-4 text-right">
+                    {entry.event_type
+                      ? entry.event_type.charAt(0).toUpperCase() + entry.event_type.slice(1)
+                      : ''}
+                  </span>
+                </button>
+              ))}
+            </GlassCard>
           )}
-
-          <div className="grid grid-cols-2 gap-3">
-            <Button variant="glass" leftIcon={<Calendar size={16} />} onClick={() => navigate('/venter/recovery/calendar')}>
-              {t('VenterRecovery.dashboard.journeyCalendar', 'Journey Calendar')}
-            </Button>
-            <Button variant="glass" leftIcon={<TrendingUp size={16} />} onClick={() => navigate('/venter/recovery/summary')}>
-              {t('VenterRecovery.dashboard.progressSummary', 'Progress Summary')}
-            </Button>
-          </div>
         </>
       )}
     </div>

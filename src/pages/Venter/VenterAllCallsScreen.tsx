@@ -126,12 +126,11 @@ export const VenterAllCallsScreen = () => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-sm font-semibold text-white truncate">
-                      {call.otherParticipant?.anonymousName || 
-                       call.otherParticipant?.displayName || 
+                      {call.otherParticipant?.anonymousName ||
                        t('Common.anonymous', 'Anonymous')}
                     </p>
                     <span className="text-xs text-gray-500 flex-shrink-0">
-                      {formatTimeAgo(call.createdAt)}
+                      {call.createdAt ? formatTimeAgo(call.createdAt) : ''}
                     </span>
                   </div>
                   <div className="flex items-center gap-3 mt-1">
@@ -139,10 +138,10 @@ export const VenterAllCallsScreen = () => {
                       <Phone size={12} />
                       {t('VenterCall.callEntry.lastCall', 'Last call')}
                     </span>
-                    {call.duration !== undefined && (
+                    {call.durationSeconds !== undefined && (
                       <span className="text-xs text-gray-500 flex items-center gap-1">
                         <Clock size={12} />
-                        {formatDuration(call.duration)}
+                        {formatDuration(call.durationSeconds)}
                       </span>
                     )}
                     <span className={`text-[10px] px-2 py-0.5 rounded-full ${

@@ -90,8 +90,9 @@ export const VenterMoodDetails = () => {
         item: {
           id: mood.id,
           mood: mood.mood_type,
-          note: mood.notes,
-          categories: mood.category ? [mood.category] : [],
+          note: mood.notes ?? '',
+          // Lowercase to match option IDs ('work', 'family', etc.) — same as native app
+          categories: mood.category ? [mood.category.toLowerCase()] : [],
         },
       },
     });
@@ -152,7 +153,16 @@ export const VenterMoodDetails = () => {
         <GlassCard bordered>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <span className="text-4xl">{config?.emoji || '😶'}</span>
+              {config?.icon ? (
+                <img
+                  src={config.icon}
+                  alt={mood.mood_type}
+                  className="w-10 h-10 object-contain"
+                  style={{ filter: 'brightness(0) invert(1)', opacity: 0.9 }}
+                />
+              ) : (
+                <span className="text-4xl">😶</span>
+              )}
               <div>
                 <p className="text-lg font-semibold capitalize" style={{ color: config?.text || '#aaa' }}>
                   {mood.mood_type}

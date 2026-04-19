@@ -11,6 +11,7 @@ import { EmptyState } from '../../components/ui/EmptyState';
 import { useMood } from '../../api/hooks/useMood';
 import { useReflections } from '../../api/hooks/useReflections';
 import { MoodBarChart } from '../../components/charts/MoodBarChart';
+import happyIcon from '../../assets/icons/happy.png';
 
 export const VenterDashboard = () => {
   const { t } = useTranslation();
@@ -99,11 +100,11 @@ export const VenterDashboard = () => {
   };
 
   const handleCall = () => {
-    navigate('/venter/finding-listener', { state: { type: 'call' } });
+    navigate('/venter/calls');
   };
 
   const handleChat = () => {
-    navigate('/venter/finding-listener', { state: { type: 'chat' } });
+    navigate('/venter/chat');
   };
 
   return (
@@ -220,7 +221,7 @@ export const VenterDashboard = () => {
           />
         )}
 
-        {/* Streak / Happy Days Card — matches RN streakCard */}
+        {/* Streak / Happy Days Card */}
         <GlassCard bordered className="mt-3">
           <div className="flex items-center justify-between">
             <div>
@@ -231,7 +232,12 @@ export const VenterDashboard = () => {
                   : t('VenterHome.streakCard.totalHappyDays_other', { days: happyDays })}
               </p>
             </div>
-            <span className="text-2xl">😊</span>
+            <img
+              src={happyIcon}
+              alt="happy"
+              className="w-8 h-8 object-contain"
+              style={{ filter: 'brightness(0) invert(1)', opacity: 0.85 }}
+            />
           </div>
         </GlassCard>
       </div>

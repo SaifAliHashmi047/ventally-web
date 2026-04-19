@@ -88,8 +88,10 @@ export const ChatScreen = () => {
       console.error('End chat error:', error);
     }
     if (currentUser?.userType === 'venter' || currentUser?.role === 'venter') {
-      navigate(`/venter/session/${id}/feedback`, { replace: true, state: { chat, type: 'chat' } });
+      // Venter: Rating (tip) first → then Feedback
+      navigate(`/venter/session/${id}/rating`, { replace: true, state: { chat, type: 'chat' } });
     } else {
+      // Listener: Feedback (mood) first → then Rating (stars)
       navigate(`/listener/session/${id}/feedback`, { replace: true, state: { chat, type: 'chat' } });
     }
   };
@@ -159,11 +161,13 @@ export const ChatScreen = () => {
       console.log('[Chat] Chat ended:', data);
       setIsChatActive(false);
       dispatch(endChatSession());
-      // Navigate to feedback after session ends
-      if (currentUser?.userType === 'venter' || currentUser?.role === 'venter') {
-        navigate(`/venter/session/${id}/feedback`, { state: { chat, type: 'chat' } });
+      const isVenter = currentUser?.userType === 'venter' || currentUser?.role === 'venter';
+      if (isVenter) {
+        // Venter: Rating (tip) → Feedback (mood+stars+comment)
+        navigate(`/venter/session/${id}/rating`, { state: { chat, type: 'chat' } });
       } else {
-        navigate(`/listener/session/${id}/feedback`);
+        // Listener: ListenerSessionFeedback (mood) → ListenerSessionRating (stars)
+        navigate(`/listener/session/${id}/feedback`, { state: { chat, type: 'chat' } });
       }
     };
 

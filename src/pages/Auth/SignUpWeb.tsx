@@ -20,7 +20,6 @@ export const SignUpWeb = () => {
 
   const validate = () => {
     const errs: any = {};
-    if (!form.firstName.trim()) errs.firstName = t('SignUp.error.required', 'Required');
     if (!form.email.includes('@')) errs.email = t('SignUp.error.validEmail', 'Valid email required');
     if (form.password.length < 8) errs.password = t('SignUp.error.minPassword', 'Minimum 8 characters');
     if (form.password !== form.confirmPassword) errs.confirmPassword = t('SignUp.error.passwordMatch', 'Passwords do not match');
@@ -88,10 +87,6 @@ export const SignUpWeb = () => {
         </div>
 
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
-            <Input label={t('Common.firstName', 'First Name')} value={form.firstName} onChange={e => update('firstName', e.target.value)} error={errors.firstName} leftIcon={<User size={14} />} />
-            <Input label={t('Common.lastName', 'Last Name')} value={form.lastName} onChange={e => update('lastName', e.target.value)} />
-          </div>
           <Input label={t('SignUp.emailOrPhone')} type="email" value={form.email} onChange={e => update('email', e.target.value)} error={errors.email} leftIcon={<Mail size={14} />} />
           <Input label={t('SignUp.password')} isPassword value={form.password} onChange={e => update('password', e.target.value)} error={errors.password} hint={t('SignUp.passwordHint')} leftIcon={<Lock size={14} />} />
           <Input label={t('Common.confirmPassword', 'Confirm Password')} isPassword value={form.confirmPassword} onChange={e => update('confirmPassword', e.target.value)} error={errors.confirmPassword} leftIcon={<Lock size={14} />} />

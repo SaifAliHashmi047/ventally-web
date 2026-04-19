@@ -1,109 +1,186 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
-import { useMood } from '../../api/hooks/useMood';
-import { MOOD_CONFIG, type MoodType } from '../../components/ui/MoodSelector';
+import { Button } from '../../components/ui/Button';
 import { MoodBarChart } from '../../components/charts/MoodBarChart';
-import {
-  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
-} from 'recharts';
+import { useMood } from '../../api/hooks/useMood';
+import { ChevronRight } from 'lucide-react';
 
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload?.length) return (
-    <div className="glass rounded-xl px-3 py-2 text-xs">
-      <p className="text-white font-semibold">{label}</p>
-      <p className="text-gray-400 capitalize">{payload[0]?.payload?.label}: {payload[0]?.value}</p>
-    </div>
-  );
-  return null;
+type TabType = '7' | '30' | 'custom';
+
+const parseMoodDistribution = (res: any) => {
+  if (!res?.mood_distribution) return [];
+  const moods = ['happy', 'neutral', 'sad', 'anxious', 'mad'];
+  const map: Record<string, number> = {};
+  res.mood_distribution.forEach((d: any) => {
+    if (d.mood_type) map[d.mood_type.toLowerCase()] = parseInt(d.count, 10) || 0;
+  });
+  return moods.map(m => ({ label: m, value: map[m] || 0 }));
 };
 
 export const VenterMoodTrends = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const { getMoodStats } = useMood();
-  const [distribution, setDistribution] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        const res = await getMoodStats(30);
-        if (res?.mood_distribution) {
-          const allMoods = ['happy', 'neutral', 'sad', 'anxious', 'mad'];
-          const moodMap: Record<string, number> = {};
-          res.mood_distribution.forEach((d: any) => {
-            if (d.mood_type) moodMap[d.mood_type.toLowerCase()] = parseInt(d.count, 10);
-          });
-          setDistribution(allMoods.map(m => ({ value: moodMap[m] || 0, label: m })));
-        }
-      } catch { /* ignore */ } finally {
-        setLoading(false);
-      }
-    };
-    fetch();
+  const [activeTab, setActiveTab] = useState<TabType>('7');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [moodData, setMoodData] = useState<{ label: string; value: number }[]>([]);
+
+  const fetchStats = useCallback(async (days: number) => {
+    setLoading(true);
+    try {
+      const res = await getMoodStats(days);
+      setMoodData(parseMoodDistribution(res));
+    } catch { /* ignore */ } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const total = distribution.reduce((sum, d) => sum + d.value, 0);
-  const topMood = distribution.reduce((best, d) => d.value > best.value ? d : best, { value: 0, label: '' });
+  useEffect(() => {
+    if (activeTab === '7') fetchStats(7);
+    else if (activeTab === '30') fetchStats(30);
+  }, [activeTab, fetchStats]);
+
+  const handleCustomSearch = () => {
+    if (!startDate || !endDate) return;
+    const s = new Date(startDate.replace(/\//g, '-'));
+    const e = new Date(endDate.replace(/\//g, '-'));
+    if (isNaN(s.getTime()) || isNaN(e.getTime())) return;
+    const diffDays = Math.ceil(Math.abs(e.getTime() - s.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+    fetchStats(diffDays);
+  };
+
+  const TABS: { key: TabType; label: string }[] = [
+    { key: '7',      label: t('VenterJourney.moodTrends.tabs.7days',  '7 Days')  },
+    { key: '30',     label: t('VenterJourney.moodTrends.tabs.30days', '30 Days') },
+    { key: 'custom', label: t('VenterJourney.moodTrends.tabs.custom', 'Custom')  },
+  ];
+
+  // variation is always "Moderate" in the native app (not returned from API)
+  const variation = t('VenterJourney.moodVariation.moderate', 'Moderate');
 
   return (
-    <div className="page-wrapper animate-fade-in">
-      <PageHeader title="Mood Trends" subtitle="Your mood patterns over the last 30 days" />
+    <div className="page-wrapper animate-fade-in pb-10">
+      <PageHeader
+        title={t('VenterJourney.moodTrends.title', 'Your Mood')}
+        onBack={() => navigate(-1)}
+      />
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <GlassCard>
-          <p className="text-xs text-gray-500 mb-1">Total Logs</p>
-          <p className="text-xl font-bold text-white">{total}</p>
-        </GlassCard>
-        {topMood.label && (
-          <GlassCard className="sm:col-span-2">
-            <p className="text-xs text-gray-500 mb-1">Dominant Mood</p>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">{MOOD_CONFIG[topMood.label as MoodType]?.emoji}</span>
-              <p className="text-xl font-bold capitalize" style={{ color: MOOD_CONFIG[topMood.label as MoodType]?.text }}>
-                {topMood.label}
+      {/* ── 3-tab selector — matches native tabContainer ── */}
+      <div
+        className="flex rounded-3xl p-1 mb-8"
+        style={{ background: 'rgba(255,255,255,0.08)' }}
+      >
+        {TABS.map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className="flex-1 py-2.5 rounded-[22px] text-sm font-medium transition-all"
+            style={
+              activeTab === tab.key
+                ? { background: 'rgba(255,255,255,0.18)', color: 'rgba(255,255,255,1)' }
+                : { color: 'rgba(255,255,255,0.5)' }
+            }
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* ── Custom date range pickers ── */}
+      {activeTab === 'custom' && (
+        <>
+          <div className="flex gap-4 mb-4">
+            {/* Start Date */}
+            <div className="flex-1">
+              <p className="text-sm font-medium text-white mb-2">
+                {t('VenterJourney.moodTrends.startDate', 'Start Date')}
               </p>
+              <input
+                type="date"
+                value={startDate}
+                max={new Date().toISOString().split('T')[0]}
+                onChange={e => setStartDate(e.target.value)}
+                className="w-full rounded-2xl px-4 py-3 text-sm text-white border outline-none"
+                style={{ background: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.2)', colorScheme: 'dark' }}
+                placeholder={t('VenterJourney.moodTrends.placeholder', 'yyyy/mm/dd')}
+              />
             </div>
-            <p className="text-xs text-gray-500 mt-1">{topMood.value} days</p>
+            {/* End Date */}
+            <div className="flex-1">
+              <p className="text-sm font-medium text-white mb-2">
+                {t('VenterJourney.moodTrends.endDate', 'End Date')}
+              </p>
+              <input
+                type="date"
+                value={endDate}
+                min={startDate || undefined}
+                max={new Date().toISOString().split('T')[0]}
+                onChange={e => setEndDate(e.target.value)}
+                className="w-full rounded-2xl px-4 py-3 text-sm text-white border outline-none"
+                style={{ background: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.2)', colorScheme: 'dark' }}
+                placeholder={t('VenterJourney.moodTrends.placeholder', 'yyyy/mm/dd')}
+              />
+            </div>
+          </div>
+          <Button
+            variant="glass"
+            size="sm"
+            fullWidth
+            loading={loading}
+            onClick={handleCustomSearch}
+            className="mb-8"
+          >
+            {t('Common.search', 'Search')}
+          </Button>
+        </>
+      )}
+
+      {/* ── Mood Over Time chart — matches native MoodChart inside GlassView ── */}
+      <div className="mb-8">
+        {loading ? (
+          <div className="skeleton rounded-3xl h-52" />
+        ) : (
+          <GlassCard style={{ background: 'rgba(0,0,0,0.15)' }}>
+            <p className="text-sm font-medium text-white mb-6">
+              {t('VenterJourney.moodTrends.moodOverTime', 'Mood Over Time')}
+            </p>
+            <MoodBarChart data={moodData} />
           </GlassCard>
         )}
       </div>
 
-      {/* Bar Chart */}
-      {loading ? (
-        <div className="skeleton h-48 rounded-3xl" />
-      ) : (
-        <GlassCard>
-          <p className="section-title mb-4">Mood Distribution</p>
-          <MoodBarChart data={distribution} />
-        </GlassCard>
-      )}
+      {/* ── Trend Breakdown section — matches native sectionTitle + GlassView ── */}
+      <p className="text-lg font-semibold text-white mb-4">
+        {t('VenterJourney.moodTrends.trendBreakdown', 'Trend Breakdown')}
+      </p>
 
-      {/* Mood Breakdown */}
-      <GlassCard padding="none" rounded="2xl">
-        <div className="px-5 py-4 border-b border-white/5">
-          <p className="text-base font-semibold text-white">Breakdown</p>
-        </div>
-        {distribution.map((d, i) => {
-          const config = MOOD_CONFIG[d.label as MoodType];
-          const pct = total > 0 ? Math.round((d.value / total) * 100) : 0;
-          return (
-            <div key={d.label} className={`px-5 py-3 flex items-center gap-4 ${i < distribution.length - 1 ? 'border-b border-white/5' : ''}`}>
-              <span className="text-xl w-8 text-center">{config?.emoji}</span>
-              <div className="flex-1">
-                <div className="flex justify-between mb-1.5">
-                  <p className="text-sm font-medium capitalize" style={{ color: config?.text }}>{d.label}</p>
-                  <p className="text-sm font-semibold text-white">{pct}%</p>
-                </div>
-                <div className="h-1.5 rounded-full bg-white/8">
-                  <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, background: config?.text }} />
-                </div>
-              </div>
-              <p className="text-xs text-gray-500 w-10 text-right">{d.value}d</p>
+      <button
+        onClick={() => navigate('/venter/mood/variation')}
+        className="w-full text-left"
+      >
+        <GlassCard
+          bordered
+          hover
+          className="cursor-pointer"
+          style={{ background: 'rgba(0,0,0,0.12)' }}
+        >
+          <div className="flex items-center justify-between py-1">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-white">
+                {t('VenterJourney.moodVariation.title', 'Mood Variation')}
+              </p>
+              <p className="text-xs text-white/60 mt-0.5">{variation}</p>
             </div>
-          );
-        })}
-      </GlassCard>
+            <ChevronRight size={18} className="text-white/60 flex-shrink-0 ml-3" />
+          </div>
+        </GlassCard>
+      </button>
     </div>
   );
 };

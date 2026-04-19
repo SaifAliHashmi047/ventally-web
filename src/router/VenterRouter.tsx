@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { VenterLayout } from '../components/Layout/VenterLayout';
 import { VenterMoodDetails } from '../pages/Venter/VenterMoodDetails';
+import { VenterRecoveryDetails } from '../pages/Venter/VenterRecoveryDetails';
 
 // Venter Pages
 import { VenterDashboard } from '../pages/Venter/VenterDashboard';
@@ -10,6 +11,7 @@ import { VenterTransactions } from '../pages/Venter/VenterTransactions';
 import { VenterMoodLog } from '../pages/Venter/VenterMoodLog';
 import { VenterMoods } from '../pages/Venter/VenterMoods';
 import { VenterMoodTrends } from '../pages/Venter/VenterMoodTrends';
+import { VenterMoodVariation } from '../pages/Venter/VenterMoodVariation';
 import { VenterMoodHistory } from '../pages/Venter/VenterMoodHistory';
 import { VenterReflections } from '../pages/Venter/VenterReflections';
 import { VenterAddReflection } from '../pages/Venter/VenterAddReflection';
@@ -39,6 +41,7 @@ import { VenterQuietHours } from '../pages/Venter/VenterQuietHours';
 import { VenterChangeBackground } from '../pages/Venter/VenterChangeBackground';
 import { VenterSubmitFeedback } from '../pages/Venter/VenterSubmitFeedback';
 import { VenterChangeAccountType } from '../pages/Venter/VenterChangeAccountType';
+import { VenterOthers } from '../pages/Venter/VenterOthers';
 
 // Common Pages
 import { ProfileScreen } from '../pages/Common/ProfileScreen';
@@ -62,6 +65,8 @@ import { FaithOrBeliefSelect } from '../pages/Common/FaithOrBeliefSelect';
 import { SpecialTopicsSelect } from '../pages/Common/SpecialTopicsSelect';
 
 // Chat Pages
+import { VenterMessages } from '../pages/Venter/VenterMessages';
+import { VenterCall } from '../pages/Venter/VenterCall';
 import { RecentChats } from '../pages/Chat/RecentChats';
 import { ChatScreen } from '../pages/Chat/ChatScreen';
 import { FindingListener } from '../pages/Chat/FindingListener';
@@ -75,6 +80,7 @@ export const VenterRouter = () => {
     <VenterLayout>
       <Routes>
         <Route index element={<Navigate to="home" replace />} />
+        <Route path="others" element={<VenterOthers />} />
         <Route path="home" element={<VenterDashboard />} />
         <Route path="wallet" element={<VenterWallet />} />
         <Route path="wallet/add-funds" element={<VenterAddFunds />} />
@@ -84,8 +90,8 @@ export const VenterRouter = () => {
         <Route path="mood/trends" element={<VenterMoodTrends />} />
         <Route path="mood/history" element={<VenterMoodHistory />} />
         <Route path="mood/:id" element={<VenterMoodDetails />} />
-        <Route path="mood/monthly" element={<VenterMoodTrends />} />
-        <Route path="mood/variation" element={<VenterMoodTrends />} />
+        <Route path="mood/monthly" element={<VenterMoodVariation />} />
+        <Route path="mood/variation" element={<VenterMoodVariation />} />
         <Route path="reflections" element={<VenterReflections />} />
         <Route path="reflections/add" element={<VenterAddReflection />} />
         <Route path="reflections/:id" element={<VenterReflectionDetail />} />
@@ -94,7 +100,8 @@ export const VenterRouter = () => {
         <Route path="recovery/log" element={<VenterLogProgress />} />
         <Route path="recovery/summary" element={<VenterProgressSummary />} />
         <Route path="recovery/calendar" element={<VenterRecoveryCalendar />} />
-        <Route path="recovery/:id" element={<VenterRecoveryDashboard />} />
+        <Route path="recovery/:id" element={<VenterRecoveryDetails />} />
+        <Route path="recovery/details/:id" element={<VenterRecoveryDetails />} />
         <Route path="recovery/edit/:id" element={<VenterLogProgress />} />
         <Route path="crisis" element={<VenterCrisisFlow />} />
         <Route path="crisis-warning" element={<VenterCrisisWarning />} />
@@ -138,12 +145,14 @@ export const VenterRouter = () => {
         <Route path="notifications" element={<Notifications />} />
         <Route path="notifications/:id" element={<NotificationDetail />} />
         {/* Chat/Call */}
-        <Route path="chat" element={<RecentChats />} />
+        <Route path="chat" element={<VenterMessages />} />
+        <Route path="chat/all" element={<RecentChats />} />
         <Route path="chat/:id" element={<ChatScreen />} />
+        <Route path="calls" element={<VenterCall />} />
         <Route path="finding-listener" element={<FindingListener />} />
         <Route path="call/:roomId" element={<ActiveCall />} />
-        <Route path="session/:id/feedback" element={<SessionFeedback />} />
         <Route path="session/:id/rating" element={<SessionRating />} />
+        <Route path="session/:id/feedback" element={<SessionFeedback />} />
         <Route path="report" element={<ReportScreen />} />
         <Route path="*" element={<Navigate to="home" replace />} />
       </Routes>

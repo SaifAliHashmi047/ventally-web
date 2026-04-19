@@ -1,84 +1,123 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Button } from '../../components/ui/Button';
+import { GlassCard } from '../../components/ui/GlassCard';
 import { useRecovery } from '../../api/hooks/useRecovery';
 import { toastSuccess, toastError } from '../../utils/toast';
-
-const STATUSES = ['success', 'slip', 'partial'];
 
 export const VenterLogProgress = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { id } = useParams();
   const location = useLocation();
   const { startSobriety, logRelapse } = useRecovery();
-  const [status, setStatus] = useState('');
-  const [notes, setNotes] = useState('');
-  const [saving, setSaving] = useState(false);
-  const isEditMode = !!id || location.state?.editMode;
 
-  // Pre-fill if editing
+  const stateEntry = location.state?.entry as any;
+  const isEditMode = !!location.state?.editMode;
+
+  // Exactly 2 options — matches native: 'track' | 'setback'
+  const [status, setStatus] = useState<'track' | 'setback' | null>(
+    location.state?.status ?? null
+  );
+  const [notes, setNotes] = useState<string>(location.state?.notes ?? stateEntry?.notes ?? '');
+  const [saving, setSaving] = useState(false);
+
+  // Pre-fill if editing from RecoveryDetails
   useEffect(() => {
-    if (location.state?.status) {
-      setStatus(location.state.status);
+    if (stateEntry) {
+      const s = stateEntry.event_type === 'relapse' ? 'setback' : 'track';
+      setStatus(s);
+      setNotes(stateEntry.notes || '');
     }
-    if (location.state?.notes) {
-      setNotes(location.state.notes);
-    }
-  }, [location.state]);
+  }, []);
 
   const handleSave = async () => {
     if (!status) return;
     setSaving(true);
     try {
-      const today = new Date().toISOString().split('T')[0];
-      if (status === 'slip') {
-        await logRelapse({ relapse_date: today, note: notes, trigger: '' });
+      if (status === 'track') {
+        await startSobriety({
+          restart_date: new Date().toISOString(),
+          notes: notes,
+        } as any);
       } else {
-        await startSobriety({ sobriety_date: today, addiction_type: 'general', note: notes });
+        await logRelapse({
+          relapse_date: new Date().toISOString(),
+          notes: notes,
+        } as any);
       }
-      toastSuccess(t('VenterRecovery.logProgress.success'));
+      toastSuccess(t('VenterRecovery.logProgress.success', 'Recovery logged successfully'));
       navigate(-1);
     } catch (e: any) {
-      toastError(e?.error || t('Common.somethingWentWrong'));
+      toastError(e?.message || t('Common.somethingWentWrong'));
     } finally {
       setSaving(false);
     }
   };
 
-  const statusConfig: Record<string, { color: string; emoji: string; label: string }> = {
-    success: { color: 'text-success border-success/30 bg-success/10', emoji: '✅', label: t('VenterRecovery.log.success', 'Successful Day') },
-    partial: { color: 'text-warning border-warning/30 bg-warning/10', emoji: '⚠️', label: t('VenterRecovery.log.partial', 'Partial') },
-    slip: { color: 'text-error border-error/30 bg-error/10', emoji: '❌', label: t('VenterRecovery.log.slip', 'Slip') },
-  };
-
   return (
     <div className="page-wrapper animate-fade-in">
-      <PageHeader title={isEditMode ? t('VenterRecovery.log.editTitle', 'Edit Progress') : t('VenterRecovery.log.title', 'Log Progress')} onBack={() => navigate(-1)} />
-      <p className="section-label mb-3">{t('VenterRecovery.log.howWasToday', 'How was today?')}</p>
-      <div className="grid grid-cols-3 gap-3">
-        {STATUSES.map(s => {
-          const conf = statusConfig[s];
-          return (
-            <button key={s} onClick={() => setStatus(s)}
-              className={`py-6 rounded-2xl border text-center transition-all ${conf.color} ${status === s ? 'scale-105 shadow-lg' : 'opacity-70 hover:opacity-100'}`}>
-              <div className="text-2xl mb-1">{conf.emoji}</div>
-              <p className="text-xs font-semibold">{conf.label}</p>
-            </button>
-          );
-        })}
+      <PageHeader title="" onBack={() => navigate(-1)} />
+
+      {/* Question — matches native large centered text */}
+      <p className="text-center text-lg font-medium text-white mt-8 mb-8 whitespace-pre-line leading-relaxed">
+        {t('VenterRecovery.logProgress.question', 'How was your recovery \n today?')}
+      </p>
+
+      {/* Two toggle buttons — exactly matches native */}
+      <div className="flex gap-4 mb-8">
+        <button
+          onClick={() => setStatus('track')}
+          className="flex-1 py-3 rounded-3xl border text-sm font-medium text-white transition-all"
+          style={
+            status === 'track'
+              ? { borderColor: 'transparent', background: 'rgba(255,255,255,0.15)' }
+              : { borderColor: 'rgba(255,255,255,0.25)', background: 'rgba(0,0,0,0.1)' }
+          }
+        >
+          {t('VenterRecovery.logProgress.track', 'Stayed on track')}
+        </button>
+        <button
+          onClick={() => setStatus('setback')}
+          className="flex-1 py-3 rounded-3xl border text-sm font-medium text-white transition-all"
+          style={
+            status === 'setback'
+              ? { borderColor: 'transparent', background: 'rgba(255,255,255,0.15)' }
+              : { borderColor: 'rgba(255,255,255,0.25)', background: 'rgba(0,0,0,0.1)' }
+          }
+        >
+          {t('VenterRecovery.logProgress.setback', 'Had a setback')}
+        </button>
       </div>
-      <div className="mt-6">
-        <p className="section-label mb-2">{t('VenterRecovery.log.notes', 'Notes (optional)')}</p>
-        <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder={t('VenterRecovery.log.notesPlaceholder', 'What happened today?')} className="input-field w-full h-32 resize-none" />
-      </div>
-      <div className="mt-6">
-        <Button variant="primary" size="lg" fullWidth loading={saving} disabled={!status} onClick={handleSave}>
-          {t('VenterRecovery.log.saveEntry', 'Save Entry')}
-        </Button>
-      </div>
+
+      {/* Notes */}
+      <p className="text-base font-medium text-white mb-3">
+        {t('VenterRecovery.logProgress.notes', 'Notes')}
+      </p>
+      <GlassCard
+        className="mb-8"
+        style={{ background: 'rgba(0,0,0,0.12)', borderColor: 'rgba(255,255,255,0.2)' }}
+      >
+        <textarea
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          placeholder={t('VenterRecovery.logProgress.placeholder', "Let's reflect on our day")}
+          className="w-full h-28 resize-none bg-transparent text-sm text-white placeholder-white/60 outline-none leading-relaxed"
+        />
+      </GlassCard>
+
+      {/* Save button — fixed at bottom like native */}
+      <Button
+        variant="primary"
+        size="lg"
+        fullWidth
+        loading={saving}
+        disabled={!status || saving}
+        onClick={handleSave}
+      >
+        {t('VenterRecovery.logProgress.saveEntry', 'Save Entry')}
+      </Button>
     </div>
   );
 };

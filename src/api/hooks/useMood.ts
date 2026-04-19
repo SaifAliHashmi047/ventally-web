@@ -42,8 +42,10 @@ export const useMood = () => {
     return res.data;
   };
 
-  const getMoodHistory = async (limit = 30, offset = 0) => {
-    const res = await apiInstance.get('mood/history', { params: { limit, offset } });
+  const getMoodHistory = async (limit = 30, offset = 0, start_date?: string, end_date?: string) => {
+    const res = await apiInstance.get('mood/history', {
+      params: { limit, offset, ...(start_date && { start_date }), ...(end_date && { end_date }) },
+    });
     return res.data;
   };
 

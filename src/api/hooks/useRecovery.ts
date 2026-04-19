@@ -7,8 +7,10 @@ export const useRecovery = () => {
   };
 
   const startSobriety = async (payload: {
-    sobriety_date: string;
-    addiction_type: string;
+    sobriety_date?: string;
+    restart_date?: string;
+    addiction_type?: string;
+    notes?: string;
     note?: string;
   }) => {
     const res = await apiInstance.post('sobriety/start', payload);
@@ -18,6 +20,7 @@ export const useRecovery = () => {
   const logRelapse = async (payload: {
     relapse_date: string;
     trigger?: string;
+    notes?: string;
     note?: string;
   }) => {
     const res = await apiInstance.post('sobriety/relapse', payload);

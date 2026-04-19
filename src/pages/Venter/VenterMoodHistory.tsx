@@ -85,7 +85,7 @@ export const VenterMoodHistory = () => {
               <div className="space-y-2">
                 {entries.map((m: any) => {
                   const moodKey = m.mood_type?.toLowerCase() as MoodType;
-                  const config = MOOD_CONFIG[moodKey] || { emoji: '😶', label: m.mood_type, bg: '#333', text: '#aaa' };
+                  const config = MOOD_CONFIG[moodKey] || { icon: '', label: m.mood_type, bg: '#333', text: '#aaa', labelKey: '', emoji: '' };
                   const dateObj = new Date(m.logged_date || m.created_at || m.updated_at);
                   
                   return (
@@ -94,12 +94,20 @@ export const VenterMoodHistory = () => {
                       hover
                       padding="sm"
                       rounded="2xl"
-                      // Web currently doesnt have VenterMoodDetails port, so navigate to edit mode log
-                      onClick={() => navigate('/venter/mood/log', { state: { editMode: true, selectedMood: moodKey, item: m } })}
+                      onClick={() => navigate(`/venter/mood/${m.id}`, { state: { item: m } })}
                       className="cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-xl">{config.emoji}</span>
+                        {MOOD_CONFIG[moodKey] ? (
+                          <img
+                            src={MOOD_CONFIG[moodKey].icon}
+                            alt={config.label}
+                            className="w-6 h-6 object-contain flex-shrink-0"
+                            style={{ filter: 'brightness(0) invert(1)', opacity: 0.9 }}
+                          />
+                        ) : (
+                          <span className="text-xl">😶</span>
+                        )}
                         <div className="flex-1">
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-2">

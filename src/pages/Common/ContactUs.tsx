@@ -80,7 +80,7 @@ export const ContactUs = () => {
       </div>
 
       {faqItems.map((item: any, index: number) => (
-        <GlassCard key={index} bordered padding="sm" rounded="2xl">
+        // <GlassCard key={index} bordered padding="sm" rounded="2xl">
           <AccordionItem
             title={item.title}
             isExpanded={expandedIndex === index}
@@ -88,7 +88,7 @@ export const ContactUs = () => {
           >
             <p className="text-sm text-gray-400 leading-relaxed whitespace-pre-line">{item.description}</p>
           </AccordionItem>
-        </GlassCard>
+        // </GlassCard>
       ))}
     </div>
   ), [expandedIndex, faqItems, t]);

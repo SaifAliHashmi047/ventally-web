@@ -37,6 +37,29 @@ export const VenterMoodLog = () => {
   const [isEditMode, setIsEditMode] = useState<boolean>(!!state?.editMode);
   const [loading, setLoading] = useState(false);
 
+  // ── Sync edit item into state (mirrors native app's second useEffect) ─────────
+  useEffect(() => {
+    if (!state?.editMode || !state?.item) return;
+
+    const editItem = state.item;
+
+    // Pre-fill mood if passed
+    if (editItem?.mood && !state?.selectedMood) {
+      setSelectedMood(editItem.mood.toLowerCase() as MoodType);
+    }
+
+    // Pre-fill category — always lowercase to match option IDs
+    if (editItem?.categories && Array.isArray(editItem.categories) && editItem.categories.length > 0) {
+      setSelectedCategory(editItem.categories[0]?.toLowerCase() ?? null);
+    }
+
+    // Pre-fill notes
+    if (typeof editItem?.note === 'string') {
+      setNotes(editItem.note);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // ── On mount: check if mood already logged today ───────────────────────────
   useEffect(() => {
     // If we were already told it's edit mode from the dashboard, skip the check
@@ -140,14 +163,25 @@ export const VenterMoodLog = () => {
     <div className="page-wrapper animate-fade-in">
       <PageHeader title={title} onBack={() => navigate(-1)} />
 
-      {/* ── Mood indicator ─────────────────────────────────────────────────── */}
+      {/* Mood indicator */}
       {moodConfig && (
         <div className="flex items-center gap-3 py-1 mb-2">
-          <span className="text-5xl">{moodConfig.emoji}</span>
+          <img
+            src={moodConfig.icon}
+            alt={moodConfig.label}
+            className="w-12 h-12 object-contain"
+            style={{
+              filter: `brightness(0) saturate(100%) ${
+                selectedMood === 'happy'   ? 'invert(72%) sepia(18%) saturate(600%) hue-rotate(115deg) brightness(95%) contrast(90%)' :
+                selectedMood === 'neutral' ? 'invert(75%) sepia(30%) saturate(500%) hue-rotate(185deg) brightness(105%) contrast(95%)' :
+                selectedMood === 'sad'     ? 'invert(70%) sepia(20%) saturate(500%) hue-rotate(200deg) brightness(105%) contrast(90%)' :
+                selectedMood === 'anxious' ? 'invert(85%) sepia(50%) saturate(600%) hue-rotate(10deg) brightness(105%) contrast(95%)' :
+                                             'invert(60%) sepia(30%) saturate(500%) hue-rotate(320deg) brightness(105%) contrast(90%)'
+              }`,
+            }}
+          />
           <div>
-            <p className="text-xl font-bold" style={{ color: moodConfig.text }}>
-              {moodConfig.label}
-            </p>
+            <p className="text-xl font-bold" style={{ color: moodConfig.text }}>{t(moodConfig.labelKey, moodConfig.label)}</p>
             <p className="text-sm text-gray-500">{t('VenterMoodLog.subtitle')}</p>
           </div>
         </div>

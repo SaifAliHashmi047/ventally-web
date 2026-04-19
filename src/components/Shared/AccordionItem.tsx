@@ -18,7 +18,7 @@ export const AccordionItem = ({ title, children, isExpanded, onToggle }: Accordi
           justifyContent: 'space-between', 
           alignItems: 'center', 
           cursor: 'pointer',
-          background: isExpanded ? 'rgba(255,255,255,0.05)' : 'transparent'
+          // background: isExpanded ? 'rgba(255,255,255,0.05)' : 'transparent'
         }}
       >
         <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'white' }}>{title}</h3>

@@ -1,92 +1,129 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
-import { EmptyState } from '../../components/ui/EmptyState';
 import { Button } from '../../components/ui/Button';
+import { EmptyState } from '../../components/ui/EmptyState';
 import { MOOD_CONFIG, type MoodType } from '../../components/ui/MoodSelector';
 import { useMood } from '../../api/hooks/useMood';
-import { Plus, ChevronRight } from 'lucide-react';
+import { ChevronRight, Calendar } from 'lucide-react';
+import happyIcon from '../../assets/icons/happy.png';
+
+const formatDate = (dateStr: string) =>
+  new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(
+    new Date(dateStr)
+  );
 
 export const VenterMoods = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { getMoodHistory } = useMood();
-  const [moods, setMoods] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
 
+  const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const getMoodHistoryRef = useRef(getMoodHistory);
+
+  // Fetch 5 recent moods — once on mount
   useEffect(() => {
+    let cancelled = false;
     const fetch = async () => {
+      setLoading(true);
       try {
-        const res = await getMoodHistory(30, 0);
-        setMoods(res?.moods ?? []);
+        const res = await getMoodHistoryRef.current(5, 0);
+        if (!cancelled) setItems(res?.moods ?? []);
       } catch { /* ignore */ } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
     fetch();
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className="page-wrapper animate-fade-in">
       <PageHeader
-        title="Mood History"
+        title={t('VenterYourMood.title')}
+        onBack={() => navigate(-1)}
         rightContent={
-          <Button variant="primary" size="sm" leftIcon={<Plus size={16} />} onClick={() => navigate('/venter/mood/log')}>
-            Log Mood
-          </Button>
+          <button
+            onClick={() => navigate('/venter/mood/monthly')}
+            className="p-2 rounded-xl glass text-gray-400 hover:text-white transition-colors"
+          >
+            <Calendar size={18} />
+          </button>
         }
       />
 
-      <div className="flex gap-2 flex-wrap">
-        <button onClick={() => navigate('/venter/mood/trends')} className="px-4 py-2 glass rounded-2xl text-sm text-gray-400 hover:text-white transition-colors">
-          📈 Trends
-        </button>
-        <button onClick={() => navigate('/venter/mood/history')} className="px-4 py-2 glass rounded-2xl text-sm text-gray-400 hover:text-white transition-colors">
-          📅 Calendar View
-        </button>
-      </div>
-
-      {loading ? (
-        <div className="space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="skeleton h-20 rounded-2xl" />)}</div>
-      ) : moods.length === 0 ? (
-        <EmptyState
-          title="No mood logs yet"
-          description="Start tracking how you feel each day."
-          action={<Button variant="accent" size="sm" onClick={() => navigate('/venter/mood/log')}>Log First Mood</Button>}
-        />
-      ) : (
-        <div className="space-y-3">
-          {moods.map((m: any) => {
-            const moodKey = m.mood_type?.toLowerCase() as MoodType;
-            const config = MOOD_CONFIG[moodKey] || { emoji: '😶', label: m.mood_type, bg: '#333', text: '#aaa' };
-            return (
-              <GlassCard
-                key={m.id}
-                hover
-                onClick={() => navigate('/venter/mood/log', { state: { editMode: true, selectedMood: moodKey, item: m } })}
-                padding="md"
-                rounded="2xl"
-                className="cursor-pointer"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
-                    style={{ background: `${config.bg}30` }}>
-                    {config.emoji}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold" style={{ color: config.text }}>{config.label}</p>
-                    {m.notes && <p className="text-xs text-gray-500 mt-0.5 truncate">{m.notes}</p>}
-                    <p className="text-xs text-gray-600 mt-1">
-                      {new Date(m.updated_at).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-                    </p>
-                  </div>
-                  <ChevronRight size={16} className="text-gray-500" />
-                </div>
-              </GlassCard>
-            );
-          })}
+      {/* Today's Mood — matches RN SettingsItem "Today's Mood" */}
+      <GlassCard
+        bordered
+        hover
+        onClick={() => navigate('/venter/mood/log')}
+        className="cursor-pointer"
+        style={{ background: 'rgba(0,0,0,0.2)' }}
+      >
+        <div className="flex items-center justify-between py-1">
+          <p className="text-sm font-medium text-white">{t('VenterYourMood.todaysMood')}</p>
+          <ChevronRight size={16} className="text-white/60" />
         </div>
-      )}
+      </GlassCard>
+
+      {/* Recent Moods section */}
+      <p className="text-sm font-medium text-white">{t('VenterYourMood.recentMoods')}</p>
+
+      <GlassCard bordered style={{ background: 'rgba(0,0,0,0.2)' }}>
+        {loading ? (
+          <div className="space-y-3">
+            {[1, 2, 3].map(i => <div key={i} className="skeleton h-10 rounded-xl" />)}
+          </div>
+        ) : items.length === 0 ? (
+          <EmptyState
+            title={t('VenterMoodHistory.noMoods')}
+            description={t('VenterMoodHistory.noMoodsDescription')}
+            icon={
+              <img src={happyIcon} alt="mood" className="w-8 h-8 object-contain"
+                style={{ filter: 'brightness(0) invert(1)', opacity: 0.5 }} />
+            }
+          />
+        ) : (
+          <div>
+            {items.map((item: any, index: number) => {
+              const moodKey = item.mood_type?.toLowerCase() as MoodType;
+              const config = MOOD_CONFIG[moodKey];
+              return (
+                <div
+                  key={item.id || index}
+                  className={`flex items-center justify-between py-3 ${
+                    index < items.length - 1 ? 'border-b border-white/10' : ''
+                  }`}
+                >
+                  <span className="text-sm text-white">
+                    {formatDate(item.logged_date || item.created_at)}
+                  </span>
+                  <span
+                    className="text-sm font-medium capitalize"
+                    style={{ color: config?.text || '#aaa' }}
+                  >
+                    {item.mood_type}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </GlassCard>
+
+      {/* Mood History button — matches RN footer Button */}
+      <Button
+        variant="glass"
+        size="lg"
+        fullWidth
+        onClick={() => navigate('/venter/mood/history')}
+      >
+        {t('VenterYourMood.moodHistory')}
+      </Button>
     </div>
   );
 };

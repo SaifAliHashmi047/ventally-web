@@ -23,7 +23,8 @@ export const VenterRecoveryCalendar = () => {
       setLoading(true);
       try {
         const res = await getSobrietyHistory(50, 0);
-        setHistory(res?.history || []);
+        // Native uses res.events, not res.history
+        setHistory(res?.events ?? res?.history ?? []);
       } catch {
         /* ignore */
       } finally {
@@ -56,7 +57,8 @@ export const VenterRecoveryCalendar = () => {
 
   // Create a map for quick lookup
   const eventsMap = history.reduce((acc, event) => {
-    const d = new Date(event.logged_date || event.created_at);
+    // Native uses event.event_date — matches SobrietyEvent type
+    const d = new Date(event.event_date || event.created_at);
     if (d.getMonth() === currentMonth.getMonth() && d.getFullYear() === currentMonth.getFullYear()) {
       acc[d.getDate()] = event;
     }
@@ -111,7 +113,7 @@ export const VenterRecoveryCalendar = () => {
               return (
                 <div 
                   key={day} 
-                  onClick={() => event && navigate(`/venter/recovery/${event.id}`)}
+                  onClick={() => event && navigate(`/venter/recovery/details/${event.id}`, { state: { entry: event } })}
                   className={cn(
                     "aspect-square rounded-xl flex items-center justify-center text-sm relative transition-all",
                     event ? "cursor-pointer" : "",

@@ -81,51 +81,26 @@ export const SOCKET_URL = BASE_URL.replace(/\/api\/v1\/?$/, '').replace(/\/$/, '
 const apiInstance: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   timeout: 15000,
-  maxRedirects: 0, // Prevent redirect loops that cause v1 duplication
   headers: {
     'Content-Type': 'application/json',
-    // Accept: 'application/json',
-  },
-  validateStatus: (status) => {
-    // Accept 2xx and 3xx status codes - we'll handle redirects manually
-    return status >= 200 && status < 400;
   },
 });
 
 // Request Interceptor
 apiInstance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    // Get access token from AsyncStorage
     const token = await getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
-    // Debug: Log full URL to diagnose v1 duplication
-    const fullUrl = new URL(config.url || '', config.baseURL || apiInstance.defaults.baseURL).toString();
-    console.log("[API Request]", {
-      fullUrl,
-      baseURL: config.baseURL || apiInstance.defaults.baseURL,
-      url: config.url,
-      method: config.method,
-    });
-
     return config;
   },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  }
+  (error: AxiosError) => Promise.reject(error)
 );
 
 // Response Interceptor
 apiInstance.interceptors.response.use(
   (response: AxiosResponse): any => {
-    const fullUrl = new URL(response.config.url || '', response.config.baseURL || apiInstance.defaults.baseURL).toString();
-    console.log("[API Response]", {
-      fullUrl,
-      status: response.status,
-      method: response.config.method,
-    });
     return {
       success: true,
       data: response.data,
@@ -134,27 +109,6 @@ apiInstance.interceptors.response.use(
   },
   async (error: AxiosError): Promise<any> => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
-    const fullUrl = originalRequest ? new URL(originalRequest.url || '', originalRequest.baseURL || apiInstance.defaults.baseURL).toString() : 'unknown';
-    
-    // Log redirect errors specifically
-    const status = error.response?.status;
-    if (status && status >= 300 && status < 400) {
-      console.error("[API Redirect Error]", {
-        status,
-        fullUrl,
-        originalUrl: originalRequest?.url,
-        baseURL: originalRequest?.baseURL,
-        location: error.response?.headers?.location,
-        message: "Server is redirecting with v1 duplication - check API server configuration",
-      });
-    } else {
-      console.log("[API Error]", {
-        status,
-        fullUrl,
-        message: error.message,
-        errorMessage: (error?.response?.data as any)?.message,
-      });
-    }
     // Handle 401 Unauthorized - Token expired or invalid
     if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes('auth/login') && !originalRequest.url?.includes('auth/refresh')) {
       // Set _retry immediately to prevent any recursive retry loops

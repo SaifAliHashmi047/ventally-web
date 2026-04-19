@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { ReactNode } from 'react';
 import {
-  Home, MessageSquare, Phone, Wallet, Settings,
+  Home, MessageSquare, Phone, Wallet, Settings, MoreHorizontal,
   Menu, X, ChevronRight, LogOut
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,13 +18,14 @@ interface NavItem {
   icon: React.ComponentType<any>;
 }
 
-// STRICT: Only these 5 items as per requirements
+// STRICT: Only these 6 items as per requirements
 const NAV_ITEMS: NavItem[] = [
-  { path: '/venter/home',             labelKey: 'Navigation.tabs.home',     icon: Home },
-  { path: '/venter/chat',             labelKey: 'Navigation.tabs.messages', icon: MessageSquare },
-  { path: '/venter/finding-listener', labelKey: 'Navigation.tabs.call',     icon: Phone },
-  { path: '/venter/wallet',           labelKey: 'Navigation.tabs.wallet',   icon: Wallet },
-  { path: '/venter/settings',         labelKey: 'Navigation.tabs.settings', icon: Settings },
+  { path: '/venter/home',     labelKey: 'Navigation.tabs.home',     icon: Home },
+  { path: '/venter/chat',     labelKey: 'Navigation.tabs.messages', icon: MessageSquare },
+  { path: '/venter/calls',    labelKey: 'Navigation.tabs.call',     icon: Phone },
+  { path: '/venter/wallet',   labelKey: 'Navigation.tabs.wallet',   icon: Wallet },
+  { path: '/venter/others',   labelKey: 'Navigation.tabs.others',   icon: MoreHorizontal },
+  { path: '/venter/settings', labelKey: 'Navigation.tabs.settings', icon: Settings },
 ];
 
 interface VenterLayoutProps {
@@ -55,8 +56,10 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
   };
 
   const isActive = (path: string) => {
-    if (path === '/venter/finding-listener') {
+    if (path === '/venter/calls') {
+      // Calls tab is active on the calls page AND when finding/in a call
       return (
+        location.pathname.startsWith('/venter/calls') ||
         location.pathname.startsWith('/venter/finding-listener') ||
         location.pathname.startsWith('/venter/call/')
       );

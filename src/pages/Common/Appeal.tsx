@@ -54,7 +54,7 @@ export const Appeal = () => {
       formData.append('summary', summary.trim());
       formData.append('document', pickedFile);
 
-      await apiInstance.post('support/appeal', formData, {
+      await apiInstance.post('support/listener-appeals', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 

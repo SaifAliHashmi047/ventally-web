@@ -11,22 +11,31 @@ export const useSessions = () => {
     return res.data;
   };
 
-  // Submit feedback - matches mobile app reviews endpoint
+  // Submit feedback/review — POST /reviews
   const submitFeedback = async (sessionId: string, payload: {
-    rating?: number;
-    comment?: string;
+    rating: number;
+    comment: string;
     topics?: string[];
     sessionType?: string;
     revieweeId?: string;
   }) => {
-    // Use reviews endpoint like mobile app
-    const res = await apiInstance.post('reviews', {
+    // Guard: rating must be 1-5, comment must be non-empty
+    if (!payload.rating || payload.rating < 1 || payload.rating > 5) {
+      throw { error: 'Rating must be between 1 and 5' };
+    }
+    if (!payload.comment?.trim()) {
+      throw { error: 'Comment is required' };
+    }
+
+    const body: Record<string, any> = {
       sessionId,
       sessionType: payload.sessionType || 'chat',
       rating: payload.rating,
-      comment: payload.comment,
+      comment: payload.comment.trim(),
       revieweeId: payload.revieweeId,
-    });
+    };
+
+    const res = await apiInstance.post('reviews', body);
     return res.data;
   };
 
