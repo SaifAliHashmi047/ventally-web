@@ -24,27 +24,10 @@ export const SignUpOTP = () => {
   const userType = stateUserType || reduxUser?.userType || reduxUser?.role || 'venter';
 
   /**
-   * Navigate after OTP — mirrors native useVenterNavigation / useListenerNavigation.
-   * Venter:   → nickname → optionalQuestions → choosePlan
-   * Listener: → listener-training → listener-legal → verification
+   * Navigate after OTP — Enforce parity showing Language Selection screen to both roles
    */
   const navigateAfterVerify = () => {
-    const user = reduxUser;
-    if (userType === 'listener') {
-      // Native: !listenerSignature → microphoneRequest (we map this to listener-training)
-      if (!user?.displayName) {
-        navigate('/signup/nickname', { state: { userType } });
-      } else {
-        navigate('/signup/listener-training');
-      }
-    } else {
-      // Venter: !displayName → nickname
-      if (!user?.displayName) {
-        navigate('/signup/nickname', { state: { userType } });
-      } else {
-        navigate('/signup/questions', { state: { userType } });
-      }
-    }
+    navigate('/signup/language', { state: { userType } });
   };
 
   const handleVerify = async (e: React.FormEvent) => {

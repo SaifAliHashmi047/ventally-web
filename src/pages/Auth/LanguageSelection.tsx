@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +23,7 @@ import es3 from '../../assets/icons/spanish3.png';
 export const LanguageSelection = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user.user);
   const name = user?.displayName || user?.email?.split('@')[0] || 'User';
@@ -44,12 +45,12 @@ export const LanguageSelection = () => {
     dispatch(setPreferredLanguage(langId));
     dispatch(updateUser({ preferredLanguage: langId }));
     await i18n.changeLanguage(langId);
-    navigate('/signup/terms');
+    navigate('/signup/terms', { state: { userType: location.state?.userType } });
   };
 
   return (
     <AuthLayout>
-      <button 
+      <button
         onClick={() => navigate(-1)}
         style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}
       >
@@ -67,7 +68,7 @@ export const LanguageSelection = () => {
         {languages.map((lang) => (
           <div key={lang.id} className="glass card-hover" style={{ borderRadius: '20px', padding: '24px 16px', textAlign: 'center', cursor: 'pointer' }} onClick={() => handleSelect(lang.id)}>
             <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>{lang.name}</h3>
-            <div className="flex-center" style={{ gap: '8px', marginBottom: '20px' }}>
+            <div className="flex-center flex justify-center " style={{ gap: '8px', marginBottom: '20px' }}>
               {lang.flags.map((flag, idx) => (
                 <img key={idx} src={flag} alt="flag" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
               ))}

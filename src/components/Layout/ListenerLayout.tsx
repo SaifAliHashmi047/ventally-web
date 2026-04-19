@@ -2,24 +2,23 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import {
-  Home, MessageSquare, Bell, Settings, LogOut, Menu, X,
-  Wallet, Users, ChevronRight, User, Shield, DollarSign
+  Home, Users, Wallet, User, Settings, LogOut, Menu, X, ChevronRight
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { logout } from '../../store/slices/userSlice';
 import { setRequests, clearRequests } from '../../store/slices/listenerSlice';
 import type { RootState } from '../../store/store';
 import { cn } from '../../utils/cn';
 import socketService from '../../api/socketService';
 
+// Defining exact 5 tabs used natively in ListenerHomeStack.tsx
 const NAV_ITEMS = [
-  { path: '/listener/home', label: 'Home', icon: Home },
-  { path: '/listener/requests', label: 'Requests', icon: Users },
-  { path: '/listener/chat', label: 'Messages', icon: MessageSquare },
-  { path: '/listener/wallet', label: 'Earnings', icon: DollarSign },
-  { path: '/listener/sessions', label: 'Sessions', icon: Wallet },
-  { path: '/listener/notifications', label: 'Notifications', icon: Bell },
-  { path: '/listener/settings', label: 'Settings', icon: Settings },
+  { path: '/listener/home', labelKey: 'Navigation.tabs.home', icon: Home },
+  { path: '/listener/requests', labelKey: 'Navigation.tabs.requests', icon: Users },
+  { path: '/listener/wallet', labelKey: 'Navigation.tabs.wallet', icon: Wallet },
+  { path: '/listener/profile', labelKey: 'Navigation.tabs.profile', icon: User },
+  { path: '/listener/settings', labelKey: 'Navigation.tabs.settings', icon: Settings },
 ];
 
 interface ListenerLayoutProps {
@@ -27,11 +26,11 @@ interface ListenerLayoutProps {
 }
 
 export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
+  const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.user.user as any);
 
   const handleLogout = () => {
     dispatch(logout() as any);
@@ -107,14 +106,14 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
           </div>
           <div>
             <h1 className="text-xl font-bold text-white tracking-tight">Ventally</h1>
-            <p className="text-xs text-gray-400">Listener</p>
+            <p className="text-xs text-gray-400">{t('Common.SupportGuide', 'Support Guide')}</p>
           </div>
         </div>
 
         {/* Availability Status */}
         <div className="mx-3 mb-4 glass-accent rounded-2xl px-4 py-3 flex items-center gap-3">
           <div className="w-2 h-2 rounded-full bg-success animate-pulse-soft" />
-          <span className="text-sm font-medium text-accent">Available</span>
+          <span className="text-sm font-medium text-accent">{t('Common.Available', 'Available')}</span>
         </div>
 
         {/* Nav */}
@@ -131,7 +130,7 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
                 className={cn('nav-link nav-link-accent', active && 'active')}
               >
                 <Icon size={18} />
-                <span>{item.label}</span>
+                <span>{t(item.labelKey)}</span>
                 {isRequests && requestCount > 0 && (
                   <span className="ml-auto bg-accent text-white text-xs font-bold px-2 py-0.5 rounded-full">
                     {requestCount}
@@ -143,19 +142,11 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
           })}
         </nav>
 
-        {/* User Footer */}
+        {/* User Footer (Simplified precisely to rules) */}
         <div className="px-3 pb-6 pt-4 border-t border-white/5 space-y-1">
-          <Link to="/listener/profile" onClick={() => setSidebarOpen(false)} className={cn('nav-link', isActive('/listener/profile') && 'active')}>
-            <User size={18} />
-            <span>{user?.displayName || user?.firstName || 'My Profile'}</span>
-          </Link>
-          <Link to="/listener/security" onClick={() => setSidebarOpen(false)} className={cn('nav-link', isActive('/listener/security') && 'active')}>
-            <Shield size={18} />
-            <span>Security</span>
-          </Link>
           <button onClick={handleLogout} className="nav-link w-full text-left text-red-400 hover:text-red-300 hover:bg-red-500/8">
             <LogOut size={18} />
-            <span>Log Out</span>
+            <span>{t('Common.LogOut', 'Logout')}</span>
           </button>
         </div>
       </aside>

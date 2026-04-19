@@ -13,9 +13,9 @@ export const TermsAndConditions = () => {
 
   const handleAccept = () => {
     if (role === 'listener') {
-      navigate('/signup/listener-training');
+      navigate('/signup/questions', { state: { userType: role } });
     } else {
-      navigate('/signup/questions');
+      navigate('/signup/nickname', { state: { userType: role } });
     }
   };
 

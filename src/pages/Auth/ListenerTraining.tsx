@@ -9,8 +9,10 @@ import listenerTopImage from '../../assets/images/listenerTopImage.png';
 export const ListenerTraining = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  // Expanded mission block initially
   const [expandedSection, setExpandedSection] = useState<string | null>('module1');
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const [showError, setShowError] = useState(false);
 
   const modules = t('ListenerTraining.complianceModules', { returnObjects: true }) as any[];
 
@@ -18,8 +20,14 @@ export const ListenerTraining = () => {
     setExpandedSection(expandedSection === id ? null : id);
   };
 
-  const handleCheckboxChange = (id: string) => {
-    setCheckedItems(prev => ({ ...prev, [id]: !prev[id] }));
+  const handleCheckboxChange = (id: string, checked: boolean) => {
+    const newChecked = { ...checkedItems, [id]: checked };
+    setCheckedItems(newChecked);
+    
+    if (checked && showError) {
+        const allChecked = modules?.every(m => newChecked[m.id]);
+        if (allChecked) setShowError(false);
+    }
   };
 
   const isAllChecked = modules?.every(m => checkedItems[m.id]);
@@ -27,6 +35,8 @@ export const ListenerTraining = () => {
   const handleContinue = () => {
     if (isAllChecked) {
       navigate('/signup/listener-legal');
+    } else {
+      setShowError(true);
     }
   };
 
@@ -36,65 +46,108 @@ export const ListenerTraining = () => {
         onClick={() => navigate(-1)}
         style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}
       >
-        <ArrowLeft size={20} /> Back
+        <ArrowLeft size={16} /> Back
       </button>
 
-      <div style={{ borderRadius: '24px', overflow: 'hidden', marginBottom: '32px' }}>
-        <img src={listenerTopImage} alt="Training" style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
+      <div style={{ borderRadius: '16px', overflow: 'hidden', marginBottom: '24px', height: '220px' }}>
+        <img src={listenerTopImage} alt="Training" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
       </div>
 
-      <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text-pure)', marginBottom: '12px' }}>
-          {t('ListenerTraining.title')}
-        </h1>
-        <p style={{ color: 'var(--text-dim)', fontSize: '15px', lineHeight: '1.5' }}>
-          {t('ListenerTraining.subtitle')}
-        </p>
+      <div style={{ height: '450px', overflowY: 'auto', paddingRight: '8px', marginBottom: '32px' }}>
+          <div style={{ marginBottom: '24px' }}>
+            <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-pure)', marginBottom: '8px' }}>
+              {t('ListenerTraining.title')}
+            </h1>
+            <p style={{ color: 'var(--text-dim)', fontSize: '14px', lineHeight: '1.5' }}>
+              {t('ListenerTraining.subtitle')}
+            </p>
+          </div>
+
+          {/* Expertise Container */}
+          <div style={{ marginBottom: '24px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 500, color: 'var(--text-pure)', marginBottom: '12px' }}>
+                {t('ListenerTraining.expertise')}
+            </h3>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+                <div className="glass" style={{ padding: '8px 16px', borderRadius: '100px' }}>
+                    <span style={{ fontSize: '14px', color: 'var(--text-pure)' }}>{t('ListenerTraining.emotionalIntelligence')}</span>
+                </div>
+                <div className="glass" style={{ padding: '8px 16px', borderRadius: '100px' }}>
+                    <span style={{ fontSize: '14px', color: 'var(--text-pure)' }}>{t('ListenerTraining.activeListening')}</span>
+                </div>
+            </div>
+          </div>
+
+          {/* Course Overview */}
+          <div style={{ marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-pure)', marginBottom: '12px' }}>
+                  {t('ListenerTraining.courseOverview')}
+              </h3>
+              <div className="glass" style={{ padding: '16px', borderRadius: '16px', marginBottom: '24px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.9)', lineHeight: '1.6' }}>
+                      {t('ListenerTraining.courseDescription')}
+                  </p>
+              </div>
+
+              {/* Stats Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div className="glass" style={{ padding: '16px', borderRadius: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <p style={{ fontSize: '16px', fontWeight: 500, color: 'var(--text-pure)' }}>{t('ListenerTraining.hours')}</p>
+                      <Clock size={20} color="white" />
+                  </div>
+                  <p style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-pure)' }}>2</p>
+                </div>
+                <div className="glass" style={{ padding: '16px', borderRadius: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <p style={{ fontSize: '16px', fontWeight: 500, color: 'var(--text-pure)' }}>{t('ListenerTraining.modules')}</p>
+                      <BookOpen size={20} color="white" />
+                  </div>
+                  <p style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-pure)' }}>7</p>
+                </div>
+              </div>
+          </div>
+
+          {/* Compliance Modules Accordions */}
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {modules?.map((module) => (
+              <AccordionItem 
+                key={module.id} 
+                title={module.title} 
+                isExpanded={expandedSection === module.id}
+                onToggle={() => handleToggle(module.id)}
+              >
+                <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', lineHeight: '1.6', marginBottom: '16px' }}>
+                    {module.content}
+                </p>
+                <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer', userSelect: 'none' }}>
+                  <input 
+                    type="checkbox" 
+                    checked={checkedItems[module.id] || false}
+                    onChange={(e) => handleCheckboxChange(module.id, e.target.checked)}
+                    style={{ width: '20px', height: '20px', borderRadius: '4px', accentColor: 'var(--primary)', flexShrink: 0, marginTop: '2px' }}
+                  />
+                  <span style={{ fontSize: '14px', color: 'var(--text-pure)', lineHeight: '1.4' }}>{module.checkboxLabel}</span>
+                </label>
+              </AccordionItem>
+            ))}
+          </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '32px' }}>
-        <div className="glass" style={{ padding: '20px', borderRadius: '16px', textAlign: 'center' }}>
-          <Clock size={24} color="white" style={{ marginBottom: '8px' }} />
-          <p style={{ fontSize: '14px', color: 'var(--text-dim)' }}>{t('ListenerTraining.hours')}</p>
-          <p style={{ fontSize: '20px', fontWeight: 700 }}>2</p>
-        </div>
-        <div className="glass" style={{ padding: '20px', borderRadius: '16px', textAlign: 'center' }}>
-          <BookOpen size={24} color="white" style={{ marginBottom: '8px' }} />
-          <p style={{ fontSize: '14px', color: 'var(--text-dim)' }}>{t('ListenerTraining.modules')}</p>
-          <p style={{ fontSize: '20px', fontWeight: 700 }}>8</p>
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {showError && !isAllChecked && (
+          <p style={{ color: '#FF5252', fontSize: '13px', textAlign: 'center', fontWeight: 500 }}>
+            {t('ListenerTraining.agreeAllTerms')}
+          </p>
+        )}
+        <button 
+          onClick={handleContinue}
+          className="btn-primary" 
+          style={{ height: '56px', justifyContent: 'center', fontSize: '17px', borderRadius: '16px', width: '100%', opacity: isAllChecked ? 1 : 0.7 }}
+        >
+          {t('ListenerTraining.continue')}
+        </button>
       </div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '32px' }}>
-        {modules?.map((module) => (
-          <AccordionItem 
-            key={module.id} 
-            title={module.title} 
-            isExpanded={expandedSection === module.id}
-            onToggle={() => handleToggle(module.id)}
-          >
-            <p style={{ marginBottom: '16px' }}>{module.content}</p>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', userSelect: 'none' }}>
-              <input 
-                type="checkbox" 
-                checked={checkedItems[module.id] || false}
-                onChange={() => handleCheckboxChange(module.id)}
-                style={{ width: '20px', height: '20px', borderRadius: '4px', accentColor: 'var(--primary)' }}
-              />
-              <span style={{ fontSize: '14px', color: 'white' }}>{module.checkboxLabel}</span>
-            </label>
-          </AccordionItem>
-        ))}
-      </div>
-
-      <button 
-        onClick={handleContinue}
-        className="btn-primary" 
-        style={{ height: '56px', justifyContent: 'center', fontSize: '17px', borderRadius: '16px', width: '100%' }}
-        disabled={!isAllChecked}
-      >
-        {t('ListenerTraining.continue')}
-      </button>
     </AuthLayout>
   );
 };
