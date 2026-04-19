@@ -3,26 +3,54 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
-import { GlassCard } from '../../components/ui/GlassCard';
 import { setTokens } from '../../api';
 import apiInstance from '../../api/apiInstance';
 import { useDispatch } from 'react-redux';
-import { setUser, setAuthenticated } from '../../store/slices/userSlice';
-import { Mail, Lock, User } from 'lucide-react';
+import { setUser, setAuthenticated, setIsVenter } from '../../store/slices/userSlice';
+import { Mail, Lock } from 'lucide-react';
 
 export const SignUpWeb = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '', userType: 'venter' });
+
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    userType: '' as 'venter' | 'listener' | '',
+  });
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState(false);
 
+  const update = (key: string, val: string) => {
+    setForm(prev => ({ ...prev, [key]: val }));
+    setErrors((prev: any) => ({ ...prev, [key]: undefined, general: undefined }));
+  };
+
+  // Strong password validation — matches native exactly
+  const validatePassword = (pwd: string) => {
+    if (
+      !pwd ||
+      pwd.length < 8 ||
+      !/[A-Z]/.test(pwd) ||
+      !/[a-z]/.test(pwd) ||
+      !/\d/.test(pwd) ||
+      !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pwd)
+    ) {
+      return t('Common.passwordValidationError', 'Password must be at least 8 chars, include uppercase, number and special character');
+    }
+    return '';
+  };
+
   const validate = () => {
     const errs: any = {};
-    if (!form.email.includes('@')) errs.email = t('SignUp.error.validEmail', 'Valid email required');
-    if (form.password.length < 8) errs.password = t('SignUp.error.minPassword', 'Minimum 8 characters');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email.trim())) errs.email = t('SignUp.error.validEmail', 'Valid email required');
+    const pwdError = validatePassword(form.password);
+    if (pwdError) errs.password = pwdError;
     if (form.password !== form.confirmPassword) errs.confirmPassword = t('SignUp.error.passwordMatch', 'Passwords do not match');
+    if (!form.userType) errs.userType = t('SignUp.selectUsage', 'Please select how you will use the app');
     return errs;
   };
 
@@ -31,26 +59,33 @@ export const SignUpWeb = () => {
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setLoading(true);
     try {
-      const res = await apiInstance.post('auth/register', form);
-      const { tokens, user } = res.data || {};
-      if (tokens?.accessToken) {
-        await setTokens(tokens.accessToken, tokens.refreshToken || '');
+      const res = await apiInstance.post('auth/register', {
+        email: form.email.trim(),
+        password: form.password,
+        userType: form.userType,
+      });
+
+      const data = res.data || res;
+
+      // Handle both token shapes native uses
+      if (data?.access_token && data?.refresh_token) {
+        await setTokens(data.access_token, data.refresh_token);
+      } else if (data?.tokens?.accessToken) {
+        await setTokens(data.tokens.accessToken, data.tokens.refreshToken || '');
       }
-      if (user) {
-        dispatch(setUser(user));
-        dispatch(setAuthenticated(true));
+
+      if (data?.user) {
+        dispatch(setUser(data.user));
+        dispatch(setIsVenter(data.user?.userType === 'venter'));
       }
-      navigate('/signup/otp', { state: { email: form.email } });
+
+      // ── Navigate to OTP, carrying email + userType for post-verify branching ──
+      navigate('/signup/otp', { state: { email: form.email.trim(), userType: form.userType } });
     } catch (e: any) {
-      setErrors({ general: e?.error || t('SignUp.error.general', 'Registration failed. Please try again.') });
+      setErrors({ general: e?.error || e?.message || t('SignUp.error.general', 'Registration failed. Please try again.') });
     } finally {
       setLoading(false);
     }
-  };
-
-  const update = (key: string, val: string) => {
-    setForm(prev => ({ ...prev, [key]: val }));
-    setErrors((prev: any) => ({ ...prev, [key]: undefined, general: undefined }));
   };
 
   return (
@@ -67,29 +102,54 @@ export const SignUpWeb = () => {
         <h2 className="text-xl font-bold text-white mb-1">{t('SignUp.title')}</h2>
         <p className="text-sm text-gray-500 mb-6">{t('SignUp.subtitle', 'Start your wellness journey today')}</p>
 
-        {/* Role Selector */}
-        <div className="flex gap-2 mb-6">
-          {[
-            { value: 'venter', label: `🎙️ ${t('SignUp.usageOptions.venter')}`, desc: t('SignUp.usageOptions.wantToVent') },
-            { value: 'listener', label: `🎧 ${t('SignUp.usageOptions.listener')}`, desc: t('SignUp.usageOptions.wantToListen') },
-          ].map(role => (
-            <button key={role.value} onClick={() => update('userType', role.value)}
-              className={`flex-1 py-3 rounded-2xl text-sm border transition-all ${
-                form.userType === role.value
-                  ? 'bg-primary/15 border-primary/30 text-white'
-                  : 'glass border-white/10 text-gray-400 hover:bg-white/5'
+        {/* ── Role Selector — matches native Dropdown (wantToListen / wantToVent) ── */}
+        <p className="text-sm font-medium text-white mb-2">{t('SignUp.howWillYouUse', 'How will you use the app?')}</p>
+        <div className="flex gap-3 mb-2">
+          {([
+            { value: 'venter' as const, label: `🎙️ ${t('SignUp.usageOptions.venter', 'I want to Vent')}` },
+            { value: 'listener' as const, label: `🎧 ${t('SignUp.usageOptions.listener', 'I want to Listen')}` },
+          ] as const).map(role => (
+            <button
+              key={role.value}
+              onClick={() => update('userType', role.value)}
+              className={`btn flex-1 py-3 text-sm font-semibold transition-all ${
+                form.userType === role.value ? 'btn-glass-bordered' : 'btn-glass'
               }`}
             >
-              <p className="font-semibold">{role.label}</p>
-              <p className="text-xs mt-0.5 opacity-70">{role.desc}</p>
+              {role.label}
             </button>
           ))}
         </div>
+        {errors.userType && (
+          <p className="text-xs text-error mb-4 ml-1">{errors.userType}</p>
+        )}
 
-        <div className="space-y-4">
-          <Input label={t('SignUp.emailOrPhone')} type="email" value={form.email} onChange={e => update('email', e.target.value)} error={errors.email} leftIcon={<Mail size={14} />} />
-          <Input label={t('SignUp.password')} isPassword value={form.password} onChange={e => update('password', e.target.value)} error={errors.password} hint={t('SignUp.passwordHint')} leftIcon={<Lock size={14} />} />
-          <Input label={t('Common.confirmPassword', 'Confirm Password')} isPassword value={form.confirmPassword} onChange={e => update('confirmPassword', e.target.value)} error={errors.confirmPassword} leftIcon={<Lock size={14} />} />
+        <div className="space-y-4 mt-4">
+          <Input
+            label={t('SignUp.emailOrPhone', 'Email')}
+            type="email"
+            value={form.email}
+            onChange={e => update('email', e.target.value)}
+            error={errors.email}
+            leftIcon={<Mail size={14} />}
+          />
+          <Input
+            label={t('SignUp.password', 'Password')}
+            isPassword
+            value={form.password}
+            onChange={e => update('password', e.target.value)}
+            error={errors.password}
+            hint={t('SignUp.passwordHint')}
+            leftIcon={<Lock size={14} />}
+          />
+          <Input
+            label={t('Common.confirmPassword', 'Confirm Password')}
+            isPassword
+            value={form.confirmPassword}
+            onChange={e => update('confirmPassword', e.target.value)}
+            error={errors.confirmPassword}
+            leftIcon={<Lock size={14} />}
+          />
 
           {errors.general && (
             <p className="text-sm text-error bg-error/8 border border-error/20 rounded-xl px-3 py-2">{errors.general}</p>

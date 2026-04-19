@@ -3,7 +3,15 @@ import { cn } from '../../utils/cn';
 import { Loader2 } from 'lucide-react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'glass' | 'accent' | 'danger' | 'ghost';
+  /**
+   * glass        — native GlassWrapper (gradient side borders, backdrop blur, ~transparent)
+   * glass-bordered — native borderedGlassButton (solid border, backdrop blur, ~transparent)
+   * primary      — filled blue
+   * accent       — accent color fill
+   * danger       — red tint
+   * ghost        — no background
+   */
+  variant?: 'primary' | 'glass' | 'glass-bordered' | 'accent' | 'danger' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
   loading?: boolean;
@@ -24,12 +32,13 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
-  const variantMap = {
-    primary: 'btn-primary',
-    glass: 'btn-glass',
-    accent: 'btn-accent',
-    danger: 'btn-danger',
-    ghost: 'hover:bg-white/5 text-gray-400 hover:text-white',
+  const variantMap: Record<string, string> = {
+    primary:        'btn-primary',
+    glass:          'btn-glass',
+    'glass-bordered': 'btn-glass-bordered',
+    accent:         'btn-accent',
+    danger:         'btn-danger',
+    ghost:          'hover:bg-white/5 text-gray-400 hover:text-white',
   };
 
   const sizeMap = {

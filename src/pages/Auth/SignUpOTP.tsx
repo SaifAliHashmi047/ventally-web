@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../store/store';
 import { Button } from '../../components/ui/Button';
 import { OTPInput } from '../../components/Shared/OTPInput';
 import { ArrowLeft } from 'lucide-react';
@@ -14,7 +16,36 @@ export const SignUpOTP = () => {
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [error, setError] = useState('');
-  const email = (location.state as { email?: string })?.email || '';
+
+  const email = (location.state as any)?.email || '';
+  // userType is carried in state from SignUpWeb, falls back to Redux user
+  const stateUserType = (location.state as any)?.userType || '';
+  const reduxUser = useSelector((state: RootState) => state.user.user);
+  const userType = stateUserType || reduxUser?.userType || reduxUser?.role || 'venter';
+
+  /**
+   * Navigate after OTP — mirrors native useVenterNavigation / useListenerNavigation.
+   * Venter:   → nickname → optionalQuestions → choosePlan
+   * Listener: → listener-training → listener-legal → verification
+   */
+  const navigateAfterVerify = () => {
+    const user = reduxUser;
+    if (userType === 'listener') {
+      // Native: !listenerSignature → microphoneRequest (we map this to listener-training)
+      if (!user?.displayName) {
+        navigate('/signup/nickname', { state: { userType } });
+      } else {
+        navigate('/signup/listener-training');
+      }
+    } else {
+      // Venter: !displayName → nickname
+      if (!user?.displayName) {
+        navigate('/signup/nickname', { state: { userType } });
+      } else {
+        navigate('/signup/questions', { state: { userType } });
+      }
+    }
+  };
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +55,7 @@ export const SignUpOTP = () => {
     try {
       const response = await verifyEmail(email, code);
       if ((response as any).success !== false) {
-        navigate('/signup/nickname');
+        navigateAfterVerify();
       } else {
         setError((response as any)?.message || (response as any)?.error || t('Common.error') || 'Verification failed');
       }
@@ -54,7 +85,7 @@ export const SignUpOTP = () => {
   return (
     <div className="auth-container py-8">
       <div className="auth-card animate-slide-up w-full max-w-md">
-        <button 
+        <button
           type="button"
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors mb-6"
@@ -67,25 +98,33 @@ export const SignUpOTP = () => {
             {t('EmailVerification.title')}
           </h1>
           <p className="text-sm text-gray-400">
-            {t('EmailVerification.subtitle')} {email ? <span className="text-primary">{email}</span> : null}
+            {t('EmailVerification.subtitle')}{' '}
+            {email ? <span className="text-primary">{email}</span> : null}
           </p>
         </div>
 
         <form onSubmit={handleVerify} className="space-y-6">
           <OTPInput value={code} onChange={setCode} cellCount={4} />
 
-          {error ? <p className="text-sm text-error bg-error/8 border border-error/20 rounded-xl px-3 py-2 text-center">{error}</p> : null}
+          {error ? (
+            <p className="text-sm text-error bg-error/8 border border-error/20 rounded-xl px-3 py-2 text-center">{error}</p>
+          ) : null}
 
           <div className="text-center mt-6">
             <p className="text-sm text-gray-500">
               {t('EmailVerification.didntReceive')}{' '}
-              <button type="button" disabled={resendLoading} onClick={handleResend} className="text-primary hover:text-primary-hover font-medium transition-colors">
+              <button
+                type="button"
+                disabled={resendLoading}
+                onClick={handleResend}
+                className="text-primary hover:text-primary-hover font-medium transition-colors"
+              >
                 {t('EmailVerification.resend')}
               </button>
             </p>
           </div>
 
-          <Button 
+          <Button
             variant="primary"
             size="lg"
             fullWidth

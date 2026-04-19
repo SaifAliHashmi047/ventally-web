@@ -4,16 +4,16 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
-import { GlassCard } from '../../components/ui/GlassCard';
 import { setTokens } from '../../api';
 import apiInstance from '../../api/apiInstance';
-import { setUser, setAuthenticated } from '../../store/slices/userSlice';
+import { setUser, setAuthenticated, setIsVenter } from '../../store/slices/userSlice';
 import { Mail, Lock } from 'lucide-react';
 
 export const LoginWeb = () => {
   const { t } = useTranslation();
-   const dispatch = useDispatch();
-  const [form, setForm] = useState({ email: 'm47@yopmail.com', password: 'Hello@123' });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState(false);
 
@@ -24,20 +24,80 @@ export const LoginWeb = () => {
     return errs;
   };
 
+  /**
+   * Navigate after login — mirrors native useVenterNavigation / useListenerNavigation.
+   *
+   * Venter:
+   *   !isVerified → OTP
+   *   !displayName → nickname
+   *   else → /venter (AppRouter picks it up)
+   *
+   * Listener:
+   *   !isVerified → OTP
+   *   !listenerSignature → listener-training
+   *   !verificationDocumentStatus / 'not_submitted' → /signup/verification
+   *   else → /listener
+   */
+  const navigateAfterLogin = (user: any) => {
+    const role = user?.userType || user?.role || 'venter';
+
+    if (!user?.isVerified) {
+      navigate('/signup/otp', { state: { email: user?.email, userType: role } });
+      return;
+    }
+
+    if (role === 'listener') {
+      if (!user?.listenerSignature) {
+        navigate('/signup/listener-training', { state: { userType: role } });
+      } else if (
+        !user?.verificationDocumentStatus ||
+        user?.verificationDocumentStatus === 'not_submitted'
+      ) {
+        navigate('/signup/verification', { state: { userType: role } });
+      } else {
+        // Fully onboarded listener — AppRouter will send to /listener
+        navigate('/listener');
+      }
+    } else if (role === 'admin' || role === 'sub_admin') {
+      navigate('/admin');
+    } else {
+      // Venter
+      if (!user?.displayName) {
+        navigate('/signup/nickname', { state: { userType: role } });
+      } else {
+        // Fully onboarded venter — AppRouter redirects to /venter
+        navigate('/venter');
+      }
+    }
+  };
+
   const handleLogin = async () => {
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setLoading(true);
     try {
-      const res = await apiInstance.post('auth/login', form);
-      const { tokens, user } = res.data || {};
-      if (tokens?.accessToken) {
+      const res = await apiInstance.post('auth/login', {
+        email: form.email.trim(),
+        password: form.password,
+      });
+      const data = res.data || res;
+      const { tokens, user } = data || {};
+
+      // Handle both token shapes
+      if (data?.access_token && data?.refresh_token) {
+        await setTokens(data.access_token, data.refresh_token);
+      } else if (tokens?.accessToken) {
         await setTokens(tokens.accessToken, tokens.refreshToken || '');
       }
-      dispatch(setUser(user));
-      dispatch(setAuthenticated(true));
+
+      if (user) {
+        dispatch(setUser(user));
+        dispatch(setIsVenter(user?.userType === 'venter'));
+        dispatch(setAuthenticated(true));
+        navigateAfterLogin(user);
+      }
     } catch (e: any) {
-      setErrors({ general: e?.error || t('LogIn.error.general', 'Invalid credentials. Please try again.') });
+      setErrors({ general: e?.error || e?.message || t('LogIn.error.general', 'Invalid credentials. Please try again.') });
     } finally {
       setLoading(false);
     }
@@ -99,9 +159,7 @@ export const LoginWeb = () => {
           </Button>
         </div>
 
-        <div className="divider-text mt-6 mb-6 text-xs">{t('LogIn.biometric', 'Or continue with').trim().toLowerCase()}</div>
-
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-center text-sm text-gray-500 mt-6">
           {t('LogIn.dontHaveAccount')}{' '}
           <Link to="/signup" className="text-primary hover:text-primary-hover font-medium transition-colors">
             {t('LogIn.signUp')}

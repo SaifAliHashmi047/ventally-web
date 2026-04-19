@@ -26,6 +26,9 @@ export interface User {
   faithOrBelief?: string;
   ethnicity?: string;
   specialTopics?: string[];
+  /** Listener-specific onboarding fields */
+  listenerSignature?: string;
+  verificationDocumentStatus?: string;
 }
 
 interface UserState {
