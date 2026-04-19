@@ -2,8 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
 import { useSelector } from 'react-redux';
-import { ArrowLeft } from 'lucide-react';
-import tickIcon from '../../assets/icons/tick.png';
+import { ArrowLeft, Check } from 'lucide-react';
 
 export const OptionalQuestionsHero = () => {
   const { t } = useTranslation();
@@ -44,8 +43,11 @@ export const OptionalQuestionsHero = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {[1, 2, 3].map((num) => (
             <div key={num} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-              <div className="flex-center" style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'white', marginTop: '2px', flexShrink: 0 }}>
-                <img src={tickIcon} alt="tick" style={{ width: '10px', height: '10px', filter: 'invert(1)' }} />
+              <div 
+                className="flex items-center justify-center flex-shrink-0 bg-white rounded-full mt-0.5" 
+                style={{ width: '20px', height: '20px' }}
+              >
+                <Check size={13} className="text-black" strokeWidth={3} />
               </div>
               <p style={{ color: 'var(--text-dim)', fontSize: '14px', lineHeight: '1.4' }}>
                 {t(`OptionalQuestions.bullet${num}`)}

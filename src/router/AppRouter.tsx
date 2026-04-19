@@ -16,6 +16,7 @@ import { ChoosePlan } from '../pages/Auth/ChoosePlan';
 import { ListenerTraining } from '../pages/Auth/ListenerTraining';
 import { ListenerLegalFlow } from '../pages/Auth/ListenerLegalFlow';
 import { ListenerVerification } from '../pages/Auth/ListenerVerification';
+import { VerificationInProgress } from '../pages/Auth/VerificationInProgress';
 import { ResetPasswordWeb } from '../pages/Auth/ResetPasswordWeb';
 import { EmailVerificationWeb } from '../pages/Auth/EmailVerificationWeb';
 import { CreateNewPasswordWeb } from '../pages/Auth/CreateNewPasswordWeb';
@@ -63,6 +64,7 @@ const AppRouter = () => {
       <Route path="/signup/listener-training" element={<ListenerTraining />} />
       <Route path="/signup/listener-legal" element={<ListenerLegalFlow />} />
       <Route path="/signup/verification" element={<ListenerVerification />} />
+      <Route path="/signup/verification-in-progress" element={<VerificationInProgress />} />
       <Route path="/forgot-password" element={<ResetPasswordWeb />} />
       <Route path="/forgot-password/verify-email" element={<EmailVerificationWeb />} />
       <Route path="/forgot-password/new-password" element={<CreateNewPasswordWeb />} />

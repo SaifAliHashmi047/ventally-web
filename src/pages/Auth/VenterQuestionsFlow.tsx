@@ -33,7 +33,7 @@ const STEPS_CONFIG: Record<string, {
     ],
   },
   race: {
-    step: 2, titleKey: 'RacialIdentity.title', userKey: 'race', apiField: 'racialIdentity',
+    step: 2, titleKey: 'RacialIdentity.title', userKey: 'culturalBackground', apiField: 'culturalBackground',
     next: 'ethnicity',
     options: [
       { id: 'Black',            labelKey: 'RacialIdentity.black' },
@@ -48,7 +48,7 @@ const STEPS_CONFIG: Record<string, {
     ],
   },
   ethnicity: {
-    step: 3, titleKey: 'Ethnicity.title', userKey: 'culturalBackground', apiField: 'ethnicity',
+    step: 3, titleKey: 'Ethnicity.title', userKey: 'ethnicity', apiField: 'ethnicity',
     next: 'age',
     options: [
       { id: 'African Diaspora',  labelKey: 'Ethnicity.africanDiaspora' },
@@ -187,7 +187,12 @@ export const VenterQuestionsFlow = () => {
       } else {
         // Advance to next step
         if (config.next === 'finish') {
-          navigate('/signup/choose-plan');
+          const role = user?.role || (user as any)?.userType || 'venter';
+          if (role === 'listener') {
+            navigate('/signup/listener-training');
+          } else {
+            navigate('/signup/choose-plan');
+          }
         } else {
           navigate(`/signup/questions/${config.next}`);
         }
@@ -205,7 +210,12 @@ export const VenterQuestionsFlow = () => {
       return;
     }
     if (config.next === 'finish') {
-      navigate('/signup/choose-plan');
+      const role = user?.role || (user as any)?.userType || 'venter';
+      if (role === 'listener') {
+        navigate('/signup/listener-training');
+      } else {
+        navigate('/signup/choose-plan');
+      }
     } else {
       navigate(`/signup/questions/${config.next}`);
     }
