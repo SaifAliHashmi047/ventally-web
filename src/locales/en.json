@@ -2236,6 +2236,7 @@
     "decline": "Cancel",
     "failed": "Failed",
     "unknown": "Unknown",
+    "acceptAndContinue": "Continue",
     "documentRequired": "Document Required",
     "noData": "No data",
     "createdAt": "Created At",

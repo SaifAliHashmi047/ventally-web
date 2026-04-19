@@ -44,6 +44,7 @@ import { AgeGroupSelect } from '../pages/Common/AgeGroupSelect';
 import { LGBTQSelect } from '../pages/Common/LGBTQSelect';
 import { FaithOrBeliefSelect } from '../pages/Common/FaithOrBeliefSelect';
 import { SpecialTopicsSelect } from '../pages/Common/SpecialTopicsSelect';
+import { LanguageSelection } from '../pages/Auth/LanguageSelection';
 
 export const ListenerRouter = () => {
   return (
@@ -70,6 +71,7 @@ export const ListenerRouter = () => {
         <Route path="delete-account" element={<DeleteAccount />} />
         <Route path="notifications" element={<Notifications />} />
         <Route path="notifications/:id" element={<NotificationDetail />} />
+        <Route path="language" element={<LanguageSelection />} />
         <Route path="chat" element={<RecentChats />} />
         <Route path="chat/:id" element={<ChatScreen />} />
         <Route path="session/:id/feedback" element={<ListenerSessionFeedback />} />

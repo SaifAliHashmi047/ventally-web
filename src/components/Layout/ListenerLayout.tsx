@@ -12,6 +12,8 @@ import type { RootState } from '../../store/store';
 import { cn } from '../../utils/cn';
 import socketService from '../../api/socketService';
 
+import { MainBackground } from '../ui/MainBackground';
+
 // Defining exact 5 tabs used natively in ListenerHomeStack.tsx
 const NAV_ITEMS = [
   { path: '/listener/home', labelKey: 'Navigation.tabs.home', icon: Home },
@@ -80,7 +82,9 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
   const requestCount = useSelector((state: RootState) => state.listener.requests.length);
 
   return (
-    <div className="flex min-h-screen bg-bg-deep">
+    <div className="flex min-h-screen relative">
+      <MainBackground />
+      <div className="relative z-10 flex w-full min-h-screen">
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
@@ -170,6 +174,7 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
           {children}
         </div>
       </main>
+      </div>
     </div>
   );
 };

@@ -108,10 +108,10 @@ export const VenterChangeAccountType = () => {
       // User doesn't have this role, needs onboarding
       if (selectedRole.toLowerCase() === 'listener') {
         // Navigate to listener training
-        navigate('/listener/training', { state: { accountTypeChanging: true } });
+        navigate('/signup/listener-training', { state: { accountTypeChanging: true } });
       } else {
-        // Navigate to choose plan (subscription)
-        navigate('/venter/subscription', { state: { accountTypeChanging: true } });
+        // Navigate to nickname screen to start Venter signup
+        navigate('/signup/nickname', { state: { accountTypeChanging: true } });
       }
     }
   };

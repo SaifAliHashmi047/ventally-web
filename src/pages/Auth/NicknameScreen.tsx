@@ -35,13 +35,16 @@ export const NicknameScreen = () => {
       if ((response as any).success !== false) {
         dispatch(updateUser({ displayName: nickname.trim(), name: nickname.trim() }));
 
+        const accountTypeChanging = (location.state as any)?.accountTypeChanging;
+        
         // ── Role-based branching — matches native NicknameScreen handleSave ──
-        // Native Venter: navigate to optionalQuestions
-        // Native Listener: navigate to listenerTraining
-        if (userType === 'listener') {
+        if (accountTypeChanging) {
+          // When changing account type to Venter, skip optional questions and head straight to subscription
+          navigate('/signup/choose-plan', { state: { accountTypeChanging: true } });
+        } else if (userType === 'listener') {
           navigate('/signup/listener-training', { state: { userType } });
         } else {
-          // Venter: optional questions hero
+          // Venter norm: optional questions hero
           navigate('/signup/questions', { state: { userType } });
         }
       } else {

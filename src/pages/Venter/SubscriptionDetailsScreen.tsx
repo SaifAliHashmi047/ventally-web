@@ -41,7 +41,7 @@ export const SubscriptionDetailsScreen = () => {
   return (
     <div className="page-wrapper animate-fade-in">
       <PageHeader title={t('SubscriptionDetails.title', 'Subscription Details')} onBack={() => navigate(-1)} />
-      
+
       {loading ? (
         <div className="space-y-4">
           <div className="skeleton h-32 rounded-3xl" />
@@ -50,48 +50,33 @@ export const SubscriptionDetailsScreen = () => {
       ) : sub ? (
         <div className="space-y-4">
           <GlassCard className="text-center py-8">
-             <div className="w-16 h-16 rounded-full bg-success/20 flex flex-col items-center justify-center mx-auto mb-4">
-                <CheckCircle2 size={28} className="text-success" />
-             </div>
-             <h2 className="text-2xl font-bold text-white mb-2">{sub.plan?.name || 'Premium Plan'}</h2>
-             <p className="text-success font-medium mb-1">{t('SubscriptionDetails.statusActive', 'Active')}</p>
-             <p className="text-sm text-gray-400">
-               {t('SubscriptionDetails.renewsOn', 'Renews on')} {new Date(sub.current_period_end * 1000).toLocaleDateString()}
-             </p>
+            <div className="w-16 h-16 rounded-full bg-success/20 flex flex-col items-center justify-center mx-auto mb-4">
+              <CheckCircle2 size={28} className="text-success" />
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-2">{sub.plan?.name || 'Premium Plan'}</h2>
+            <p className="text-success font-medium mb-1">{t('SubscriptionDetails.statusActive', 'Active')}</p>
+            <p className="text-sm text-gray-400">
+              {t('SubscriptionDetails.renewsOn', 'Renews on')} {new Date(sub.current_period_end * 1000).toLocaleDateString()}
+            </p>
           </GlassCard>
 
-          <GlassCard>
-            <p className="font-semibold text-white mb-4">{t('SubscriptionDetails.paymentMethod', 'Payment Method')}</p>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center">
-                  <CreditCard size={18} className="text-gray-400" />
-                </div>
-                <div>
-                   <p className="text-sm text-white font-medium">•••• {sub.default_payment_method?.card?.last4 || '****'}</p>
-                </div>
-              </div>
-              <Button variant="ghost" size="sm" onClick={() => navigate('/venter/settings')}>
-                {t('Common.edit', 'Edit')}
-              </Button>
-            </div>
-          </GlassCard>
+
 
           <div className="pt-6">
-             <Button variant="danger" fullWidth onClick={handleCancel}>
-               {t('SubscriptionDetails.cancelSub', 'Cancel Subscription')}
-             </Button>
+            <Button variant="danger" fullWidth onClick={handleCancel}>
+              {t('SubscriptionDetails.cancelSub', 'Cancel Subscription')}
+            </Button>
           </div>
         </div>
       ) : (
         <div className="text-center py-12">
-            <div className="w-16 h-16 rounded-full bg-error/20 flex flex-col items-center justify-center mx-auto mb-4">
-                <AlertCircle size={28} className="text-error" />
-            </div>
-            <h2 className="text-xl font-bold text-white mb-2">{t('SubscriptionDetails.noActive', 'No Active Subscription')}</h2>
-            <Button variant="primary" className="mt-4" onClick={() => navigate('/venter/subscription')}>
-               {t('SubscriptionDetails.viewPlans', 'View Plans')}
-            </Button>
+          <div className="w-16 h-16 rounded-full bg-error/20 flex flex-col items-center justify-center mx-auto mb-4">
+            <AlertCircle size={28} className="text-error" />
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2">{t('SubscriptionDetails.noActive', 'No Active Subscription')}</h2>
+          <Button variant="primary" className="mt-4" onClick={() => navigate('/venter/subscription')}>
+            {t('SubscriptionDetails.viewPlans', 'View Plans')}
+          </Button>
         </div>
       )}
     </div>

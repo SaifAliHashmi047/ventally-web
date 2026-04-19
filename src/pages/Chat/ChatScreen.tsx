@@ -231,16 +231,16 @@ export const ChatScreen = () => {
   const title = getOtherName();
 
   return (
-    <div className="flex flex-col h-screen animate-fade-in bg-bg-deep">
+    <div className="flex border border-gray-800 rounded-2xl flex-col h-screen animate-fade-in bg-transparent">
       {/* Chat Header - matching mobile ChatHeader */}
-      <div className="glass border-b border-white/8 px-4 py-3 flex items-center gap-3 flex-shrink-0 z-10">
-        <button 
-          onClick={() => navigate(-1)} 
+      <div className="glass rounded-2xl border-b border-white/8 px-4 py-3 flex items-center gap-3 flex-shrink-0 z-10">
+        <button
+          onClick={() => navigate(-1)}
           className="p-2 rounded-xl glass text-gray-400 hover:text-white transition-colors flex-shrink-0"
         >
           <ChevronLeft size={20} />
         </button>
-        
+
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-white truncate">{title}</p>
           <p className="text-xs text-gray-500">{t('VenterChat.subtitle', 'You are chatting with a listener')}</p>
@@ -248,7 +248,7 @@ export const ChatScreen = () => {
 
         {/* Crisis Button - only when chat is active */}
         {isChatActive && (
-          <button 
+          <button
             onClick={handleCrisisPress}
             className="p-2 rounded-xl glass text-error hover:bg-error/20 transition-colors flex-shrink-0"
             title={t('VenterChat.crisisButton', 'Crisis Support')}
@@ -258,7 +258,7 @@ export const ChatScreen = () => {
         )}
 
         {/* Options Menu - using Popover component */}
-        <Popover
+        {isChatActive && <Popover
           trigger={
             <button className="p-2 rounded-xl glass text-gray-400 hover:text-white transition-colors flex-shrink-0">
               <MoreVertical size={18} />
@@ -273,18 +273,18 @@ export const ChatScreen = () => {
               {t('Chat.report', 'Report Chat')}
             </div>
           </PopoverItem>
-          {isChatActive && (
-            <>
-              <PopoverSeparator />
-              <PopoverItem onClick={handleEndChatPress} danger>
-                <div className="flex items-center gap-2">
-                  <PhoneOff size={14} />
-                  {t('Chat.endSession', 'End Session')}
-                </div>
-              </PopoverItem>
-            </>
-          )}
-        </Popover>
+
+          <>
+            <PopoverSeparator />
+            <PopoverItem onClick={handleEndChatPress} danger>
+              <div className="flex items-center gap-2">
+                <PhoneOff size={14} />
+                {t('Chat.endSession', 'End Session')}
+              </div>
+            </PopoverItem>
+          </>
+
+        </Popover>}
       </div>
 
       {/* Messages - Keyboard avoiding layout like mobile */}
@@ -303,7 +303,7 @@ export const ChatScreen = () => {
             const messageKey = String(msg?.messageId || msg?.id || '');
             const ts = msg?.deliveredAt || msg?.createdAt || msg?.timestamp;
             const senderName = msg?.sender?.anonymousName;
-            
+
             return (
               <div key={messageKey} className={cn('flex', isOwn ? 'justify-end' : 'justify-start')}>
                 <div className="max-w-[75%] sm:max-w-[60%]">
@@ -311,7 +311,7 @@ export const ChatScreen = () => {
                   {!isOwn && senderName && (
                     <p className="text-xs text-gray-500 mb-1 ml-1">{senderName}</p>
                   )}
-                  
+
                   {/* Message bubble with glass styling like mobile */}
                   <GlassCard
                     padding="sm"
@@ -321,14 +321,14 @@ export const ChatScreen = () => {
                       isOwn ? 'rounded-br-md bg-primary/20' : 'rounded-bl-md'
                     )}
                     style={{
-                      background: isOwn 
-                        ? 'rgba(59, 130, 246, 0.15)' 
+                      background: isOwn
+                        ? 'rgba(59, 130, 246, 0.15)'
                         : 'rgba(255, 255, 255, 0.03)',
                     }}
                   >
                     <p className="text-white leading-relaxed">{msg.content}</p>
                   </GlassCard>
-                  
+
                   {/* Timestamp */}
                   {ts && (
                     <p className={cn(
@@ -349,9 +349,9 @@ export const ChatScreen = () => {
       {/* Input - only shown when chat is active, matching mobile */}
       {isChatActive && (
         <div className="glass border-t border-white/8 px-4 py-3 flex items-end gap-3 flex-shrink-0">
-          <GlassCard 
-            className="flex-1" 
-            padding="none" 
+          <GlassCard
+            className="flex-1"
+            padding="none"
             rounded="2xl"
             style={{ background: 'rgba(255, 255, 255, 0.03)' }}
           >
@@ -372,14 +372,14 @@ export const ChatScreen = () => {
               maxLength={500}
             />
           </GlassCard>
-          
+
           <button
             onClick={sendMessage}
             disabled={!input.trim() || sending}
             className="w-11 h-11 rounded-2xl flex items-center justify-center transition-all flex-shrink-0"
-            style={{ 
-              background: input.trim() 
-                ? 'rgba(59, 130, 246, 0.2)' 
+            style={{
+              background: input.trim()
+                ? 'rgba(59, 130, 246, 0.2)'
                 : 'rgba(255, 255, 255, 0.03)',
             }}
           >
@@ -399,13 +399,13 @@ export const ChatScreen = () => {
               {t('VenterChat.endSessionMessage', 'Are you sure you want to end this session?')}
             </p>
             <div className="grid grid-cols-2 gap-3">
-              <Button 
+              <Button
                 variant="ghost"
                 onClick={handleEndSessionNo}
               >
                 {t('Common.no', 'No')}
               </Button>
-              <Button 
+              <Button
                 variant="danger"
                 onClick={handleEndSessionYes}
               >

@@ -118,7 +118,7 @@ export const ListenerRequests = () => {
                     <span className="capitalize">{req.type === 'call' ? t('ListenerHome.callSession', 'Call Session') : t('ListenerHome.chatSession', 'Chat Session')}</span>
                   </div>
                 </div>
-                <Badge variant="warning" dot>{t('ListenerRequests.pending')}</Badge>
+                <Badge variant="warning" dot>{t('Admin.status.pending', 'Pending')}</Badge>
               </div>
 
 
@@ -129,7 +129,7 @@ export const ListenerRequests = () => {
                   fullWidth
                   onClick={() => handleDecline(req)}
                 >
-                  {t('ListenerRequests.decline')}
+                  {t('Common.decline', 'Cancel')}
                 </Button>
                 <Button
                   variant="primary"
@@ -137,7 +137,7 @@ export const ListenerRequests = () => {
                   fullWidth
                   onClick={() => handleAccept(req)}
                 >
-                  {t('ListenerRequests.accept')}
+                  {t('Common.accept', 'Begin Session')}
                 </Button>
               </div>
             </GlassCard>

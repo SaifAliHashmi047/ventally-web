@@ -122,11 +122,8 @@ export const SessionsHistory = () => {
   const renderItem = (item: SessionItem, type: Tab) => (
     <GlassCard
       key={item.id}
-      hover
       padding="md"
       rounded="2xl"
-      className="cursor-pointer"
-      onClick={() => navigate(`session/${item.id}/feedback`, { state: { session: item } })}
     >
       <div className="flex items-center gap-3">
         {/* Icon */}

@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
@@ -8,12 +8,18 @@ import { Button } from '../../components/ui/Button';
 import { ArrowLeft, UploadCloud, File, Image as ImageIcon } from 'lucide-react';
 import apiInstance from '../../api/apiInstance';
 import { toastError } from '../../utils/toast';
-import { setUser } from '../../store/slices/userSlice';
+import { setUser, setIsVenter } from '../../store/slices/userSlice';
+import { useRoles } from '../../api/hooks/useRoles';
+import { setTokens } from '../../api/apiInstance';
 
 export const ListenerVerification = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
+  const { updateAvailableRoles, switchRole } = useRoles();
+  
+  const accountTypeChanging = (location.state as any)?.accountTypeChanging;
   
   const user = useSelector((state: any) => state.user.user);
   
@@ -61,8 +67,33 @@ export const ListenerVerification = () => {
         },
       });
 
-      // Update Redux state so the UI knows they are pending
-      if (user) {
+      if (accountTypeChanging) {
+        const response = await updateAvailableRoles({
+          rolesToAdd: ['listener'],
+          rolesToRemove: [],
+        });
+
+        if (response) {
+          // Silent switch to listener role
+          const switchRes = await switchRole({ targetRole: 'listener' });
+
+          if (switchRes && switchRes.tokens) {
+            await setTokens(switchRes.tokens.accessToken, switchRes.tokens.refreshToken);
+
+            // Update Redux state silently
+            if (switchRes.user) {
+              const reduxUser = {
+                ...switchRes.user,
+                role: switchRes.user.activeRole?.toLowerCase() || 'listener',
+                verificationStatus: 'pending'
+              };
+              dispatch(setUser(reduxUser as any));
+              dispatch(setIsVenter(false));
+            }
+          }
+        }
+      } else if (user) {
+        // Update Redux state so the UI knows they are pending (Normal Signup Flow)
         const updatedUser = {
           ...user,
           role: 'listener',

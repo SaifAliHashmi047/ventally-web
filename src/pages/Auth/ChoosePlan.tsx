@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
@@ -26,6 +26,7 @@ interface PlanOption {
 export const ChoosePlan = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const user = useSelector((state: any) => state.user.user);
   
   const [plans, setPlans] = useState<PlanOption[]>([]);
@@ -141,10 +142,13 @@ export const ChoosePlan = () => {
       // Pass the successUrl back to the web portal success page.
       // E.g., if the backend takes successUrl it will use it. Otherwise,
       // the backend Stripe webhook handles DB updates and redirect might fail back to API URL.
+      const accountTypeChanging = (location.state as any)?.accountTypeChanging;
+      const successUrlParams = accountTypeChanging ? '?accountTypeChanging=true' : '';
+      
       const res = await apiInstance.post('payments/create-subscription-checkout', {
         planId: selectedPlan,
         billingCycle: planType,
-        successUrl: window.location.origin + '/signup/success',
+        successUrl: window.location.origin + '/signup/success' + successUrlParams,
         cancelUrl: window.location.origin + '/signup/choose-plan'
       });
       

@@ -12,6 +12,8 @@ import type { RootState } from '../../store/store';
 import { cn } from '../../utils/cn';
 import { getBackgroundStyle } from '../../utils/backgrounds';
 
+import { MainBackground } from '../ui/MainBackground';
+
 interface NavItem {
   path: string;
   labelKey: string;
@@ -69,21 +71,7 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
 
   return (
     <div className="flex min-h-screen relative">
-      {/* ── Fixed background layer — sits behind everything ── */}
-      <div
-        className="fixed inset-0 z-0"
-        style={{
-          ...bgStyle,
-          backgroundAttachment: 'fixed',
-          backgroundColor: '#0a0a0a',
-        }}
-      />
-      {/* ── Dark overlay — keeps theme colors consistent regardless of bg image ── */}
-      <div
-        className="fixed inset-0 z-0"
-        style={{ background: 'rgba(0, 0, 0, 0.55)' }}
-      />
-
+      <MainBackground />
       {/* All content sits above the background layers */}
       <div className="relative z-10 flex w-full min-h-screen">
       {/* Mobile Overlay */}

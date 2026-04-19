@@ -1,15 +1,21 @@
 import { useEffect, useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
 import { GlassCard } from '../../components/ui/GlassCard';
-import apiInstance from '../../api/apiInstance';
+import apiInstance, { setTokens } from '../../api/apiInstance';
+import { useRoles } from '../../api/hooks/useRoles';
+import { setUser, setIsVenter } from '../../store/slices/userSlice';
 import { toastError, toastSuccess } from '../../utils/toast';
 import { Check, RotateCcw } from 'lucide-react';
 
 export const SubscriptionSuccessScreen = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const { updateAvailableRoles, switchRole } = useRoles();
 
   const [loading, setLoading] = useState(true);
   const [cancelling, setCancelling] = useState(false);
@@ -57,7 +63,33 @@ export const SubscriptionSuccessScreen = () => {
     }
   };
 
-  const handleLetsStart = () => {
+  const handleLetsStart = async () => {
+    const searchParams = new URLSearchParams(location.search);
+    const accountTypeChanging = searchParams.get('accountTypeChanging') === 'true';
+
+    if (accountTypeChanging) {
+      setLoading(true); // Re-use the spinner
+      try {
+        const response = await updateAvailableRoles({ rolesToAdd: ['venter'], rolesToRemove: [] });
+        if (response) {
+          const switchRes = await switchRole({ targetRole: 'venter' });
+          if (switchRes && switchRes.tokens) {
+            await setTokens(switchRes.tokens.accessToken, switchRes.tokens.refreshToken);
+            if (switchRes.user) {
+              const reduxUser = {
+                ...switchRes.user,
+                role: switchRes.user.activeRole?.toLowerCase() || 'venter'
+              };
+              dispatch(setUser(reduxUser as any));
+              dispatch(setIsVenter(true));
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Failed to update roles for accountTypeChanging:', err);
+      }
+    }
+    
     navigate('/venter/home', { replace: true });
   };
 

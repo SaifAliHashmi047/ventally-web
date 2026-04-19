@@ -26,6 +26,7 @@ export const LanguageSelection = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user.user);
+  const isAuthenticated = useSelector((state: any) => state.user.isAuthenticated);
   const name = user?.displayName || user?.email?.split('@')[0] || 'User';
 
   const languages: { id: Exclude<PreferredLanguage, null>; name: string; flags: string[] }[] = [
@@ -45,7 +46,12 @@ export const LanguageSelection = () => {
     dispatch(setPreferredLanguage(langId));
     dispatch(updateUser({ preferredLanguage: langId }));
     await i18n.changeLanguage(langId);
-    navigate('/signup/terms', { state: { userType: location.state?.userType } });
+    
+    if (isAuthenticated) {
+      navigate(-1);
+    } else {
+      navigate('/signup/terms', { state: { userType: location.state?.userType } });
+    }
   };
 
   return (

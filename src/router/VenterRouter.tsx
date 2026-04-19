@@ -41,6 +41,7 @@ import { VenterQuietHours } from '../pages/Venter/VenterQuietHours';
 import { VenterChangeBackground } from '../pages/Venter/VenterChangeBackground';
 import { VenterSubmitFeedback } from '../pages/Venter/VenterSubmitFeedback';
 import { VenterChangeAccountType } from '../pages/Venter/VenterChangeAccountType';
+import { VenterChoosePlan } from '../pages/Venter/VenterChoosePlan';
 import { VenterOthers } from '../pages/Venter/VenterOthers';
 
 // Common Pages
@@ -63,6 +64,7 @@ import { AgeGroupSelect } from '../pages/Common/AgeGroupSelect';
 import { LGBTQSelect } from '../pages/Common/LGBTQSelect';
 import { FaithOrBeliefSelect } from '../pages/Common/FaithOrBeliefSelect';
 import { SpecialTopicsSelect } from '../pages/Common/SpecialTopicsSelect';
+import { LanguageSelection } from '../pages/Auth/LanguageSelection';
 
 // Chat Pages
 import { VenterMessages } from '../pages/Venter/VenterMessages';
@@ -110,6 +112,7 @@ export const VenterRouter = () => {
         <Route path="crisis-immediate-help" element={<VenterCrisisImmediateHelp />} />
         <Route path="crisis-988-support" element={<VenterCrisis988Support />} />
         <Route path="subscription" element={<VenterSubscription />} />
+        <Route path="subscription/plans" element={<VenterChoosePlan />} />
         <Route path="subscription/details" element={<SubscriptionDetailsScreen />} />
         <Route path="settings" element={<VenterSettings />} />
         <Route path="payment-check" element={<VenterPaymentCheckScreen />} />
@@ -144,6 +147,7 @@ export const VenterRouter = () => {
         <Route path="delete-account" element={<DeleteAccount />} />
         <Route path="notifications" element={<Notifications />} />
         <Route path="notifications/:id" element={<NotificationDetail />} />
+        <Route path="language" element={<LanguageSelection />} />
         {/* Chat/Call */}
         <Route path="chat" element={<VenterMessages />} />
         <Route path="chat/all" element={<RecentChats />} />

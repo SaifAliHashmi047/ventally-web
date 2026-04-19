@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
 import { ArrowLeft } from 'lucide-react';
@@ -15,15 +15,17 @@ const LEGAL_STEPS = [
 export const ListenerLegalFlow = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentStep, setCurrentStep] = useState(0);
 
+  const accountTypeChanging = (location.state as any)?.accountTypeChanging;
   const step = LEGAL_STEPS[currentStep];
 
   const handleContinue = () => {
     if (currentStep < LEGAL_STEPS.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      navigate('/signup/verification');
+      navigate('/signup/verification', { state: { accountTypeChanging } });
     }
   };
 

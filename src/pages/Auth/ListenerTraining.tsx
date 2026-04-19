@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
 import { AccordionItem } from '../../components/Shared/AccordionItem';
@@ -9,6 +9,7 @@ import listenerTopImage from '../../assets/images/listenerTopImage.png';
 export const ListenerTraining = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   // Expanded mission block initially
   const [expandedSection, setExpandedSection] = useState<string | null>('module1');
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
@@ -32,9 +33,11 @@ export const ListenerTraining = () => {
 
   const isAllChecked = modules?.every(m => checkedItems[m.id]);
 
+  const accountTypeChanging = (location.state as any)?.accountTypeChanging;
+
   const handleContinue = () => {
     if (isAllChecked) {
-      navigate('/signup/listener-legal');
+      navigate('/signup/listener-legal', { state: { accountTypeChanging } });
     } else {
       setShowError(true);
     }

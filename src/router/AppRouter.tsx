@@ -23,6 +23,9 @@ import { EmailVerificationWeb } from '../pages/Auth/EmailVerificationWeb';
 import { CreateNewPasswordWeb } from '../pages/Auth/CreateNewPasswordWeb';
 import { ResetSuccessfulWeb } from '../pages/Auth/ResetSuccessfulWeb';
 
+// Common Public Pages
+import { LegalDocViewer } from '../pages/Common/LegalDocViewer';
+
 // Role Routers
 import { VenterRouter } from './VenterRouter';
 import { ListenerRouter } from './ListenerRouter';
@@ -71,6 +74,13 @@ const AppRouter = () => {
       <Route path="/forgot-password/verify-email" element={<EmailVerificationWeb />} />
       <Route path="/forgot-password/new-password" element={<CreateNewPasswordWeb />} />
       <Route path="/forgot-password/done" element={<ResetSuccessfulWeb />} />
+
+      {/* ── Public Legal Document Viewer ── */}
+      <Route path="/legal/:docId" element={
+        <div className="flex flex-col min-h-screen w-full" style={{ background: 'var(--bg-deep)' }}>
+          <LegalDocViewer />
+        </div>
+      } />
 
       {/* ── App routes — gated by authentication ── */}
       {isAuthenticated ? (
