@@ -12,14 +12,14 @@ export const VenterSubscription = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { getMySubscription } = useWallet();
-  const [subscription, setSubscription] = useState<any>(null);
+  const [subData, setSubData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetch = async () => {
       try {
-        const subRes = await getMySubscription();
-        if (subRes) setSubscription(subRes.subscription);
+        const res = await getMySubscription();
+        if (res) setSubData(res);
       } catch {
         /* ignore */
       } finally {
@@ -37,6 +37,11 @@ export const VenterSubscription = () => {
     navigate('/venter/subscription/details');
   };
 
+  const subscription = subData?.subscription;
+  const planName = subData?.hasSubscription 
+    ? (subscription?.planName || t('VenterMySubscription.planNameValue')) 
+    : t('VenterMySubscription.planNameValue');
+
   return (
     <div className="page-wrapper animate-fade-in flex flex-col min-h-[calc(100vh-100px)]">
       <PageHeader title={t('VenterMySubscription.title')} onBack={() => navigate(-1)} />
@@ -45,7 +50,7 @@ export const VenterSubscription = () => {
         {loading ? (
           <div className="skeleton h-60 rounded-3xl" />
         ) : (
-          <GlassCard bordered padding="lg" rounded="2xl" className="mt-2">
+          <GlassCard bordered padding="lg" rounded="2xl" className="mt-2 text-left">
             <h2 className="text-lg font-semibold text-white mb-6">
               {t('VenterMySubscription.currentBilling')}
             </h2>
@@ -54,15 +59,15 @@ export const VenterSubscription = () => {
               <div className="flex flex-col gap-1">
                 <span className="text-sm text-gray-500">{t('VenterMySubscription.planName')}</span>
                 <span className="text-sm font-medium text-white">
-                  {subscription?.planName || t('VenterMySubscription.planNameValue')}
+                  {planName}
                 </span>
               </div>
 
               <div className="flex flex-col gap-1">
                 <span className="text-sm text-gray-500">{t('VenterMySubscription.endsIn')}</span>
                 <span className="text-sm font-medium text-white">
-                  {subscription?.renewalDate
-                    ? new Date(subscription.renewalDate).toLocaleDateString('en-GB')
+                  {subscription?.renewalDate || subscription?.billingCycleEnd
+                    ? new Date(subscription.renewalDate || subscription.billingCycleEnd).toLocaleDateString('en-GB')
                     : t('VenterMySubscription.endsInValue')}
                 </span>
               </div>

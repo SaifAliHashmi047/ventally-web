@@ -202,22 +202,31 @@ const DOC_CONFIG: Record<string, { titleKey: string; contentKey?: string; sectio
   },
   guidelines: {
     titleKey: 'Legal.listenerGuidelines',
-    sections: [
-      'TermsAndConditions.codeOfConductTitle',
-      'TermsAndConditions.codeOfConductPurpose1',
-      'TermsAndConditions.codeOfConductPurpose2',
-      'TermsAndConditions.standardsOfBehavior',
-      'TermsAndConditions.standardRespect',
-      'TermsAndConditions.standardNoHarassment',
-      'TermsAndConditions.standardNoHateSpeech',
-      'TermsAndConditions.standardNoExploitation',
-      'TermsAndConditions.standardNoThreats',
-      'TermsAndConditions.standardConfidentiality',
-      'TermsAndConditions.reportingMisconduct',
-      'TermsAndConditions.reportingMisconduct1',
-      'TermsAndConditions.reportingMisconduct2',
-      'TermsAndConditions.reportingMisconduct3',
-    ],
+    contentKey: 'ListenerCodeOfConduct',
+  },
+  'liability-waiver': {
+    titleKey: 'Legal.liabilityWaiver',
+    contentKey: 'ListenerLiabilityWaiver',
+  },
+  'payment-terms': {
+    titleKey: 'Legal.paymentTerms',
+    contentKey: 'PaymentTermsAcknowledgment',
+  },
+  'listener-agreement': {
+    titleKey: 'Legal.listenerAgreement',
+    contentKey: 'ListenerAgreement',
+  },
+  nda: {
+    titleKey: 'Legal.nda',
+    contentKey: 'ListenerNDA',
+  },
+  'code-of-conduct': {
+    titleKey: 'Legal.codeOfConduct',
+    contentKey: 'ListenerCodeOfConduct',
+  },
+  safety: {
+    titleKey: 'Legal.safetyPolicy',
+    contentKey: 'ListenerSafetyPolicy',
   },
 };
 
@@ -263,6 +272,17 @@ const isHeading = (key: string) => {
   );
 };
 
+interface StructuredSection {
+  title?: string;
+  text?: string;
+  subsections?: Array<{
+    title?: string;
+    text?: string;
+    bullets?: string[];
+  }>;
+  bullets?: string[];
+}
+
 export const LegalDocViewer = () => {
   const { docId } = useParams<{ docId: string }>();
   const { t } = useTranslation();
@@ -271,28 +291,118 @@ export const LegalDocViewer = () => {
   const config = docId ? DOC_CONFIG[docId] : null;
   const title = config ? t(config.titleKey) : t('Legal.title');
 
+  // Helper to render structured sections (matching native ListenerAgreement logic)
+  const renderStructuredSections = (rootKey: string) => {
+    const data = t(rootKey, { returnObjects: true }) as any;
+    if (!data || typeof data === 'string') return null;
+
+    return (
+      <div className="space-y-8">
+        {data.effectiveDate && (
+          <p className="text-sm font-medium text-white mb-6">
+            {data.effectiveDate}
+          </p>
+        )}
+
+        {data.introText1 && (
+          <p className="text-[15px] text-gray-300 leading-relaxed mb-8">
+            {data.introText1}
+          </p>
+        )}
+
+        <div className="space-y-8">
+          {data.sections?.map((section: StructuredSection, sIdx: number) => (
+            <div key={sIdx} className="space-y-4">
+              {section.title && (
+                <h3 className="text-lg font-bold text-white tracking-tight pt-4 first:pt-0">
+                  {section.title}
+                </h3>
+              )}
+              
+              {section.text && (
+                <p className="text-[15px] text-gray-400 leading-relaxed">
+                  {section.text}
+                </p>
+              )}
+
+              {section.subsections?.map((sub, ssIdx) => (
+                <div key={ssIdx} className="space-y-3 ml-1">
+                  {sub.title && (
+                    <h4 className="text-[16px] font-semibold text-white">
+                      {sub.title}
+                    </h4>
+                  )}
+                  {sub.text && (
+                    <p className="text-[15px] text-gray-400 leading-relaxed">
+                      {sub.text}
+                    </p>
+                  )}
+                  {sub.bullets?.map((bullet, bIdx) => (
+                    <p key={bIdx} className="text-sm text-gray-400 leading-relaxed flex items-start gap-2 pl-2">
+                       <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary/40 shrink-0" />
+                       {bullet}
+                    </p>
+                  ))}
+                </div>
+              ))}
+
+              {section.bullets?.map((bullet, bIdx) => (
+                <p key={bIdx} className="text-sm text-gray-400 leading-relaxed flex items-start gap-2 pl-2">
+                   <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary/40 shrink-0" />
+                   {bullet}
+                </p>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        {data.signatures && (
+          <div className="pt-8 border-t border-white/5 space-y-4">
+            <h3 className="text-lg font-bold text-white">
+              {data.signatures.title}
+            </h3>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              {data.signatures.text}
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="page-wrapper animate-fade-in">
       <PageHeader title={title} onBack={() => navigate(-1)} />
 
-      <GlassCard bordered>
-        <div className="space-y-3 max-h-[70vh] overflow-y-auto scrollbar-hide pr-2">
-          {config?.sections?.map((key, i) => {
-            const text = t(key);
-            if (!text || text === key) return null; // skip missing keys
-            const heading = isHeading(key);
-            return heading ? (
-              <h3 key={i} className="text-base font-semibold text-white mt-4 first:mt-0">
-                {text}
-              </h3>
-            ) : (
-              <p key={i} className="text-sm text-gray-400 leading-relaxed">
-                {text}
-              </p>
-            );
-          })}
+      <GlassCard bordered className="mb-8">
+        <div className="max-h-[75vh] overflow-y-auto scrollbar-hide pr-2 p-2">
+          {config?.contentKey ? (
+            // Structured Mode
+            renderStructuredSections(config.contentKey)
+          ) : (
+            // Flat Mode (Legacy)
+            <div className="space-y-3">
+              {config?.sections?.map((key, i) => {
+                const text = t(key);
+                if (!text || text === key) return null;
+                const heading = isHeading(key);
+                return heading ? (
+                  <h3 key={i} className="text-base font-semibold text-white mt-6 first:mt-0">
+                    {text}
+                  </h3>
+                ) : (
+                  <p key={i} className="text-sm text-gray-400 leading-relaxed">
+                    {text}
+                  </p>
+                );
+              })}
+            </div>
+          )}
+          
           {!config && (
-            <p className="text-sm text-gray-400">{t('Common.noData')}</p>
+            <p className="text-sm text-gray-400 text-center py-8">
+              {t('Common.noData')}
+            </p>
           )}
         </div>
       </GlassCard>
