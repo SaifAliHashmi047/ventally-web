@@ -17,6 +17,7 @@ const STEPS_CONFIG: Record<string, {
   apiField: string;        // field name sent to auth/profile
   next: string | 'finish';
   multiSelect?: boolean;
+  useBubblePattern?: boolean;
   options: { id: string; labelKey: string; isPrimary?: boolean }[];
 }> = {
   gender: {

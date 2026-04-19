@@ -76,7 +76,11 @@ export const QuestionStep = ({
             className="px-4 py-1.5 rounded-full text-xs font-medium text-white"
             style={{ background: 'rgba(255,255,255,0.12)' }}
           >
-            {t('QuestionStep.stepOf', { step: String(step), total: String(totalSteps) }, `Step ${step}/${totalSteps}`)}
+            {t('QuestionStep.stepOf', {
+              step: String(step),
+              total: String(totalSteps),
+              defaultValue: `Step ${step}/${totalSteps}`,
+            })}
           </div>
         </div>
       </div>

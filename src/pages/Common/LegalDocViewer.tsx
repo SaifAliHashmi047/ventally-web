@@ -186,20 +186,6 @@ const DOC_CONFIG: Record<string, { titleKey: string; contentKey?: string; sectio
       'TermsAndConditions.contactUsEmail',
     ],
   },
-  safety: {
-    titleKey: 'Legal.safetyPolicy',
-    sections: [
-      'TermsAndConditions.safetyPolicyTitle',
-      'TermsAndConditions.safetyPurpose',
-      'TermsAndConditions.safetyPurposeText',
-      'TermsAndConditions.crisisProtocol',
-      'TermsAndConditions.crisisProtocol1',
-      'TermsAndConditions.crisisProtocol2',
-      'TermsAndConditions.crisisProtocol3',
-      'TermsAndConditions.limitations',
-      'TermsAndConditions.limitationsText',
-    ],
-  },
   guidelines: {
     titleKey: 'Legal.listenerGuidelines',
     contentKey: 'ListenerCodeOfConduct',

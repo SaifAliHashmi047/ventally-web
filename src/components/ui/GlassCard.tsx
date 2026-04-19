@@ -9,7 +9,7 @@ interface GlassCardProps {
   accent?: boolean;
   hover?: boolean;
   onClick?: () => void;
-  padding?: 'sm' | 'md' | 'lg' | 'none';
+  padding?: 'sm' | 'md' | 'lg' | 'xl' | 'none';
   rounded?: 'xl' | '2xl' | '3xl';
   style?: React.CSSProperties;
 }
@@ -31,6 +31,7 @@ export const GlassCard: React.FC<GlassCardProps> = ({
     sm: 'p-4',
     md: 'p-6',
     lg: 'p-8',
+    xl: 'p-10',
   };
 
   const roundedMap = {

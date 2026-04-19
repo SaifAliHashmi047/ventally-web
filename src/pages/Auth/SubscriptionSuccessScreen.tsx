@@ -246,7 +246,10 @@ export const SubscriptionSuccessScreen = () => {
              <p className="text-[15px] text-white/80 mb-4">
                {planType === 'payAsYouGo' 
                  ? t('ChoosePlan.payAsYouGo', 'Pay As You Go') 
-                 : t('SubscriptionSuccess.renewalDate', { date: renewalDate }, `Your subscription renews on ${renewalDate}`)}
+                 : t('SubscriptionSuccess.renewalDate', {
+                     date: renewalDate,
+                     defaultValue: `Your subscription renews on ${renewalDate}`,
+                   })}
              </p>
              
              <button 

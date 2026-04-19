@@ -29,8 +29,12 @@ export interface SwitchRoleResponse {
 }
 
 export interface UpdateAvailableRolesPayload {
-  role: string;
-  action: 'add' | 'remove';
+  /** Legacy single-role update */
+  role?: string;
+  action?: 'add' | 'remove';
+  /** Batch update used by onboarding / account-type flows */
+  rolesToAdd?: string[];
+  rolesToRemove?: string[];
 }
 
 export interface UpdateAvailableRolesResponse {
