@@ -25,11 +25,11 @@ const createLocalStorage = (): Storage => {
 
 const storage = createLocalStorage();
 
-// Persist config - persist user slice to restore role on refresh
+// Persist config - persist user and app slices
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user'], // only persist user slice
+  whitelist: ['user', 'app'], // persist user + app (for background selection)
 };
 
 const rootReducer = combineReducers({

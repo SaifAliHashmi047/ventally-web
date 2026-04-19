@@ -18,6 +18,8 @@ import { VenterRecoveryDashboard } from '../pages/Venter/VenterRecoveryDashboard
 import { VenterJourneyDashboard } from '../pages/Venter/VenterJourneyDashboard';
 import { VenterLogProgress } from '../pages/Venter/VenterLogProgress';
 import { VenterProgressSummary } from '../pages/Venter/VenterProgressSummary';
+import { LegalDocViewer } from '../pages/Common/LegalDocViewer';
+import { Appeal } from '../pages/Common/Appeal';
 import { VenterRecoveryCalendar } from '../pages/Venter/VenterRecoveryCalendar';
 import { VenterSettings } from '../pages/Venter/VenterSettings';
 import { VenterCrisisFlow } from '../pages/Venter/VenterCrisisFlow';
@@ -129,7 +131,9 @@ export const VenterRouter = () => {
         <Route path="profile/faith" element={<FaithOrBeliefSelect />} />
         <Route path="profile/special-topics" element={<SpecialTopicsSelect />} />
         <Route path="legal" element={<LegalPolicies />} />
+        <Route path="legal/:docId" element={<LegalDocViewer />} />
         <Route path="contact" element={<ContactUs />} />
+        <Route path="appeal" element={<Appeal />} />
         <Route path="delete-account" element={<DeleteAccount />} />
         <Route path="notifications" element={<Notifications />} />
         <Route path="notifications/:id" element={<NotificationDetail />} />

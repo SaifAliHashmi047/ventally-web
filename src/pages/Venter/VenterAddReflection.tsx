@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Button } from '../../components/ui/Button';
 import { useReflections } from '../../api/hooks/useReflections';
+import { toastSuccess, toastError } from '../../utils/toast';
 import { PenLine } from 'lucide-react';
 
 export const VenterAddReflection = () => {
@@ -18,8 +19,11 @@ export const VenterAddReflection = () => {
     setSaving(true);
     try {
       await addReflection(text.trim());
+      toastSuccess(t('VenterHome.reflectionSuccess.message'));
       navigate('/venter/reflections');
-    } catch { /* ignore */ } finally {
+    } catch (e: any) {
+      toastError(e?.error || t('Common.somethingWentWrong'));
+    } finally {
       setSaving(false);
     }
   };

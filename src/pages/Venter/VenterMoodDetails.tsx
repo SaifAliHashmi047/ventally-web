@@ -6,6 +6,7 @@ import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
 import { useMood } from '../../api/hooks/useMood';
 import { MOOD_CONFIG, type MoodType } from '../../components/ui/MoodSelector';
+import { toastSuccess, toastError } from '../../utils/toast';
 import { Trash2, Edit2, AlertTriangle } from 'lucide-react';
 
 interface MoodItem {
@@ -66,14 +67,14 @@ export const VenterMoodDetails = () => {
 
   const handleDelete = async () => {
     if (!mood?.id) return;
-
     setDeleteLoading(true);
     try {
       await deleteMood(mood.id);
+      toastSuccess(t('VenterMoodHistory.deleteSuccess'));
       setShowDeleteModal(false);
       navigate(-1);
-    } catch (error) {
-      console.error('Delete mood error:', error);
+    } catch (error: any) {
+      toastError(error?.error || t('Common.somethingWentWrong'));
     } finally {
       setDeleteLoading(false);
     }

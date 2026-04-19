@@ -1,5 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ListenerLayout } from '../components/Layout/ListenerLayout';
+import { LegalDocViewer } from '../pages/Common/LegalDocViewer';
+import { Appeal } from '../pages/Common/Appeal';
 
 // Listener Pages
 import { ListenerDashboard } from '../pages/Listener/ListenerDashboard';
@@ -60,7 +62,9 @@ export const ListenerRouter = () => {
         <Route path="update-email" element={<UpdateEmail />} />
         <Route path="notifications-settings" element={<ListenerNotificationsSettings />} />
         <Route path="legal" element={<LegalPolicies />} />
+        <Route path="legal/:docId" element={<LegalDocViewer />} />
         <Route path="contact" element={<ContactUs />} />
+        <Route path="appeal" element={<Appeal />} />
         <Route path="delete-account" element={<DeleteAccount />} />
         <Route path="notifications" element={<Notifications />} />
         <Route path="notifications/:id" element={<NotificationDetail />} />

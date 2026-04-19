@@ -49,10 +49,10 @@ export const ChatScreen = () => {
     const isVenter = currentUser?.userType === 'venter' || currentUser?.role === 'venter';
     if (isVenter) {
       // Venter goes to warning screen with acknowledgment flow
-      navigate('/venter/crisis-warning');
+      navigate('/venter/crisis-warning', { state: { fromChat: true } });
     } else {
       // Listener goes to 988 escalation screen
-      navigate('/listener/crisis-escalation');
+      navigate('/listener/crisis-escalation', { state: { fromChat: true } });
     }
   };
 
@@ -78,15 +78,19 @@ export const ChatScreen = () => {
     setShowEndModal(false);
     if (!id) return;
     try {
+      // Emit socket event to end chat for real-time notification to other party
+      await socketService.connect();
+      socketService.emit('chat:end', { conversationId: id });
+      // Also call REST API
       await apiInstance.post(`conversations/${id}/end`);
       dispatch(endChatSession());
     } catch (error) {
       console.error('End chat error:', error);
     }
     if (currentUser?.userType === 'venter' || currentUser?.role === 'venter') {
-      navigate(`/venter/session/${id}/feedback`, { state: { chat, type: 'chat' } });
+      navigate(`/venter/session/${id}/feedback`, { replace: true, state: { chat, type: 'chat' } });
     } else {
-      navigate(`/listener/session/${id}/feedback`, { state: { chat, type: 'chat' } });
+      navigate(`/listener/session/${id}/feedback`, { replace: true, state: { chat, type: 'chat' } });
     }
   };
 
@@ -210,9 +214,11 @@ export const ChatScreen = () => {
 
     try {
       await socketService.connect();
+      console.log('[Chat] Sending message:', { conversationId: id, content });
       socketService.emit('chat:message', { conversationId: id, content });
-    } catch {
-      // ignore
+      console.log('[Chat] Message emitted successfully');
+    } catch (err) {
+      console.error('[Chat] Failed to send message:', err);
     } finally {
       setSending(false);
     }

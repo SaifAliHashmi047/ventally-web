@@ -89,11 +89,20 @@ export const useChat = () => {
     return res.data;
   }, []);
 
+  /**
+   * End an active conversation
+   */
+  const endConversation = useCallback(async (conversationId: string) => {
+    const res = await apiInstance.post(`conversations/${conversationId}/end`);
+    return res.data;
+  }, []);
+
   return {
     getChatHistory,
     getConversations,
     getRecentChats,
     flagMessage,
     addAdminNote,
+    endConversation,
   };
 };

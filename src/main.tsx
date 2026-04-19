@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { store, persistor } from './store/store'
 import './locales/i18n'
 import './index.css'
@@ -22,6 +24,19 @@ if (rootElement) {
       >
         <BrowserRouter>
           <App />
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+            style={{ zIndex: 99999 }}
+          />
         </BrowserRouter>
       </PersistGate>
     </Provider>

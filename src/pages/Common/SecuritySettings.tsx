@@ -8,6 +8,7 @@ import { Toggle } from '../../components/ui/Toggle';
 import { ChevronRight, Shield, Lock, Mail, Fingerprint } from 'lucide-react';
 import type { RootState } from '../../store/store';
 import { useCredentialsChange } from '../../api/hooks/useCredentialsChange';
+import { toastSuccess, toastError } from '../../utils/toast';
 
 export const SecuritySettings = () => {
   const { t } = useTranslation();
@@ -24,7 +25,9 @@ export const SecuritySettings = () => {
   const loadTwoFactorSettings = useCallback(async () => {
     try {
       const res = await getTwoFactorSettings();
-      setTwoFactorEnabled(res?.enabled || false);
+      // Handle both response shapes from the API
+      const enabled = (res as any)?.twoFactorAuthentication?.enabled ?? res?.enabled ?? false;
+      setTwoFactorEnabled(enabled);
     } catch {
       // Silently fail
     } finally {
@@ -45,9 +48,13 @@ export const SecuritySettings = () => {
         method: newStatus ? 'email' : undefined,
       });
       setTwoFactorEnabled(newStatus);
-    } catch {
-      // Optimistic UI: toggle anyway for demo
-      setTwoFactorEnabled(prev => !prev);
+      toastSuccess(
+        newStatus
+          ? t('Security.twoFactorEnabledSuccess')
+          : t('Security.twoFactorDisabledSuccess')
+      );
+    } catch (error: any) {
+      toastError(error?.error || t('Common.somethingWentWrong'));
     } finally {
       setLoading2FA(false);
     }
@@ -55,19 +62,18 @@ export const SecuritySettings = () => {
 
   return (
     <div className="page-wrapper animate-fade-in">
-      <PageHeader title={t('Security.title', 'Security')} onBack={() => navigate(-1)} />
+      <PageHeader title={t('Security.title')} onBack={() => navigate(-1)} />
 
-      {/* Biometrics section (web equivalent) */}
-      <GlassCard bordered className="mb-4">
-        <div className="flex justify-between items-center">
+      {/* Enable Biometrics — web shows toggle but disabled (no native biometrics on web) */}
+      <GlassCard bordered padding="none" rounded="2xl" className="mb-4">
+        <div className="settings-item flex justify-between items-center px-4 py-3">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400">
+            <div className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 flex-shrink-0">
               <Fingerprint size={15} />
             </div>
-            <div>
-              <p className="text-sm font-medium text-white">{t('Security.enableBiometrics', 'Enable Biometrics')}</p>
-              <p className="text-xs text-gray-500">Use your browser's passkey or fingerprint</p>
-            </div>
+            <span className="text-sm font-medium text-white">
+              {t('Security.enableBiometrics')}
+            </span>
           </div>
           <Toggle
             checked={false}
@@ -76,50 +82,50 @@ export const SecuritySettings = () => {
             size="sm"
           />
         </div>
-        <p className="text-xs text-gray-600 mt-2 ml-12">Biometric login is managed by your browser's passkey settings.</p>
       </GlassCard>
 
       {/* Account security actions */}
-      <GlassCard padding="none" rounded="2xl" className="mb-4">
+      <GlassCard padding="none" rounded="2xl">
         {/* Reset Password */}
-        <div
-          className="settings-item flex justify-between items-center px-4 py-3 cursor-pointer border-b border-white/5"
+        <button
+          className="settings-item w-full flex justify-between items-center px-4 py-3 border-b border-white/5 text-left"
           onClick={() => navigate(`${basePath}/security/change-password`)}
         >
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400">
+            <div className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 flex-shrink-0">
               <Lock size={15} />
             </div>
-            <span className="text-sm font-medium text-white">{t('Security.resetPassword', 'Reset Password')}</span>
+            <span className="text-sm font-medium text-white">
+              {t('Security.resetPassword')}
+            </span>
           </div>
           <ChevronRight size={16} className="text-gray-500" />
-        </div>
+        </button>
 
         {/* Change Email */}
-        <div
-          className="settings-item flex justify-between items-center px-4 py-3 cursor-pointer border-b border-white/5"
+        <button
+          className="settings-item w-full flex justify-between items-center px-4 py-3 border-b border-white/5 text-left"
           onClick={() => navigate(`${basePath}/update-email`)}
         >
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400">
+            <div className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 flex-shrink-0">
               <Mail size={15} />
             </div>
-            <span className="text-sm font-medium text-white">{t('Security.changeEmail', 'Change Email')}</span>
+            <span className="text-sm font-medium text-white">
+              {t('Security.changeEmail')}
+            </span>
           </div>
           <ChevronRight size={16} className="text-gray-500" />
-        </div>
+        </button>
 
         {/* Two-Factor Authentication */}
-        <div
-          className="settings-item flex justify-between items-center px-4 py-3"
-          style={{ borderBottomWidth: 0 }}
-        >
+        <div className="settings-item flex justify-between items-center px-4 py-3">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400">
+            <div className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 flex-shrink-0">
               <Shield size={15} />
             </div>
             <span className="text-sm font-medium text-white">
-              {t('Security.twoFactorEnabled', 'Two Factor Authentication')}
+              {t('Security.twoFactorEnabled')}
             </span>
           </div>
           <Toggle
@@ -128,16 +134,6 @@ export const SecuritySettings = () => {
             disabled={loading2FA || loadingInit}
             size="sm"
           />
-        </div>
-      </GlassCard>
-
-      {/* Info card */}
-      <GlassCard>
-        <div className="flex items-start gap-3">
-          <Shield size={18} className="text-accent flex-shrink-0 mt-0.5" />
-          <p className="text-xs text-gray-400 leading-relaxed">
-            Keep your account secure by using a strong, unique password and enabling two-factor authentication.
-          </p>
         </div>
       </GlassCard>
     </div>

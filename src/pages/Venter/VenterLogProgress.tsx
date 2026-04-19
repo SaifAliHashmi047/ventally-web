@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Button } from '../../components/ui/Button';
 import { useRecovery } from '../../api/hooks/useRecovery';
+import { toastSuccess, toastError } from '../../utils/toast';
 
 const STATUSES = ['success', 'slip', 'partial'];
 
@@ -33,15 +34,16 @@ export const VenterLogProgress = () => {
     setSaving(true);
     try {
       const today = new Date().toISOString().split('T')[0];
-      
       if (status === 'slip') {
         await logRelapse({ relapse_date: today, note: notes, trigger: '' });
       } else {
         await startSobriety({ sobriety_date: today, addiction_type: 'general', note: notes });
       }
-      
+      toastSuccess(t('VenterRecovery.logProgress.success'));
       navigate(-1);
-    } catch { /* ignore */ } finally {
+    } catch (e: any) {
+      toastError(e?.error || t('Common.somethingWentWrong'));
+    } finally {
       setSaving(false);
     }
   };

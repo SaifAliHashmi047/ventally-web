@@ -8,7 +8,8 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import type { RootState } from '../../store/store';
 import { useAuth } from '../../api/hooks/useAuth';
-import { ChevronRight, Camera, User } from 'lucide-react';
+import { toastSuccess, toastError } from '../../utils/toast';
+import { ChevronRight, Camera } from 'lucide-react';
 
 const PREFERENCE_ITEMS = [
   { key: 'gender',            label: 'EditProfile.gender',            path: 'gender',         displayKey: 'gender'           },
@@ -63,9 +64,10 @@ export const EditProfile = () => {
     setSaving(true);
     try {
       await updateProfile({ ...form, ...(avatarPreview && avatarPreview !== user?.avatar ? { avatar: avatarPreview } : {}) });
+      toastSuccess(t('Common.operationSuccess'));
       navigate(-1);
     } catch (e: any) {
-      setErrors({ general: e?.error || t('Common.somethingWentWrong', 'Failed to update profile.') });
+      toastError(e?.error || t('Common.somethingWentWrong'));
     } finally {
       setSaving(false);
     }

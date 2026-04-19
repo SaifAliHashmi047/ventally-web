@@ -7,6 +7,7 @@ import { ChevronLeft, Flag, AlertTriangle } from 'lucide-react';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
 import { useAdmin } from '../../api/hooks/useAdmin';
+import { toastSuccess, toastError } from '../../utils/toast';
 
 // Match mobile app reason keys
 const REPORT_REASONS = [
@@ -38,8 +39,6 @@ export const ReportScreen = () => {
   const [selectedReason, setSelectedReason] = useState('');
   const [description, setDescription] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showError, setShowError] = useState(false);
 
   const getTargetUserId = useCallback(() => {
     if (targetUserId) return targetUserId;
@@ -65,15 +64,14 @@ export const ReportScreen = () => {
   const handleSubmit = async () => {
     if (!selectedReason) return;
 
-    // Description is required in mobile API
     if (!description.trim()) {
-      setShowError(true);
+      toastError(t('Common.fillRequiredFields'));
       return;
     }
 
     const targetId = getTargetUserId();
     if (!targetId) {
-      setShowError(true);
+      toastError(t('Common.somethingWentWrong'));
       return;
     }
 
@@ -82,7 +80,6 @@ export const ReportScreen = () => {
 
     setSubmitting(true);
     try {
-      // Match mobile app payload structure
       await submitReport({
         reportedId: targetId,
         sessionType: type || 'chat',
@@ -90,10 +87,10 @@ export const ReportScreen = () => {
         reason: REASON_MAP[selectedReason] || selectedReason,
         description: description.trim(),
       });
-      setShowSuccess(true);
-    } catch (error) {
-      console.error('Report submission error:', error);
-      setShowError(true);
+      toastSuccess(t('ReportScreen.successMessage'));
+      navigate(-1);
+    } catch (error: any) {
+      toastError(error?.error || t('Common.somethingWentWrong'));
     } finally {
       setSubmitting(false);
     }
@@ -101,15 +98,6 @@ export const ReportScreen = () => {
 
   const handleBack = () => {
     navigate(-1);
-  };
-
-  const handleSuccessOk = () => {
-    setShowSuccess(false);
-    navigate(-1);
-  };
-
-  const handleErrorOk = () => {
-    setShowError(false);
   };
 
   return (
@@ -201,52 +189,6 @@ export const ReportScreen = () => {
           </Button>
         </div>
       </div>
-
-      {/* Success Modal */}
-      {showSuccess && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <GlassCard className="w-full max-w-sm rounded-3xl p-6 text-center">
-            <div className="w-16 h-16 rounded-full bg-success/20 flex items-center justify-center mx-auto mb-4">
-              <Flag size={24} className="text-success" />
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">
-              {t('Report.successTitle', 'Report Submitted')}
-            </h3>
-            <p className="text-sm text-gray-400 mb-6">
-              {t(
-                'Report.successMessage',
-                'Thank you for your report. Our team will review it shortly.'
-              )}
-            </p>
-            <Button variant="primary" onClick={handleSuccessOk} className="w-full">
-              {t('Common.ok', 'OK')}
-            </Button>
-          </GlassCard>
-        </div>
-      )}
-
-      {/* Error Modal */}
-      {showError && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <GlassCard className="w-full max-w-sm rounded-3xl p-6 text-center">
-            <div className="w-16 h-16 rounded-full bg-error/20 flex items-center justify-center mx-auto mb-4">
-              <AlertTriangle size={24} className="text-error" />
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">
-              {t('Report.errorTitle', 'Error')}
-            </h3>
-            <p className="text-sm text-gray-400 mb-6">
-              {t(
-                'Report.errorMessage',
-                'Failed to submit report. Please try again.'
-              )}
-            </p>
-            <Button variant="primary" onClick={handleErrorOk} className="w-full">
-              {t('Common.ok', 'OK')}
-            </Button>
-          </GlassCard>
-        </div>
-      )}
     </div>
   );
 };

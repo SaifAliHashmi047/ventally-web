@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,162 +12,240 @@ import {
   removeCustomBackground,
 } from '../../store/slices/appSlice';
 import type { RootState } from '../../store/store';
-import { Image as ImageIcon, Plus, Trash2, CheckCircle } from 'lucide-react';
-
-const DEFAULT_BACKGROUNDS = [
-  { id: '1', name: 'Cosmic Dreams', color: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' },
-  { id: '2', name: 'Aurora', color: 'linear-gradient(135deg, #0d1117 0%, #1a2744 40%, #0d4f3c 100%)' },
-  { id: '3', name: 'Dusk Rose', color: 'linear-gradient(135deg, #1a0a1c 0%, #3d1152 50%, #1a0a1c 100%)' },
-  { id: '4', name: 'Ocean Depth', color: 'linear-gradient(135deg, #0a0e27 0%, #0d2137 50%, #0a1628 100%)' },
-  { id: '5', name: 'Ember', color: 'linear-gradient(135deg, #1a0a00 0%, #3d1a00 50%, #1a0500 100%)' },
-  { id: '6', name: 'Slate', color: 'linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 50%, #0d0d0d 100%)' },
-];
+import {
+  defaultBackgrounds,
+  getBackgroundStyle,
+  getBackgroundSrc,
+  type CustomBackground,
+} from '../../utils/backgrounds';
+import { Plus, Trash2, Check } from 'lucide-react';
+import { toastSuccess } from '../../utils/toast';
 
 export const VenterChangeBackground = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const customBackgrounds = useSelector((state: RootState) => state.app?.customBackgrounds || []);
-  const selectedBackgroundId = useSelector((state: RootState) => state.app?.selectedBackgroundId || '1');
-  const [newSelected, setNewSelected] = useState(selectedBackgroundId);
-  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const customBackgrounds: CustomBackground[] = useSelector(
+    (state: RootState) => (state.app as any)?.customBackgrounds ?? []
+  );
+  const selectedBackgroundId: string = useSelector(
+    (state: RootState) => (state.app as any)?.selectedBackgroundId ?? '1'
+  );
+
+  // Local preview — only committed to Redux when user taps "Set as Current"
+  const [previewId, setPreviewId] = useState<string>(selectedBackgroundId);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  // Merge defaults + custom into one list
   const allBackgrounds = [
-    ...DEFAULT_BACKGROUNDS,
-    ...customBackgrounds.map((bg: any) => ({
+    ...defaultBackgrounds,
+    ...customBackgrounds.map(bg => ({
       id: bg.id,
-      name: bg.name || 'Custom',
-      color: '',
-      uri: bg.uri,
-      isCustom: true,
+      name: bg.name,
+      image: bg.uri,   // base64 data URI
+      isDefault: false as const,
     })),
   ];
 
-  const handleSet = () => {
-    dispatch(setSelectedBackgroundId(newSelected));
+  const isCurrentActive = previewId === selectedBackgroundId;
+
+  // ── Set as current ──────────────────────────────────────────────────────────
+  const handleSetAsCurrent = () => {
+    dispatch(setSelectedBackgroundId(previewId));
+    toastSuccess(t('QuietHours.addedTitle'));
   };
 
+  // ── Upload custom background → convert to base64 for persistence ────────────
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const base64 = ev.target?.result as string;
+        if (!base64) return;
+        const newBg: CustomBackground = {
+          id: `custom-${Date.now()}`,
+          uri: base64,
+          name: file.name.replace(/\.[^.]+$/, '') || `Background ${customBackgrounds.length + 1}`,
+        };
+        dispatch(addCustomBackground(newBg));
+        setPreviewId(newBg.id);
+      };
+      reader.readAsDataURL(file);
+      e.target.value = '';
+    },
+    [customBackgrounds.length, dispatch]
+  );
+
+  // ── Delete custom background ────────────────────────────────────────────────
   const handleDeleteConfirm = () => {
-    if (pendingDelete) {
-      dispatch(removeCustomBackground(pendingDelete));
-      if (selectedBackgroundId === pendingDelete || newSelected === pendingDelete) {
-        setNewSelected('1');
-        dispatch(setSelectedBackgroundId('1'));
-      }
-    }
+    if (!pendingDeleteId) return;
+    dispatch(removeCustomBackground(pendingDeleteId));
+    if (selectedBackgroundId === pendingDeleteId) dispatch(setSelectedBackgroundId('1'));
+    if (previewId === pendingDeleteId) setPreviewId('1');
     setShowDeleteModal(false);
-    setPendingDelete(null);
+    setPendingDeleteId(null);
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const uri = URL.createObjectURL(file);
-    const newBg = {
-      id: `custom-${Date.now()}`,
-      uri,
-      name: file.name || `Background ${customBackgrounds.length + 1}`,
-    };
-    dispatch(addCustomBackground(newBg));
-    setNewSelected(newBg.id);
-  };
+  // Preview background style (applied to the live preview window)
+  const previewStyle = getBackgroundStyle(previewId, customBackgrounds);
 
   return (
     <div className="page-wrapper animate-fade-in">
-      <PageHeader title={t('GeneralSettings.changeBackground', 'Change Background')} onBack={() => navigate(-1)} />
+      <PageHeader
+        title={t('GeneralSettings.changeBackground')}
+        onBack={() => navigate(-1)}
+      />
 
-      {/* Preview + grid */}
-      <GlassCard bordered className="mb-4">
-        <p className="text-xs text-gray-400 mb-3">{t('ChangeBackground.description', 'Easily refresh your interface appearance by changing the background.')}</p>
+      {/* ── Live Preview ──────────────────────────────────────────────────── */}
+      <div className="mb-5 rounded-3xl overflow-hidden border border-white/10 shadow-xl">
+        {/* Full-bleed preview image */}
+        <div
+          className="w-full h-44 relative transition-all duration-500"
+          style={{ ...previewStyle, backgroundAttachment: 'local' }}
+        >
+          {/* Dark overlay so badge text is readable */}
+          <div className="absolute inset-0 bg-black/30" />
+          <div className="absolute bottom-3 left-3">
+            <span className="text-xs font-medium text-white bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-lg">
+              {isCurrentActive
+                ? t('ChangeBackground.current')
+                : allBackgrounds.find(b => b.id === previewId)?.name ?? ''}
+            </span>
+          </div>
+        </div>
 
-        <div className="grid grid-cols-3 gap-3 mb-4">
-          {allBackgrounds.map(bg => {
-            const isSelected = bg.id === newSelected;
-            const isCurrent = bg.id === selectedBackgroundId;
-            return (
-              <div
-                key={bg.id}
-                className="relative cursor-pointer"
-                onClick={() => setNewSelected(bg.id)}
+        {/* Description strip */}
+        <div className="glass px-4 py-3">
+          <p className="text-xs text-gray-400 leading-relaxed">
+            {t('ChangeBackground.description')}
+          </p>
+        </div>
+      </div>
+
+      {/* ── Background Grid ───────────────────────────────────────────────── */}
+      <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-5">
+        {allBackgrounds.map(bg => {
+          const isSelected = bg.id === previewId;
+          const isCurrent = bg.id === selectedBackgroundId;
+          const src = getBackgroundSrc(bg.id, customBackgrounds);
+
+          return (
+            <div key={bg.id} className="relative group">
+              <button
+                onClick={() => setPreviewId(bg.id)}
+                className={`w-full h-20 rounded-2xl overflow-hidden border-2 transition-all duration-200 block ${
+                  isSelected
+                    ? 'border-accent scale-105 shadow-lg shadow-accent/30'
+                    : 'border-white/10 hover:border-white/30'
+                }`}
               >
-                <div
-                  className={`h-20 rounded-xl overflow-hidden border-2 transition-all ${
-                    isSelected ? 'border-accent shadow-lg shadow-accent/20' : 'border-white/10'
-                  }`}
-                  style={{
-                    background: (bg as any).uri ? undefined : bg.color,
-                  }}
-                >
-                  {(bg as any).uri && (
-                    <img
-                      src={(bg as any).uri}
-                      alt={bg.name}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-                  {isCurrent && (
-                    <div className="absolute bottom-1 left-1">
-                      <span className="text-xs bg-black/60 text-white px-1.5 py-0.5 rounded-md">
-                        {t('ChangeBackground.current', 'Current')}
-                      </span>
-                    </div>
-                  )}
-                  {(bg as any).isCustom && (
-                    <button
-                      className="absolute top-1 right-1 bg-red-600/70 rounded-md p-0.5"
-                      onClick={e => {
-                        e.stopPropagation();
-                        setPendingDelete(bg.id);
-                        setShowDeleteModal(true);
-                      }}
-                    >
-                      <Trash2 size={10} className="text-white" />
-                    </button>
-                  )}
-                </div>
-                <p className="text-xs text-center text-gray-400 mt-1 truncate">{bg.name}</p>
-              </div>
-            );
-          })}
+                {/* Actual background image thumbnail */}
+                <img
+                  src={src}
+                  alt={bg.name}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
 
-          {/* Add custom button */}
-          <label className="cursor-pointer">
-            <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
-            <div className="h-20 rounded-xl border-2 border-dashed border-white/20 flex flex-col items-center justify-center gap-1 hover:border-accent/50 transition-colors">
+                {/* Selected checkmark overlay */}
+                {isSelected && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/25 rounded-2xl">
+                    <div className="w-6 h-6 rounded-full bg-accent flex items-center justify-center shadow-md">
+                      <Check size={12} className="text-white" />
+                    </div>
+                  </div>
+                )}
+
+                {/* "Current" badge (only when not selected) */}
+                {isCurrent && !isSelected && (
+                  <div className="absolute bottom-1 left-1">
+                    <span className="text-xs bg-black/60 text-white px-1.5 py-0.5 rounded-md leading-none">
+                      {t('ChangeBackground.current')}
+                    </span>
+                  </div>
+                )}
+              </button>
+
+              {/* Delete button — custom backgrounds only, visible on hover */}
+              {!bg.isDefault && (
+                <button
+                  onClick={e => {
+                    e.stopPropagation();
+                    setPendingDeleteId(bg.id);
+                    setShowDeleteModal(true);
+                  }}
+                  className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-error flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10 shadow-md"
+                >
+                  <Trash2 size={10} className="text-white" />
+                </button>
+              )}
+
+              <p className="text-xs text-center text-gray-500 mt-1 truncate px-1">
+                {bg.name}
+              </p>
+            </div>
+          );
+        })}
+
+        {/* Add custom background tile */}
+        <div>
+          <label className="cursor-pointer block">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            <div className="w-full h-20 rounded-2xl border-2 border-dashed border-white/20 flex flex-col items-center justify-center gap-1 hover:border-accent/50 hover:bg-white/3 transition-all duration-200">
               <Plus size={18} className="text-gray-500" />
               <span className="text-xs text-gray-500">Add</span>
             </div>
           </label>
+          <p className="text-xs text-center text-gray-600 mt-1">Custom</p>
         </div>
+      </div>
 
-        {newSelected !== selectedBackgroundId ? (
-          <Button variant="primary" fullWidth onClick={handleSet}>
-            {t('ChangeBackground.setAsCurrent', 'Set as Current')}
-          </Button>
-        ) : (
-          <div className="flex items-center justify-center gap-2 text-success">
-            <CheckCircle size={16} />
-            <span className="text-sm">{t('ChangeBackground.current', 'Current background active')}</span>
-          </div>
-        )}
-      </GlassCard>
+      {/* ── Action Button ─────────────────────────────────────────────────── */}
+      {isCurrentActive ? (
+        <div className="flex items-center justify-center gap-2 py-3 glass rounded-2xl">
+          <Check size={16} className="text-success" />
+          <span className="text-sm font-medium text-success">
+            {t('ChangeBackground.current')}
+          </span>
+        </div>
+      ) : (
+        <Button variant="primary" size="lg" fullWidth onClick={handleSetAsCurrent}>
+          {t('ChangeBackground.setAsCurrent')}
+        </Button>
+      )}
 
+      {/* ── Delete Confirmation Modal ─────────────────────────────────────── */}
       <Modal
         isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-        title={t('ChangeBackground.deleteAlertTitle', 'Delete Background')}
+        onClose={() => { setShowDeleteModal(false); setPendingDeleteId(null); }}
+        title={t('ChangeBackground.deleteAlertTitle')}
         size="sm"
       >
         <p className="text-sm text-gray-400 mb-5">
-          {t('ChangeBackground.deleteAlertMessage', 'Are you sure you want to delete this background?')}
+          {t('ChangeBackground.deleteAlertMessage')}
         </p>
         <div className="flex gap-3">
-          <Button variant="glass" fullWidth onClick={() => setShowDeleteModal(false)}>
-            {t('ChangeBackground.cancel', 'Cancel')}
+          <Button
+            variant="glass"
+            fullWidth
+            onClick={() => { setShowDeleteModal(false); setPendingDeleteId(null); }}
+          >
+            {t('ChangeBackground.cancel')}
           </Button>
           <Button variant="danger" fullWidth onClick={handleDeleteConfirm}>
-            {t('ChangeBackground.delete', 'Delete')}
+            {t('ChangeBackground.delete')}
           </Button>
         </div>
       </Modal>

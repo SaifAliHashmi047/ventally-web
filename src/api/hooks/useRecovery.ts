@@ -36,5 +36,15 @@ export const useRecovery = () => {
     return res.data;
   };
 
-  return { getSobrietyStatus, startSobriety, logRelapse, getSobrietyHistory, getVenterHomeSummary };
+  const getProgressHistory = async (limit = 30, offset = 0) => {
+    const res = await apiInstance.get('sobriety/history', { params: { limit, offset } });
+    return res.data;
+  };
+
+  const getSummary = async (period: string = 'month') => {
+    const res = await apiInstance.get('sobriety/summary', { params: { period } });
+    return res.data;
+  };
+
+  return { getSobrietyStatus, startSobriety, logRelapse, getSobrietyHistory, getVenterHomeSummary, getProgressHistory, getSummary };
 };

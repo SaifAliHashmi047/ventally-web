@@ -5,7 +5,7 @@ export type PreferredLanguage = 'en' | 'pt' | 'fr' | 'es' | null;
 
 export interface CustomBackground {
   id: string;
-  uri: string;
+  uri: string;  // base64 data URI — persists across page refreshes
   name: string;
 }
 
@@ -18,7 +18,7 @@ interface AppState {
   } | null;
   preferredLanguage: PreferredLanguage;
   customBackgrounds: CustomBackground[];
-  selectedBackgroundId: string | null;
+  selectedBackgroundId: string;  // always has a value — defaults to '1'
 }
 
 const initialState: AppState = {
@@ -27,7 +27,7 @@ const initialState: AppState = {
   user: null,
   preferredLanguage: null,
   customBackgrounds: [],
-  selectedBackgroundId: null,
+  selectedBackgroundId: '1',  // Cosmic Dreams by default
 };
 
 const appSlice = createSlice({
@@ -57,7 +57,7 @@ const appSlice = createSlice({
       }
       state.customBackgrounds = state.customBackgrounds.filter(bg => bg.id !== action.payload);
     },
-    setSelectedBackgroundId: (state, action: PayloadAction<string | null>) => {
+    setSelectedBackgroundId: (state, action: PayloadAction<string>) => {
       state.selectedBackgroundId = action.payload;
     },
     toggleDarkMode: (state) => {

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Phone, MessageSquare, BookOpen, TrendingUp, ChevronRight, PenLine, Sparkles } from 'lucide-react';
+import { Phone, MessageSquare, ChevronRight, Bell } from 'lucide-react';
 import type { RootState } from '../../store/store';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
@@ -23,17 +23,9 @@ export const VenterDashboard = () => {
   const [todayMood, setTodayMood] = useState<any>(null);
   const [chartData, setChartData] = useState<any[]>([]);
   const [happyDays, setHappyDays] = useState(0);
-  const [streaks, setStreaks] = useState({ current: 0, longest: 0 });
   const [reflection, setReflection] = useState<any>(null);
   const [reflections, setReflections] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const greeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return t('Greeting.goodMorning');
-    if (hour < 17) return t('Greeting.goodAfternoon');
-    return t('Greeting.goodEvening');
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,10 +59,6 @@ export const VenterDashboard = () => {
           setHappyDays(moodMap['happy'] || 0);
         }
 
-        if (statsRes.status === 'fulfilled' && statsRes.value?.streaks) {
-          setStreaks(statsRes.value.streaks);
-        }
-
         if (reflectionRes.status === 'fulfilled' && reflectionRes.value?.saved) {
           const r = reflectionRes.value.reflection;
           const today = new Date().toLocaleDateString();
@@ -94,69 +82,75 @@ export const VenterDashboard = () => {
   const handleMoodSelect = (mood: MoodType) => {
     setSelectedMood(mood);
     if (todayMood) {
-      navigate('/venter/mood/log', { state: { editMode: true, selectedMood: mood, item: todayMood } });
+      navigate('/venter/mood/log', {
+        state: {
+          editMode: true,
+          selectedMood: mood,
+          item: {
+            mood: todayMood.mood_type,
+            note: todayMood.notes,
+            categories: todayMood.category ? [todayMood.category.toLowerCase()] : [],
+          },
+        },
+      });
     } else {
       navigate('/venter/mood/log', { state: { selectedMood: mood } });
     }
   };
 
-  const firstName = user?.firstName || user?.displayName?.split(' ')[0] || 'there';
+  const handleCall = () => {
+    navigate('/venter/finding-listener', { state: { type: 'call' } });
+  };
+
+  const handleChat = () => {
+    navigate('/venter/finding-listener', { state: { type: 'chat' } });
+  };
 
   return (
     <div className="page-wrapper animate-fade-in">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-sm text-gray-500 mb-1">{greeting()},</p>
-          <h1 className="text-3xl font-bold text-white tracking-tight">{firstName} 👋</h1>
-          <p className="text-gray-500 mt-1 text-sm">{t('VenterHome.subtitle')}</p>
+      {/* Header — matches RN HomeHeader with logo + notification icon */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-xl bg-gradient-primary flex items-center justify-center">
+            <div className="w-2.5 h-2.5 border-2 border-white rounded-full" />
+          </div>
+          <span className="text-lg font-bold text-white tracking-tight">{t('Home.title')}</span>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => navigate('/venter/notifications')}
-            className="w-10 h-10 glass rounded-2xl flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-          >
-            <span className="relative">
-              <Sparkles size={18} />
-            </span>
-          </button>
-        </div>
+        <button
+          onClick={() => navigate('/venter/notifications')}
+          className="w-10 h-10 glass rounded-2xl flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+        >
+          <Bell size={18} />
+        </button>
       </div>
 
-      {/* Reflection Button */}
-      <GlassCard
-        hover
-        onClick={() => navigate(reflection ? `/venter/reflections/${reflection.id}` : '/venter/reflections/add')}
-        className="cursor-pointer"
+      {/* Your Reflection Button — matches RN Button with title t('VenterHome.yourReflection') */}
+      <Button
+        variant="glass"
+        size="md"
+        fullWidth
+        onClick={() => {
+          if (reflection) {
+            navigate(`/venter/reflections/${reflection.id}`, { state: { reflection } });
+          } else {
+            navigate('/venter/reflections/add');
+          }
+        }}
+        className="mb-4"
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl glass-accent flex items-center justify-center">
-              <PenLine size={16} className="text-accent" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-white">
-                {reflection ? t('VenterHome.todaysReflection') : t('VenterHome.addReflection')}
-              </p>
-              {reflection && (
-                <p className="text-xs text-gray-500 mt-0.5 truncate max-w-xs">{reflection.reflection_text}</p>
-              )}
-            </div>
-          </div>
-          <ChevronRight size={16} className="text-gray-500" />
-        </div>
-      </GlassCard>
+        {t('VenterHome.yourReflection')}
+      </Button>
 
-      {/* Let's Vent */}
-      <div>
-        <h2 className="section-title mb-3">{t('VenterHome.letsVent')}</h2>
+      {/* Let's Vent Section */}
+      <div className="mb-6">
+        <p className="text-sm font-semibold text-white mb-3">{t('VenterHome.letsVent')}</p>
         <div className="grid grid-cols-2 gap-3">
           <Button
             variant="glass"
             size="lg"
             fullWidth
             leftIcon={<Phone size={18} />}
-            onClick={() => navigate('/venter/finding-listener', { state: { type: 'call' } })}
+            onClick={handleCall}
             className="justify-center"
           >
             {t('VenterHome.call')}
@@ -166,7 +160,7 @@ export const VenterDashboard = () => {
             size="lg"
             fullWidth
             leftIcon={<MessageSquare size={18} />}
-            onClick={() => navigate('/venter/finding-listener', { state: { type: 'chat' } })}
+            onClick={handleChat}
             className="justify-center"
           >
             {t('VenterHome.chat')}
@@ -174,17 +168,9 @@ export const VenterDashboard = () => {
         </div>
       </div>
 
-      {/* Mood Check-In */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="section-title">{t('VenterHome.moodCheckIn')}</h2>
-          <button
-            onClick={() => navigate('/venter/mood')}
-            className="text-xs text-gray-500 hover:text-white transition-colors flex items-center gap-1"
-          >
-            {t('VenterHome.seeAll')} <ChevronRight size={12} />
-          </button>
-        </div>
+      {/* Mood Check In */}
+      <div className="mb-6">
+        <p className="text-sm font-semibold text-white mb-3">{t('VenterHome.moodCheckIn')}</p>
         <MoodSelector
           selected={selectedMood}
           onSelect={handleMoodSelect}
@@ -192,44 +178,10 @@ export const VenterDashboard = () => {
         />
       </div>
 
-      {/* Streak + Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <GlassCard className="sm:col-span-2">
-          <div className="flex items-center gap-3 mb-1">
-            <span className="text-2xl">😊</span>
-            <div>
-              <p className="text-sm font-medium text-gray-500">{t('VenterHome.happyDays')}</p>
-              <p className="text-xl font-bold text-white">{happyDays}</p>
-            </div>
-          </div>
-        </GlassCard>
-        <GlassCard>
-          <p className="text-xs text-gray-500 mb-1">{t('VenterHome.currentStreak')}</p>
-          <p className="text-xl font-bold text-white">{streaks.current}</p>
-          <p className="text-xs text-gray-500 mt-1">{t('VenterHome.days')} {t('VenterHome.fire')}</p>
-        </GlassCard>
-      </div>
-
-      {/* Mood Chart */}
-      {chartData.length > 0 && (
-        <div>
-          <h2 className="section-title mb-3">{t('VenterHome.moodOverTime')}</h2>
-          <GlassCard>
-            <MoodBarChart data={chartData} />
-          </GlassCard>
-        </div>
-      )}
-
-      {/* Recent Reflections */}
-      <div>
+      {/* Reflections Section */}
+      <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="section-title">{t('VenterHome.reflections')}</h2>
-          <button
-            onClick={() => navigate('/venter/reflections')}
-            className="text-xs text-gray-500 hover:text-white transition-colors flex items-center gap-1"
-          >
-            {t('VenterHome.seeAll')} <ChevronRight size={12} />
-          </button>
+          <p className="text-sm font-semibold text-white">{t('VenterHome.reflections')}</p>
         </div>
 
         {loading ? (
@@ -244,58 +196,55 @@ export const VenterDashboard = () => {
               <GlassCard
                 key={r.id}
                 hover
+                bordered
                 onClick={() => navigate(`/venter/reflections/${r.id}`, { state: { reflection: r } })}
-                className="flex-shrink-0 w-56"
+                className="flex-shrink-0 w-56 cursor-pointer"
                 padding="sm"
                 rounded="2xl"
               >
-                <p className="text-sm text-white font-medium truncate-2 mb-2">{r.reflection_text}</p>
+                <p className="text-sm text-white font-medium line-clamp-2 mb-2">{r.reflection_text}</p>
                 <p className="text-xs text-gray-500">
-                  {new Date(r.reflection_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  {new Date(r.reflection_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
                 </p>
+                <div className="flex justify-end mt-1">
+                  <ChevronRight size={14} className="text-gray-500" />
+                </div>
               </GlassCard>
             ))}
           </div>
         ) : (
           <EmptyState
             title={t('VenterHome.noReflections')}
-            description={t('VenterHome.noReflectionsDesc')}
-            icon={<BookOpen size={22} />}
-            action={
-              <Button variant="accent" size="sm" onClick={() => navigate('/venter/reflections/add')}>
-                {t('VenterHome.addReflection')}
-              </Button>
-            }
+            description={t('VenterHome.noReflectionsDescription')}
+            icon={<MessageSquare size={22} />}
           />
         )}
+
+        {/* Streak / Happy Days Card — matches RN streakCard */}
+        <GlassCard bordered className="mt-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-400">{t('VenterHome.moods.happy')}</p>
+              <p className="text-sm font-medium text-white mt-0.5">
+                {happyDays === 1
+                  ? t('VenterHome.streakCard.totalHappyDays_one', { days: happyDays })
+                  : t('VenterHome.streakCard.totalHappyDays_other', { days: happyDays })}
+              </p>
+            </div>
+            <span className="text-2xl">😊</span>
+          </div>
+        </GlassCard>
       </div>
 
-      {/* Quick Actions */}
-      <div>
-        <h2 className="section-title mb-3">{t('VenterHome.quickAccess')}</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {[
-            { labelKey: 'VenterRecovery.dashboard.title', icon: TrendingUp, path: '/venter/recovery' },
-            { labelKey: 'VenterHome.moodTrends', icon: TrendingUp, path: '/venter/mood/trends' },
-            { labelKey: 'Navigation.tabs.wallet', icon: MessageSquare, path: '/venter/wallet' },
-            { labelKey: 'Subscription.title', icon: Sparkles, path: '/venter/subscription' },
-          ].map(({ labelKey, icon: Icon, path }) => (
-            <GlassCard
-              key={path}
-              hover
-              onClick={() => navigate(path)}
-              padding="sm"
-              rounded="2xl"
-              className="flex flex-col items-center gap-2 py-5 cursor-pointer"
-            >
-              <div className="w-10 h-10 glass rounded-2xl flex items-center justify-center text-primary">
-                <Icon size={18} />
-              </div>
-              <p className="text-xs font-medium text-gray-400 text-center">{t(labelKey)}</p>
-            </GlassCard>
-          ))}
+      {/* Mood Chart Section */}
+      {chartData.length > 0 && (
+        <div className="mb-6">
+          <p className="text-sm font-semibold text-white mb-3">{t('VenterHome.moodOverTime')}</p>
+          <GlassCard>
+            <MoodBarChart data={chartData} />
+          </GlassCard>
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
 import { useReflections } from '../../api/hooks/useReflections';
+import { toastSuccess, toastError } from '../../utils/toast';
 import { BookOpen, Edit, Trash2, Calendar } from 'lucide-react';
 
 export const VenterReflectionDetail = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const reflection = location.state?.reflection;
@@ -28,8 +31,11 @@ export const VenterReflectionDetail = () => {
     setSaving(true);
     try {
       await updateReflection(reflection.id, text);
+      toastSuccess(t('VenterHome.reflectionSuccess.message'));
       setEditMode(false);
-    } catch { /* ignore */ } finally {
+    } catch (e: any) {
+      toastError(e?.error || t('Common.somethingWentWrong'));
+    } finally {
       setSaving(false);
     }
   };
@@ -38,8 +44,11 @@ export const VenterReflectionDetail = () => {
     setDeleting(true);
     try {
       await deleteReflection(reflection.id);
+      toastSuccess(t('VenterHome.delete'));
       navigate('/venter/reflections');
-    } catch { /* ignore */ } finally {
+    } catch (e: any) {
+      toastError(e?.error || t('Common.somethingWentWrong'));
+    } finally {
       setDeleting(false);
     }
   };

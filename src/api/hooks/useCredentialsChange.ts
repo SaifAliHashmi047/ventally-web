@@ -24,8 +24,13 @@ export const useCredentialsChange = () => {
     return res.data;
   }, []);
 
-  const updatePassword = useCallback(async (current: string, newPass: string) => {
-    const res = await apiInstance.put('auth/password', { currentPassword: current, newPassword: newPass });
+  const updatePassword = useCallback(async (currentPassword: string, newPassword: string) => {
+    const res = await apiInstance.post('auth/change-password', { currentPassword, newPassword });
+    return res.data;
+  }, []);
+
+  const changePassword = useCallback(async (payload: { currentPassword: string; newPassword: string }) => {
+    const res = await apiInstance.post('auth/change-password', payload);
     return res.data;
   }, []);
 
@@ -51,6 +56,7 @@ export const useCredentialsChange = () => {
     changeEmail,
     changePhone,
     updatePassword,
+    changePassword,
     getTwoFactorSettings,
     updateTwoFactorSettings,
   };

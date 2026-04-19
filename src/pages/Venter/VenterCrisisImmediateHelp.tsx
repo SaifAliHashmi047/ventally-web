@@ -1,27 +1,56 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../store/store';
 import { Button } from '../../components/ui/Button';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Phone, MessageSquare, ArrowRight, Clock } from 'lucide-react';
+import socketService from '../../api/socketService';
 
 export const VenterCrisisImmediateHelp = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
+  const activeConversationId = useSelector((state: RootState) => state.call.activeConversationId);
+  const isChatActive = useSelector((state: RootState) => state.call.isChatActive);
+  const fromChat = location.state?.fromChat || false;
+
+  // End chat via socket if coming from chat
+  const endChatIfActive = async () => {
+    if (isChatActive && activeConversationId) {
+      try {
+        await socketService.connect();
+        socketService.emit('chat:end', { conversationId: activeConversationId });
+      } catch (e) {
+        console.log('[Crisis] End chat socket error (non-blocking):', e);
+      }
+    }
+  };
+
+  const handleCall988 = async () => {
+    await endChatIfActive();
+    window.location.href = 'tel:988';
+  };
+
+  const handleText988 = async () => {
+    await endChatIfActive();
+    window.location.href = 'sms:988';
+  };
 
   const resources = [
     {
       icon: Phone,
       title: t('Crisis.call988', 'Call 988'),
       description: t('Crisis.call988Desc', '24/7 Suicide & Crisis Lifeline'),
-      action: () => window.location.href = 'tel:988',
+      action: handleCall988,
       variant: 'primary' as const,
     },
     {
       icon: MessageSquare,
       title: t('Crisis.text988', 'Text 988'),
       description: t('Crisis.text988Desc', 'Text HELLO to 988 for chat support'),
-      action: () => window.location.href = 'sms:988',
+      action: handleText988,
       variant: 'glass' as const,
     },
   ];
@@ -30,7 +59,14 @@ export const VenterCrisisImmediateHelp = () => {
     <div className="page-wrapper animate-fade-in">
       <PageHeader
         title={t('Crisis.title', 'Crisis Support')}
-        onBack={() => navigate(-1)}
+        onBack={() => {
+          // If coming from chat, navigate to dashboard instead of back to chat
+          if (fromChat || isChatActive) {
+            navigate('/venter/dashboard', { replace: true });
+          } else {
+            navigate(-1);
+          }
+        }}
       />
 
       <div className="flex flex-col items-center text-center mb-8">

@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../../components/ui/Button';
 import { GlassCard } from '../../components/ui/GlassCard';
@@ -8,6 +8,8 @@ import { Info, Check, ArrowRight } from 'lucide-react';
 export const VenterCrisisDisclaimer = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
+  const fromChat = location.state?.fromChat || false;
 
   const points = [
     t('Crisis.disclaimer1', 'Ventally is not a substitute for professional mental health services.'),
@@ -20,7 +22,14 @@ export const VenterCrisisDisclaimer = () => {
     <div className="page-wrapper animate-fade-in">
       <PageHeader
         title={t('Crisis.title', 'Crisis Support')}
-        onBack={() => navigate(-1)}
+        onBack={() => {
+          // If coming from chat, navigate to dashboard instead of back to chat
+          if (fromChat) {
+            navigate('/venter/dashboard', { replace: true });
+          } else {
+            navigate(-1);
+          }
+        }}
       />
 
       <div className="flex flex-col items-center text-center mb-8">
@@ -52,7 +61,7 @@ export const VenterCrisisDisclaimer = () => {
           size="lg"
           fullWidth
           rightIcon={<ArrowRight size={20} />}
-          onClick={() => navigate('/venter/crisis-immediate-help')}
+          onClick={() => navigate('/venter/crisis-immediate-help', { state: { fromChat } })}
         >
           {t('Common.continue', 'Continue')}
         </Button>

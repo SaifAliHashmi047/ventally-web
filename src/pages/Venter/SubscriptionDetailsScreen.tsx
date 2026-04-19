@@ -6,6 +6,7 @@ import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
 import { CreditCard, CheckCircle2, AlertCircle } from 'lucide-react';
 import apiInstance from '../../api/apiInstance';
+import { toastSuccess, toastError } from '../../utils/toast';
 
 export const SubscriptionDetailsScreen = () => {
   const { t } = useTranslation();
@@ -28,12 +29,12 @@ export const SubscriptionDetailsScreen = () => {
   }, []);
 
   const handleCancel = async () => {
-    // Native has a logic to cancel
     try {
-      if(sub?.id) await apiInstance.post(`payments/cancel-subscription`);
+      await apiInstance.post(`payments/cancel-subscription`);
+      toastSuccess(t('SubscriptionDetails.cancelSuccess'));
       navigate(-1);
-    } catch {
-      /* ignore */
+    } catch (e: any) {
+      toastError(e?.error || t('Common.somethingWentWrong'));
     }
   };
 

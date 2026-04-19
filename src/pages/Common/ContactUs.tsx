@@ -1,97 +1,168 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import apiInstance from '../../api/apiInstance';
-import { MessageCircle, Mail, CheckCircle } from 'lucide-react';
+import { AccordionItem } from '../../components/Shared/AccordionItem';
+import {
+  Mail, Globe, Music2, Scale, ExternalLink
+} from 'lucide-react';
+import { cn } from '../../utils/cn';
 
-const TOPICS = ['Technical Issue', 'Account Problem', 'Billing Issue', 'Report Abuse', 'Feedback', 'Other'];
+// Social / contact links matching the RN app exactly
+const CONTACT_LINKS = [
+  {
+    key: 'website',
+    labelKey: 'Contact.website',
+    icon: Globe,
+    url: 'https://ventally.co/',
+  },
+  {
+    key: 'facebook',
+    labelKey: 'Contact.facebook',
+    icon: ExternalLink,
+    url: 'https://www.facebook.com/share/1DBvLkRmW4/?mibextid=wwXIfr',
+  },
+  {
+    key: 'instagram',
+    labelKey: 'Contact.instagram',
+    icon: ExternalLink,
+    url: 'https://www.instagram.com/ventally.co?igsh=bDBxaW42MzdmaTZn',
+  },
+  {
+    key: 'twitter',
+    labelKey: 'Contact.twitter',
+    icon: ExternalLink,
+    url: 'https://x.com/ventallyco',
+  },
+  {
+    key: 'tiktok',
+    labelKey: 'Contact.tiktok',
+    icon: Music2,
+    url: 'https://www.tiktok.com/@ventallyco?_r=1&_t=ZP-943pBMEKx1r',
+  },
+  {
+    key: 'appeal',
+    labelKey: 'Contact.appeal',
+    icon: Scale,
+    url: null, // internal navigation
+    internal: true,
+  },
+];
 
 export const ContactUs = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ topic: '', message: '' });
-  const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState('');
+  const [activeTab, setActiveTab] = useState<'faq' | 'contact'>('faq');
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
 
-  const handleSend = async () => {
-    if (!form.topic || !form.message.trim()) {
-      setError('Please select a topic and write a message.');
-      return;
-    }
-    setSending(true);
-    setError('');
-    try {
-      await apiInstance.post('contact-us', form);
-      setSent(true);
-    } catch (e: any) {
-      setError(e?.error || 'Failed to send. Please try again.'); } finally {
-      setSending(false);
+  const faqItems = useMemo(
+    () => (t('FAQ.items', { returnObjects: true }) as any[]) || [],
+    [t]
+  );
+
+  const handleContactLink = (link: typeof CONTACT_LINKS[0]) => {
+    if (link.internal) {
+      // Appeal screen — navigate internally
+      const userPath = window.location.pathname.split('/')[1]; // 'venter' | 'listener'
+      navigate(`/${userPath}/appeal`);
+    } else if (link.url) {
+      window.open(link.url, '_blank', 'noopener,noreferrer');
     }
   };
 
-  if (sent) {
-    return (
-      <div className="page-wrapper animate-fade-in">
-        <PageHeader title="Contact Us" onBack={() => navigate(-1)} />
-        <GlassCard bordered className="text-center py-10">
-          <div className="w-16 h-16 rounded-full bg-success/15 flex items-center justify-center mx-auto mb-4">
-            <CheckCircle size={28} className="text-success" />
-          </div>
-          <p className="text-lg font-bold text-white mb-2">Message Sent!</p>
-          <p className="text-sm text-gray-500 mb-6">Our team will get back to you within 24 hours.</p>
-          <Button variant="primary" onClick={() => navigate(-1)}>Done</Button>
-        </GlassCard>
+  const renderFaq = useCallback(() => (
+    <div className="space-y-3">
+      {/* FAQ header */}
+      <div className="text-center mb-4">
+        <h2 className="text-base font-semibold text-white">{t('Contact.faq')}</h2>
+        <p className="text-sm text-gray-500 mt-1">{t('FAQ.subtitle')}</p>
       </div>
-    );
-  }
+
+      {faqItems.map((item: any, index: number) => (
+        <GlassCard key={index} bordered padding="sm" rounded="2xl">
+          <AccordionItem
+            title={item.title}
+            isExpanded={expandedIndex === index}
+            onToggle={() => setExpandedIndex(prev => prev === index ? null : index)}
+          >
+            <p className="text-sm text-gray-400 leading-relaxed whitespace-pre-line">{item.description}</p>
+          </AccordionItem>
+        </GlassCard>
+      ))}
+    </div>
+  ), [expandedIndex, faqItems, t]);
+
+  const renderContact = useCallback(() => (
+    <div className="space-y-3">
+      {/* Contact header */}
+      <div className="text-center mb-4">
+        <h2 className="text-base font-semibold text-white">{t('Contact.title')}</h2>
+        <p className="text-sm text-gray-500 mt-1">{t('FAQ.subtitle')}</p>
+      </div>
+
+      {/* Email Us — prominent card */}
+      <GlassCard bordered className="flex flex-col items-center justify-center py-6 cursor-pointer hover:bg-white/5 transition-colors"
+        onClick={() => window.open('mailto:info@ventally.co', '_blank')}>
+        <Mail size={24} className="text-accent mb-2" />
+        <p className="text-sm font-medium text-white">{t('Contact.email')}</p>
+      </GlassCard>
+
+      {/* Social / other links */}
+      {CONTACT_LINKS.map((link) => {
+        const Icon = link.icon;
+        return (
+          <GlassCard
+            key={link.key}
+            bordered
+            hover
+            onClick={() => handleContactLink(link)}
+            className="cursor-pointer"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400 flex-shrink-0">
+                <Icon size={16} />
+              </div>
+              <span className="text-sm font-medium text-white">{t(link.labelKey)}</span>
+            </div>
+          </GlassCard>
+        );
+      })}
+    </div>
+  ), [t]);
 
   return (
     <div className="page-wrapper animate-fade-in">
-      <PageHeader title="Contact Us" onBack={() => navigate(-1)} />
+      <PageHeader title={t('Contact.title')} onBack={() => navigate(-1)} />
 
-      <GlassCard bordered>
-        <div className="flex items-center gap-3 mb-5">
-          <div className="w-10 h-10 rounded-2xl glass-accent flex items-center justify-center">
-            <MessageCircle size={18} className="text-accent" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-white">How can we help?</p>
-            <p className="text-xs text-gray-500">Typical response time: 24 hours</p>
-          </div>
-        </div>
+      {/* Tabs — matching RN SwipeableTabs */}
+      <div className="flex gap-1 glass rounded-2xl p-1 mb-6">
+        <button
+          onClick={() => setActiveTab('faq')}
+          className={cn(
+            'flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200',
+            activeTab === 'faq'
+              ? 'bg-white/10 text-white'
+              : 'text-gray-500 hover:text-gray-300'
+          )}
+        >
+          {t('Contact.faq')}
+        </button>
+        <button
+          onClick={() => setActiveTab('contact')}
+          className={cn(
+            'flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200',
+            activeTab === 'contact'
+              ? 'bg-white/10 text-white'
+              : 'text-gray-500 hover:text-gray-300'
+          )}
+        >
+          {t('Contact.title')}
+        </button>
+      </div>
 
-        <div className="space-y-4">
-          <div>
-            <p className="text-sm font-medium text-gray-400 mb-2">Topic</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {TOPICS.map(t => (
-                <button key={t} onClick={() => setForm(p => ({ ...p, topic: t }))}
-                  className={`px-3 py-2 rounded-xl text-xs font-medium text-left transition-all ${
-                    form.topic === t ? 'bg-accent/15 text-accent border border-accent/25' : 'glass text-gray-400 hover:bg-white/5'
-                  }`}
-                >{t}</button>
-              ))}
-            </div>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-gray-400 mb-1.5">Message</p>
-            <textarea
-              value={form.message}
-              onChange={e => { setForm(p => ({ ...p, message: e.target.value })); setError(''); }}
-              placeholder="Describe your issue or question in detail..."
-              className="input-field w-full h-36 resize-none"
-            />
-          </div>
-          {error && <p className="text-sm text-error">{error}</p>}
-        </div>
-      </GlassCard>
-
-      <Button variant="primary" size="lg" fullWidth loading={sending} leftIcon={<Mail size={16} />} onClick={handleSend}>
-        Send Message
-      </Button>
+      {/* Tab Content */}
+      {activeTab === 'faq' ? renderFaq() : renderContact()}
     </div>
   );
 };

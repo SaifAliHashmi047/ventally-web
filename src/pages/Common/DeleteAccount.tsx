@@ -9,6 +9,7 @@ import { Input } from '../../components/ui/Input';
 import { Modal } from '../../components/ui/Modal';
 import { logout } from '../../store/slices/userSlice';
 import { useAuth } from '../../api/hooks/useAuth';
+import { toastError } from '../../utils/toast';
 import { Trash2, AlertTriangle } from 'lucide-react';
 
 export const DeleteAccount = () => {
@@ -22,14 +23,15 @@ export const DeleteAccount = () => {
   const [error, setError] = useState('');
 
   const handleDelete = async () => {
-    if (!password) { setError('Please enter your password to confirm.'); return; }
+    if (!password) { setError(t('DeleteAccount.passwordRequired')); return; }
     setDeleting(true);
     try {
       await deleteAccount(password);
       dispatch(logout() as any);
       navigate('/login');
     } catch (e: any) {
-      setError(e?.error || 'Failed to delete account. Check your password.');
+      toastError(e?.error || t('Common.somethingWentWrong'));
+      setError(e?.error || t('Common.somethingWentWrong'));
     } finally {
       setDeleting(false);
     }

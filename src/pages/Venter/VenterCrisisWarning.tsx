@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../store/store';
@@ -9,12 +9,15 @@ import { PageHeader } from '../../components/ui/PageHeader';
 import { AlertTriangle, Check } from 'lucide-react';
 import { endChatSession, endCall } from '../../store/slices/callSlice';
 import { useChat } from '../../api/hooks/useChat';
+import socketService from '../../api/socketService';
 
 export const VenterCrisisWarning = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const { endConversation } = useChat();
+  const fromChat = location.state?.fromChat || false;
 
   const [understood, setUnderstood] = useState(false);
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
@@ -27,6 +30,10 @@ export const VenterCrisisWarning = () => {
     // End active chat/call if exists
     if (isChatActive && activeConversationId) {
       try {
+        // Emit socket event to notify other party
+        await socketService.connect();
+        socketService.emit('chat:end', { conversationId: activeConversationId });
+        // Call API to end
         await endConversation(activeConversationId);
       } catch (e) {
         console.log('[Crisis] End conversation error (non-blocking):', e);
@@ -41,14 +48,21 @@ export const VenterCrisisWarning = () => {
 
   const handleContact988 = () => {
     setShowEmergencyModal(false);
-    navigate('/venter/crisis-disclaimer');
+    navigate('/venter/crisis-disclaimer', { state: { fromChat } });
   };
 
   return (
     <div className="page-wrapper animate-fade-in">
       <PageHeader
         title=""
-        onBack={() => navigate(-1)}
+        onBack={() => {
+          // If coming from chat, navigate to dashboard instead of back
+          if (fromChat || isChatActive) {
+            navigate('/venter/dashboard', { replace: true });
+          } else {
+            navigate(-1);
+          }
+        }}
       />
 
       <div className="flex-1 flex flex-col items-center justify-center px-4">

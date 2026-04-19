@@ -12,6 +12,7 @@ import type { RootState } from '../../store/store';
 import { useSelector as useReduxSelector } from 'react-redux';
 import { Phone, MessageSquare, ChevronRight, DollarSign, Clock, TrendingUp, Bell, Sparkles } from 'lucide-react';
 import { cn } from '../../utils/cn';
+import { toastError } from '../../utils/toast';
 
 export const ListenerDashboard = () => {
   const { t } = useTranslation();
@@ -53,8 +54,8 @@ export const ListenerDashboard = () => {
         await goOnline();
         setIsAvailable(true);
       }
-    } catch (e) {
-      console.error('Failed to update availability', e);
+    } catch (e: any) {
+      toastError(e?.error || t('Common.somethingWentWrong'));
     } finally {
       setLoadingToggle(false);
     }

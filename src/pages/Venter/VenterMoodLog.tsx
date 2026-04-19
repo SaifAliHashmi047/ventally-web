@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
@@ -6,173 +6,236 @@ import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
 import { MoodSelector, type MoodType, MOOD_CONFIG } from '../../components/ui/MoodSelector';
 import { useMood } from '../../api/hooks/useMood';
+import { toastSuccess, toastError } from '../../utils/toast';
 
-const CATEGORIES = ['Work', 'Family', 'Health', 'Unknown'];
+// Category options — exact match with RN app keys
+const CATEGORY_OPTIONS = [
+  { id: 'work',    labelKey: 'VenterMoodLog.categories.work' },
+  { id: 'family',  labelKey: 'VenterMoodLog.categories.family' },
+  { id: 'health',  labelKey: 'VenterMoodLog.categories.health' },
+  { id: 'unknown', labelKey: 'VenterMoodLog.categories.unknown' },
+];
 
 export const VenterMoodLog = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const { logMood, updateMood, getTodayMood } = useMood();
+  const { getTodayMood, logMood, updateMood } = useMood();
+  const submittingRef = useRef(false);
+
   const state = location.state as any;
 
-  const [mood, setMood] = useState<MoodType | null>(state?.selectedMood ?? null);
-  const [note, setNote] = useState(state?.item?.note ?? '');
-  const [categories, setCategories] = useState<string[]>(state?.item?.categories ?? []);
-  const [saving, setSaving] = useState(false);
-  const [loadingToday, setLoadingToday] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(!!state?.editMode);
-  const [moodId, setMoodId] = useState(state?.item?.id);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // ── State ──────────────────────────────────────────────────────────────────
+  const [selectedMood, setSelectedMood] = useState<MoodType | null>(
+    (state?.selectedMood as MoodType) ?? null
+  );
+  // Single-select category — matches RN behaviour
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    state?.item?.categories?.[0] ?? null
+  );
+  const [notes, setNotes] = useState<string>(state?.item?.note ?? '');
+  const [isEditMode, setIsEditMode] = useState<boolean>(!!state?.editMode);
+  const [loading, setLoading] = useState(false);
 
+  // ── On mount: check if mood already logged today ───────────────────────────
   useEffect(() => {
-    const fetchTodayMood = async () => {
-      // If we weren't passed editMode, check if we already logged today
-      if (!state?.editMode) {
-        setLoadingToday(true);
-        try {
-          const res = await getTodayMood();
-          if (res?.mood) {
-            setIsEditMode(true);
-            setMoodId(res.mood.id);
-            setMood(res.mood.mood_type as MoodType);
-            setNote(res.mood.notes || '');
-            if (res.mood.category) setCategories([res.mood.category]);
+    // If we were already told it's edit mode from the dashboard, skip the check
+    if (state?.editMode) return;
+
+    const checkTodayMood = async () => {
+      setLoading(true);
+      try {
+        const res = await getTodayMood();
+        if (res?.mood) {
+          // Mood already logged → switch to edit mode silently
+          setIsEditMode(true);
+          // Only pre-fill mood if none was passed via navigation state
+          if (!state?.selectedMood) {
+            setSelectedMood(res.mood.mood_type?.toLowerCase() as MoodType);
           }
-        } catch {
-          // ignore, no mood logged today
-        } finally {
-          setLoadingToday(false);
+          setNotes(res.mood.notes || '');
+          if (res.mood.category) {
+            setSelectedCategory(res.mood.category.toLowerCase());
+          }
         }
+      } catch {
+        // No mood logged today — stay in log mode
+      } finally {
+        setLoading(false);
       }
     };
-    fetchTodayMood();
+
+    checkTodayMood();
   }, []);
 
-  const toggleCategory = (cat: string) => {
-    setCategories(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
+  // ── Category toggle (single-select, same as RN) ────────────────────────────
+  const handleCategorySelect = (id: string) => {
+    setSelectedCategory(prev => (prev === id ? null : id));
   };
 
+  // ── Save / Update ──────────────────────────────────────────────────────────
   const handleSave = async () => {
-    if (!mood) return;
-    setSaving(true);
-    setError(null);
+    if (!selectedMood) {
+      toastError(t('VenterMoodLog.errors.selectMoodAndCategory'));
+      return;
+    }
+    if (submittingRef.current) return;
+    submittingRef.current = true;
+
+    const category = selectedCategory || 'unknown';
+
+    // Capitalise first letter to match API expectation: 'happy' → 'Happy'
+    const capitalize = (s: string) =>
+      s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+
+    const payload = {
+      mood_type: capitalize(selectedMood),
+      category:  capitalize(category),
+      notes:     notes.trim(),
+    };
+
     try {
-      if (isEditMode && moodId) {
-        await updateMood(moodId, { mood_type: mood, notes: note, category: categories[0] });
+      if (isEditMode) {
+        // PUT mood/today
+        await updateMood('today', payload);
+        toastSuccess(t('VenterMoodLog.success.updated'));
       } else {
-        await logMood({ mood_type: mood, notes: note, category: categories[0] });
+        try {
+          // POST mood/log
+          await logMood(payload);
+          toastSuccess(t('VenterMoodLog.success.logged'));
+        } catch (logErr: any) {
+          // 409 = already logged today → auto-switch to update
+          if (logErr?.statusCode === 409) {
+            await updateMood('today', payload);
+            toastSuccess(t('VenterMoodLog.success.updated'));
+          } else {
+            throw logErr;
+          }
+        }
       }
-      setShowSuccess(true);
-      setTimeout(() => {
-        navigate(-1);
-      }, 1500);
-    } catch (e: any) {
-      setError(e?.error || e?.message || 'Failed to save mood');
-      console.error('Mood save error:', e);
+
+      // Navigate back after a short delay so the toast is visible
+      setTimeout(() => navigate(-1), 1200);
+    } catch (err: any) {
+      const statusCode = err?.statusCode;
+      if (statusCode === 403) {
+        toastError(t('Common.somethingWentWrong'));
+      } else {
+        toastError(err?.error || err?.message || t('Common.somethingWentWrong'));
+      }
     } finally {
-      setSaving(false);
+      submittingRef.current = false;
     }
   };
 
-  const selectedConfig = mood ? MOOD_CONFIG[mood] : null;
+  // ── Derived ────────────────────────────────────────────────────────────────
+  const moodConfig = selectedMood ? MOOD_CONFIG[selectedMood] : null;
 
-  if (loadingToday) {
-    return <div className="page-wrapper flex items-center justify-center min-h-screen text-gray-500">Checking today's mood...</div>;
-  }
+  const title = isEditMode
+    ? t('VenterMoodLog.editTitle')
+    : t('VenterMoodLog.title');
 
   return (
-    <div className="page-wrapper animate-fade-in relative overflow-hidden">
-      <PageHeader title={isEditMode ? t('VenterMoodLog.editTitle') : t('VenterMoodLog.title')} />
+    <div className="page-wrapper animate-fade-in">
+      <PageHeader title={title} onBack={() => navigate(-1)} />
 
-      {error && (
-        <div className="bg-error/10 border border-error/30 text-error px-4 py-3 rounded-2xl mb-4 text-sm">
-          {error}
-        </div>
-      )}
-
-      {/* Mood Indicator */}
-      {selectedConfig && (
-        <div className="flex items-center gap-3 py-2">
-          <span className="text-5xl">{selectedConfig.emoji}</span>
+      {/* ── Mood indicator ─────────────────────────────────────────────────── */}
+      {moodConfig && (
+        <div className="flex items-center gap-3 py-1 mb-2">
+          <span className="text-5xl">{moodConfig.emoji}</span>
           <div>
-            <p className="text-xl font-bold" style={{ color: selectedConfig.text }}>{selectedConfig.label}</p>
+            <p className="text-xl font-bold" style={{ color: moodConfig.text }}>
+              {moodConfig.label}
+            </p>
             <p className="text-sm text-gray-500">{t('VenterMoodLog.subtitle')}</p>
           </div>
         </div>
       )}
 
-      {/* Mood Selector */}
-      <div>
-        <p className="section-label mb-3">{t('VenterMoodLog.mood', 'Select Mood')}</p>
-        <MoodSelector selected={mood} onSelect={setMood} />
-      </div>
+      {/* ── Mood selector ──────────────────────────────────────────────────── */}
+      <MoodSelector
+        selected={selectedMood}
+        onSelect={setMood => setSelectedMood(setMood)}
+        disabled={loading}
+      />
 
-      {/* Categories */}
-      <div>
-        <p className="section-label mb-3">{t('VenterMoodLog.whatsGoingOn')}</p>
-        <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map(cat => (
-            <button
-              key={cat}
-              onClick={() => toggleCategory(cat)}
-              className={`px-4 py-2 rounded-2xl text-sm font-medium transition-all ${
-                categories.includes(cat)
-                ? 'border text-white'
-                : 'glass text-gray-400 hover:bg-white/5'
-              }`}
-              style={categories.includes(cat) ? {
-                background: selectedConfig ? `${selectedConfig.bg}20` : 'rgba(194,174,191,0.15)',
-                color: selectedConfig?.text,
-                borderColor: selectedConfig?.bg,
-              } : {}}
-            >
-              {t(`VenterMoodLog.categories.${cat.toLowerCase().replace(' ', '')}`, cat)}
-            </button>
-          ))}
+      {/* ── What's going on + categories + notes ──────────────────────────── */}
+      <GlassCard bordered>
+        {/* What's going on */}
+        <p className="text-sm font-medium text-white text-center mb-4">
+          {t('VenterMoodLog.whatsGoingOn')}
+        </p>
+
+        {/* Categories — single-select, matches RN */}
+        <div className="flex flex-wrap gap-2 mb-5">
+          {CATEGORY_OPTIONS.map(cat => {
+            const isSelected = selectedCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => handleCategorySelect(cat.id)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all border ${
+                  isSelected
+                    ? 'text-white'
+                    : 'glass text-gray-400 border-white/10 hover:bg-white/5'
+                }`}
+                style={
+                  isSelected
+                    ? {
+                        background: 'rgba(209,242,226,0.15)',
+                        borderColor: '#68BDA1',
+                        color: '#68BDA1',
+                      }
+                    : {}
+                }
+              >
+                {t(cat.labelKey)}
+              </button>
+            );
+          })}
         </div>
-      </div>
 
-      {/* Note */}
-      <div>
-        <p className="section-label mb-3">{t('VenterMoodLog.notes')} (optional)</p>
-        <textarea
-          value={note}
-          onChange={e => setNote(e.target.value)}
-          placeholder={t('VenterMoodLog.notesPlaceholder')}
-          className="input-field w-full h-32 resize-none"
-          maxLength={500}
-        />
-        <p className="text-xs text-gray-600 text-right mt-1">{note.length}/500</p>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3 mt-6">
-        <Button variant="ghost" size="lg" onClick={() => navigate(-1)} disabled={saving}>
-          {t('VenterMoodLog.cancel', 'Cancel')}
-        </Button>
-        <Button
-          variant="primary"
-          size="lg"
-          loading={saving}
-          disabled={!mood || showSuccess}
-          onClick={handleSave}
+        {/* Notes textarea */}
+        <div
+          className="rounded-2xl border border-white/10 overflow-hidden"
+          style={{ background: 'rgba(255,255,255,0.06)' }}
         >
-          {isEditMode ? t('VenterMoodLog.updateMoodLog', 'Update') : t('VenterMoodLog.logMood', 'Save')}
-        </Button>
-      </div>
-
-      {showSuccess && (
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-6 animate-fade-in z-50">
-          <GlassCard className="text-center w-full max-w-xs transform animate-scale-up border-success/30 rounded-3xl p-8">
-            <div className="w-20 h-20 bg-success/20 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-success text-success text-4xl">
-              ✓
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">Mood Logged</h3>
-            <p className="text-sm text-gray-400">Your reflection has been safely saved.</p>
-          </GlassCard>
+          <textarea
+            value={notes}
+            onChange={e => setNotes(e.target.value)}
+            placeholder={t('VenterMoodLog.notesPlaceholder')}
+            className="w-full h-28 resize-none bg-transparent px-4 py-3 text-sm text-white placeholder-gray-500 outline-none"
+            maxLength={500}
+          />
         </div>
-      )}
+        <p className="text-xs text-gray-600 text-right mt-1">{notes.length}/500</p>
+      </GlassCard>
+
+      {/* ── Action buttons ─────────────────────────────────────────────────── */}
+      <Button
+        variant="primary"
+        size="lg"
+        fullWidth
+        loading={loading}
+        disabled={!selectedMood || loading}
+        onClick={handleSave}
+      >
+        {isEditMode
+          ? t('VenterMoodLog.updateMoodLog')
+          : t('VenterMoodLog.logMood')}
+      </Button>
+
+      <Button
+        variant="glass"
+        size="lg"
+        fullWidth
+        disabled={loading}
+        onClick={() => navigate(-1)}
+        className="mt-2"
+      >
+        {t('VenterMoodLog.cancel')}
+      </Button>
     </div>
   );
 };

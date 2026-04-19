@@ -140,7 +140,7 @@ export const FindingListener = () => {
 
       hasNavigated.current = true;
       const conversationId = data.conversationId || data.conversation?.id;
-      navigate(`/venter/chat/${conversationId}`, { state: { chat: data } });
+      navigate(`/venter/chat/${conversationId}`, { replace: true, state: { chat: data } });
     });
 
     return () => {

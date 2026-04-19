@@ -11,6 +11,7 @@ import { sessionStarted, chatSessionStarted } from '../../store/slices/callSlice
 import { setSessionInfo } from '../../store/slices/sessionSlice';
 import type { RootState } from '../../store/store';
 import apiInstance from '../../api/apiInstance';
+import { toastError } from '../../utils/toast';
 import { Phone, MessageSquare, User } from 'lucide-react';
 
 export const ListenerRequests = () => {
@@ -74,8 +75,8 @@ export const ListenerRequests = () => {
       dispatch(removeRequest(req.id));
 
       navigate(`/listener/chat/${conversationId}`, { state: { chat: chatData } });
-    } catch {
-      /* ignore */
+    } catch (e: any) {
+      toastError(e?.error || t('Common.somethingWentWrong'));
     }
   };
 
@@ -87,8 +88,8 @@ export const ListenerRequests = () => {
         await apiInstance.post(`conversations/${req.id}/decline`);
       }
       dispatch(removeRequest(req.id));
-    } catch {
-      /* ignore */
+    } catch (e: any) {
+      toastError(e?.error || t('Common.somethingWentWrong'));
     }
   };
 

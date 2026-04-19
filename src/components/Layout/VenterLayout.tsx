@@ -3,30 +3,28 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { ReactNode } from 'react';
 import {
-  Home, MessageSquare, Bell, Settings, LogOut, Menu, X,
-  Wallet, Brain, BookOpen, TrendingUp, ChevronRight, User, Shield
+  Home, MessageSquare, Phone, Wallet, Settings,
+  Menu, X, ChevronRight, LogOut
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/slices/userSlice';
 import type { RootState } from '../../store/store';
 import { cn } from '../../utils/cn';
+import { getBackgroundStyle } from '../../utils/backgrounds';
 
 interface NavItem {
   path: string;
-  label: string;
+  labelKey: string;
   icon: React.ComponentType<any>;
-  badge?: number;
 }
 
+// STRICT: Only these 5 items as per requirements
 const NAV_ITEMS: NavItem[] = [
-  { path: '/venter/home', label: 'Navigation.tabs.home', icon: Home },
-  { path: '/venter/chat', label: 'Navigation.tabs.messages', icon: MessageSquare },
-  { path: '/venter/mood', label: 'VenterHome.moodCheckIn', icon: Brain },
-  { path: '/venter/reflections', label: 'VenterHome.reflections', icon: BookOpen },
-  { path: '/venter/recovery', label: 'VenterRecovery.dashboard.title', icon: TrendingUp },
-  { path: '/venter/wallet', label: 'Navigation.tabs.wallet', icon: Wallet },
-  { path: '/venter/notifications', label: 'Notifications.title', icon: Bell },
-  { path: '/venter/settings', label: 'Navigation.tabs.settings', icon: Settings },
+  { path: '/venter/home',             labelKey: 'Navigation.tabs.home',     icon: Home },
+  { path: '/venter/chat',             labelKey: 'Navigation.tabs.messages', icon: MessageSquare },
+  { path: '/venter/finding-listener', labelKey: 'Navigation.tabs.call',     icon: Phone },
+  { path: '/venter/wallet',           labelKey: 'Navigation.tabs.wallet',   icon: Wallet },
+  { path: '/venter/settings',         labelKey: 'Navigation.tabs.settings', icon: Settings },
 ];
 
 interface VenterLayoutProps {
@@ -39,18 +37,52 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const user = useSelector((state: RootState) => state.user.user as any);
+  const selectedBackgroundId = useSelector(
+    (state: RootState) => (state.app as any)?.selectedBackgroundId ?? '1'
+  );
+  const customBackgrounds = useSelector(
+    (state: RootState) => (state.app as any)?.customBackgrounds ?? []
+  );
+
+  // Compute background style from Redux state
+  const bgStyle = getBackgroundStyle(selectedBackgroundId, customBackgrounds);
 
   const handleLogout = () => {
     dispatch(logout() as any);
     navigate('/login');
   };
 
-  const isActive = (path: string) =>
-    location.pathname === path || location.pathname.startsWith(path + '/');
+  const isActive = (path: string) => {
+    if (path === '/venter/finding-listener') {
+      return (
+        location.pathname.startsWith('/venter/finding-listener') ||
+        location.pathname.startsWith('/venter/call/')
+      );
+    }
+    return location.pathname === path || location.pathname.startsWith(path + '/');
+  };
 
   return (
-    <div className="flex min-h-screen bg-bg-deep">
+    <div className="flex min-h-screen relative">
+      {/* ── Fixed background layer — sits behind everything ── */}
+      <div
+        className="fixed inset-0 z-0"
+        style={{
+          ...bgStyle,
+          backgroundAttachment: 'fixed',
+          backgroundColor: '#0a0a0a',
+        }}
+      />
+      {/* ── Dark overlay — keeps theme colors consistent regardless of bg image ── */}
+      <div
+        className="fixed inset-0 z-0"
+        style={{ background: 'rgba(0, 0, 0, 0.55)' }}
+      />
+
+      {/* All content sits above the background layers */}
+      <div className="relative z-10 flex w-full min-h-screen">
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
@@ -68,6 +100,7 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
           'lg:translate-x-0 lg:static lg:z-auto',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         )}
+        style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}
       >
         {/* Logo */}
         <div className="flex items-center gap-3 px-6 pt-8 pb-8">
@@ -80,7 +113,7 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
           </div>
         </div>
 
-        {/* Nav */}
+        {/* Nav — STRICT 5 items only */}
         <nav className="flex-1 px-3 space-y-1 overflow-y-auto scrollbar-hide">
           {NAV_ITEMS.map((item) => {
             const active = isActive(item.path);
@@ -93,35 +126,15 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
                 className={cn('nav-link', active && 'active')}
               >
                 <Icon size={18} />
-                <span>{t(item.label)}</span>
-                {item.badge ? (
-                  <span className="ml-auto badge badge-error text-xs">{item.badge}</span>
-                ) : active ? (
-                  <ChevronRight size={14} className="ml-auto opacity-50" />
-                ) : null}
+                <span>{t(item.labelKey)}</span>
+                {active && <ChevronRight size={14} className="ml-auto opacity-50" />}
               </Link>
             );
           })}
         </nav>
 
-        {/* User Footer */}
-        <div className="px-3 pb-6 pt-4 border-t border-white/5 space-y-1">
-          <Link
-            to="/venter/profile"
-            onClick={() => setSidebarOpen(false)}
-            className={cn('nav-link', isActive('/venter/profile') && 'active')}
-          >
-            <User size={18} />
-            <span>{t('Profile.title')}</span>
-          </Link>
-          <Link
-            to="/venter/security"
-            onClick={() => setSidebarOpen(false)}
-            className={cn('nav-link', isActive('/venter/security') && 'active')}
-          >
-            <Shield size={18} />
-            <span>{t('Security.title')}</span>
-          </Link>
+        {/* Logout Footer */}
+        <div className="px-3 pb-6 pt-4 border-t border-white/5">
           <button
             onClick={handleLogout}
             className="nav-link w-full text-left text-red-400 hover:text-red-300 hover:bg-red-500/8"
@@ -133,7 +146,14 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
       </aside>
 
       {/* Mobile Top Bar */}
-      <div className="fixed top-0 left-0 right-0 z-30 h-16 glass border-b border-white/8 flex items-center justify-between px-4 lg:hidden">
+      <div
+        className="fixed top-0 left-0 right-0 z-30 h-16 border-b border-white/8 flex items-center justify-between px-4 lg:hidden"
+        style={{
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          background: 'rgba(0,0,0,0.4)',
+        }}
+      >
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gradient-primary flex items-center justify-center">
             <div className="w-2.5 h-2.5 border-2 border-white rounded-full" />
@@ -154,6 +174,7 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
           {children}
         </div>
       </main>
+      </div>
     </div>
   );
 };

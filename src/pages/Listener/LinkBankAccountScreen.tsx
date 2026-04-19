@@ -6,6 +6,7 @@ import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { Lock } from 'lucide-react';
 import apiInstance from '../../api/apiInstance';
+import { toastSuccess, toastError } from '../../utils/toast';
 
 export const LinkBankAccountScreen = () => {
   const { t } = useTranslation();
@@ -16,12 +17,11 @@ export const LinkBankAccountScreen = () => {
   const handleSave = async () => {
     setLoading(true);
     try {
-      // API call to link bank account
       await apiInstance.post('payments/payout-methods/add', form);
+      toastSuccess(t('Common.operationSuccess'));
       navigate(-1);
-    } catch {
-      // Mock success for now as per gap recovery
-      navigate(-1);
+    } catch (e: any) {
+      toastError(e?.error || t('Common.somethingWentWrong'));
     } finally {
       setLoading(false);
     }
