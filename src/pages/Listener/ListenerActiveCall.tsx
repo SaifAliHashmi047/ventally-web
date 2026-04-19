@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Mic, MicOff, PhoneOff, Plus, Heart } from 'lucide-react';
+import socketService from '../../api/socketService';
 
 const formatDuration = (seconds: number): string => {
   const mins = Math.floor(seconds / 60);
@@ -14,6 +15,7 @@ const formatDuration = (seconds: number): string => {
 export const ListenerActiveCall = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { roomId } = useParams<{ roomId: string }>();
 
   const [seconds, setSeconds] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
@@ -21,6 +23,9 @@ export const ListenerActiveCall = () => {
   const [showSessionEndedModal, setShowSessionEndedModal] = useState(false);
 
   useEffect(() => {
+    // Connect socket when entering call
+    socketService.connect();
+    
     const timer = setInterval(() => {
       setSeconds(prev => prev + 1);
     }, 1000);
@@ -37,9 +42,24 @@ export const ListenerActiveCall = () => {
     
     setTimeout(() => {
       setShowSessionEndedModal(false);
-      navigate('/listener/session/feedback'); // Note: Make sure route exists
+      navigate('/listener/session/feedback', { state: { type: 'call' } });
     }, 2000);
   };
+
+  // Listen for remote end via socket (when other party ends the call)
+  useEffect(() => {
+    if (!roomId) return;
+
+    const handleCallEnded = (data: any) => {
+      console.log('[ListenerActiveCall] call:ended from socket:', data);
+      navigate('/listener/session/feedback', { replace: true, state: { type: 'call' } });
+    };
+
+    socketService.on('call:ended', handleCallEnded);
+    return () => {
+      socketService.off('call:ended', handleCallEnded);
+    };
+  }, [roomId, navigate]);
 
   return (
     <div className="page-wrapper animate-fade-in relative min-h-screen flex flex-col items-center pt-10">

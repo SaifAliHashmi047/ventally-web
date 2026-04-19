@@ -10,8 +10,10 @@ import type { RootState } from '../../store/store';
 export const SessionRating = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { submitRating } = useSessions();
+  const location = useLocation();
+  const { submitFeedback } = useSessions();
   const user = useSelector((state: RootState) => state.user.user as any);
+  const session = useSelector((state: RootState) => state.session);
   const role = user?.userType || 'venter';
 
   const [rating, setRating] = useState(0);
@@ -19,12 +21,23 @@ export const SessionRating = () => {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
 
+  const { type = 'chat', chat } = location.state || {};
+
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      await submitRating(id!, rating, review || undefined);
+      // Use reviews endpoint like mobile app
+      const revieweeId = session?.listenerId || chat?.listener?.userId || chat?.otherParticipant?.userId;
+      await submitFeedback(id!, {
+        rating,
+        comment: review || undefined,
+        sessionType: type,
+        revieweeId,
+      });
       setDone(true);
-    } catch { /* ignore */ } finally {
+    } catch (err) {
+      console.error('Rating submission error:', err);
+    } finally {
       setSubmitting(false);
     }
   };

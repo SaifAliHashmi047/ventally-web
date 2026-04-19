@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store';
-import { Mic, MicOff, Volume2, VolumeX, Phone, MessageSquare, Clock } from 'lucide-react';
+import { Mic, MicOff, Volume2, VolumeX, Phone } from 'lucide-react';
 import { GlassCard } from '../../components/ui/GlassCard';
-import { Button } from '../../components/ui/Button';
 import apiInstance from '../../api/apiInstance';
+import socketService from '../../api/socketService';
 
 export const ActiveCall = () => {
   const { roomId } = useParams<{ roomId: string }>();
@@ -26,6 +26,9 @@ export const ActiveCall = () => {
   }, [callStatus]);
 
   useEffect(() => {
+    // Connect socket when entering call
+    socketService.connect();
+    
     // Simulated connection — replace with actual WebRTC/Agora signaling
     const timer = setTimeout(() => setCallStatus('connected'), 2000);
     return () => clearTimeout(timer);
@@ -39,10 +42,25 @@ export const ActiveCall = () => {
 
   const handleEndCall = async () => {
     try {
-      await apiInstance.post(`sessions/${roomId}/end`);
+      await apiInstance.post(`calls/${roomId}/end`);
     } catch { /* ignore */ }
-    navigate(`/${role}/session/${roomId}/feedback`, { replace: true });
+    navigate(`/${role}/session/${roomId}/feedback`, { replace: true, state: { type: 'call' } });
   };
+
+  // Listen for remote end via socket (when other party ends the call)
+  useEffect(() => {
+    if (!roomId) return;
+
+    const handleCallEnded = (data: any) => {
+      console.log('[ActiveCall] call:ended from socket:', data);
+      navigate(`/${role}/session/${roomId}/feedback`, { replace: true, state: { type: 'call' } });
+    };
+
+    socketService.on('call:ended', handleCallEnded);
+    return () => {
+      socketService.off('call:ended', handleCallEnded);
+    };
+  }, [roomId, navigate, role]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-between py-12 px-4 bg-bg-deep"

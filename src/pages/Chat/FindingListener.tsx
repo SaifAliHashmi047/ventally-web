@@ -139,7 +139,8 @@ export const FindingListener = () => {
       }));
 
       hasNavigated.current = true;
-      navigate('/venter/chat/session', { state: { chat: data } });
+      const conversationId = data.conversationId || data.conversation?.id;
+      navigate(`/venter/chat/${conversationId}`, { state: { chat: data } });
     });
 
     return () => {

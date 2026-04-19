@@ -95,14 +95,20 @@ class SocketService {
       console.warn('[Socket] not connected, trying to reconnect before emit:', event);
       this.connect()
         .then(() => {
-          callback
-            ? this.socket!.emit(event, data, callback)
-            : this.socket!.emit(event, data);
+          if (callback) {
+            this.socket!.emit(event, data, callback);
+          } else {
+            this.socket!.emit(event, data);
+          }
         })
         .catch((err) => console.error('[Socket] emit failed:', event, err));
       return;
     }
-    callback ? this.socket.emit(event, data, callback) : this.socket.emit(event, data);
+    if (callback) {
+      this.socket.emit(event, data, callback);
+    } else {
+      this.socket.emit(event, data);
+    }
   }
 
   disconnect(): void {

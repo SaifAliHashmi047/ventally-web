@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { clearTokens } from '../../api/apiInstance';
+import { clearTokens, getAccessToken, getRefreshToken } from '../../api/apiInstance';
 
 
 export interface User {
@@ -47,6 +47,18 @@ const initialState: UserState = {
   isAuthenticated: false,
 };
 
+/** Initialize auth state: check localStorage for tokens without API call */
+export const initializeAuth = createAsyncThunk(
+  'user/initializeAuth',
+  async () => {
+    const accessToken = await getAccessToken();
+    const refreshToken = await getRefreshToken();
+    // Just check if tokens exist in storage - don't call API
+    const isAuthenticated = !!(accessToken && refreshToken);
+    return { isAuthenticated };
+  }
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -79,6 +91,11 @@ const userSlice = createSlice({
       const current = state.user.balance ?? 0;
       state.user.balance = current + action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(initializeAuth.fulfilled, (state, action) => {
+      state.isAuthenticated = action.payload.isAuthenticated;
+    });
   },
 });
 

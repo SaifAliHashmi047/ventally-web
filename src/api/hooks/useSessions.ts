@@ -11,12 +11,22 @@ export const useSessions = () => {
     return res.data;
   };
 
+  // Submit feedback - matches mobile app reviews endpoint
   const submitFeedback = async (sessionId: string, payload: {
     rating?: number;
     comment?: string;
     topics?: string[];
+    sessionType?: string;
+    revieweeId?: string;
   }) => {
-    const res = await apiInstance.post(`sessions/${sessionId}/feedback`, payload);
+    // Use reviews endpoint like mobile app
+    const res = await apiInstance.post('reviews', {
+      sessionId,
+      sessionType: payload.sessionType || 'chat',
+      rating: payload.rating,
+      comment: payload.comment,
+      revieweeId: payload.revieweeId,
+    });
     return res.data;
   };
 

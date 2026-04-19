@@ -71,6 +71,18 @@ export const useAdmin = () => {
     return res.data;
   };
 
+  // Submit user report - matches mobile API
+  const submitReport = async (payload: {
+    reportedId: string;
+    sessionType?: string;
+    sessionId?: string;
+    reason: string;
+    description: string;
+  }) => {
+    const res = await apiInstance.post('reports', payload);
+    return res.data;
+  };
+
   // Financial
   const getFinancialStats = async (period?: string) => {
     const res = await apiInstance.get('admin/financial/stats', { params: { period } });
@@ -115,7 +127,7 @@ export const useAdmin = () => {
     getUsers, getUserDetail, toggleUserStatus,
     getSubAdmins, addSubAdmin, updateSubAdminPermissions, removeSubAdmin,
     getListenerRequests, reviewListenerRequest,
-    getReports, getReportDetail, takeAction,
+    getReports, getReportDetail, takeAction, submitReport,
     getFinancialStats, getPaymentHistory,
     exportData,
     getCrisisConfig, updateCrisisConfig,

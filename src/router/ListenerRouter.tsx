@@ -24,6 +24,7 @@ import { RecentChats } from '../pages/Chat/RecentChats';
 import { ChatScreen } from '../pages/Chat/ChatScreen';
 import { SessionFeedback } from '../pages/Chat/SessionFeedback';
 import { SessionRating } from '../pages/Chat/SessionRating';
+import { ReportScreen } from '../pages/Chat/ReportScreen';
 import { ListenerActiveCall } from '../pages/Listener/ListenerActiveCall';
 import { PayoutMethodScreen } from '../pages/Listener/PayoutMethodScreen';
 import { LinkBankAccountScreen } from '../pages/Listener/LinkBankAccountScreen';
@@ -67,6 +68,7 @@ export const ListenerRouter = () => {
         <Route path="chat/:id" element={<ChatScreen />} />
         <Route path="session/:id/feedback" element={<SessionFeedback />} />
         <Route path="session/:id/rating" element={<SessionRating />} />
+        <Route path="report" element={<ReportScreen />} />
         <Route path="payout" element={<PayoutSettings />} />
         {/* Profile Selector Sub-pages */}
         <Route path="profile/gender" element={<GenderIdentitySelect />} />

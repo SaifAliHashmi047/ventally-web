@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../store/store';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
@@ -13,19 +15,35 @@ export const SessionFeedback = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { submitFeedback } = useSessions();
+  const currentUser = useSelector((state: RootState) => state.user.user as any);
+  const session = useSelector((state: RootState) => state.session);
+
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [topics, setTopics] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
+
+  const { type = 'chat', chat } = location.state || {};
 
   const toggleTopic = (t: string) => setTopics(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
 
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      await submitFeedback(id!, { rating, comment, topics });
+      // Get revieweeId from session state or chat data (matches mobile)
+      const revieweeId = session?.listenerId || chat?.listener?.userId || chat?.otherParticipant?.userId;
+
+      await submitFeedback(id!, {
+        rating,
+        comment,
+        topics,
+        sessionType: type,
+        revieweeId,
+      });
       navigate(`/${location.pathname.split('/')[1]}/session/${id}/rating`, { replace: true });
-    } catch { /* ignore */ } finally {
+    } catch (err) {
+      console.error('Feedback submission error:', err);
+    } finally {
       setSubmitting(false);
     }
   };

@@ -66,6 +66,7 @@ import { FindingListener } from '../pages/Chat/FindingListener';
 import { ActiveCall } from '../pages/Chat/ActiveCall';
 import { SessionFeedback } from '../pages/Chat/SessionFeedback';
 import { SessionRating } from '../pages/Chat/SessionRating';
+import { ReportScreen } from '../pages/Chat/ReportScreen';
 
 export const VenterRouter = () => {
   return (
@@ -139,6 +140,7 @@ export const VenterRouter = () => {
         <Route path="call/:roomId" element={<ActiveCall />} />
         <Route path="session/:id/feedback" element={<SessionFeedback />} />
         <Route path="session/:id/rating" element={<SessionRating />} />
+        <Route path="report" element={<ReportScreen />} />
         <Route path="*" element={<Navigate to="home" replace />} />
       </Routes>
     </VenterLayout>

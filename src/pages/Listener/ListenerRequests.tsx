@@ -7,6 +7,8 @@ import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { removeRequest } from '../../store/slices/listenerSlice';
+import { sessionStarted, chatSessionStarted } from '../../store/slices/callSlice';
+import { setSessionInfo } from '../../store/slices/sessionSlice';
 import type { RootState } from '../../store/store';
 import apiInstance from '../../api/apiInstance';
 import { Phone, MessageSquare, User } from 'lucide-react';
@@ -18,19 +20,76 @@ export const ListenerRequests = () => {
   // Get requests from Redux store (populated by socket)
   const requests = useSelector((state: RootState) => state.listener.requests);
 
-  const handleAccept = async (requestId: string) => {
+  const handleAccept = async (req: (typeof requests)[number]) => {
     try {
-      const res = await apiInstance.post(`sessions/${requestId}/accept`);
-      const roomId = res.data?.roomId || requestId;
-      navigate(`/listener/call/${roomId}`);
-    } catch { /* ignore */ }
+      if (req.type === 'call') {
+        const res = await apiInstance.post(`calls/${req.id}/accept`);
+        const call = res.data?.call ?? res.data;
+        const roomId = call?.channelName || res.data?.roomId || req.requestId || req.id;
+
+        dispatch(removeRequest(req.id));
+        dispatch(sessionStarted({ sessionId: req.requestId ?? req.id }));
+        dispatch(
+          setSessionInfo({
+            sessionId: req.requestId ?? req.id ?? null,
+            requestId: req.requestId ?? null,
+            venterId: req.venterId ?? null,
+            listenerId: req.listenerId ?? null,
+            sessionType: 'call',
+            data: { ...req, ...res.data },
+          }),
+        );
+
+        navigate(`/listener/call/${roomId}`, {
+          state: {
+            call: {
+              ...call,
+              token: call?.token,
+              channelName: call?.channelName,
+              roomName: call?.channelName,
+              uid: 1,
+            },
+          },
+        });
+        return;
+      }
+
+      // Chat request
+      const res = await apiInstance.post(`conversations/${req.id}/accept`);
+      const chatData = res.data;
+      const conversationId =
+        chatData?.conversationId || chatData?.conversation?.id || chatData?.id || req.requestId || req.id;
+
+      dispatch(chatSessionStarted({ chatData, chatStartTime: Date.now(), conversationId }));
+      dispatch(
+        setSessionInfo({
+          sessionId: req.requestId ?? conversationId ?? null,
+          requestId: req.requestId ?? null,
+          venterId: req.venterId ?? chatData?.conversation?.venterId ?? null,
+          listenerId: req.listenerId ?? chatData?.listenerId ?? chatData?.listener?.id ?? null,
+          sessionType: 'chat',
+          data: chatData,
+        }),
+      );
+      dispatch(removeRequest(req.id));
+
+      navigate(`/listener/chat/${conversationId}`, { state: { chat: chatData } });
+    } catch {
+      /* ignore */
+    }
   };
 
-  const handleDecline = async (requestId: string) => {
+  const handleDecline = async (req: (typeof requests)[number]) => {
     try {
-      await apiInstance.post(`sessions/${requestId}/decline`);
-      dispatch(removeRequest(requestId));
-    } catch { /* ignore */ }
+      if (req.type === 'call') {
+        await apiInstance.post(`calls/${req.id}/decline`);
+      } else {
+        await apiInstance.post(`conversations/${req.id}/decline`);
+      }
+      dispatch(removeRequest(req.id));
+    } catch {
+      /* ignore */
+    }
   };
 
   return (
@@ -67,7 +126,7 @@ export const ListenerRequests = () => {
                   variant="danger"
                   size="sm"
                   fullWidth
-                  onClick={() => handleDecline(req.id)}
+                  onClick={() => handleDecline(req)}
                 >
                   {t('ListenerRequests.decline')}
                 </Button>
@@ -75,7 +134,7 @@ export const ListenerRequests = () => {
                   variant="primary"
                   size="sm"
                   fullWidth
-                  onClick={() => handleAccept(req.id)}
+                  onClick={() => handleAccept(req)}
                 >
                   {t('ListenerRequests.accept')}
                 </Button>
