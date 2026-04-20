@@ -47,7 +47,9 @@ export const AdminAddSubAdmin = () => {
     setLoading(true);
     setError('');
     try {
-      await addSubAdmin({ email, permissions: selectedPermissions });
+      const permissionsObj: Record<string, boolean> = {};
+      selectedPermissions.forEach(p => { permissionsObj[p] = true; });
+      await addSubAdmin({ email, permissions: permissionsObj });
       navigate('/admin/sub-admins');
     } catch {
       setError(t('AdminAddSubAdmin.createFailed', 'Failed to create sub-admin'));

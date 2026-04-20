@@ -22,8 +22,8 @@ export const AdminReviewRequest = () => {
     // In a real app, we'd have getListenerRequestById, but using list and filtering
     const fetch = async () => {
       try {
-        const res = await getListenerRequests();
-        const found = (res?.requests ?? []).find((r: any) => r.id === id);
+        const res = await getListenerRequests(50, 0);
+        const found = (res?.verifications ?? res?.requests ?? []).find((r: any) => r.id === id);
         setRequest(found);
       } catch { /* ignore */ } finally {
         setLoading(false);
@@ -36,7 +36,7 @@ export const AdminReviewRequest = () => {
     if (!actionModal || !id) return;
     setSubmitting(true);
     try {
-      await reviewListenerRequest(id, actionModal, notes || undefined);
+      await reviewListenerRequest(id, { action: actionModal, notes: notes || undefined });
       navigate('/admin/listener-requests');
     } catch { /* ignore */ } finally {
       setSubmitting(false);

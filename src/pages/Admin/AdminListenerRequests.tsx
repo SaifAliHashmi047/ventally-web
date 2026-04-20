@@ -19,7 +19,7 @@ export const AdminListenerRequests = () => {
     const fetch = async () => {
       setLoading(true);
       try {
-        const res = await getListenerRequests(filter);
+        const res = await getListenerRequests(50, 0, filter as any);
         setRequests(res?.requests ?? []);
       } catch { /* ignore */ } finally {
         setLoading(false);

@@ -1,97 +1,169 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
-import { Badge } from '../../components/ui/Badge';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { useAdmin } from '../../api/hooks/useAdmin';
-import { Flag, ChevronRight, Search } from 'lucide-react';
+import { Search, AlertTriangle } from 'lucide-react';
+
+const TABS = ['Pending', 'Resolved'] as const;
+type Tab = typeof TABS[number];
+
+const tabStatus = (tab: Tab) => tab.toLowerCase();
+
+const formatDate = (s: string) => {
+  if (!s) return '';
+  const d = new Date(s);
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+};
+
+const ReportCard = ({ report, onClick }: { report: any; onClick: () => void }) => (
+  <div
+    className="glass rounded-2xl p-4 mb-3 cursor-pointer hover:bg-white/[0.06] transition-all relative"
+    onClick={onClick}
+  >
+    <div className="flex items-center justify-between mb-2">
+      <span className="text-sm font-bold text-white">
+        #{report.id?.substring(0, 8)}
+      </span>
+      {report.reason && (
+        <span className="px-2.5 py-0.5 rounded-full bg-white/15 text-xs font-medium text-white">
+          {report.reason}
+        </span>
+      )}
+    </div>
+    <p className="text-sm text-white/80 mb-0.5">
+      Reported: <span className="text-gray-400">{report.reported_email}</span>
+    </p>
+    <p className="text-sm text-white/80 mb-2">
+      By: <span className="text-gray-400">{report.reporter_email}</span>
+    </p>
+    {report.status === 'resolved' && report.resolution && (
+      <p className="text-xs text-gray-500 mb-2">Result: {report.resolution}</p>
+    )}
+    <p className="text-xs text-gray-600 absolute bottom-3 right-4">{formatDate(report.created_at)}</p>
+  </div>
+);
 
 export const AdminReports = () => {
   const navigate = useNavigate();
   const { getReports } = useAdmin();
+  const [activeTab, setActiveTab] = useState<Tab>('Pending');
   const [reports, setReports] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('open');
+  const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [search, setSearch] = useState('');
   const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
-  const LIMIT = 15;
+  const LIMIT = 20;
+  const offsetRef = useRef(0);
+  const isFetchingRef = useRef(false);
 
-  useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
-      try {
-        const res = await getReports({ page, limit: LIMIT, status: filter });
-        setReports(res?.reports ?? []);
-        setTotal(res?.total ?? 0);
-      } catch { /* ignore */ } finally {
-        setLoading(false);
+  const fetchReports = useCallback(async (isRefresh = false, isLoadMore = false) => {
+    if (isFetchingRef.current) return;
+    isFetchingRef.current = true;
+    if (isLoadMore) setLoadingMore(true);
+    else setLoading(true);
+
+    try {
+      const currentOffset = isRefresh ? 0 : offsetRef.current;
+      const res = await getReports(tabStatus(activeTab), LIMIT, currentOffset);
+      const fetched = res?.reports ?? [];
+
+      if (isRefresh) {
+        setReports(fetched);
+        offsetRef.current = LIMIT;
+      } else {
+        setReports(prev => [...prev, ...fetched]);
+        offsetRef.current = currentOffset + LIMIT;
       }
-    };
-    fetch();
-  }, [filter, page]);
+      setTotal(res?.pagination?.total ?? res?.total ?? 0);
+    } catch { /* ignore */ } finally {
+      isFetchingRef.current = false;
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  }, [activeTab, getReports]);
 
-  const STATUS_MAP: Record<string, { variant: any; label: string }> = {
-    open: { variant: 'error', label: 'Open' },
-    resolved: { variant: 'success', label: 'Resolved' },
-    dismissed: { variant: 'default', label: 'Dismissed' },
-  };
+  useEffect(() => { fetchReports(true); }, [activeTab]);
+
+  const isFirstSearch = useRef(true);
+  useEffect(() => {
+    if (isFirstSearch.current) { isFirstSearch.current = false; return; }
+    const t = setTimeout(() => fetchReports(true), 500);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  // Client-side filter by search
+  const filtered = reports.filter(r =>
+    !search ||
+    r.id?.toLowerCase().includes(search.toLowerCase()) ||
+    r.reported_email?.toLowerCase().includes(search.toLowerCase()) ||
+    r.reporter_email?.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="page-wrapper animate-fade-in">
-      <PageHeader title="Reports" subtitle={`${total} total reports`} />
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-white tracking-tight">Moderation</h1>
+        <p className="text-gray-500 mt-1">{total} total reports</p>
+      </div>
 
-      <div className="flex gap-2">
-        {['open', 'resolved', 'dismissed'].map(s => (
-          <button key={s} onClick={() => { setFilter(s); setPage(1); }}
-            className={`px-4 py-2 rounded-xl text-sm font-medium capitalize transition-all ${
-              filter === s ? 'bg-error/15 text-error border border-error/25' : 'glass text-gray-400 hover:text-white'
+      {/* Search */}
+      <Input
+        placeholder="Search by ID or email..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        leftIcon={<Search size={16} />}
+      />
+
+      {/* Tabs */}
+      <div className="flex gap-1 bg-white/5 p-1 rounded-2xl mt-4 mb-5">
+        {TABS.map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+              activeTab === tab
+                ? 'bg-white/10 text-white shadow'
+                : 'text-gray-500 hover:text-gray-300'
             }`}
           >
-            {s}
+            {tab}
           </button>
         ))}
       </div>
 
+      {/* List */}
       {loading ? (
-        <div className="space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="skeleton h-20 rounded-2xl" />)}</div>
-      ) : reports.length === 0 ? (
-        <EmptyState title={`No ${filter} reports`} icon={<Flag size={22} />} />
-      ) : (
         <div className="space-y-3">
-          {reports.map((report: any) => (
-            <GlassCard key={report.id} hover onClick={() => navigate(`/admin/reports/${report.id}`)} padding="md" rounded="2xl" className="cursor-pointer">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Badge variant={STATUS_MAP[report.status]?.variant || 'default'} dot>
-                      {STATUS_MAP[report.status]?.label || report.status}
-                    </Badge>
-                    <span className="text-xs text-gray-500">#{report.id?.slice(0, 8)}</span>
-                  </div>
-                  <p className="text-sm font-semibold text-white">{report.reason}</p>
-                  <p className="text-xs text-gray-500 mt-1 truncate">{report.details || 'No details provided'}</p>
-                  <p className="text-xs text-gray-600 mt-1">
-                    {new Date(report.createdAt).toLocaleDateString('en-US', { dateStyle: 'medium' })}
-                  </p>
-                </div>
-                <ChevronRight size={16} className="text-gray-500 flex-shrink-0 mt-1" />
-              </div>
-            </GlassCard>
+          {[...Array(5)].map((_, i) => <div key={i} className="skeleton h-28 rounded-2xl" />)}
+        </div>
+      ) : filtered.length === 0 ? (
+        <EmptyState
+          title={`No ${activeTab.toLowerCase()} reports`}
+          description="All clear! No reports to review."
+          icon={<AlertTriangle size={22} />}
+        />
+      ) : (
+        <>
+          {filtered.map((r: any) => (
+            <ReportCard
+              key={r.id}
+              report={r}
+              onClick={() => navigate(`/admin/reports/${r.id}`)}
+            />
           ))}
-        </div>
-      )}
-
-      {total > LIMIT && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-500">Page {page} of {Math.ceil(total / LIMIT)}</p>
-          <div className="flex gap-2">
-            <Button variant="glass" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Previous</Button>
-            <Button variant="glass" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= Math.ceil(total / LIMIT)}>Next</Button>
-          </div>
-        </div>
+          {reports.length < total && (
+            <div className="flex justify-center mt-4">
+              <Button variant="glass" size="sm" loading={loadingMore} onClick={() => fetchReports(false, true)}>
+                Load More
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

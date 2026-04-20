@@ -19,6 +19,7 @@ import { AdminViewChat } from '../pages/Admin/AdminViewChat';
 import { AdminPaymentHistory } from '../pages/Admin/AdminPaymentHistory';
 import { AdminCrisisConf } from '../pages/Admin/AdminCrisisConf';
 import { AdminAddSubAdmin } from '../pages/Admin/AdminAddSubAdmin';
+import { AdminSubAdminProfile } from '../pages/Admin/AdminSubAdminProfile';
 import { AdminChangeEmailPhone } from '../pages/Admin/AdminChangeEmailPhone';
 import { AdminVerifyOTP } from '../pages/Admin/AdminVerifyOTP';
 import { AdminResetPassword } from '../pages/Admin/AdminResetPassword';
@@ -52,6 +53,7 @@ export const AdminRouter = () => {
         <Route path="payments" element={<AdminPaymentHistory />} />
         <Route path="crisis-config" element={<AdminCrisisConf />} />
         <Route path="sub-admins/add" element={<AdminAddSubAdmin />} />
+        <Route path="sub-admins/:id" element={<AdminSubAdminProfile />} />
         <Route path="change-email" element={<AdminChangeEmailPhone />} />
         <Route path="verify-otp" element={<AdminVerifyOTP />} />
         <Route path="reset-password" element={<AdminResetPassword />} />
