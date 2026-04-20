@@ -5,6 +5,7 @@ import { requestPasswordReset } from '../../api';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { Mail, ArrowLeft } from 'lucide-react';
+import { AuthPageFrame } from '../../components/ui/AuthPageFrame';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -42,7 +43,7 @@ export const ResetPasswordWeb = () => {
   };
 
   return (
-    <div className="auth-container">
+    <AuthPageFrame>
       <div className="auth-card animate-slide-up relative">
         <button 
           onClick={() => navigate('/login')}
@@ -70,6 +71,6 @@ export const ResetPasswordWeb = () => {
           </Button>
         </form>
       </div>
-    </div>
+    </AuthPageFrame>
   );
 };

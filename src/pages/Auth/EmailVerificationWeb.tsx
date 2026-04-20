@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../../components/ui/Button';
 import { ArrowLeft } from 'lucide-react';
+import { AuthPageFrame } from '../../components/ui/AuthPageFrame';
 
 export const EmailVerificationWeb = () => {
   const { t } = useTranslation();
@@ -51,7 +52,7 @@ export const EmailVerificationWeb = () => {
   }
 
   return (
-    <div className="auth-container">
+    <AuthPageFrame>
       <div className="auth-card animate-slide-up relative text-center">
         <button 
           onClick={() => navigate('/forgot-password')}
@@ -96,6 +97,6 @@ export const EmailVerificationWeb = () => {
           </Button>
         </form>
       </div>
-    </div>
+    </AuthPageFrame>
   );
 };

@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/slices/userSlice';
 import type { RootState } from '../../store/store';
 import { cn } from '../../utils/cn';
-import { getBackgroundStyle } from '../../utils/backgrounds';
 
 import { MainBackground } from '../ui/MainBackground';
 
@@ -42,15 +41,6 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.user.user as any);
-  const selectedBackgroundId = useSelector(
-    (state: RootState) => (state.app as any)?.selectedBackgroundId ?? '1'
-  );
-  const customBackgrounds = useSelector(
-    (state: RootState) => (state.app as any)?.customBackgrounds ?? []
-  );
-
-  // Compute background style from Redux state
-  const bgStyle = getBackgroundStyle(selectedBackgroundId, customBackgrounds);
 
   const handleLogout = () => {
     dispatch(logout() as any);
@@ -161,7 +151,7 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
 
       {/* Main Content */}
       <main className="flex-1 lg:ml-0 pt-16 lg:pt-0 overflow-y-auto">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+        <div className="max-w-6xl xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-6 lg:py-10 w-full">
           {children}
         </div>
       </main>

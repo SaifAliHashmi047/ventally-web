@@ -35,6 +35,7 @@ import { PaymentMethodsScreen } from '../pages/Auth/PaymentMethodsScreen';
 import { AddPaymentMethodScreen } from '../pages/Auth/AddPaymentMethodScreen';
 import { PaymentMethodSavedScreen } from '../pages/Auth/PaymentMethodSavedScreen';
 import { SubscriptionSuccessScreen } from '../pages/Auth/SubscriptionSuccessScreen';
+import { MainBackground } from '../components/ui/MainBackground';
 
 const AppRouter = () => {
   const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
@@ -77,8 +78,11 @@ const AppRouter = () => {
 
       {/* ── Public Legal Document Viewer ── */}
       <Route path="/legal/:docId" element={
-        <div className="flex flex-col min-h-screen w-full" style={{ background: 'var(--bg-deep)' }}>
-          <LegalDocViewer />
+        <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden">
+          <MainBackground />
+          <div className="relative z-10 flex flex-col flex-1 w-full min-h-0">
+            <LegalDocViewer />
+          </div>
         </div>
       } />
 

@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/Button';
 import { Lock, ArrowLeft } from 'lucide-react';
 import { resetPasswordWithOtp } from '../../api';
 import chatIcon from '../../assets/icons/chat.png';
+import { AuthPageFrame } from '../../components/ui/AuthPageFrame';
 
 const validateStrongPassword = (pwd: string): string | null => {
   if (!pwd?.trim()) return 'Password is required';
@@ -67,7 +68,7 @@ export const CreateNewPasswordWeb = () => {
   }
 
   return (
-    <div className="auth-container">
+    <AuthPageFrame>
       <div className="auth-card animate-slide-up relative">
         <button 
           onClick={() => navigate('/forgot-password/verify-email', { state })}
@@ -108,6 +109,6 @@ export const CreateNewPasswordWeb = () => {
           </Button>
         </form>
       </div>
-    </div>
+    </AuthPageFrame>
   );
 };

@@ -7,6 +7,7 @@ import { Button } from '../../components/ui/Button';
 import { OTPInput } from '../../components/Shared/OTPInput';
 import { ArrowLeft } from 'lucide-react';
 import { verifyEmail, resendVerificationEmail } from '../../api';
+import { AuthPageFrame } from '../../components/ui/AuthPageFrame';
 
 export const SignUpOTP = () => {
   const { t } = useTranslation();
@@ -66,7 +67,7 @@ export const SignUpOTP = () => {
   };
 
   return (
-    <div className="auth-container py-8">
+    <AuthPageFrame>
       <div className="auth-card animate-slide-up w-full max-w-md">
         <button
           type="button"
@@ -119,6 +120,6 @@ export const SignUpOTP = () => {
           </Button>
         </form>
       </div>
-    </div>
+    </AuthPageFrame>
   );
 };

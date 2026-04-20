@@ -6,6 +6,7 @@ import type { RootState } from '../../store/store';
 import { updateUser } from '../../store/slices/userSlice';
 import { updateProfile } from '../../api';
 import { ArrowLeft } from 'lucide-react';
+import { AuthPageFrame } from '../../components/ui/AuthPageFrame';
 
 export const NicknameScreen = () => {
   const { t } = useTranslation();
@@ -58,7 +59,7 @@ export const NicknameScreen = () => {
   };
 
   return (
-    <div className="auth-container py-8">
+    <AuthPageFrame>
       <div className="auth-card animate-slide-up w-full max-w-md">
         <button
           type="button"
@@ -99,6 +100,6 @@ export const NicknameScreen = () => {
           </button>
         </form>
       </div>
-    </div>
+    </AuthPageFrame>
   );
 };

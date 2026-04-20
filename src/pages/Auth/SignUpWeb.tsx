@@ -8,6 +8,7 @@ import apiInstance from '../../api/apiInstance';
 import { useDispatch } from 'react-redux';
 import { setUser, setAuthenticated, setIsVenter } from '../../store/slices/userSlice';
 import { Mail, Lock } from 'lucide-react';
+import { AuthPageFrame } from '../../components/ui/AuthPageFrame';
 
 export const SignUpWeb = () => {
   const { t } = useTranslation();
@@ -89,7 +90,7 @@ export const SignUpWeb = () => {
   };
 
   return (
-    <div className="auth-container py-8">
+    <AuthPageFrame>
       <div className="auth-card animate-slide-up w-full max-w-lg">
         {/* Logo */}
         <div className="flex items-center gap-3 mb-6">
@@ -165,6 +166,6 @@ export const SignUpWeb = () => {
           <Link to="/login" className="text-primary hover:text-primary-hover font-medium transition-colors">{t('SignUp.logIn')}</Link>
         </p>
       </div>
-    </div>
+    </AuthPageFrame>
   );
 };

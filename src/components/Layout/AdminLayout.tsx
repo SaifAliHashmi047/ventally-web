@@ -11,6 +11,7 @@ import { logout } from '../../store/slices/userSlice';
 import type { RootState } from '../../store/store';
 import { cn } from '../../utils/cn';
 import { useTranslation } from 'react-i18next';
+import { MainBackground } from '../ui/MainBackground';
 
 const NAV_ITEMS = [
   { path: '/admin/dashboard', labelKey: 'Navigation.tabs.home', fallback: 'Dashboard', icon: BarChart3 },
@@ -42,7 +43,9 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
     location.pathname === path || location.pathname.startsWith(path + '/');
 
   return (
-    <div className="flex min-h-screen bg-bg-deep">
+    <div className="flex min-h-screen relative">
+      <MainBackground />
+      <div className="relative z-10 flex w-full min-h-screen">
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setSidebarOpen(false)} />
@@ -111,10 +114,11 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
 
       {/* Main Content */}
       <main className="flex-1 lg:ml-0 pt-16 lg:pt-0 overflow-y-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-6 lg:py-10 w-full">
           {children}
         </div>
       </main>
+      </div>
     </div>
   );
 };

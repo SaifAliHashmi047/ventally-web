@@ -369,7 +369,7 @@ body {
      PAGE LAYOUTS
      ============================================= */
   .page-wrapper {
-    @apply flex flex-col gap-6;
+    @apply flex flex-col gap-6 sm:gap-8 w-full;
   }
 
   .page-header {
@@ -465,18 +465,16 @@ body {
   }
 
   /* =============================================
-     AUTH LAYOUT
+     AUTH — cards pair with AuthPageFrame + MainBackground
      ============================================= */
   .auth-container {
-    @apply min-h-screen flex flex-col items-center px-4 py-8;
-    background: var(--bg-deep);
-    background-image:
-      radial-gradient(ellipse at 30% 20%, rgba(194, 174, 191, 0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 80%, rgba(10, 132, 255, 0.05) 0%, transparent 50%);
+    /* Legacy: prefer <AuthPageFrame> + .auth-card. Kept for any stragglers. */
+    @apply min-h-[100dvh] flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12 w-full;
   }
 
   .auth-card {
-    @apply glass rounded-3xl p-8 w-full max-w-md my-auto shadow-2xl;
+    @apply glass glass-bordered rounded-[28px] sm:rounded-3xl p-6 sm:p-8 lg:p-10 w-full max-w-md lg:max-w-lg my-auto shadow-2xl border;
+    border-color: rgba(255, 255, 255, 0.12);
   }
 
   /* =============================================

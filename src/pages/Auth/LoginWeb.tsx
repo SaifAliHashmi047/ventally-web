@@ -8,6 +8,7 @@ import { setTokens } from '../../api';
 import apiInstance from '../../api/apiInstance';
 import { setUser, setAuthenticated, setIsVenter } from '../../store/slices/userSlice';
 import { Mail, Lock } from 'lucide-react';
+import { AuthPageFrame } from '../../components/ui/AuthPageFrame';
 
 export const LoginWeb = () => {
   const { t } = useTranslation();
@@ -104,7 +105,7 @@ export const LoginWeb = () => {
   };
 
   return (
-    <div className="auth-container">
+    <AuthPageFrame>
       <div className="auth-card animate-slide-up">
         {/* Logo */}
         <div className="flex items-center gap-3 mb-8">
@@ -166,6 +167,6 @@ export const LoginWeb = () => {
           </Link>
         </p>
       </div>
-    </div>
+    </AuthPageFrame>
   );
 };

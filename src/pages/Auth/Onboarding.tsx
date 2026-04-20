@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../../components/ui/Button';
 import { GlassCard } from '../../components/ui/GlassCard';
+import { MainBackground } from '../../components/ui/MainBackground';
 import { Sparkles, Shield, Heart, MessageCircle } from 'lucide-react';
 
 export const Onboarding = () => {
@@ -32,15 +33,9 @@ export const Onboarding = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-bg-deep flex flex-col">
-      {/* Background gradient */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-      </div>
-
-      {/* Content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 relative z-10">
+    <div className="relative min-h-[100dvh] flex flex-col w-full overflow-x-hidden">
+      <MainBackground />
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-10 py-12 sm:py-16">
         {/* Logo */}
         <div className="mb-8">
           <div className="w-20 h-20 rounded-3xl bg-gradient-primary flex items-center justify-center shadow-glow-primary mx-auto">

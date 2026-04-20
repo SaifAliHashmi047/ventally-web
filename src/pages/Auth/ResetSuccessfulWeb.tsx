@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../../components/ui/Button';
 import { CheckCircle2 } from 'lucide-react';
+import { AuthPageFrame } from '../../components/ui/AuthPageFrame';
 
 export const ResetSuccessfulWeb = () => {
   const { t } = useTranslation();
@@ -14,7 +15,7 @@ export const ResetSuccessfulWeb = () => {
   }, [navigate]);
 
   return (
-    <div className="auth-container">
+    <AuthPageFrame>
       <div className="auth-card animate-slide-up relative text-center">
         <div className="w-20 h-20 rounded-full bg-success/20 flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(50,215,75,0.2)]">
           <CheckCircle2 size={40} className="text-success" />
@@ -35,6 +36,6 @@ export const ResetSuccessfulWeb = () => {
         </Button>
         <p className="text-xs text-gray-500 mt-4">Redirecting to log in…</p>
       </div>
-    </div>
+    </AuthPageFrame>
   );
 };
