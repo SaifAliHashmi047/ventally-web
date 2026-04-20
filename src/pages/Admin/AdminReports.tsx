@@ -23,7 +23,8 @@ export const AdminReports = () => {
     const fetch = async () => {
       setLoading(true);
       try {
-        const res = await getReports({ page, limit: LIMIT, status: filter });
+        const offset = (page - 1) * LIMIT;
+        const res = await getReports(filter, LIMIT, offset);
         setReports(res?.reports ?? []);
         setTotal(res?.total ?? 0);
       } catch { /* ignore */ } finally {

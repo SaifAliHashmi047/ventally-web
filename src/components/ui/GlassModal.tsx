@@ -15,6 +15,8 @@ interface GlassModalProps {
   title?: string;
   description?: string;
   icon?: React.ReactNode;
+  /** Custom body when you need more than title/description (e.g. success animation). */
+  children?: React.ReactNode;
   primaryAction?: ModalAction;
   secondaryAction?: ModalAction;
   className?: string;
@@ -26,6 +28,7 @@ export const GlassModal: React.FC<GlassModalProps> = ({
   title,
   description,
   icon,
+  children,
   primaryAction,
   secondaryAction,
   className,
@@ -78,27 +81,31 @@ export const GlassModal: React.FC<GlassModalProps> = ({
           </p>
         )}
 
-        <div className={cn("grid gap-3", secondaryAction ? "grid-cols-2" : "grid-cols-1")}>
-          {secondaryAction && (
-            <Button
-              variant="ghost"
-              onClick={secondaryAction.onClick}
-              className="rounded-2xl h-[56px] text-white/60 hover:text-white"
-            >
-              {secondaryAction.label}
-            </Button>
-          )}
-          {primaryAction && (
-            <Button
-              variant="primary"
-              onClick={primaryAction.onClick}
-              loading={primaryAction.loading}
-              className="rounded-2xl h-[56px] font-bold"
-            >
-              {primaryAction.label}
-            </Button>
-          )}
-        </div>
+        {children}
+
+        {(primaryAction || secondaryAction) && (
+          <div className={cn('grid gap-3', secondaryAction ? 'grid-cols-2' : 'grid-cols-1')}>
+            {secondaryAction && (
+              <Button
+                variant="ghost"
+                onClick={secondaryAction.onClick}
+                className="rounded-2xl h-[56px] text-white/60 hover:text-white"
+              >
+                {secondaryAction.label}
+              </Button>
+            )}
+            {primaryAction && (
+              <Button
+                variant="primary"
+                onClick={primaryAction.onClick}
+                loading={primaryAction.loading}
+                className="rounded-2xl h-[56px] font-bold"
+              >
+                {primaryAction.label}
+              </Button>
+            )}
+          </div>
+        )}
       </GlassCard>
     </div>
   );

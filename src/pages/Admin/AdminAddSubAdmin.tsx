@@ -102,7 +102,7 @@ export const AdminAddSubAdmin = () => {
         </div>
 
         {/* Permissions Card */}
-        <GlassCard padding="none" rounded="2.5rem" className="overflow-hidden bg-black/10 border-white/5">
+        <GlassCard padding="none" rounded="3xl" className="overflow-hidden bg-black/10 border-white/5 !rounded-[2.5rem]">
           <div className="px-5 py-4 border-b border-white/5">
             <h3 className="text-base font-bold text-white text-center">
               {t('Admin.addSubAdmin.permissions', 'Permissions')}
@@ -139,11 +139,7 @@ export const AdminAddSubAdmin = () => {
       </div>
 
       {/* Success Modal (Native Match) */}
-      <GlassModal
-        isOpen={showSuccess}
-        onClose={() => {}}
-        showCloseButton={false}
-      >
+      <GlassModal isOpen={showSuccess} onClose={() => {}}>
         <div className="flex flex-col items-center py-6 text-center">
           <div className="w-16 h-16 rounded-full bg-success/20 flex items-center justify-center mb-4 border border-success/30">
             <Check size={32} className="text-success" />

@@ -95,7 +95,7 @@ export const AdminUserDetail = () => {
               <Badge variant={user.status === 'active' ? 'success' : 'error'} dot className="px-4 py-1.5 rounded-full capitalize">
                 {user.status || 'active'}
               </Badge>
-              <Badge variant="glass" className="px-4 py-1.5 rounded-full">
+              <Badge variant="default" className="px-4 py-1.5 rounded-full bg-white/10 text-white/80 border-white/15">
                 ID: {user.id?.slice(0, 8)}...
               </Badge>
             </div>
