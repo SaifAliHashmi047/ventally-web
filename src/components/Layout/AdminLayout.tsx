@@ -10,18 +10,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/slices/userSlice';
 import type { RootState } from '../../store/store';
 import { cn } from '../../utils/cn';
+import { useTranslation } from 'react-i18next';
 
 const NAV_ITEMS = [
-  { path: '/admin/dashboard', label: 'Dashboard', icon: BarChart3 },
-  { path: '/admin/users', label: 'Users', icon: Users },
-  { path: '/admin/listener-requests', label: 'Listener Requests', icon: UserCheck },
-  { path: '/admin/reports', label: 'Reports', icon: Flag },
-  { path: '/admin/financial', label: 'Financial Stats', icon: DollarSign },
-  { path: '/admin/sub-admins', label: 'Sub-Admins', icon: ShieldCheck },
-  { path: '/admin/roles', label: 'Roles & Permissions', icon: Lock },
-  { path: '/admin/exports', label: 'Exports', icon: Download },
-  { path: '/admin/notifications', label: 'Notifications', icon: Bell },
-  { path: '/admin/settings', label: 'Settings', icon: Settings },
+  { path: '/admin/dashboard', labelKey: 'Navigation.tabs.home', fallback: 'Dashboard', icon: BarChart3 },
+  { path: '/admin/users', labelKey: 'Navigation.tabs.users', fallback: 'Users', icon: Users },
+  { path: '/admin/sub-admins', labelKey: 'Navigation.tabs.subAdmins', fallback: 'Sub Admins', icon: ShieldCheck },
+  { path: '/admin/reports', labelKey: 'Navigation.tabs.reports', fallback: 'Reports', icon: Flag },
+  { path: '/admin/settings', labelKey: 'Navigation.tabs.settings', fallback: 'Settings', icon: Settings },
 ];
 
 interface AdminLayoutProps {
@@ -34,6 +30,8 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.user as any);
+
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     dispatch(logout() as any);
@@ -82,27 +80,19 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
                 className={cn('nav-link', active && 'active')}
               >
                 <Icon size={18} />
-                <span>{item.label}</span>
+                <span>{t(item.labelKey, item.fallback)}</span>
                 {active && <ChevronRight size={14} className="ml-auto opacity-50" />}
               </Link>
             );
           })}
         </nav>
 
-        {/* User Footer */}
+        {/* User Footer - removed security and profile as per strict requirement. Settings handles them */}
         <div className="px-3 pb-6 pt-4 border-t border-white/5 space-y-1">
-          <Link to="/admin/profile" onClick={() => setSidebarOpen(false)} className={cn('nav-link', isActive('/admin/profile') && 'active')}>
-            <User size={18} />
-            <span>{user?.displayName || user?.firstName || 'Admin'}</span>
-          </Link>
-          <Link to="/admin/security" onClick={() => setSidebarOpen(false)} className={cn('nav-link', isActive('/admin/security') && 'active')}>
-            <Lock size={18} />
-            <span>Security</span>
-          </Link>
-          <button onClick={handleLogout} className="nav-link w-full text-left text-red-400 hover:text-red-300 hover:bg-red-500/8">
-            <LogOut size={18} />
-            <span>Log Out</span>
-          </button>
+          <div className="nav-link w-full text-left text-white/50 cursor-default hover:bg-transparent">
+             <User size={18} />
+             <span>{user?.displayName || user?.firstName || 'Admin'}</span>
+          </div>
         </div>
       </aside>
 

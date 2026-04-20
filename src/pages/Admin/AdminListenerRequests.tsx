@@ -2,99 +2,110 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
+import { Input } from '../../components/ui/Input';
 import { Badge } from '../../components/ui/Badge';
-import { Button } from '../../components/ui/Button';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { useAdmin } from '../../api/hooks/useAdmin';
-import { UserCheck, ChevronRight, Clock } from 'lucide-react';
+import { Search, FileText, ChevronRight, Filter } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export const AdminListenerRequests = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { getListenerRequests } = useAdmin();
+
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('pending');
+  const [search, setSearch] = useState('');
+  const [status, setStatus] = useState<'pending' | 'verified' | 'rejected'>('pending');
+
+  const fetchRequests = async () => {
+    try {
+      setLoading(true);
+      const res = await getListenerRequests(status);
+      setRequests(res?.requests ?? res ?? []);
+    } catch { /* ignore */ } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
-      try {
-        const res = await getListenerRequests(filter);
-        setRequests(res?.requests ?? []);
-      } catch { /* ignore */ } finally {
-        setLoading(false);
-      }
-    };
-    fetch();
-  }, [filter]);
+    fetchRequests();
+  }, [status]);
 
-  const STATUS_FILTERS = ['pending', 'approved', 'rejected'];
+  const filtered = requests.filter(req =>
+    !search || req.email?.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="page-wrapper animate-fade-in">
-      <PageHeader title="Listener Applications" subtitle="Review and approve listener verification requests" />
+      <PageHeader title={t('Admin.moderation.listenerRequests.title', 'Listener Requests')} />
 
-      <div className="flex gap-2">
-        {STATUS_FILTERS.map(s => (
-          <button
-            key={s}
-            onClick={() => setFilter(s)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium capitalize transition-all ${
-              filter === s
-                ? 'bg-accent/15 text-accent border border-accent/25'
-                : 'glass text-gray-400 hover:text-white'
-            }`}
+      <div className="flex gap-2 mb-4">
+        <div className="flex-1">
+          <Input
+            placeholder="Search by email..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            leftIcon={<Search size={16} />}
+          />
+        </div>
+        <div className="relative">
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value as any)}
+            className="h-10 bg-white/10 text-white text-sm border border-white/10 rounded-2xl px-4 py-2 outline-none focus:border-accent appearance-none cursor-pointer"
           >
-            {s}
-          </button>
-        ))}
+            <option value="pending" className="bg-gray-800">Pending</option>
+            <option value="verified" className="bg-gray-800">Verified</option>
+            <option value="rejected" className="bg-gray-800">Rejected</option>
+          </select>
+        </div>
       </div>
 
-      {loading ? (
-        <div className="space-y-3">
-          {[...Array(4)].map((_, i) => <div key={i} className="skeleton h-20 rounded-2xl" />)}
-        </div>
-      ) : requests.length === 0 ? (
-        <EmptyState title={`No ${filter} requests`} icon={<UserCheck size={22} />} />
-      ) : (
-        <div className="space-y-3">
-          {requests.map((req: any) => (
-            <GlassCard
-              key={req.id}
-              hover
-              onClick={() => navigate(`/admin/listener-requests/${req.id}`)}
-              padding="md"
-              rounded="2xl"
-              className="cursor-pointer"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-11 h-11 rounded-full glass flex items-center justify-center text-base font-semibold text-white flex-shrink-0">
-                  {(req.user?.firstName?.[0] || 'L').toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <p className="text-sm font-semibold text-white">
-                      {req.user?.displayName || `${req.user?.firstName} ${req.user?.lastName}`}
-                    </p>
-                    <Badge
-                      variant={req.status === 'approved' ? 'success' : req.status === 'rejected' ? 'error' : 'warning'}
-                      dot
-                    >
-                      {req.status}
-                    </Badge>
+      <div className="space-y-3">
+        {loading ? (
+          <div className="space-y-3">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="skeleton h-20 rounded-3xl" />
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
+          <EmptyState
+            title="No requests found"
+            icon={<FileText size={22} />}
+          />
+        ) : (
+          <div className="space-y-3 pb-24">
+            {filtered.map((req) => (
+              <GlassCard
+                key={req.id}
+                hover
+                onClick={() => navigate(`/admin/listener-requests/${req.id}`)}
+                className="cursor-pointer border-white/5"
+                padding="md"
+                rounded="2xl"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-lg glass flex items-center justify-center border border-white/5">
+                    <FileText size={20} className="text-white/60" />
                   </div>
-                  <p className="text-xs text-gray-500">{req.user?.email}</p>
-                  <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
-                    <Clock size={11} />
-                    Submitted {new Date(req.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                  </p>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-white truncate">{req.email || req.user?.email}</p>
+                    <p className="text-xs text-white/40 mt-0.5">Submitted: {new Date(req.createdAt).toLocaleDateString()}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant={status === 'verified' ? 'success' : status === 'rejected' ? 'error' : 'warning'} className="capitalize rounded-full text-[10px] px-2.5 py-0.5 font-bold">
+                      {req.status || status}
+                    </Badge>
+                    <ChevronRight size={18} className="text-white/20" />
+                  </div>
                 </div>
-                <ChevronRight size={16} className="text-gray-500 flex-shrink-0" />
-              </div>
-            </GlassCard>
-          ))}
-        </div>
-      )}
+              </GlassCard>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

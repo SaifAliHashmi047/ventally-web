@@ -1,159 +1,110 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
-import { Button } from '../../components/ui/Button';
-import { EmptyState } from '../../components/ui/EmptyState';
-import { Badge } from '../../components/ui/Badge';
-import { useAdmin } from '../../api/hooks/useAdmin';
-import { Search, Plus, ChevronRight, Shield, Trash2, Edit } from 'lucide-react';
 import { Input } from '../../components/ui/Input';
+import { Badge } from '../../components/ui/Badge';
+import { EmptyState } from '../../components/ui/EmptyState';
+import { useAdmin } from '../../api/hooks/useAdmin';
+import { Search, UserCircle, ChevronRight, Filter } from 'lucide-react';
 
 export const AdminUsers = () => {
   const navigate = useNavigate();
-  const { getUsers, toggleUserStatus } = useAdmin();
+  const { t } = useTranslation();
+  const { getUsers } = useAdmin();
+
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('all');
-  const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
-
-  const LIMIT = 20;
+  const [filterType, setFilterType] = useState<string>('all');
 
   const fetchUsers = async () => {
-    setLoading(true);
     try {
-      const res = await getUsers({
-        page,
-        limit: LIMIT,
-        search: search || undefined,
-        type: filter !== 'all' ? filter : undefined,
-      });
+      setLoading(true);
+      const res = await getUsers({ search, type: filterType !== 'all' ? filterType : undefined });
       setUsers(res?.users ?? []);
-      setTotal(res?.total ?? 0);
     } catch { /* ignore */ } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => { fetchUsers(); }, [page, filter]);
   useEffect(() => {
-    const timer = setTimeout(() => fetchUsers(), 400);
-    return () => clearTimeout(timer);
-  }, [search]);
-
-  const FILTERS = ['all', 'venter', 'listener'];
+    fetchUsers();
+  }, [search, filterType]);
 
   return (
     <div className="page-wrapper animate-fade-in">
-      <PageHeader
-        title="Users"
-        subtitle={`${total} total users`}
-      />
+      <PageHeader title={t('Admin.users.title', 'Users')} />
 
-      {/* Filters + Search */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <Input
-          placeholder="Search by name or email..."
-          value={search}
-          onChange={e => { setSearch(e.target.value); setPage(1); }}
-          leftIcon={<Search size={16} />}
-          containerClassName="flex-1"
-        />
-        <div className="flex gap-2">
-          {FILTERS.map(f => (
-            <button
-              key={f}
-              onClick={() => { setFilter(f); setPage(1); }}
-              className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all capitalize ${
-                filter === f
-                  ? 'bg-primary/15 text-primary border border-primary/25'
-                  : 'glass text-gray-400 hover:text-white'
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+      <div className="flex gap-2 mb-4">
+        <div className="flex-1">
+          <Input
+            placeholder={t('Admin.users.searchPlaceholder', 'Search users by name or email...')}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            leftIcon={<Search size={16} />}
+          />
+        </div>
+        <div className="relative">
+          <select
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+            className="h-10 bg-white/10 text-white text-sm border border-white/10 rounded-2xl px-4 py-2 outline-none focus:border-accent appearance-none cursor-pointer"
+          >
+            <option value="all" className="bg-gray-800">All Roles</option>
+            <option value="venter" className="bg-gray-800">Venters</option>
+            <option value="listener" className="bg-gray-800">Listeners</option>
+          </select>
         </div>
       </div>
 
-      {/* Table */}
-      <GlassCard padding="none" rounded="2xl">
+      <div className="space-y-3">
         {loading ? (
-          <div className="p-6 space-y-3">
+          <div className="space-y-3">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="skeleton h-16 rounded-2xl" />
+              <div key={i} className="skeleton h-20 rounded-3xl" />
             ))}
           </div>
         ) : users.length === 0 ? (
-          <EmptyState title="No users found" description="Try adjusting your filters." />
+          <EmptyState
+            title={t('Admin.users.emptyTitle', 'No users found')}
+            icon={<UserCircle size={22} />}
+          />
         ) : (
-          <div className="overflow-x-auto">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>User</th>
-                  <th>Type</th>
-                  <th>Status</th>
-                  <th>Joined</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((u: any) => (
-                  <tr key={u.id} className="cursor-pointer" onClick={() => navigate(`/admin/users/${u.id}`)}>
-                    <td>
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full glass flex items-center justify-center text-sm font-semibold text-white flex-shrink-0">
-                          {(u.firstName?.[0] || u.displayName?.[0] || 'U').toUpperCase()}
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-white">{u.displayName || `${u.firstName} ${u.lastName}`}</p>
-                          <p className="text-xs text-gray-500">{u.email}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <Badge variant={u.userType === 'listener' ? 'accent' : 'primary'} className="capitalize">
-                        {u.userType}
+          <div className="space-y-3 pb-24">
+            {users.map((user) => (
+              <GlassCard
+                key={user.id}
+                hover
+                onClick={() => navigate(`/admin/users/${user.id}`)}
+                className="cursor-pointer border-white/5"
+                padding="md"
+                rounded="2xl"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full glass flex items-center justify-center text-lg font-bold text-white/40 border border-white/5">
+                    {(user.displayName?.[0] || user.email?.[0] || 'U').toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-white truncate">{user.displayName || 'Anonymous'}</p>
+                    <p className="text-xs text-white/40 truncate">{user.email}</p>
+                    <div className="flex gap-2 mt-1.5">
+                      <Badge variant={user.userType === 'listener' ? 'accent' : 'default'} className="rounded-full text-[9px] uppercase tracking-wider px-2 py-0.5">
+                        {user.userType || 'Venter'}
                       </Badge>
-                    </td>
-                    <td>
-                      <Badge variant={u.isActive ? 'success' : 'error'} dot>
-                        {u.isActive ? 'Active' : 'Suspended'}
+                      <Badge variant={user.status === 'active' ? 'success' : 'error'} dot className="rounded-full text-[9px] uppercase tracking-wider px-2 py-0.5">
+                        {user.status || 'active'}
                       </Badge>
-                    </td>
-                    <td className="text-gray-500 text-sm">
-                      {new Date(u.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                    </td>
-                    <td>
-                      <ChevronRight size={16} className="text-gray-500" />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                  </div>
+                  <ChevronRight size={18} className="text-white/20" />
+                </div>
+              </GlassCard>
+            ))}
           </div>
         )}
-      </GlassCard>
-
-      {/* Pagination */}
-      {total > LIMIT && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-500">
-            Page {page} of {Math.ceil(total / LIMIT)}
-          </p>
-          <div className="flex gap-2">
-            <Button variant="glass" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
-              Previous
-            </Button>
-            <Button variant="glass" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= Math.ceil(total / LIMIT)}>
-              Next
-            </Button>
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 };

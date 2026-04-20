@@ -22,6 +22,7 @@ import { AdminAddSubAdmin } from '../pages/Admin/AdminAddSubAdmin';
 import { AdminChangeEmailPhone } from '../pages/Admin/AdminChangeEmailPhone';
 import { AdminVerifyOTP } from '../pages/Admin/AdminVerifyOTP';
 import { AdminResetPassword } from '../pages/Admin/AdminResetPassword';
+import { AdminSubAdminProfile } from '../pages/Admin/AdminSubAdminProfile';
 
 // Common Pages
 import { Notifications } from '../pages/Common/Notifications';
@@ -52,7 +53,9 @@ export const AdminRouter = () => {
         <Route path="payments" element={<AdminPaymentHistory />} />
         <Route path="crisis-config" element={<AdminCrisisConf />} />
         <Route path="sub-admins/add" element={<AdminAddSubAdmin />} />
+        <Route path="sub-admins/:id" element={<AdminSubAdminProfile />} />
         <Route path="change-email" element={<AdminChangeEmailPhone />} />
+        <Route path="update-email" element={<AdminChangeEmailPhone />} />
         <Route path="verify-otp" element={<AdminVerifyOTP />} />
         <Route path="reset-password" element={<AdminResetPassword />} />
         {/* Common */}
@@ -61,7 +64,7 @@ export const AdminRouter = () => {
         <Route path="profile" element={<ProfileScreen />} />
         <Route path="security" element={<SecuritySettings />} />
         <Route path="security/change-password" element={<ChangePassword />} />
-        <Route path="*" element={<Navigate to="dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
       </Routes>
     </AdminLayout>
   );

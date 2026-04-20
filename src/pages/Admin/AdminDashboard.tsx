@@ -10,18 +10,18 @@ import {
   BarChart3, ChevronRight
 } from 'lucide-react';
 import {
-  LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip,
-  ResponsiveContainer, CartesianGrid
+  AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip,
+  ResponsiveContainer, CartesianGrid, Cell
 } from 'recharts';
 
 const formatNumber = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(1)}K` : String(n);
 const formatChange = (pct: number) => `${pct >= 0 ? '+' : ''}${pct.toFixed(2)}%`;
 
 const FALLBACK_CARDS = [
-  { key: 'activeUsers', labelKey: 'AdminDashboard.activeUsers', value: '--', change: '--', positive: true },
-  { key: 'monthlySessions', labelKey: 'AdminDashboard.monthlySessions', value: '--', change: '--', positive: false },
-  { key: 'newSignups', labelKey: 'AdminDashboard.newSignups', value: '--', change: '--', positive: true },
-  { key: 'listenerOnlineMinutes', labelKey: 'AdminDashboard.listenerMinutes', value: '--', change: '--', positive: true },
+  { key: 'activeUsers', labelKey: 'Admin.home.activeUsers', value: '--', change: '--', positive: true },
+  { key: 'monthlySessions', labelKey: 'Admin.home.monthlySessions', value: '--', change: '--', positive: false },
+  { key: 'newSignups', labelKey: 'Admin.home.newSignups', value: '--', change: '--', positive: true },
+  { key: 'listenerOnlineMinutes', labelKey: 'Admin.home.listenerOnlineMinutes', value: '--', change: '--', positive: true },
 ];
 
 const STAT_ICONS = [Users, BarChart3, UserPlus, Clock];
@@ -60,25 +60,25 @@ export const AdminDashboard = () => {
         if (cards24h) {
           setCards([
             {
-              key: 'activeUsers', labelKey: 'AdminDashboard.activeUsers',
+              key: 'activeUsers', labelKey: 'Admin.home.activeUsers',
               value: formatNumber(cards24h.activeUsers?.value ?? 0),
               change: formatChange(cards24h.activeUsers?.changePercent ?? 0),
               positive: (cards24h.activeUsers?.changePercent ?? 0) >= 0,
             },
             {
-              key: 'monthlySessions', labelKey: 'AdminDashboard.monthlySessions',
+              key: 'monthlySessions', labelKey: 'Admin.home.monthlySessions',
               value: formatNumber(cards24h.monthlySessions?.value ?? 0),
               change: formatChange(cards24h.monthlySessions?.changePercent ?? 0),
               positive: (cards24h.monthlySessions?.changePercent ?? 0) >= 0,
             },
             {
-              key: 'newSignups', labelKey: 'AdminDashboard.newSignups',
+              key: 'newSignups', labelKey: 'Admin.home.newSignups',
               value: formatNumber(cards24h.newSignups?.value ?? 0),
               change: formatChange(cards24h.newSignups?.changePercent ?? 0),
               positive: (cards24h.newSignups?.changePercent ?? 0) >= 0,
             },
             {
-              key: 'listenerOnlineMinutes', labelKey: 'AdminDashboard.listenerMinutes',
+              key: 'listenerOnlineMinutes', labelKey: 'Admin.home.listenerOnlineMinutes',
               value: formatNumber(cards24h.listenerOnlineMinutes?.value ?? 0),
               change: formatChange(cards24h.listenerOnlineMinutes?.changePercent ?? 0),
               positive: (cards24h.listenerOnlineMinutes?.changePercent ?? 0) >= 0,
@@ -116,8 +116,7 @@ export const AdminDashboard = () => {
     <div className="page-wrapper animate-fade-in">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">{t('AdminDashboard.title')}</h1>
-        <p className="text-gray-500 mt-1">{t('AdminDashboard.platformOverview')}</p>
+        <h1 className="text-3xl font-bold text-white tracking-tight">{t('Admin.home.overview', 'Overview')}</h1>
       </div>
 
       {/* Stats Grid */}
@@ -143,88 +142,73 @@ export const AdminDashboard = () => {
         }
       </div>
 
-      {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Charts Column */}
+      <div className="flex flex-col mt-6 gap-8 pb-14">
         {/* User Progress Line Chart */}
-        <GlassCard>
-          <h2 className="text-base font-semibold text-white mb-4">{t('AdminDashboard.userEngagement')}</h2>
+        <div>
+          <h2 className="text-base font-bold text-white mb-4">{t('Admin.home.userProgress', 'User Progress')}</h2>
+          <GlassCard>
           <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={lineData.length ? lineData : [{ value: 0, label: '--' }]}>
+            <AreaChart data={lineData.length ? lineData : [{ value: 0, label: '--' }]}>
+              <defs>
+                <linearGradient id="colorMagenda" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#C2AEBF" stopOpacity={0.4} />
+                  <stop offset="95%" stopColor="#C2AEBF" stopOpacity={0.05} />
+                </linearGradient>
+              </defs>
               <CartesianGrid stroke="rgba(255,255,255,0.05)" strokeDasharray="4 4" />
               <XAxis dataKey="label" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis hide />
               <Tooltip content={<CustomTooltip />} />
-              <Line
+              <Area
                 type="monotone"
                 dataKey="value"
                 stroke="#C2AEBF"
                 strokeWidth={2}
-                dot={false}
-                fill="rgba(194,174,191,0.1)"
+                fillOpacity={1}
+                fill="url(#colorMagenda)"
               />
-            </LineChart>
+            </AreaChart>
           </ResponsiveContainer>
         </GlassCard>
+        </div>
 
         {/* Session Traffic Bar Chart */}
         <GlassCard>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-white">{t('AdminDashboard.sessionTraffic')}</h2>
+            <h2 className="text-base font-semibold text-white">{t('Admin.home.sessionTraffic', 'Session Traffic')}</h2>
             <div className="flex gap-1">
-              {(['week', 'month'] as const).map(p => (
-                <button
-                  key={p}
-                  onClick={() => setPeriod(p)}
-                  className={`px-3 py-1 rounded-xl text-xs font-medium transition-all ${
-                    period === p
-                      ? 'bg-accent/15 text-accent border border-accent/25'
-                      : 'text-gray-500 hover:text-white'
-                  }`}
+                <select
+                  value={period}
+                  onChange={(e) => setPeriod(e.target.value as 'week' | 'month')}
+                  className="bg-white/10 text-white text-xs border border-white/10 rounded-xl px-3 py-1.5 outline-none focus:border-accent appearance-none"
+                  style={{ backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.5rem center', backgroundSize: '1em', paddingRight: '2rem' }}
                 >
-                  {p === 'week' ? t('AdminDashboard.week') : t('AdminDashboard.month')}
-                </button>
-              ))}
+                  <option value="week" className="bg-gray-800 text-white">Week</option>
+                  <option value="month" className="bg-gray-800 text-white">Month</option>
+                </select>
             </div>
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={barData.length ? barData : [{ value: 0, label: '--' }]} barCategoryGap="25%">
               <XAxis dataKey="label" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis hide />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
-              <Bar dataKey="value" fill="#C2AEBF" fillOpacity={0.8} radius={[4, 4, 4, 4]} />
+              <Tooltip
+                content={<CustomTooltip />}
+                cursor={{ fill: 'rgba(255,255,255,0.04)' }}
+              />
+              <Bar dataKey="value" radius={[4, 4, 4, 4]}>
+                {barData.map((entry, index) => {
+                  const maxVal = Math.max(...barData.map(d => d.value));
+                  const isMax = entry.value === maxVal && entry.value > 0;
+                  return (
+                    <Cell key={`cell-${index}`} fill={isMax ? '#C2AEBF' : '#FFFFFF'} fillOpacity={isMax ? 1 : 0.8} />
+                  );
+                })}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </GlassCard>
-      </div>
-
-      {/* Quick Admin Links */}
-      <div>
-        <h2 className="section-title mb-3">{t('AdminDashboard.quickActions')}</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {[
-            { labelKey: 'AdminDashboard.manageUsers', path: '/admin/users', icon: Users },
-            { labelKey: 'AdminDashboard.listenerRequests', path: '/admin/listener-requests', icon: UserPlus },
-            { labelKey: 'AdminDashboard.viewReports', path: '/admin/reports', icon: BarChart3 },
-            { labelKey: 'AdminDashboard.financialStats', path: '/admin/financial', icon: TrendingUp },
-          ].map(({ labelKey, path, icon: Icon }) => (
-            <GlassCard
-              key={path}
-              hover
-              onClick={() => navigate(path)}
-              padding="md"
-              rounded="2xl"
-              className="flex items-center gap-3 cursor-pointer"
-            >
-              <div className="w-9 h-9 rounded-2xl glass flex items-center justify-center text-accent">
-                <Icon size={16} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">{t(labelKey)}</p>
-              </div>
-              <ChevronRight size={14} className="text-gray-500 flex-shrink-0" />
-            </GlassCard>
-          ))}
-        </div>
       </div>
     </div>
   );
