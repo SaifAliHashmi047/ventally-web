@@ -51,8 +51,9 @@ export const ChatScreen = () => {
       // Venter goes to warning screen with acknowledgment flow
       navigate('/venter/crisis-warning', { state: { fromChat: true } });
     } else {
-      // Listener goes to 988 escalation screen
-      navigate('/listener/crisis-escalation', { state: { fromChat: true } });
+      navigate('/listener/crisis-escalation', {
+        state: { fromChat: true, sessionId: id },
+      });
     }
   };
 

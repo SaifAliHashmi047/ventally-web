@@ -99,7 +99,8 @@ export const FindingListener = () => {
       }));
 
       hasNavigated.current = true;
-      navigate('/venter/call/active', {
+      const callId = data.id || data.callId || 'active';
+      navigate(`/venter/call/${callId}`, {
         state: {
           call: {
             ...data,

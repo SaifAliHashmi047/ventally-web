@@ -1,38 +1,118 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store';
 import { Mic, MicOff, Volume2, VolumeX, Phone } from 'lucide-react';
-import { GlassCard } from '../../components/ui/GlassCard';
 import apiInstance from '../../api/apiInstance';
 import socketService from '../../api/socketService';
+import {
+  useAgoraWeb,
+  joinParamsFromCallPayload,
+  type AgoraCallPayload,
+} from '../../hooks/useAgoraWeb';
+
+/** Real call id for API + feedback routes (URL param is often the placeholder `active` from FindingListener). */
+function useResolvedCallId(
+  roomId: string | undefined,
+  locationState: unknown,
+  session: RootState['session'],
+  callSessionId: string | null,
+): string | undefined {
+  return useMemo(() => {
+    const fromNav = (locationState as { call?: { id?: string; callId?: string } } | null | undefined)?.call;
+    const fromSessionData = session.data as { id?: string; callId?: string } | undefined;
+    const paramLooksLikeId = roomId && roomId !== 'active' ? roomId : null;
+
+    return (
+      fromNav?.callId ||
+      fromNav?.id ||
+      session.sessionId ||
+      session.requestId ||
+      fromSessionData?.callId ||
+      fromSessionData?.id ||
+      callSessionId ||
+      paramLooksLikeId ||
+      undefined
+    );
+  }, [locationState, roomId, session.sessionId, session.requestId, session.data, callSessionId]);
+}
 
 export const ActiveCall = () => {
   const { roomId } = useParams<{ roomId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const user = useSelector((state: RootState) => state.user.user as any);
+  const session = useSelector((state: RootState) => state.session);
+  const callSessionId = useSelector((state: RootState) => state.call.sessionId);
   const role = user?.userType || 'venter';
+
+  const resolvedCallId = useResolvedCallId(roomId, location.state, session, callSessionId);
+  const feedbackSessionId = resolvedCallId ?? roomId;
+
+  const agoraJoinParams = useMemo(() => {
+    const fromNav = (location.state as { call?: AgoraCallPayload } | undefined)?.call;
+    const fromSession = session.data as AgoraCallPayload | undefined;
+    return joinParamsFromCallPayload(fromNav ?? fromSession ?? undefined);
+  }, [location.state, session.data]);
+
+  const {
+    joinChannel,
+    leaveChannel,
+    toggleMute,
+    setSpeakerMuted,
+    isJoined,
+  } = useAgoraWeb();
 
   const [muted, setMuted] = useState(false);
   const [speakerOff, setSpeakerOff] = useState(false);
   const [duration, setDuration] = useState(0);
-  const [callStatus, setCallStatus] = useState<'connecting' | 'connected' | 'ended'>('connecting');
+  const callStatus: 'connecting' | 'connected' | 'ended' = isJoined ? 'connected' : 'connecting';
 
-  // Timer
+  // Call duration (starts when Agora reports joined + publishing)
   useEffect(() => {
-    if (callStatus !== 'connected') return;
-    const interval = setInterval(() => setDuration(d => d + 1), 1000);
+    if (!isJoined) return;
+    const interval = setInterval(() => setDuration((d) => d + 1), 1000);
     return () => clearInterval(interval);
-  }, [callStatus]);
+  }, [isJoined]);
+
+  // Agora voice channel
+  useEffect(() => {
+    if (!agoraJoinParams) {
+      console.warn('[ActiveCall] Missing channel/token for Agora — check call:accepted payload.');
+      return;
+    }
+    void joinChannel(agoraJoinParams);
+    return () => {
+      void leaveChannel();
+    };
+  }, [agoraJoinParams, joinChannel, leaveChannel]);
 
   useEffect(() => {
-    // Connect socket when entering call
-    socketService.connect();
-    
-    // Simulated connection — replace with actual WebRTC/Agora signaling
-    const timer = setTimeout(() => setCallStatus('connected'), 2000);
-    return () => clearTimeout(timer);
-  }, []);
+    toggleMute(muted);
+  }, [muted, toggleMute]);
+
+  useEffect(() => {
+    setSpeakerMuted(speakerOff);
+  }, [speakerOff, setSpeakerMuted]);
+
+  // Socket: connect + server call room (signaling / presence)
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        await socketService.connect();
+        if (cancelled) return;
+        if (resolvedCallId) {
+          socketService.emit('call:join', { callId: resolvedCallId });
+        }
+      } catch (e) {
+        console.error('[ActiveCall] socket connect failed:', e);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [resolvedCallId]);
 
   const formatDuration = (secs: number) => {
     const m = Math.floor(secs / 60);
@@ -41,26 +121,34 @@ export const ActiveCall = () => {
   };
 
   const handleEndCall = async () => {
+    await leaveChannel();
     try {
-      await apiInstance.post(`calls/${roomId}/end`);
+      if (resolvedCallId) {
+        await apiInstance.post(`calls/${resolvedCallId}/end`);
+      }
     } catch { /* ignore */ }
-    navigate(`/${role}/session/${roomId}/feedback`, { replace: true, state: { type: 'call' } });
+    navigate(`/${role}/session/${feedbackSessionId}/feedback`, { replace: true, state: { type: 'call' } });
   };
 
   // Listen for remote end via socket (when other party ends the call)
   useEffect(() => {
-    if (!roomId) return;
+    if (!feedbackSessionId) return;
 
-    const handleCallEnded = (data: any) => {
+    const handleCallEnded = async (data: any) => {
+      const endedId = data?.callId ?? data?.id ?? data?.call?.id;
+      if (resolvedCallId && endedId != null && String(endedId) !== String(resolvedCallId)) {
+        return;
+      }
       console.log('[ActiveCall] call:ended from socket:', data);
-      navigate(`/${role}/session/${roomId}/feedback`, { replace: true, state: { type: 'call' } });
+      await leaveChannel();
+      navigate(`/${role}/session/${feedbackSessionId}/feedback`, { replace: true, state: { type: 'call' } });
     };
 
     socketService.on('call:ended', handleCallEnded);
     return () => {
       socketService.off('call:ended', handleCallEnded);
     };
-  }, [roomId, navigate, role]);
+  }, [feedbackSessionId, resolvedCallId, navigate, role, leaveChannel]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-between py-12 px-4 bg-bg-deep"
