@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
@@ -7,13 +7,14 @@ import { Button } from '../../components/ui/Button';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { useMood } from '../../api/hooks/useMood';
 import { MOOD_CONFIG, type MoodType } from '../../components/ui/MoodSelector';
-import { ChevronDown, Loader2 } from 'lucide-react';
+import { ChevronDown, Loader2, ChevronRight } from 'lucide-react';
 
 export const VenterMoodHistory = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { getMoodHistory } = useMood();
-  
+  const moodHook = useMood();
+  const getMoodHistoryRef = useRef(moodHook.getMoodHistory);
+
   const [moods, setMoods] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -24,28 +25,22 @@ export const VenterMoodHistory = () => {
   const fetchHistory = async (pageIndex: number, isLoadingMore = false) => {
     if (isLoadingMore) setLoadingMore(true);
     else setLoading(true);
-
     try {
-      const res = await getMoodHistory(LIMIT, pageIndex * LIMIT);
+      const res = await getMoodHistoryRef.current(LIMIT, pageIndex * LIMIT);
       const newMoods = res?.moods || [];
-      
-      if (isLoadingMore) {
-        setMoods(prev => [...prev, ...newMoods]);
-      } else {
-        setMoods(newMoods);
-      }
-      
+      if (isLoadingMore) setMoods(prev => [...prev, ...newMoods]);
+      else setMoods(newMoods);
       setHasMore(newMoods.length === LIMIT);
-    } catch { 
-      // handle error
-    } finally {
+    } catch { /* ignore */ } finally {
       if (isLoadingMore) setLoadingMore(false);
       else setLoading(false);
     }
   };
 
+  // Fetch once on mount — no deps that change
   useEffect(() => {
     fetchHistory(0);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLoadMore = () => {
@@ -108,18 +103,27 @@ export const VenterMoodHistory = () => {
                         ) : (
                           <span className="text-xl">😶</span>
                         )}
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-2">
-                                <p className="text-sm font-semibold capitalize" style={{ color: config.text }}>{config.label}</p>
-                                {m.category && (
-                                <span className="text-[10px] text-gray-500 bg-white/5 border border-white/5 px-2 py-0.5 rounded-full">{m.category}</span>
-                                )}
+                            <div className="flex items-center gap-2 min-w-0">
+                              <p className="text-sm font-semibold capitalize" style={{ color: config.text }}>
+                                {t(config.labelKey, config.label)}
+                              </p>
+                              {m.category && (
+                                <span className="text-[10px] text-gray-500 bg-white/5 border border-white/5 px-2 py-0.5 rounded-full flex-shrink-0">
+                                  {m.category}
+                                </span>
+                              )}
                             </div>
-                            <p className="text-xs font-medium text-white/50">{dateObj.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}</p>
+                            <p className="text-xs font-medium text-white/50 flex-shrink-0">
+                              {dateObj.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}
+                            </p>
                           </div>
-                          {m.notes && <p className="text-xs text-gray-400 truncate mt-1 max-w-[85%]">{m.notes}</p>}
+                          {m.notes && (
+                            <p className="text-xs text-gray-400 truncate mt-1">{m.notes}</p>
+                          )}
                         </div>
+                        <ChevronRight size={14} className="text-white/30 flex-shrink-0" />
                       </div>
                     </GlassCard>
                   );

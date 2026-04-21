@@ -1,9 +1,12 @@
 import apiInstance from '../apiInstance';
 
 export const useAdmin = () => {
-  // ── Stats ───────────────────────────────────────────────────────────────
+  /**
+   * Get comprehensive report statistics (Admin)
+   * Matches RN: reports/admin/stats
+   */
   const getReportStats = async () => {
-    const res = await apiInstance.get('admin/stats/report');
+    const res = await apiInstance.get('reports/admin/stats');
     return res.data;
   };
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
@@ -24,52 +24,45 @@ export const VenterMoodDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
-  const { getMoodHistory, deleteMood } = useMood();
+  const moodHook = useMood();
+  const getMoodHistoryRef = useRef(moodHook.getMoodHistory);
+  const deleteMoodRef = useRef(moodHook.deleteMood);
 
-  const [mood, setMood] = useState<MoodItem | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [mood, setMood] = useState<MoodItem | null>(
+    // Use state passed from history screen — avoids extra API call
+    (location.state?.item as MoodItem) ?? null
+  );
+  const [loading, setLoading] = useState(!location.state?.item);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  // Support passing item via location state
-  const stateItem = location.state?.item as MoodItem | undefined;
-
+  // Only fetch if item wasn't passed via navigation state
   useEffect(() => {
+    if (mood || !id) return;
+
+    let cancelled = false;
     const fetchMood = async () => {
-      if (stateItem) {
-        setMood(stateItem);
-        setLoading(false);
-        return;
-      }
-
-      if (!id) {
-        setLoading(false);
-        return;
-      }
-
+      setLoading(true);
       try {
-        // Fetch from history and find by ID
-        const res = await getMoodHistory(100, 0);
-        const found = res?.moods?.find((m: MoodItem) => m.id === id);
-        if (found) {
-          setMood(found);
+        const res = await getMoodHistoryRef.current(100, 0);
+        if (!cancelled) {
+          const found = res?.moods?.find((m: MoodItem) => m.id === id);
+          setMood(found ?? null);
         }
-      } catch (error) {
-        console.error('Error fetching mood:', error);
-      } finally {
-        setLoading(false);
+      } catch { /* ignore */ } finally {
+        if (!cancelled) setLoading(false);
       }
     };
-
     fetchMood();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const handleDelete = async () => {
     if (!mood?.id) return;
     setDeleteLoading(true);
     try {
-      await deleteMood(mood.id);
+      await deleteMoodRef.current(mood.id);
       toastSuccess(t('VenterMoodHistory.deleteSuccess'));
       setShowDeleteModal(false);
       navigate(-1);

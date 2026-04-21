@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAdmin } from '../../api/hooks/useAdmin';
 import { StatCard } from '../../components/ui/StatCard';
 import { GlassCard } from '../../components/ui/GlassCard';
-import { Badge } from '../../components/ui/Badge';
 import {
   Users, TrendingUp, UserPlus, Clock,
-  BarChart3, ChevronRight
+  BarChart3,
 } from 'lucide-react';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip,
@@ -16,6 +15,42 @@ import {
 
 const formatNumber = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(1)}K` : String(n);
 const formatChange = (pct: number) => `${pct >= 0 ? '+' : ''}${pct.toFixed(2)}%`;
+
+const DAYS   = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+/**
+ * Aggregate hourly API data into 7 (week) or 12 (month) buckets.
+ * Matches the RN AdminHome aggregation logic exactly.
+ */
+const buildChartData = (
+  hourlyData: any[],
+  period: 'week' | 'month',
+  setLine: (d: any[]) => void,
+  setBar: (d: any[]) => void,
+) => {
+  const BUCKETS = period === 'week' ? 7 : 12;
+  const now = new Date();
+  const bucketSize = Math.ceil(hourlyData.length / BUCKETS);
+
+  const aggregated = Array.from({ length: BUCKETS }, (_, bi) => {
+    const slice = hourlyData.slice(bi * bucketSize, (bi + 1) * bucketSize);
+    const total = slice.reduce((s: number, x: any) => s + (x.activeUsers ?? 0), 0);
+
+    let label: string;
+    if (period === 'week') {
+      const d = new Date(now);
+      d.setDate(d.getDate() - (BUCKETS - 1 - bi));
+      label = DAYS[d.getDay()];
+    } else {
+      label = MONTHS[(now.getMonth() - (11 - bi) + 12) % 12];
+    }
+    return { value: total, label };
+  });
+
+  setLine(aggregated);
+  setBar(aggregated);
+};
 
 const FALLBACK_CARDS = [
   { key: 'activeUsers', labelKey: 'Admin.home.activeUsers', value: '--', change: '--', positive: true },
@@ -42,18 +77,28 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export const AdminDashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { getReportStats } = useAdmin();
+
+  // Stable ref — prevents getReportStats from being a changing dep that re-triggers the effect
+  const adminHook = useAdmin();
+  const getReportStatsRef = useRef(adminHook.getReportStats);
+
   const [loading, setLoading] = useState(true);
   const [cards, setCards] = useState(FALLBACK_CARDS);
   const [lineData, setLineData] = useState<any[]>([]);
   const [barData, setBarData] = useState<any[]>([]);
   const [period, setPeriod] = useState<'week' | 'month'>('week');
 
+  // Fetch stats once on mount — period change rebuilds chart labels from cached data
   useEffect(() => {
+    let cancelled = false;
+
     const fetchStats = async () => {
       try {
         setLoading(true);
-        const res = await getReportStats();
+        // Correct endpoint: reports/admin/stats (matches RN getReportStats)
+        const res = await getReportStatsRef.current();
+        if (cancelled) return;
+
         const cards24h = res?.stats?.applicationStatus24h?.cards;
         const hourlyData = res?.stats?.applicationStatus24h?.userProgressEngagementRatio;
 
@@ -87,30 +132,19 @@ export const AdminDashboard = () => {
         }
 
         if (hourlyData?.length) {
-          const BUCKETS = period === 'week' ? 7 : 12;
-          const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-          const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-          const now = new Date();
-          const bucketSize = Math.ceil(hourlyData.length / BUCKETS);
-          const aggregated = Array.from({ length: BUCKETS }, (_, bi) => {
-            const slice = hourlyData.slice(bi * bucketSize, (bi + 1) * bucketSize);
-            const avg = slice.length ? slice.reduce((s: number, x: any) => s + (x.activeUsers ?? 0), 0) : 0;
-            const label = period === 'week'
-              ? DAYS[new Date(now).setDate(now.getDate() - (BUCKETS - 1 - bi)) && new Date(now).getDay()]
-              : MONTHS[(now.getMonth() - (11 - bi) + 12) % 12];
-            return { value: avg, label };
-          });
-          setLineData(aggregated);
-          setBarData(aggregated);
+          buildChartData(hourlyData, period, setLineData, setBarData);
         }
       } catch (e) {
         console.error('Admin stats fetch failed:', e);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
+
     fetchStats();
-  }, [period]);
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // ← fetch ONCE on mount — no infinite loop
 
   return (
     <div className="page-wrapper animate-fade-in">
