@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../../components/ui/Button';
@@ -18,7 +18,9 @@ export const AdminViewChat = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { sessionId } = useParams<{ sessionId: string }>();
+  
   const { getChatHistory } = useChat();
+  const getChatHistoryRef = useRef(getChatHistory);
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +32,8 @@ export const AdminViewChat = () => {
         return;
       }
       try {
-        const data = await getChatHistory(sessionId);
+        setLoading(true);
+        const data = await getChatHistoryRef.current(sessionId);
         setMessages(data?.messages || []);
       } catch (error) {
         console.error('Failed to fetch chat:', error);
@@ -39,7 +42,7 @@ export const AdminViewChat = () => {
       }
     };
     fetchChat();
-  }, [sessionId, getChatHistory]);
+  }, [sessionId]);
 
   const handleExport = () => {
     const chatText = messages
@@ -59,16 +62,18 @@ export const AdminViewChat = () => {
         title={t('Admin.moderation.chat.title', 'Moderation Chat')}
         subtitle={t('Admin.chat.safeAndAnonymous', 'Safe & Anonymous')}
         onBack={() => navigate(-1)}
+        centered
       />
 
-      <div className="flex-1 overflow-y-auto scrollbar-hide px-2 space-y-8 pb-10">
+      <div className="flex-1 overflow-y-auto scrollbar-hide px-2 space-y-10 pb-10 pt-4">
         {loading ? (
-          <div className="flex items-center justify-center h-48">
-            <Loader2 className="animate-spin text-accent" size={32} />
+          <div className="flex flex-col items-center justify-center h-full gap-4">
+            <Loader2 className="animate-spin text-accent" size={40} />
+            <p className="text-white/40 text-sm animate-pulse">Loading conversation...</p>
           </div>
         ) : messages.length === 0 ? (
-          <div className="glass rounded-3xl p-10 text-center">
-            <p className="text-gray-400">{t('Admin.noMessages', 'No messages found')}</p>
+          <div className="glass rounded-3xl p-10 text-center mx-4">
+            <p className="text-white/40 font-medium">{t('Admin.noMessages', 'No messages found')}</p>
           </div>
         ) : (
           messages.map((msg) => {
@@ -76,27 +81,29 @@ export const AdminViewChat = () => {
             return (
               <div
                 key={msg.id}
-                className={`flex flex-col ${isListener ? 'items-end' : 'items-start'}`}
+                className={`flex flex-col ${isListener ? 'items-end' : 'items-start'} px-2`}
               >
-                {/* Sender Info - Native Style */}
-                <span className={`text-[12px] font-bold text-white/60 mb-1 ${isListener ? 'text-right' : 'text-left'}`}>
+                {/* Sender Info - Matches Native Screen exactly */}
+                <span className={`text-[12px] font-bold text-white mb-0.5 ${isListener ? 'text-right' : 'text-left'}`}>
                   {isListener ? 'User 2' : 'User 1'}
                 </span>
-                <span className="text-[10px] text-white/50 mb-2">abc@gmail.com</span>
+                <span className={`text-[10px] text-white/50 mb-3 ${isListener ? 'text-right' : 'text-left'}`}>
+                  {isListener ? 'listener@ventally.co' : 'venter@ventally.co'}
+                </span>
 
-                {/* Message Bubble - Native GlassWrapper Style */}
+                {/* Message Bubble - Native Glass radius & padding */}
                 <div 
-                  className={`max-w-[80%] px-5 py-3 rounded-[1.2rem] border border-white/10 ${
+                  className={`max-w-[85%] px-5 py-3.5 border border-white/10 ${
                     isListener 
-                      ? 'bg-white/[0.09] rounded-tr-none' 
-                      : 'bg-white/[0.015] rounded-tl-none'
+                      ? 'bg-white/[0.08] rounded-[22px] rounded-tr-none' 
+                      : 'bg-white/[0.015] rounded-[22px] rounded-tl-none'
                   }`}
                 >
-                  <p className="text-[16px] text-white leading-relaxed break-words">{msg.message}</p>
+                  <p className="text-[17px] text-white leading-relaxed break-words font-medium">{msg.message}</p>
                 </div>
 
                 {/* Timestamp */}
-                <span className="text-[10px] font-medium text-white/40 mt-1 uppercase tracking-tighter">
+                <span className="text-[10px] font-bold text-white/40 mt-1.5 uppercase tracking-widest px-1">
                   {new Date(msg.timestamp).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
                 </span>
               </div>
@@ -106,21 +113,19 @@ export const AdminViewChat = () => {
       </div>
 
       {/* Footer Actions */}
-      <div className="p-4 flex gap-3 pb-8">
+      <div className="p-4 flex gap-4 bg-transparent backdrop-blur-sm pb-10">
         <Button
-          variant="ghost"
+          variant="glass"
           fullWidth
-          className="rounded-full bg-white/5 h-12"
-          leftIcon={<ArrowLeft size={18} />}
+          className="rounded-full h-14 font-bold uppercase tracking-widest text-xs border-white/10"
           onClick={() => navigate(-1)}
         >
           {t('Common.back', 'Back')}
         </Button>
         <Button
-          variant="glass"
+          variant="accent"
           fullWidth
-          className="rounded-full h-12 border-white/10"
-          leftIcon={<Download size={18} />}
+          className="rounded-full h-14 font-bold uppercase tracking-widest text-xs shadow-lg shadow-accent/20"
           onClick={handleExport}
           disabled={messages.length === 0}
         >

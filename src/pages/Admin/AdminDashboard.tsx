@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAdmin } from '../../api/hooks/useAdmin';
 import { StatCard } from '../../components/ui/StatCard';
 import { GlassCard } from '../../components/ui/GlassCard';
+import { AdminHomeHeader } from '../../components/ui/AdminHomeHeader';
 import {
   Users, TrendingUp, UserPlus, Clock,
   BarChart3,
@@ -95,7 +96,6 @@ export const AdminDashboard = () => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        // Correct endpoint: reports/admin/stats (matches RN getReportStats)
         const res = await getReportStatsRef.current();
         if (cancelled) return;
 
@@ -144,106 +144,131 @@ export const AdminDashboard = () => {
     fetchStats();
     return () => { cancelled = true; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // ← fetch ONCE on mount — no infinite loop
+  }, []);
 
   return (
-    <div className="page-wrapper animate-fade-in">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">{t('Admin.home.overview', 'Overview')}</h1>
-      </div>
+    <div className="page-wrapper animate-fade-in pb-14">
+      {/* Header Matches Native HomeHeader */}
+      <AdminHomeHeader 
+        title={t('Admin.home.welcome')} 
+        subtitle={t('Admin.home.adminStore')} 
+      />
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-        {loading
-          ? FALLBACK_CARDS.map((_, i) => (
-            <div key={i} className="skeleton h-32 rounded-3xl" />
-          ))
-          : cards.map((card, i) => {
-            const Icon = STAT_ICONS[i];
-            return (
-              <StatCard
-                key={card.key}
-                label={t(card.labelKey)}
-                value={card.value}
-                change={card.change}
-                changePositive={card.positive}
-                icon={<Icon size={20} />}
-                iconColor={STAT_COLORS[i]}
-              />
-            );
-          })
-        }
-      </div>
-
-      {/* Charts Column */}
-      <div className="flex flex-col mt-6 gap-8 pb-14">
-        {/* User Progress Line Chart */}
-        <div>
-          <h2 className="text-base font-bold text-white mb-4">{t('Admin.home.userProgress', 'User Progress')}</h2>
-          <GlassCard>
-          <ResponsiveContainer width="100%" height={200}>
-            <AreaChart data={lineData.length ? lineData : [{ value: 0, label: '--' }]}>
-              <defs>
-                <linearGradient id="colorMagenda" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#C2AEBF" stopOpacity={0.4} />
-                  <stop offset="95%" stopColor="#C2AEBF" stopOpacity={0.05} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid stroke="rgba(255,255,255,0.05)" strokeDasharray="4 4" />
-              <XAxis dataKey="label" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis hide />
-              <Tooltip content={<CustomTooltip />} />
-              <Area
-                type="monotone"
-                dataKey="value"
-                stroke="#C2AEBF"
-                strokeWidth={2}
-                fillOpacity={1}
-                fill="url(#colorMagenda)"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </GlassCard>
+      <div className="px-1">
+        <h2 className="text-lg font-bold text-white mb-4">{t('Admin.home.overview')}</h2>
+        
+        {/* Stats Grid - 2x2 to match native */}
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          {loading
+            ? FALLBACK_CARDS.map((_, i) => (
+              <div key={i} className="skeleton h-32 rounded-3xl" />
+            ))
+            : cards.map((card, i) => {
+              const Icon = STAT_ICONS[i];
+              return (
+                  <StatCard
+                    key={card.key}
+                    label={t(card.labelKey)}
+                    value={card.value}
+                    change={card.change}
+                    changePositive={card.positive}
+                    icon={<Icon size={20} />}
+                    iconColor={STAT_COLORS[i]}
+                  />
+              );
+            })
+          }
         </div>
 
-        {/* Session Traffic Bar Chart */}
-        <GlassCard>
+        {/* User Progress Line Chart - Matches Native Params */}
+        <div className="mb-8">
+          <h3 className="text-base font-bold text-white mb-4">{t('Admin.home.userProgress')}</h3>
+          <GlassCard>
+            <ResponsiveContainer width="100%" height={240}>
+              <AreaChart data={lineData.length ? lineData : [{ value: 0, label: '--' }]}>
+                <defs>
+                  <linearGradient id="colorMagenda" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#C2AEBF" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#C2AEBF" stopOpacity={0.05} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" vertical={false} />
+                <XAxis 
+                  dataKey="label" 
+                  tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} 
+                  axisLine={false} 
+                  tickLine={false}
+                  dy={10}
+                />
+                <YAxis 
+                  tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} 
+                  axisLine={false} 
+                  tickLine={false} 
+                />
+                <Tooltip content={<CustomTooltip />} />
+                <Area
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#C2AEBF"
+                  strokeWidth={3}
+                  fillOpacity={1}
+                  fill="url(#colorMagenda)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </GlassCard>
+        </div>
+
+        {/* Session Traffic Bar Chart - Matches Native Highlighting */}
+        <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-white">{t('Admin.home.sessionTraffic', 'Session Traffic')}</h2>
-            <div className="flex gap-1">
-                <select
-                  value={period}
-                  onChange={(e) => setPeriod(e.target.value as 'week' | 'month')}
-                  className="bg-white/10 text-white text-xs border border-white/10 rounded-xl px-3 py-1.5 outline-none focus:border-accent appearance-none"
-                  style={{ backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.5rem center', backgroundSize: '1em', paddingRight: '2rem' }}
-                >
-                  <option value="week" className="bg-gray-800 text-white">Week</option>
-                  <option value="month" className="bg-gray-800 text-white">Month</option>
-                </select>
-            </div>
+            <h3 className="text-base font-bold text-white">{t('Admin.home.sessionTraffic')}</h3>
+            <select
+              value={period}
+              onChange={(e) => setPeriod(e.target.value as 'week' | 'month')}
+              className="bg-white/10 text-white text-xs border border-white/10 rounded-xl px-3 py-1.5 outline-none focus:border-accent"
+            >
+              <option value="week" className="bg-gray-800 text-white">Week</option>
+              <option value="month" className="bg-gray-800 text-white">Month</option>
+            </select>
           </div>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={barData.length ? barData : [{ value: 0, label: '--' }]} barCategoryGap="25%">
-              <XAxis dataKey="label" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis hide />
-              <Tooltip
-                content={<CustomTooltip />}
-                cursor={{ fill: 'rgba(255,255,255,0.04)' }}
-              />
-              <Bar dataKey="value" radius={[4, 4, 4, 4]}>
-                {barData.map((entry, index) => {
-                  const maxVal = Math.max(...barData.map(d => d.value));
-                  const isMax = entry.value === maxVal && entry.value > 0;
-                  return (
-                    <Cell key={`cell-${index}`} fill={isMax ? '#C2AEBF' : '#FFFFFF'} fillOpacity={isMax ? 1 : 0.8} />
-                  );
-                })}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </GlassCard>
+          
+          <GlassCard>
+            <ResponsiveContainer width="100%" height={240}>
+              <BarChart data={barData.length ? barData : [{ value: 0, label: '--' }]} barGap={8}>
+                <CartesianGrid stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" vertical={false} />
+                <XAxis 
+                  dataKey="label" 
+                  tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} 
+                  axisLine={false} 
+                  tickLine={false}
+                  dy={10}
+                />
+                <YAxis 
+                  tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} 
+                  axisLine={false} 
+                  tickLine={false} 
+                />
+                <Tooltip
+                  content={<CustomTooltip />}
+                  cursor={{ fill: 'rgba(255,255,255,0.04)' }}
+                />
+                <Bar dataKey="value" radius={[6, 6, 0, 0]} barSize={20}>
+                  {barData.map((entry, index) => {
+                    const maxVal = Math.max(...barData.map(d => d.value));
+                    const isMax = entry.value === maxVal && entry.value > 0;
+                    return (
+                      <Cell key={`cell-${index}`} fill={isMax ? '#C2AEBF' : 'rgba(255,255,255,0.8)'} />
+                    );
+                  })}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </GlassCard>
+        </div>
       </div>
     </div>
+  );
+};
   );
 };
