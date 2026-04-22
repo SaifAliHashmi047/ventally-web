@@ -8,12 +8,14 @@ import { Badge } from '../../components/ui/Badge';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { useAdmin } from '../../api/hooks/useAdmin';
 import { Plus, ShieldCheck, Search, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const statusVariant = (status: string) =>
   status === 'active' ? 'success' : status === 'suspended' ? 'error' : 'default';
 
 export const AdminSubAdmins = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { getSubAdmins } = useAdmin();
   const [subAdmins, setSubAdmins] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -110,6 +112,17 @@ export const AdminSubAdmins = () => {
             })}
           </div>
         )}
+      </div>
+
+      {/* Floating Action Button - Native Parity */}
+      <div className="fixed bottom-10 right-6 z-50">
+        <button
+          onClick={() => navigate('/admin/sub-admins/add')}
+          className="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/40 hover:scale-105 active:scale-95 transition-all"
+          title={t('Admin.subAdmins.add', 'Add Sub Admin')}
+        >
+          <Plus size={28} strokeWidth={2.5} />
+        </button>
       </div>
     </div>
   );

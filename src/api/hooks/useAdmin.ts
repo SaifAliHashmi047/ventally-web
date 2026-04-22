@@ -160,17 +160,55 @@ export const useAdmin = () => {
   };
 
   const getPaymentHistory = async (params?: any) => {
-    const res = await apiInstance.get('admin/financial/payments', { params });
+    const res = await apiInstance.get('admin/payments/history', { params });
     return res.data;
   };
 
-  // ── Exports ──────────────────────────────────────────────────────────────
+  /** Matches native getAdminPaymentStats used for financial dashboard */
+  const getAdminPaymentStats = async () => {
+    const res = await apiInstance.get('admin/payments/stats');
+    return res.data;
+  };
+
+  /** Export payment history as PDF — matches native exportPaymentHistoryPDF */
+  const exportPaymentHistoryPDF = async (params?: any) => {
+    const res = await apiInstance.get('admin/payments/history/export/pdf', {
+      params: { ...params, maxRows: 250 },
+      responseType: 'blob',
+    });
+    return res.data;
+  };
+
+  // ── Exports & Integrations ──────────────────────────────────────────────
   const exportData = async (type: string, format: 'csv' | 'json' = 'csv') => {
     const res = await apiInstance.get(`admin/exports/${type}`, { params: { format }, responseType: 'blob' });
     return res.data;
   };
 
-  // ── Crisis Config ────────────────────────────────────────────────────────
+  /** List user integrations/exports — matches native getIntegrations */
+  const getIntegrations = async (params?: any) => {
+    const res = await apiInstance.get('admin/integrations', { 
+      params: { ...params, limit: 20 } 
+    });
+    return res.data;
+  };
+
+  /** Update integration status — matches native updateExportStatus */
+  const updateExportStatus = async (userId: string, payload: { exported: boolean }) => {
+    const res = await apiInstance.put(`admin/integrations/${userId}/export-status`, payload);
+    return res.data;
+  };
+
+  /** Export individual user data as PDF — matches native exportIntegrationsPDF */
+  const exportIntegrationsPDF = async (params?: any) => {
+    const res = await apiInstance.get('admin/integrations/export/pdf', {
+      params: { ...params, maxRows: 250 },
+      responseType: 'blob',
+    });
+    return res.data;
+  };
+
+  // ── Crisis & AI Settings ──────────────────────────────────────────────
   const getCrisisConfig = async () => {
     const res = await apiInstance.get('admin/crisis-config');
     return res.data;
@@ -178,6 +216,24 @@ export const useAdmin = () => {
 
   const updateCrisisConfig = async (config: any) => {
     const res = await apiInstance.put('admin/crisis-config', config);
+    return res.data;
+  };
+
+  /** List crisis history log — matches native AdminCrisisConf listing logic */
+  const getCrisisLog = async (params?: any) => {
+    const res = await apiInstance.get('admin/crisis/log', { params });
+    return res.data;
+  };
+
+  /** Get current AI admin settings — matches native getAdminAISettings */
+  const getAdminAISettings = async () => {
+    const res = await apiInstance.get('admin-settings/ai');
+    return res.data;
+  };
+
+  /** Update AI admin settings — matches native updateAdminAISettings */
+  const updateAdminAISettings = async (payload: any) => {
+    const res = await apiInstance.put('admin-settings/ai', payload);
     return res.data;
   };
 
@@ -198,9 +254,10 @@ export const useAdmin = () => {
     getSubAdmins, createSubAdmin, addSubAdmin, getSubAdminDetail, updateSubAdminPermissions, updateSubAdmin, deleteSubAdmin, removeSubAdmin,
     getListenerRequests, getListenerVerifications, getListenerVerificationDetail, reviewListenerVerification, reviewListenerRequest,
     getReports, getReportDetail, getReportDetails, updateReportStatus, takeAction, submitReport,
-    getFinancialStats, getPaymentHistory,
-    exportData,
-    getCrisisConfig, updateCrisisConfig,
+    getFinancialStats, getPaymentHistory, getAdminPaymentStats, exportPaymentHistoryPDF,
+    exportData, getIntegrations, updateExportStatus, exportIntegrationsPDF,
+    getCrisisConfig, updateCrisisConfig, getCrisisLog,
+    getAdminAISettings, updateAdminAISettings,
     getRolesPermissions, updateRolePermissions,
   };
 };

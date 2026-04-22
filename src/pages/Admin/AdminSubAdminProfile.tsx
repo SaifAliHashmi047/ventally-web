@@ -67,7 +67,13 @@ export const AdminSubAdminProfile = () => {
     setSaving(true);
     try {
       await updateSubAdminPermissions(id!, { permissions });
-      navigate(-1);
+      navigate('/admin/security-success', {
+        state: {
+          title: t('Admin.success.permissionsUpdated', 'Permissions Updated'),
+          subtitle: t('Admin.success.permissionsSubtitle', 'The sub-admin permissions have been successfully updated.'),
+          redirectPath: '/admin/sub-admins'
+        }
+      });
     } catch { /* ignore */ } finally {
       setSaving(false);
     }

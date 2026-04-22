@@ -17,12 +17,17 @@ import { AdminExports } from '../pages/Admin/AdminExports';
 import { AdminTakeAction } from '../pages/Admin/AdminTakeAction';
 import { AdminViewChat } from '../pages/Admin/AdminViewChat';
 import { AdminPaymentHistory } from '../pages/Admin/AdminPaymentHistory';
+import { AdminCrisisLog } from '../pages/Admin/AdminCrisisLog';
 import { AdminCrisisConf } from '../pages/Admin/AdminCrisisConf';
 import { AdminAddSubAdmin } from '../pages/Admin/AdminAddSubAdmin';
 import { AdminChangeEmailPhone } from '../pages/Admin/AdminChangeEmailPhone';
 import { AdminVerifyOTP } from '../pages/Admin/AdminVerifyOTP';
 import { AdminResetPassword } from '../pages/Admin/AdminResetPassword';
 import { AdminSubAdminProfile } from '../pages/Admin/AdminSubAdminProfile';
+import { AdminSuccessScreen } from '../pages/Admin/AdminSuccessScreen';
+import { AdminSecurity } from '../pages/Admin/AdminSecurity';
+import { AdminAISettings } from '../pages/Admin/AdminAISettings';
+import { AdminCrisisLog } from '../pages/Admin/AdminCrisisLog';
 
 // Common Pages
 import { Notifications } from '../pages/Common/Notifications';
@@ -51,6 +56,7 @@ export const AdminRouter = () => {
         <Route path="reports/:id/action" element={<AdminTakeAction />} />
         <Route path="chats/:sessionId" element={<AdminViewChat />} />
         <Route path="payments" element={<AdminPaymentHistory />} />
+        <Route path="crisis" element={<AdminCrisisLog />} />
         <Route path="crisis-config" element={<AdminCrisisConf />} />
         <Route path="sub-admins/add" element={<AdminAddSubAdmin />} />
         <Route path="sub-admins/:id" element={<AdminSubAdminProfile />} />
@@ -58,6 +64,9 @@ export const AdminRouter = () => {
         <Route path="update-email" element={<AdminChangeEmailPhone />} />
         <Route path="verify-otp" element={<AdminVerifyOTP />} />
         <Route path="reset-password" element={<AdminResetPassword />} />
+        <Route path="security" element={<AdminSecurity />} />
+        <Route path="security-success" element={<AdminSuccessScreen />} />
+        <Route path="ai-settings" element={<AdminAISettings />} />
         {/* Common */}
         <Route path="notifications" element={<Notifications />} />
         <Route path="notifications/:id" element={<NotificationDetail />} />

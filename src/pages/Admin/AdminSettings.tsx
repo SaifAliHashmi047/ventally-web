@@ -67,7 +67,7 @@ export const AdminSettings = () => {
         />
         <SettingsItem
           title={t('Admin.settings.options.crisisConfig', 'Crisis config')}
-          onPress={() => navigate('/admin/crisis-conf')}
+          onPress={() => navigate('/admin/crisis')}
         />
         <SettingsItem
           title={t('Admin.settings.options.exportsIntegrations', 'Exports & Integrations')}
@@ -76,6 +76,10 @@ export const AdminSettings = () => {
         <SettingsItem
           title={t('Admin.settings.options.rolesPermissions', 'Roles & Permissions')}
           onPress={() => navigate('/admin/roles')}
+        />
+        <SettingsItem
+          title={t('Admin.settings.options.aiSettings', 'AI Settings')}
+          onPress={() => navigate('/admin/ai-settings')}
         />
         
         {/* Remove bottom border for the last item in the list visually by targeting pseudo or inline, though border-b won't break layout */}
