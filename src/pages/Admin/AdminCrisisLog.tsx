@@ -25,19 +25,21 @@ export const AdminCrisisLog = () => {
       const res = await getCrisisLog({ search: searchTerm });
       const data = res?.items || res?.logs || res?.data || (Array.isArray(res) ? res : []);
       setLogs(data);
-    } catch (error) { 
+    } catch (error) {
       console.error('Failed to fetch crisis logs:', error);
-      // Fallback only if needed
-      if (logs.length === 0) {
-        setLogs([
-          { id: '1234567', email: 'user@example.com', type: 'call', date: '12 Nov 2025' },
-          { id: '1234568', email: 'venter@example.com', type: 'chat', date: '13 Nov 2025', sessionId: 's1' },
-        ]);
-      }
+      setLogs((prev) =>
+        prev.length === 0
+          ? [
+              { id: '1234567', email: 'user@example.com', type: 'call', date: '12 Nov 2025' },
+              { id: '1234568', email: 'venter@example.com', type: 'chat', date: '13 Nov 2025', sessionId: 's1' },
+            ]
+          : prev
+      );
     } finally {
       setLoading(false);
     }
-  }, [getCrisisLog]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     fetchLogs(debouncedSearch);

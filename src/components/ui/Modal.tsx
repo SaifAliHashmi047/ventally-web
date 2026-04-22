@@ -49,24 +49,55 @@ export const Modal: React.FC<ModalProps> = ({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
-      style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{
+        background: 'rgba(0, 0, 0, 0.55)',
+        backdropFilter: 'blur(18px)',
+        WebkitBackdropFilter: 'blur(18px)',
+        animation: 'fade-in 0.25s ease forwards',
+      }}
       onClick={(e) => e.target === overlayRef.current && onClose()}
     >
       <div
-        className={cn(
-          'glass-bordered rounded-3xl w-full animate-slide-up',
-          sizeMap[size],
-          className
-        )}
+        className={cn('w-full rounded-3xl overflow-hidden', sizeMap[size], className)}
+        style={{
+          background: 'rgba(0, 0, 0, 0.10)',
+          backdropFilter: 'blur(40px)',
+          WebkitBackdropFilter: 'blur(40px)',
+          border: '1px solid rgba(255, 255, 255, 0.14)',
+          boxShadow: `
+            0 0 0 0.5px rgba(255,255,255,0.08) inset,
+            inset 0 1px 0 rgba(255,255,255,0.18),
+            0 24px 64px rgba(0,0,0,0.5),
+            0 8px 24px rgba(0,0,0,0.3)
+          `,
+          animation: 'modal-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        }}
       >
         {(title || showClose) && (
-          <div className="flex items-center justify-between p-6 border-b border-white/5">
-            {title && <h2 className="text-lg font-semibold text-white">{title}</h2>}
+          <div
+            className="flex items-center justify-between px-6 pt-6 pb-4"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+          >
+            {title && (
+              <h2 className="text-[17px] font-semibold text-white tracking-tight">{title}</h2>
+            )}
             {showClose && (
               <button
                 onClick={onClose}
-                className="p-2 rounded-xl text-gray-500 hover:text-white hover:bg-white/5 transition-all ml-auto"
+                className="ml-auto p-2 rounded-xl transition-all"
+                style={{
+                  color: 'rgba(255,255,255,0.4)',
+                  background: 'rgba(255,255,255,0)',
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.07)';
+                  (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.9)';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0)';
+                  (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.4)';
+                }}
               >
                 <X size={18} />
               </button>

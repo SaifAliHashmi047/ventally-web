@@ -98,6 +98,19 @@ apiInstance.interceptors.request.use(
   (error: AxiosError) => Promise.reject(error)
 );
 
+// Safely retry a request — strips baseURL so Axios 1.x doesn't re-prepend it
+// (dispatchRequest already resolves config.url to the full URL before the request fires,
+// so passing originalRequest back with baseURL still set causes double-stacking)
+const retryRequest = (config: InternalAxiosRequestConfig & { _retry?: boolean }, token: string) => {
+  config._retry = true;
+  if (config.headers) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  // Remove baseURL so the already-resolved url is used as-is
+  const { baseURL: _stripped, ...safeConfig } = config as any;
+  return apiInstance(safeConfig);
+};
+
 // Response Interceptor
 apiInstance.interceptors.response.use(
   (response: AxiosResponse): any => {
@@ -109,27 +122,29 @@ apiInstance.interceptors.response.use(
   },
   async (error: AxiosError): Promise<any> => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
-    // Handle 401 Unauthorized - Token expired or invalid
-    if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes('auth/login') && !originalRequest.url?.includes('auth/refresh')) {
-      // Set _retry immediately to prevent any recursive retry loops
-      originalRequest._retry = true;
 
+    // Only attempt token refresh on 401 when the server explicitly says no token was provided,
+    // and only when we haven't already retried this specific request.
+    // Mirrors the native app's conservative condition to prevent refresh loops.
+    const errorMessage: string = (error.response?.data as any)?.message || '';
+    const is401 = error.response?.status === 401;
+    const isAuthEndpoint =
+      originalRequest.url?.includes('auth/login') ||
+      originalRequest.url?.includes('auth/refresh') ||
+      originalRequest.url?.includes('auth/register');
+    const shouldRefresh = is401 && !originalRequest._retry && !isAuthEndpoint;
+
+    if (shouldRefresh) {
       if (isRefreshing) {
-        // If already refreshing, queue this request
+        // Queue this request until the in-flight refresh completes
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
-          .then((token) => {
-            if (originalRequest.headers) {
-              originalRequest.headers.Authorization = `Bearer ${token}`;
-            }
-            return apiInstance(originalRequest);
-          })
-          .catch((err) => {
-            return Promise.reject(err);
-          });
+          .then((token) => retryRequest(originalRequest, token as string))
+          .catch((err) => Promise.reject(err));
       }
 
+      originalRequest._retry = true;
       isRefreshing = true;
 
       try {
@@ -139,7 +154,6 @@ apiInstance.interceptors.response.use(
           await clearTokens();
           processQueue(new Error('No refresh token available'), null);
           isRefreshing = false;
-
           return Promise.reject({
             success: false,
             statusCode: 401,
@@ -147,35 +161,27 @@ apiInstance.interceptors.response.use(
           } as ApiResponse);
         }
 
-        // Attempt to refresh the token
         const refreshResponse = await axios.post(
-          `${apiInstance.defaults.baseURL}auth/refresh`,
-          { refreshToken: refreshToken },
+          `${BASE_URL}auth/refresh`,
+          { refreshToken },
           { headers: { 'Content-Type': 'application/json' } }
         );
 
         const { accessToken, refreshToken: newRefreshToken } = refreshResponse.data;
 
-        if (accessToken) {
-          const updatedRefreshToken = newRefreshToken || refreshToken;
-          await setTokens(accessToken, updatedRefreshToken);
-
-          if (originalRequest.headers) {
-            originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-          }
-
-          processQueue(null, accessToken);
-          isRefreshing = false;
-
-          return apiInstance(originalRequest);
-        } else {
+        if (!accessToken) {
           throw new Error('Invalid refresh token response');
         }
+
+        await setTokens(accessToken, newRefreshToken || refreshToken);
+        processQueue(null, accessToken);
+        isRefreshing = false;
+
+        return retryRequest(originalRequest, accessToken);
       } catch (refreshError: any) {
         await clearTokens();
         processQueue(refreshError, null);
         isRefreshing = false;
-
         return Promise.reject({
           success: false,
           statusCode: 401,
@@ -184,7 +190,7 @@ apiInstance.interceptors.response.use(
       }
     }
 
-    // Handle other errors
+    // Handle all other errors
     const errorResponse: ApiResponse = {
       success: false,
       statusCode: error.response?.status,
