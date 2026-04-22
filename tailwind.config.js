@@ -9,9 +9,9 @@ export default {
     extend: {
       colors: {
         // Brand Colors (from RN theme)
-        primary: '#0A84FF',
-        'primary-hover': '#0066CC',
-        secondary: '#5E5CE6',
+        primary: '#C2AEBF',
+        'primary-hover': '#A898A5',
+        secondary: '#C2AEBF',
         accent: '#C2AEBF',      // magenda
         'accent-deep': '#204845', // green
         
@@ -44,7 +44,7 @@ export default {
         success: '#32D74B',
         error: '#FF453A',
         warning: '#FFD60A',
-        info: '#0A84FF',
+        info: '#C2AEBF',
         red: '#FF5757',
         
         // Mood Colors

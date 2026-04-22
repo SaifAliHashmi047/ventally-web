@@ -184,7 +184,7 @@ export const AdminUserDetail = () => {
         {/* Actions */}
         <div className="flex flex-col gap-3 pt-6">
           <Button
-            variant={user.status === 'suspended' ? 'success' : 'error'}
+            variant="secondary"
             fullWidth
             onClick={handleToggleSuspend}
             loading={suspending}

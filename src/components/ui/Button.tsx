@@ -11,7 +11,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
    * danger       — red tint
    * ghost        — no background
    */
-  variant?: 'primary' | 'glass' | 'glass-bordered' | 'accent' | 'danger' | 'ghost';
+  variant?: 'primary' | 'glass' | 'glass-bordered' | 'secondary' | 'accent' | 'danger' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
   loading?: boolean;
@@ -33,12 +33,13 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const variantMap: Record<string, string> = {
-    primary:        'btn-primary',
-    glass:          'btn-glass',
+    primary:          'btn-primary',
+    glass:            'btn-glass',
     'glass-bordered': 'btn-glass-bordered',
-    accent:         'btn-accent',
-    danger:         'btn-danger',
-    ghost:          'hover:bg-white/5 text-gray-400 hover:text-white',
+    secondary:        'btn-secondary',
+    accent:           'btn-accent',
+    danger:           'btn-danger',
+    ghost:            'hover:bg-white/5 text-gray-400 hover:text-white',
   };
 
   const sizeMap = {
