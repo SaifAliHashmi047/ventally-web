@@ -57,7 +57,7 @@ export const AdminRouter = () => {
         <Route path="chats/:sessionId" element={<AdminViewChat />} />
         <Route path="payments" element={<AdminPaymentHistory />} />
         <Route path="crisis" element={<AdminCrisisLog />} />
-        <Route path="crisis/:id/detail" element={<AdminCrisisDetail />} />
+        <Route path="crisis/:id/chat" element={<AdminCrisisDetail />} />
         <Route path="crisis-config" element={<AdminCrisisConf />} />
         <Route path="sub-admins/add" element={<AdminAddSubAdmin />} />
         <Route path="sub-admins/:id" element={<AdminSubAdminProfile />} />

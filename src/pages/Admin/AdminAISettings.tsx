@@ -60,7 +60,7 @@ export const AdminAISettings = () => {
         onBack={() => navigate('/admin/settings')} 
       />
 
-      <div className="space-y-6 pb-24 px-1">
+      <div className="space-y-6 pb-4 px-1">
         <GlassCard className="bg-white/[0.02] border-primary/10">
           <div className="flex items-start gap-4">
             <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary flex-shrink-0">
@@ -145,28 +145,24 @@ export const AdminAISettings = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 border-t border-white/5 bg-black/40 backdrop-blur-3xl z-20">
-        <div className="max-w-2xl mx-auto flex gap-3">
-          <Button 
-            variant="glass" 
-            fullWidth 
-            onClick={() => navigate(-1)}
-            className="rounded-full h-12 border-white/10"
-          >
-            <RotateCcw size={16} className="mr-2" />
-            Reset
-          </Button>
-          <Button 
-            variant="primary" 
-            fullWidth 
-            loading={saving}
-            onClick={handleSave}
-            className="rounded-full h-12 font-bold"
-          >
-            <Save size={16} className="mr-2" />
-            Save Changes
-          </Button>
-        </div>
+      <div className="flex gap-3 px-1 pt-2 pb-6">
+        <Button
+          variant="secondary"
+          onClick={() => navigate(-1)}
+          className="h-12 flex-1"
+          leftIcon={<RotateCcw size={16} />}
+        >
+          Reset
+        </Button>
+        <Button
+          variant="primary"
+          loading={saving}
+          onClick={handleSave}
+          className="h-12 flex-1 font-bold"
+          leftIcon={<Save size={16} />}
+        >
+          Save Changes
+        </Button>
       </div>
     </div>
   );

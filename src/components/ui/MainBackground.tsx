@@ -28,7 +28,7 @@ export const MainBackground: React.FC = () => {
       {/* ── Dark overlay — keeps theme colors consistent regardless of bg image ── */}
       <div
         className="fixed inset-0 z-0 pointer-events-none"
-        style={{ background: 'rgba(0, 0, 0, 0.55)' }}
+        style={{ background: 'rgba(0, 0, 0, 0.30)' }}
       />
       {/* ── Brand light mesh — shared across app + auth (does not replace image / glass) ── */}
       <div

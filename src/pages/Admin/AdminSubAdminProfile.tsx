@@ -114,7 +114,7 @@ export const AdminSubAdminProfile = () => {
     : Object.keys(PERMISSION_LABELS);
 
   return (
-    <div className="page-wrapper animate-fade-in">
+    <div className="  animate-fade-in">
       <PageHeader title="Sub-Admin Profile" onBack={() => navigate('/admin/sub-admins')} />
 
       {/* Profile Card */}
@@ -157,7 +157,7 @@ export const AdminSubAdminProfile = () => {
       </GlassCard>
 
       {/* Actions */}
-      <Button variant="primary" fullWidth loading={saving} onClick={handleUpdate} className="mb-3">
+      <Button variant="primary" fullWidth loading={saving} onClick={handleUpdate} className='mb-3 mt-5' >
         Update Permissions
       </Button>
       <Button
