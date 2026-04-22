@@ -107,7 +107,7 @@ export const VenterCrisisImmediateHelp = () => {
         ))}
       </div>
 
-      <GlassCard className="bg-accent/5 mb-6">
+      <GlassCard className="bg-white/[0.02] mb-6">
         <p className="text-sm text-gray-300 text-center">
           {t('Crisis.notAlone', 'You are not alone. Reach out for support — it is a sign of strength.')}
         </p>

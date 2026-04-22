@@ -120,7 +120,7 @@ export const AdminFinancialStats = () => {
         </div>
 
         {/* Task Progress Chart */}
-        <GlassCard bordered className="bg-black/20 p-6">
+        <GlassCard bordered className="bg-white/[0.02] p-6">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-lg font-bold text-white">{t('Admin.financialStats.taskProgress.title', 'Task Progress')}</h2>
             <div className="bg-white/10 px-4 py-1.5 rounded-full text-[11px] text-white/60 font-bold uppercase tracking-widest">
@@ -160,7 +160,7 @@ export const AdminFinancialStats = () => {
         </GlassCard>
 
         {/* Revenue Sources Pie Chart */}
-        <GlassCard bordered className="bg-black/20 p-6">
+        <GlassCard bordered className="bg-white/[0.02] p-6">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-lg font-bold text-white">{t('Admin.financialStats.revenueSources.title', 'Revenue Sources')}</h2>
             <div className="flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full text-[11px] text-white/60 font-bold uppercase tracking-widest">

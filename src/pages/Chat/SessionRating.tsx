@@ -124,7 +124,7 @@ export const SessionRating = () => {
 
         {/* Main Action Card */}
         <div className="w-full">
-          <GlassCard bordered padding="lg" rounded="3xl" className="bg-black/10">
+          <GlassCard bordered padding="lg" rounded="3xl" className="bg-white/[0.02]">
             {isNegative ? (
               <div className="py-2">
                 <p className="text-base font-medium text-white text-center leading-relaxed mb-10">

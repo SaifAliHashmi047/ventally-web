@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { GlassModal } from '../../components/ui/GlassModal';
+import { cn } from '../../utils/cn';
 
 export const AdminUserDetail = () => {
   const { id } = useParams<{ id: string }>();

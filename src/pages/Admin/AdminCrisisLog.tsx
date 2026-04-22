@@ -72,7 +72,7 @@ export const AdminCrisisLog = () => {
         <div className="space-y-4 pb-20">
           {loading ? (
             [...Array(3)].map((_, i) => (
-              <GlassCard key={i} className="animate-pulse h-28 bg-white/5 border-white/5 rounded-3xl" />
+              <GlassCard key={i} className="animate-pulse h-28 bg-white/[0.02] border-white/5 rounded-3xl" />
             ))
           ) : filtered.length === 0 ? (
             <div className="text-center py-20 opacity-50">

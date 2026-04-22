@@ -157,7 +157,7 @@ export const SubscriptionSuccessScreen = () => {
         </p>
 
         {/* Full Benefits Glass Card Replicating Native exactly */}
-        <GlassCard className="p-5 text-left mb-6 !bg-white/[0.02] border-white/15" rounded="2xl">
+        <GlassCard className="p-5 text-left mb-6 bg-white/[0.02] border-white/15" rounded="2xl">
             <h3 className="text-white font-semibold text-[15px] mb-4">
                 {t('SubscriptionSuccess.benefitsTitle', 'Includes')}
             </h3>

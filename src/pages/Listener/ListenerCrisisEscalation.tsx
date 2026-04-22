@@ -155,7 +155,7 @@ export const ListenerCrisisEscalation = () => {
 
       {showSessionEndedModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in">
-          <GlassCard bordered className="w-full max-w-md rounded-3xl p-8 sm:p-10 text-center border-white/10 bg-black/45 shadow-2xl">
+          <GlassCard bordered className="w-full max-w-md rounded-3xl p-8 sm:p-10 text-center border-white/10 bg-white/[0.02] shadow-2xl">
             <div className="w-16 h-16 rounded-2xl bg-primary/15 border border-primary/25 flex items-center justify-center mx-auto mb-5">
               <ShieldAlert size={32} className="text-primary" />
             </div>

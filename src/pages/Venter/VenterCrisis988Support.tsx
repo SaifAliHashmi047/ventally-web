@@ -113,7 +113,7 @@ export const VenterCrisis988Support = () => {
         </Button>
       </div>
 
-      <GlassCard className="mt-6 bg-accent/5">
+      <GlassCard className="mt-6 bg-white/[0.02]">
         <p className="text-xs text-gray-400 text-center">
           {t('Crisis.remember', 'Remember: You matter, and support is always available.')}
         </p>

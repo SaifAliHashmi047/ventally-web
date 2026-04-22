@@ -20,7 +20,7 @@ export const AdminSuccessScreen = () => {
 
   return (
     <div className="page-wrapper animate-fade-in flex flex-col justify-center items-center px-6 min-h-screen pb-20">
-      <GlassCard bordered className="w-full max-w-sm p-8 flex flex-col items-center bg-black/40 border-white/10">
+      <GlassCard bordered className="w-full max-w-sm p-8 flex flex-col items-center bg-white/[0.02] border-white/10">
         <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-6 border border-white/20">
           <Check size={40} className="text-white" />
         </div>

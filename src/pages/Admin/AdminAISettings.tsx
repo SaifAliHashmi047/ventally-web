@@ -61,7 +61,7 @@ export const AdminAISettings = () => {
       />
 
       <div className="space-y-6 pb-24 px-1">
-        <GlassCard className="bg-primary/5 border-primary/10">
+        <GlassCard className="bg-white/[0.02] border-primary/10">
           <div className="flex items-start gap-4">
             <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary flex-shrink-0">
               <Bot size={22} />

@@ -102,7 +102,7 @@ export const AdminAddSubAdmin = () => {
         </div>
 
         {/* Permissions Card */}
-        <GlassCard padding="none" rounded="3xl" className="overflow-hidden bg-black/10 border-white/5 !rounded-[2.5rem]">
+        <GlassCard padding="none" rounded="3xl" className="overflow-hidden bg-white/[0.02] border-white/5 !rounded-[2.5rem]">
           <div className="px-5 py-4 border-b border-white/5">
             <h3 className="text-base font-bold text-white text-center">
               {t('Admin.addSubAdmin.permissions', 'Permissions')}

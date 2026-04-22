@@ -46,7 +46,7 @@ export const ListenerWallet = () => {
     <div className="page-wrapper animate-fade-in">
       <PageHeader title={t('ListenerWallet.title', 'Earnings')} />
 
-      <GlassCard bordered className="bg-gradient-to-br from-accent/10 to-transparent mb-4">
+      <GlassCard bordered className="bg-white/[0.02] mb-4">
         <p className="text-sm text-gray-500 mb-1">{t('ListenerWallet.availableBalance', 'Available Balance')}</p>
         <p className="text-4xl font-bold text-white tracking-tight flex items-baseline gap-1">
           {loading ? '--' : summary?.availableBalance?.toFixed(2) ?? '0.00'}

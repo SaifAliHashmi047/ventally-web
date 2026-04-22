@@ -97,7 +97,7 @@ export const AdminExports = () => {
         <div className="space-y-6">
           {loading ? (
             [...Array(2)].map((_, i) => (
-              <GlassCard key={i} className="animate-pulse h-64 bg-white/5" />
+              <GlassCard key={i} className="animate-pulse h-64 bg-white/[0.02]" />
             ))
           ) : integrations.length === 0 ? (
             <div className="text-center py-20 opacity-50">
@@ -107,7 +107,7 @@ export const AdminExports = () => {
             integrations.map((item) => {
               const isExported = item.exportStatus === 'exported';
               return (
-                <GlassCard key={item.id} bordered className="bg-white/5 border-white/10 overflow-hidden" padding="none">
+                <GlassCard key={item.id} bordered className="bg-white/[0.02] border-white/10 overflow-hidden" padding="none">
                   {/* Card Header Info */}
                   <div className="p-5 pb-4">
                     <div className="flex justify-between items-start mb-1">

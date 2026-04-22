@@ -151,7 +151,7 @@ export const VenterRecoveryDashboard = () => {
           </div>
 
           {/* ── Stats row — matches native 3-column glass card ── */}
-          <GlassCard className="mb-8" style={{ background: 'rgba(255,255,255,0.07)' }}>
+          <GlassCard className="mb-8">
             <div className="grid grid-cols-3 divide-x divide-white/10">
               {/* Reflections / Notes */}
               <div className="flex flex-col items-center py-3 px-2">
