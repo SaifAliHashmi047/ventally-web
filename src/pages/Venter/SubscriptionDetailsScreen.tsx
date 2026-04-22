@@ -191,16 +191,12 @@ export const SubscriptionDetailsScreen = () => {
         isOpen={showConfirmCancel}
         onClose={() => setShowConfirmCancel(false)}
         title={t('SubscriptionDetails.cancelSubscription')}
-        description={t('SubscriptionDetails.cancelConfirmationMessage')}
-        primaryAction={{
-          label: t('Common.yes'),
-          onClick: handleCancelSubscription,
-          loading: isCancelling
-        }}
-        secondaryAction={{
-          label: t('Common.no'),
-          onClick: () => setShowConfirmCancel(false)
-        }}
+        message={t('SubscriptionDetails.cancelConfirmationMessage')}
+        primaryButtonText={t('Common.yes')}
+        onPrimaryPress={handleCancelSubscription}
+        loading={isCancelling}
+        secondaryButtonText={t('Common.no')}
+        onSecondaryPress={() => setShowConfirmCancel(false)}
       />
 
       {/* Cancelled Success Modal */}
@@ -208,14 +204,12 @@ export const SubscriptionDetailsScreen = () => {
         isOpen={showCancelledModal}
         onClose={() => setShowCancelledModal(false)}
         title={t('SubscriptionDetails.cancelled')}
-        description={t('SubscriptionDetails.cancelledMessage')}
+        message={t('SubscriptionDetails.cancelledMessage')}
         icon={<CheckCircle className="text-success" size={48} />}
-        primaryAction={{
-          label: t('Common.continue'),
-          onClick: () => {
-            setShowCancelledModal(false);
-            navigate(-1);
-          }
+        primaryButtonText={t('Common.continue')}
+        onPrimaryPress={() => {
+          setShowCancelledModal(false);
+          navigate(-1);
         }}
       />
     </div>

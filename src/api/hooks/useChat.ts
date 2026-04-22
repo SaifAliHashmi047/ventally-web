@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import apiInstance from '../apiInstance';
 
 export interface ChatMessage {
@@ -56,9 +56,9 @@ export const useChat = () => {
   /**
    * Get recent chats for admin review
    */
-  const getRecentChats = useCallback(async (params?: { 
-    limit?: number; 
-    offset?: number; 
+  const getRecentChats = useCallback(async (params?: {
+    limit?: number;
+    offset?: number;
     status?: string;
     flagged?: boolean;
   }) => {
@@ -97,12 +97,19 @@ export const useChat = () => {
     return res.data;
   }, []);
 
-  return {
+  return useMemo(() => ({
     getChatHistory,
     getConversations,
     getRecentChats,
     flagMessage,
     addAdminNote,
     endConversation,
-  };
+  }), [
+    getChatHistory,
+    getConversations,
+    getRecentChats,
+    flagMessage,
+    addAdminNote,
+    endConversation,
+  ]);
 };

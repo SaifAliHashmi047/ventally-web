@@ -34,6 +34,7 @@ export const Notifications = () => {
     <div className="page-wrapper animate-fade-in">
       <PageHeader
         title="Notifications"
+        onBack={() => navigate(-1)}
         rightContent={
           unreadCount > 0 ? (
             <Button variant="glass" size="sm" onClick={markAllRead}>Mark All Read</Button>

@@ -139,24 +139,20 @@ export const AdminAddSubAdmin = () => {
       </div>
 
       {/* Success Modal (Native Match) */}
-      <GlassModal isOpen={showSuccess} onClose={() => {}}>
-        <div className="flex flex-col items-center py-6 text-center">
-          <div className="w-16 h-16 rounded-full bg-success/20 flex items-center justify-center mb-4 border border-success/30">
-            <Check size={32} className="text-success" />
-          </div>
-          <h2 className="text-2xl font-bold text-white mb-2">
-            {t('Common.success', 'Success')}
-          </h2>
-          <p className="text-white/60 mb-6">
-            {t('Admin.addSubAdmin.successMsg', 'Sub Admin account has been created successfully.')}
-          </p>
-          <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
-            <div className="h-full bg-success animate-progress-3s" />
-          </div>
-          <p className="text-[10px] text-white/30 mt-2 uppercase tracking-widest">
-            {t('Common.redirecting', 'Redirecting...')}
-          </p>
+      <GlassModal 
+        isOpen={showSuccess} 
+        onClose={() => {}}
+        icon={<Check className="text-success" size={32} />}
+        title={t('Common.success', 'Success')}
+        message={t('Admin.addSubAdmin.successMsg', 'Sub Admin account has been created successfully.')}
+        showButtons={false}
+      >
+        <div className="mt-2 w-full h-1 bg-white/10 rounded-full overflow-hidden">
+          <div className="h-full bg-success animate-progress-3s" />
         </div>
+        <p className="text-[10px] text-white/30 mt-4 uppercase tracking-widest text-center">
+          {t('Common.redirecting', 'Redirecting...')}
+        </p>
       </GlassModal>
     </div>
   );

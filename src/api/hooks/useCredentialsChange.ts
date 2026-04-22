@@ -52,6 +52,26 @@ export const useCredentialsChange = () => {
     return res.data;
   }, []);
 
+  const requestEmailChangeOTP = useCallback(async (newEmail: string) => {
+    const res = await apiInstance.post('auth/change-email/request-otp', { newEmail });
+    return res.data;
+  }, []);
+
+  const verifyEmailChangeOTP = useCallback(async (newEmail: string, otp: string) => {
+    const res = await apiInstance.post('auth/change-email/verify-otp', { newEmail, otp });
+    return res.data;
+  }, []);
+
+  const requestPhoneChangeOTP = useCallback(async (newPhone: string) => {
+    const res = await apiInstance.post('auth/change-phone/request-otp', { newPhone });
+    return res.data;
+  }, []);
+
+  const verifyPhoneChangeOTP = useCallback(async (newPhone: string, otp: string) => {
+    const res = await apiInstance.post('auth/change-phone/verify-otp', { newPhone, otp });
+    return res.data;
+  }, []);
+
   return {
     changeEmail,
     changePhone,
@@ -59,5 +79,9 @@ export const useCredentialsChange = () => {
     changePassword,
     getTwoFactorSettings,
     updateTwoFactorSettings,
+    requestEmailChangeOTP,
+    verifyEmailChangeOTP,
+    requestPhoneChangeOTP,
+    verifyPhoneChangeOTP,
   };
 };

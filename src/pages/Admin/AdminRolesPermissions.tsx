@@ -13,9 +13,7 @@ import { GlassModal } from '../../components/ui/GlassModal';
 import { useTranslation } from 'react-i18next';
 
 const PERMISSIONS = [
-  'view', 'edit', 'delete', 'suspend', 'accessAdminPanel',
-  'manage_users', 'manage_listeners', 'view_reports', 'take_action',
-  'view_financial', 'manage_sub_admins', 'manage_settings', 'export_data', 'manage_crisis',
+  'view', 'edit', 'delete', 'suspend', 'accessAdminPanel'
 ];
 
 const PERMISSION_LABELS: Record<string, string> = {
@@ -24,15 +22,6 @@ const PERMISSION_LABELS: Record<string, string> = {
   delete: 'Delete Content',
   suspend: 'Suspend Users',
   accessAdminPanel: 'Access Admin Panel',
-  manage_users: 'Manage Users',
-  manage_listeners: 'Manage Listeners',
-  view_reports: 'View Reports',
-  take_action: 'Take Action',
-  view_financial: 'View Financial',
-  manage_sub_admins: 'Manage Sub-Admins',
-  manage_settings: 'Manage Settings',
-  export_data: 'Export Data',
-  manage_crisis: 'Manage Crisis',
 };
 
 export const AdminRolesPermissions = () => {
@@ -215,67 +204,46 @@ export const AdminRolesPermissions = () => {
       )}
 
       {/* Permission Picker Modal */}
-      {showPermModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="glass-dark rounded-[2.5rem] p-8 w-full max-w-md border border-white/10 overflow-hidden">
-            <h2 className="text-xl font-bold text-white mb-6 text-center">Permissions</h2>
-
-            <div className="max-h-[50vh] overflow-y-auto pr-2 space-y-3 mb-8 scrollbar-hide">
-              {PERMISSIONS.map(perm => (
-                <div key={perm} className="glass rounded-2xl flex items-center justify-between px-5 py-4 border border-white/5">
-                  <span className="text-sm font-medium text-white/80">{PERMISSION_LABELS[perm]}</span>
-                  <Toggle
-                    checked={selectedPerms.includes(perm)}
-                    onChange={() =>
-                      setSelectedPerms(prev =>
-                        prev.includes(perm) ? prev.filter(p => p !== perm) : [...prev, perm]
-                      )
-                    }
-                    size="sm"
-                    className="[&>[data-state=checked]]:bg-[#3E3E6A]"
-                  />
-                </div>
-              ))}
+      <GlassModal
+        isOpen={showPermModal}
+        onClose={() => setShowPermModal(false)}
+        title="Permissions"
+        showButtons={true}
+        primaryButtonText="Save Changes"
+        onPrimaryPress={handleSavePermissions}
+        secondaryButtonText="Cancel"
+        onSecondaryPress={() => setShowPermModal(false)}
+        loading={actioning}
+      >
+        <div className="max-h-[50vh] overflow-y-auto pr-2 space-y-3 mb-4 scrollbar-hide text-center">
+          {PERMISSIONS.map(perm => (
+            <div key={perm} className="glass rounded-2xl flex items-center justify-between px-5 py-4 border border-white/5">
+              <span className="text-sm font-medium text-white/80">{PERMISSION_LABELS[perm]}</span>
+              <Toggle
+                checked={selectedPerms.includes(perm)}
+                onChange={() =>
+                  setSelectedPerms(prev =>
+                    prev.includes(perm) ? prev.filter(p => p !== perm) : [...prev, perm]
+                  )
+                }
+                size="sm"
+                className="[&>[data-state=checked]]:bg-[#3E3E6A]"
+              />
             </div>
-
-            <div className="flex flex-col gap-3">
-              <Button 
-                variant="primary" 
-                fullWidth 
-                loading={actioning}
-                disabled={selectedPerms.length === 0} 
-                onClick={handleSavePermissions}
-                className="rounded-full h-14 font-bold"
-              >
-                Save Changes
-              </Button>
-              <Button 
-                variant="ghost" 
-                fullWidth 
-                onClick={() => setShowPermModal(false)}
-                className="rounded-full h-12 text-white/40"
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
+          ))}
         </div>
-      )}
+      </GlassModal>
 
       {/* Delete Confirmation Modal */}
       <GlassModal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         title={t('Admin.subAdminProfile.deleteConfirmTitle', 'Remove Sub Admin')}
-        description={t('Admin.subAdminProfile.deleteConfirmMessage', 'Are you sure you want to remove the selected sub admin(s)? This action cannot be undone.')}
-        primaryAction={{
-          label: t('Common.remove', 'Remove'),
-          onClick: handleRemove,
-        }}
-        secondaryAction={{
-          label: t('Common.cancel', 'Cancel'),
-          onClick: () => setShowDeleteModal(false),
-        }}
+        message={t('Admin.subAdminProfile.deleteConfirmMessage', 'Are you sure you want to remove the selected sub admin(s)? This action cannot be undone.')}
+        primaryButtonText={t('Common.remove', 'Remove')}
+        onPrimaryPress={handleRemove}
+        secondaryButtonText={t('Common.cancel', 'Cancel')}
+        onSecondaryPress={() => setShowDeleteModal(false)}
       />
     </div>
   );

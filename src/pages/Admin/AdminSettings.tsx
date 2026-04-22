@@ -63,7 +63,7 @@ export const AdminSettings = () => {
         />
         <SettingsItem
           title={t('Admin.settings.options.paymentHistory', 'Payment History')}
-          onPress={() => navigate('/admin/payment-history')}
+          onPress={() => navigate('/admin/payments')}
         />
         <SettingsItem
           title={t('Admin.settings.options.crisisConfig', 'Crisis config')}
@@ -93,15 +93,11 @@ export const AdminSettings = () => {
         isOpen={isLogoutModalVisible}
         onClose={() => setIsLogoutModalVisible(false)}
         title={t('Profile.logoutConfirmTitle', 'Confirm Logout')}
-        description={t('Profile.logoutConfirmMessage', 'Are you sure you want to log out?')}
-        primaryAction={{
-          label: t('Profile.logoutConfirmTitle', 'Logout'),
-          onClick: handleLogOut
-        }}
-        secondaryAction={{
-          label: t('Common.cancel', 'Cancel'),
-          onClick: () => setIsLogoutModalVisible(false)
-        }}
+        message={t('Profile.logoutConfirmMessage', 'Are you sure you want to log out?')}
+        primaryButtonText={t('Profile.logoutConfirmTitle', 'Logout')}
+        onPrimaryPress={handleLogOut}
+        secondaryButtonText={t('Common.cancel', 'Cancel')}
+        onSecondaryPress={() => setIsLogoutModalVisible(false)}
       />
     </div>
   );

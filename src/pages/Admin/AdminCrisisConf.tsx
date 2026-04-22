@@ -7,6 +7,7 @@ import { PageHeader } from '../../components/ui/PageHeader';
 import { Toggle } from '../../components/ui/Toggle';
 import { useAdmin } from '../../api/hooks/useAdmin';
 import { AlertTriangle, Phone, Globe, Save, RotateCcw } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 interface CrisisResource {
   id: string;
@@ -63,7 +64,9 @@ export const AdminCrisisConf = () => {
     setSaving(true);
     try {
       await updateCrisisConfig(config);
+      toast.success('Crisis configuration saved successfully');
     } catch (error) {
+      toast.error('Failed to save crisis configuration');
       console.error('Failed to save crisis config:', error);
     } finally {
       setSaving(false);

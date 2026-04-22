@@ -27,7 +27,7 @@ export const AdminReviewRequest = () => {
       try {
         setLoading(true);
         const res = await getListenerVerificationDetail(id!);
-        setRequest(res?.verification ?? res);
+        setRequest(res?.submission ?? res?.verification ?? res);
       } catch {
         toast.error(t('Common.error', 'Error loading request'));
       } finally {
@@ -174,7 +174,7 @@ export const AdminReviewRequest = () => {
       </div>
 
       <GlassModal
-        visible={showApprovedModal}
+        isOpen={showApprovedModal}
         onClose={() => setShowApprovedModal(false)}
         icon={<CheckCircle className="text-accent" />}
         title={t('Admin.review.approved', 'Approved')}
@@ -183,7 +183,7 @@ export const AdminReviewRequest = () => {
       />
 
       <GlassModal
-        visible={showRejectedModal}
+        isOpen={showRejectedModal}
         onClose={() => setShowRejectedModal(false)}
         icon={<XCircle className="text-error" />}
         title={t('Admin.listenerRequests.reject', 'Rejected')}

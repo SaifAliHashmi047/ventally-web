@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import apiInstance from '../apiInstance';
 
 export const useAdmin = () => {
@@ -11,10 +12,19 @@ export const useAdmin = () => {
   };
 
   // ── Users ───────────────────────────────────────────────────────────────
-  const getUsers = async (params?: { page?: number; limit?: number; search?: string; type?: string }) => {
-    const res = await apiInstance.get('admin/users', { params });
+  const adminListUsers = async (
+    search?: string,
+    role?: 'venter' | 'listener' | 'both',
+    limit: number = 20,
+    offset: number = 0,
+  ) => {
+    const res = await apiInstance.get('admin/users', {
+      params: { search, role, limit, offset },
+    });
     return res.data;
   };
+
+  const getUsers = adminListUsers;
 
   const getUserDetail = async (userId: string) => {
     const res = await apiInstance.get(`admin/users/${userId}`);
@@ -54,7 +64,7 @@ export const useAdmin = () => {
 
   // ── Sub-Admins ──────────────────────────────────────────────────────────
   const getSubAdmins = async () => {
-    const res = await apiInstance.get('admin/sub-admins');
+    const res = await apiInstance.get('sub-admins');
     return res.data;
   };
 
@@ -67,22 +77,22 @@ export const useAdmin = () => {
   const addSubAdmin = createSubAdmin;
 
   const getSubAdminDetail = async (id: string) => {
-    const res = await apiInstance.get(`admin/sub-admins/${id}`);
+    const res = await apiInstance.get(`sub-admins/${id}`);
     return res.data;
   };
 
   const updateSubAdminPermissions = async (id: string, payload: { permissions: Record<string, boolean> | string[] }) => {
-    const res = await apiInstance.put(`admin/sub-admins/${id}/permissions`, payload);
+    const res = await apiInstance.put(`sub-admins/${id}`, payload);
     return res.data;
   };
 
   const updateSubAdmin = async (id: string, payload: any) => {
-    const res = await apiInstance.put(`admin/sub-admins/${id}`, payload);
+    const res = await apiInstance.put(`sub-admins/${id}`, payload);
     return res.data;
   };
 
   const deleteSubAdmin = async (id: string) => {
-    const res = await apiInstance.delete(`admin/sub-admins/${id}`);
+    const res = await apiInstance.delete(`sub-admins/${id}`);
     return res.data;
   };
 
@@ -90,7 +100,7 @@ export const useAdmin = () => {
 
   // ── Listener Requests ───────────────────────────────────────────────────
   const getListenerRequests = async (status?: string) => {
-    const res = await apiInstance.get('admin/listener-requests', { params: { status } });
+    const res = await apiInstance.get('listener-verifications/admin/all', { params: { status } });
     return res.data;
   };
 
@@ -133,7 +143,7 @@ export const useAdmin = () => {
 
   /** Resolve report — matches native updateReportStatus (payload: { status: 'resolved' | 'open'; adminNotes?: string }) */
   const updateReportStatus = async (reportId: string, payload: { status: 'resolved' | 'open'; adminNotes?: string }) => {
-    const res = await apiInstance.put(`admin/reports/${reportId}/status`, payload);
+    const res = await apiInstance.put(`reports/admin/${reportId}`, payload);
     return res.data;
   };
 
@@ -248,9 +258,9 @@ export const useAdmin = () => {
     return res.data;
   };
 
-  return {
+  return useMemo(() => ({
     getReportStats,
-    getUsers, getUserDetail, adminGetUserDetail, adminSuspendUser, adminDeleteUser, adminBulkDeleteUsers, adminBulkUpdateUserRoles, toggleUserStatus,
+    adminListUsers, getUsers, getUserDetail, adminGetUserDetail, adminSuspendUser, adminDeleteUser, adminBulkDeleteUsers, adminBulkUpdateUserRoles, toggleUserStatus,
     getSubAdmins, createSubAdmin, addSubAdmin, getSubAdminDetail, updateSubAdminPermissions, updateSubAdmin, deleteSubAdmin, removeSubAdmin,
     getListenerRequests, getListenerVerifications, getListenerVerificationDetail, reviewListenerVerification, reviewListenerRequest,
     getReports, getReportDetail, getReportDetails, updateReportStatus, takeAction, submitReport,
@@ -259,5 +269,5 @@ export const useAdmin = () => {
     getCrisisConfig, updateCrisisConfig, getCrisisLog,
     getAdminAISettings, updateAdminAISettings,
     getRolesPermissions, updateRolePermissions,
-  };
+  }), []);
 };

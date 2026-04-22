@@ -205,7 +205,7 @@ export const AdminUserDetail = () => {
       </div>
 
       <GlassModal
-        visible={showExportSuccess}
+        isOpen={showExportSuccess}
         onClose={() => setShowExportSuccess(false)}
         icon={<CheckCircle className="text-accent" />}
         title={t('Admin.userDetail.exportSuccess.title', 'Export Completed')}

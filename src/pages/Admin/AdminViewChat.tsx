@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../../components/ui/Button';
@@ -20,29 +20,30 @@ export const AdminViewChat = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
   
   const { getChatHistory } = useChat();
-  const getChatHistoryRef = useRef(getChatHistory);
-
+  
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const fetchChat = useCallback(async () => {
+    if (!sessionId || sessionId === 'undefined') {
+      setLoading(false);
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const data = await getChatHistory(sessionId);
+      setMessages(data?.messages || []);
+    } catch (error) {
+      console.error('Failed to fetch chat:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [getChatHistory, sessionId]);
+
   useEffect(() => {
-    const fetchChat = async () => {
-      if (!sessionId || sessionId === 'undefined') {
-        setLoading(false);
-        return;
-      }
-      try {
-        setLoading(true);
-        const data = await getChatHistoryRef.current(sessionId);
-        setMessages(data?.messages || []);
-      } catch (error) {
-        console.error('Failed to fetch chat:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchChat();
-  }, [sessionId]);
+  }, [fetchChat]);
 
   const handleExport = () => {
     const chatText = messages

@@ -5,6 +5,7 @@ import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Toggle } from '../../components/ui/Toggle';
 import { ChevronRight } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 export const AdminSecurity = () => {
   const { t } = useTranslation();
@@ -12,6 +13,16 @@ export const AdminSecurity = () => {
   
   const [isBiometricsEnabled, setIsBiometricsEnabled] = useState(true);
   const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false);
+
+  const toggleBiometrics = (val: boolean) => {
+    setIsBiometricsEnabled(val);
+    toast.success(val ? 'Biometrics enabled' : 'Biometrics disabled');
+  };
+
+  const toggle2FA = (val: boolean) => {
+    setIsTwoFactorEnabled(val);
+    toast.success(val ? 'Two-factor authentication enabled' : 'Two-factor authentication disabled');
+  };
 
   const SecurityItem = ({ title, onPress, type = 'link', value, onValueChange }: any) => (
     <div 
@@ -39,7 +50,7 @@ export const AdminSecurity = () => {
           title={t('Admin.security.enableBiometrics', 'Enable Biometrics')}
           type="toggle"
           value={isBiometricsEnabled}
-          onValueChange={setIsBiometricsEnabled}
+          onValueChange={toggleBiometrics}
         />
         <SecurityItem
           title={t('Admin.security.resetPassword', 'Reset Password')}
@@ -53,7 +64,7 @@ export const AdminSecurity = () => {
           title={t('Admin.security.twoFactorAuth', 'Two-Factor Authentication')}
           type="toggle"
           value={isTwoFactorEnabled}
-          onValueChange={setIsTwoFactorEnabled}
+          onValueChange={toggle2FA}
         />
       </GlassCard>
     </div>

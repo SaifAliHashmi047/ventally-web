@@ -136,7 +136,7 @@ export const AdminTakeAction = () => {
         isOpen={showSuccessModal}
         onClose={handleSuccessClose}
         title={t('Admin.success.issueClosed', 'Issue Closed')}
-        description={t('Admin.success.issueClosedMessage', 'The report has been resolved successfully')}
+        message={t('Admin.success.issueClosedMessage', 'The report has been resolved successfully')}
         icon={<Check className="text-white" size={32} />}
       />
     </div>

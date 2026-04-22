@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
@@ -21,17 +21,25 @@ export const AdminSubAdmins = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
-  const fetchSubAdmins = async () => {
+  const fetchSubAdmins = useCallback(async () => {
+    if (loading && subAdmins.length > 0) return; // Guard against redundant calls if already loading
+    
     try {
       setLoading(true);
       const res = await getSubAdmins();
-      setSubAdmins(res?.subAdmins ?? []);
-    } catch { /* ignore */ } finally {
+      // Handle the nested structure from apiInstance interceptor if needed
+      // but useAdmin already returns res.data
+      setSubAdmins(res?.subAdmins || (Array.isArray(res) ? res : []));
+    } catch (error) {
+      console.error('Error fetching sub-admins:', error);
+    } finally {
       setLoading(false);
     }
-  };
+  }, [getSubAdmins]);
 
-  useEffect(() => { fetchSubAdmins(); }, []);
+  useEffect(() => {
+    fetchSubAdmins();
+  }, [fetchSubAdmins]);
 
   const filtered = subAdmins.filter(sa =>
     !search ||
@@ -118,10 +126,10 @@ export const AdminSubAdmins = () => {
       <div className="fixed bottom-10 right-6 z-50">
         <button
           onClick={() => navigate('/admin/sub-admins/add')}
-          className="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/40 hover:scale-105 active:scale-95 transition-all"
+          className="w-14 h-14 rounded-full glass border border-white/10 flex items-center justify-center text-white shadow-xl shadow-black/20 hover:scale-105 active:scale-95 transition-all bg-white/10"
           title={t('Admin.subAdmins.add', 'Add Sub Admin')}
         >
-          <Plus size={28} strokeWidth={2.5} />
+          <Plus size={32} strokeWidth={2.5} />
         </button>
       </div>
     </div>

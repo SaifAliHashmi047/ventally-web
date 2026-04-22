@@ -47,7 +47,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         </div>
       )}
       
-      <div className={cn('flex flex-col items-center text-center', centered ? 'mx-auto' : 'mr-auto')}>
+      <div className={cn('flex flex-col items-center text-center px-14 w-full', centered ? 'mx-auto' : 'mr-auto')}>
         <h1 className="text-lg font-bold text-white tracking-tight uppercase">{title}</h1>
         {subtitle && (
           <p className="text-sm text-white/60 mt-0.5">{subtitle}</p>

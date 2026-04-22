@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 export const AdminUsers = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { getUsers } = useAdmin();
+  const { adminListUsers } = useAdmin();
 
   const TABS = [
     t('Admin.users.tabs.venters', 'Venters'),
@@ -29,7 +29,7 @@ export const AdminUsers = () => {
       setLoading(true);
       try {
         const role = activeTab === TABS[1] ? 'listener' : 'venter';
-        const res = await getUsers(100, 0, role);
+        const res = await adminListUsers(search, role, 100, 0);
         if (res?.users) {
           setUsers(res.users);
         }

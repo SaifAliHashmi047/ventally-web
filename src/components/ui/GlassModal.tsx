@@ -3,35 +3,54 @@ import { cn } from '../../utils/cn';
 import { Button } from './Button';
 import { GlassCard } from './GlassCard';
 
-interface ModalAction {
-  label: string;
-  onClick: () => void;
-  loading?: boolean;
-}
-
 interface GlassModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title?: string;
-  description?: string;
+  
+  // Icon props
   icon?: React.ReactNode;
-  /** Custom body when you need more than title/description (e.g. success animation). */
+  showIcon?: boolean;
+
+  // Content props
+  title?: string;
+  subtitle?: string;
+  message?: string;
+  
+  // Custom content
   children?: React.ReactNode;
-  primaryAction?: ModalAction;
-  secondaryAction?: ModalAction;
+
+  // Button props
+  showButtons?: boolean;
+  primaryButtonText?: string;
+  secondaryButtonText?: string;
+  onPrimaryPress?: () => void;
+  onSecondaryPress?: () => void;
+  loading?: boolean;
+  showVerticalButtons?: boolean;
+
+  // Layout props
   className?: string;
+  maxWidth?: string;
 }
 
 export const GlassModal: React.FC<GlassModalProps> = ({
   isOpen,
   onClose,
-  title,
-  description,
   icon,
+  showIcon = true,
+  title,
+  subtitle,
+  message,
   children,
-  primaryAction,
-  secondaryAction,
+  showButtons = true,
+  primaryButtonText,
+  secondaryButtonText,
+  onPrimaryPress,
+  onSecondaryPress,
+  loading = false,
+  showVerticalButtons = false,
   className,
+  maxWidth = 'max-w-sm',
 }) => {
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -51,57 +70,90 @@ export const GlassModal: React.FC<GlassModalProps> = ({
 
   if (!isOpen) return null;
 
+  const handlePrimaryPress = () => {
+    if (onPrimaryPress) onPrimaryPress();
+    else onClose();
+  };
+
+  const handleSecondaryPress = () => {
+    if (onSecondaryPress) onSecondaryPress();
+    else onClose();
+  };
+
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade-in bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade-in bg-black/70 backdrop-blur-md"
       onClick={(e) => e.target === overlayRef.current && onClose()}
     >
       <GlassCard 
         bordered 
-        className={cn('w-full max-w-sm rounded-[32px] p-8 text-center animate-slide-up', className)}
+        className={cn(
+          'w-full flex flex-col items-center rounded-[32px] p-8 text-center animate-slide-up relative overflow-hidden', 
+          maxWidth,
+          className
+        )}
       >
-        {icon && (
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 rounded-3xl glass-dark flex items-center justify-center">
+        {/* Background Hint for Depth */}
+        <div className="absolute inset-0 bg-white/[0.02] pointer-events-none" />
+
+        {/* Icon */}
+        {showIcon && icon && (
+          <div className="relative z-10 flex justify-center mb-6">
+            <div className="w-16 h-16 rounded-3xl glass-dark flex items-center justify-center border border-white/10 shadow-lg">
               {icon}
             </div>
           </div>
         )}
 
-        {title && (
-          <h3 className="text-xl font-bold text-white mb-2 tracking-tight">
-            {title}
-          </h3>
-        )}
+        {/* Content */}
+        <div className="relative z-10 w-full mb-8">
+          {title && (
+            <h3 className="text-xl font-bold text-white mb-2 tracking-tight">
+              {title}
+            </h3>
+          )}
 
-        {description && (
-          <p className="text-[15px] text-white/70 mb-8 leading-relaxed">
-            {description}
-          </p>
-        )}
+          {subtitle && (
+            <p className="text-base font-medium text-white/90 mb-2 leading-tight">
+              {subtitle}
+            </p>
+          )}
 
-        {children}
+          {message && (
+            <p className="text-[14px] text-white/50 leading-relaxed max-w-[90%] mx-auto font-medium">
+              {message}
+            </p>
+          )}
+        </div>
 
-        {(primaryAction || secondaryAction) && (
-          <div className={cn('grid gap-3', secondaryAction ? 'grid-cols-2' : 'grid-cols-1')}>
-            {secondaryAction && (
+        <div className="relative z-10 w-full">
+          {children}
+        </div>
+
+        {/* Actions */}
+        {showButtons && (
+          <div className={cn(
+            'relative z-10 w-full grid gap-3 mt-2',
+            secondaryButtonText && !showVerticalButtons ? 'grid-cols-2' : 'grid-cols-1'
+          )}>
+            {secondaryButtonText && (
               <Button
-                variant="ghost"
-                onClick={secondaryAction.onClick}
-                className="rounded-2xl h-[56px] text-white/60 hover:text-white"
+                variant="glass"
+                onClick={handleSecondaryPress}
+                className="rounded-2xl h-[56px] text-white/60 font-bold border-white/5"
               >
-                {secondaryAction.label}
+                {secondaryButtonText}
               </Button>
             )}
-            {primaryAction && (
+            {primaryButtonText && (
               <Button
                 variant="primary"
-                onClick={primaryAction.onClick}
-                loading={primaryAction.loading}
-                className="rounded-2xl h-[56px] font-bold"
+                onClick={handlePrimaryPress}
+                loading={loading}
+                className="rounded-2xl h-[56px] font-bold shadow-lg shadow-primary/20"
               >
-                {primaryAction.label}
+                {primaryButtonText}
               </Button>
             )}
           </div>

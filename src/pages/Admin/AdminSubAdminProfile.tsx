@@ -9,6 +9,7 @@ import { useAdmin } from '../../api/hooks/useAdmin';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { GlassModal } from '../../components/ui/GlassModal';
+import { CheckCircle } from 'lucide-react';
 
 const PERMISSION_LABELS: Record<string, string> = {
   view: 'View Content',
@@ -63,17 +64,13 @@ export const AdminSubAdminProfile = () => {
     setPermissions(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
   const handleUpdate = async () => {
     setSaving(true);
     try {
       await updateSubAdminPermissions(id!, { permissions });
-      navigate('/admin/security-success', {
-        state: {
-          title: t('Admin.success.permissionsUpdated', 'Permissions Updated'),
-          subtitle: t('Admin.success.permissionsSubtitle', 'The sub-admin permissions have been successfully updated.'),
-          redirectPath: '/admin/sub-admins'
-        }
-      });
+      setShowSuccessModal(true);
     } catch { /* ignore */ } finally {
       setSaving(false);
     }
@@ -173,18 +170,24 @@ export const AdminSubAdminProfile = () => {
       </Button>
 
       <GlassModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        icon={<CheckCircle className="text-accent" />}
+        title={t('Admin.success.permissionsUpdated', 'Permissions Updated')}
+        message={t('Admin.success.permissionsSubtitle', 'The sub-admin permissions have been successfully updated.')}
+        primaryButtonText={t('Common.done', 'Done')}
+        onPrimaryPress={() => navigate('/admin/sub-admins')}
+      />
+
+      <GlassModal
         isOpen={isDeleteModalVisible}
         onClose={() => setIsDeleteModalVisible(false)}
         title={t('Admin.subAdminProfile.deleteConfirmTitle', 'Remove Sub Admin')}
-        description={t('Admin.subAdminProfile.deleteConfirmMessage', 'Are you sure you want to remove this sub admin? This action cannot be undone.')}
-        primaryAction={{
-          label: t('Common.remove', 'Remove'),
-          onClick: handleRemove,
-        }}
-        secondaryAction={{
-          label: t('Common.cancel', 'Cancel'),
-          onClick: () => setIsDeleteModalVisible(false),
-        }}
+        message={t('Admin.subAdminProfile.deleteConfirmMessage', 'Are you sure you want to remove this sub admin? This action cannot be undone.')}
+        primaryButtonText={t('Common.remove', 'Remove')}
+        onPrimaryPress={handleRemove}
+        secondaryButtonText={t('Common.cancel', 'Cancel')}
+        onSecondaryPress={() => setIsDeleteModalVisible(false)}
       />
     </div>
   );

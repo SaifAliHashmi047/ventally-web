@@ -270,5 +270,3 @@ export const AdminDashboard = () => {
     </div>
   );
 };
-  );
-};

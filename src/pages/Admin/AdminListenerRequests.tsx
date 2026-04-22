@@ -37,7 +37,7 @@ export const AdminListenerRequests = () => {
       try {
         const status = STATUS_MAP[activeTab];
         const res = await getListenerRequests(status);
-        setRequests(res?.requests ?? res ?? []);
+        setRequests(res?.submissions ?? res?.requests ?? res ?? []);
       } catch (error: any) {
         toast.error(error?.response?.data?.message || t('Common.error', 'Error'));
       } finally {
