@@ -79,7 +79,7 @@ export const AdminVerifyOTP = () => {
           <OTPInput 
             value={otp} 
             onChange={setOtp} 
-            length={4} 
+            cellCount={4} 
           />
         </div>
 

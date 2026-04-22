@@ -97,7 +97,9 @@ export const AdminExports = () => {
         <div className="space-y-6">
           {loading ? (
             [...Array(2)].map((_, i) => (
-              <GlassCard key={i} className="animate-pulse h-64 bg-white/[0.02]" />
+              <GlassCard key={i} className="animate-pulse h-64 bg-white/[0.02]">
+                <div className="h-full min-h-48 w-full" aria-hidden />
+              </GlassCard>
             ))
           ) : integrations.length === 0 ? (
             <div className="text-center py-20 opacity-50">

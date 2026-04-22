@@ -117,7 +117,7 @@ export const AdminAISettings = () => {
         <div className="space-y-4">
           <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-widest px-2">Risk Management</h4>
           
-          <GlassCard borderStyle="none" className="bg-white/[0.02] border-white/5">
+          <GlassCard className="bg-white/[0.02] border border-white/5">
             <div className="flex justify-between mb-4">
               <span className="text-sm font-bold text-white">Risk Threshold</span>
               <span className="text-sm font-bold text-primary">{settings.riskThreshold}%</span>

@@ -48,10 +48,10 @@ export const AdminPaymentHistory = () => {
     }
 
     try {
-      const res = await getPaymentHistory(
-        undefined, undefined, undefined, undefined, undefined,
-        LIMIT, offsetRef.current
-      );
+      const res = await getPaymentHistory({
+        limit: LIMIT,
+        offset: offsetRef.current,
+      });
       const data = res?.payments ?? [];
       
       if (isRefresh) {
