@@ -66,7 +66,7 @@ export const VenterRecoveryCalendar = () => {
   }, {} as Record<number, any>);
 
   return (
-    <div className="page-wrapper animate-fade-in">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <PageHeader 
         title={t('VenterRecovery.dashboard.journeyCalendar', 'Journey Calendar')} 
         onBack={() => navigate(-1)} 

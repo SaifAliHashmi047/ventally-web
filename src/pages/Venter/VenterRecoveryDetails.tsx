@@ -38,7 +38,7 @@ export const VenterRecoveryDetails = () => {
 
   if (!entry && !id) {
     return (
-      <div className="page-wrapper animate-fade-in">
+      <div className="page-wrapper page-wrapper--wide animate-fade-in">
         <PageHeader title={t('VenterRecovery.details.title', 'Recovery Details')} onBack={() => navigate(-1)} />
         <GlassCard className="mt-8 text-center py-12">
           <p className="text-white/60">{t('VenterRecovery.details.noNotes', 'No entry found.')}</p>
@@ -48,7 +48,7 @@ export const VenterRecoveryDetails = () => {
   }
 
   return (
-    <div className="page-wrapper animate-fade-in">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <PageHeader title={t('VenterRecovery.details.title', 'Recovery Details')} onBack={() => navigate(-1)} />
 
       {/* Centered icon — tick for sober, recovery icon for relapse */}

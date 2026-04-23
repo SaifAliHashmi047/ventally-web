@@ -84,7 +84,7 @@ export const VenterAllCallsScreen = () => {
   };
 
   return (
-    <div className="page-wrapper animate-fade-in pb-24">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in pb-24">
       <PageHeader 
         title={t('VenterCall.allCallsTitle', 'All Calls')} 
         subtitle={t('VenterCall.allCallsSubtitle', 'Your call history')}

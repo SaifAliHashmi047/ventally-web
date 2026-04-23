@@ -61,7 +61,7 @@ export const VenterMoodHistory = () => {
   });
 
   return (
-    <div className="page-wrapper animate-fade-in pb-24">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in pb-24">
       <PageHeader title={t('VenterMoodHistory.title')} subtitle={t('VenterMoods.history', 'Your complete mood log')} />
 
       {loading ? (

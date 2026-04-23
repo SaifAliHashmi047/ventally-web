@@ -62,7 +62,7 @@ export const SubscriptionDetailsScreen = () => {
   const isActive = subscription?.hasSubscription;
 
   return (
-    <div className="page-wrapper animate-fade-in flex flex-col min-h-[calc(100vh-100px)]">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in flex flex-col min-h-[calc(100vh-100px)]">
       <PageHeader 
         title={t('SubscriptionDetails.title')} 
         onBack={() => navigate(-1)} 

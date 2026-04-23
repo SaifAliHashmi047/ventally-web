@@ -7,22 +7,22 @@ import { useCalls } from '../../api/hooks/useCalls';
 import { useWallet } from '../../api/hooks/useWallet';
 import { setSessionType, setReturnToSession } from '../../store/slices/callSlice';
 import { EmptyState } from '../../components/ui/EmptyState';
+import { GlassCard } from '../../components/ui/GlassCard';
 import { toastError } from '../../utils/toast';
 
-// ─── Helpers ───────────────────────────────────────────────────────────────────
-const formatTimeAgo = (dateStr: string): string => {
+// ─── Helpers (aligned with VenterMessages / chat time strings) ───────────────
+const formatTimeAgo = (dateStr: string, t: (key: string, options?: any) => string) => {
   if (!dateStr) return '';
   const diffMs = Date.now() - new Date(dateStr).getTime();
-  const secs = Math.floor(diffMs / 1000);
-  if (secs < 60) return 'Just now';
-  const mins = Math.floor(secs / 60);
-  if (mins < 60) return `${mins} min ago`;
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return t('Common.time.justNow');
+  if (mins < 60) return t('VenterMessages.chatEntry.minutesAgo', { minutes: mins });
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs} h ago`;
-  return `${Math.floor(hrs / 24)} d ago`;
+  if (hrs < 24) return t('VenterMessages.chatEntry.hoursAgo', { hours: hrs });
+  return new Date(dateStr).toLocaleDateString();
 };
 
-// ─── Start Call Card ───────────────────────────────────────────────────────────
+// ─── Start Voice Card (matches StartChatCard) ──────────────────────────────
 const StartCallCard = ({
   title,
   subtitle,
@@ -32,53 +32,69 @@ const StartCallCard = ({
   subtitle: string;
   onPress: () => void;
 }) => (
-  <button
+  <GlassCard
+    bordered
+    hover
     onClick={onPress}
-    className="w-full text-left glass rounded-2xl px-5 py-5 flex items-center gap-4 hover:bg-white/5 transition-all duration-200 active:scale-[0.99]"
+    padding="lg"
+    rounded="2xl"
+    className="w-full text-left cursor-pointer active:scale-[0.99] transition-transform shadow-lg shadow-black/10"
   >
-    <div className="w-14 h-14 rounded-full glass flex items-center justify-center flex-shrink-0">
-      <Phone size={24} className="text-white" />
+    <div className="flex items-center gap-4 lg:gap-5">
+      <div className="w-14 h-14 rounded-2xl glass flex items-center justify-center flex-shrink-0 border border-white/10">
+        <Phone size={24} className="text-white" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-base lg:text-lg font-semibold text-white mb-0.5">{title}</p>
+        <p className="text-sm text-white/60 leading-snug">{subtitle}</p>
+      </div>
     </div>
-    <div className="flex-1 min-w-0">
-      <p className="text-lg font-semibold text-white mb-0.5">{title}</p>
-      <p className="text-sm text-white/60">{subtitle}</p>
-    </div>
-  </button>
+  </GlassCard>
 );
 
-// ─── Call Entry ────────────────────────────────────────────────────────────────
+// ─── Call entry row (matches ChatEntry list-row pattern) ─────────────────────
 const CallEntry = ({
   name,
   timeAgo,
+  secondaryLine,
+  isLast,
   onPress,
 }: {
   name: string;
   timeAgo: string;
+  secondaryLine: string;
+  isLast?: boolean;
   onPress: () => void;
 }) => (
   <button
+    type="button"
     onClick={onPress}
-    className="w-full text-left glass-bordered rounded-2xl px-4 py-4 flex items-center gap-3 hover:bg-white/5 transition-all duration-200 mb-3"
-    style={{ background: 'rgba(0,0,0,0.1)' }}
+    className={`w-full text-left flex items-center gap-3 px-4 sm:px-5 py-4 transition-colors hover:bg-white/[0.04] ${
+      isLast !== true ? 'border-b border-white/8' : ''
+    }`}
   >
-    <div className="w-11 h-11 rounded-full glass border border-white/20 flex items-center justify-center flex-shrink-0">
+    <div className="w-11 h-11 rounded-xl glass border border-white/10 flex items-center justify-center flex-shrink-0">
       <Phone size={18} className="text-white" />
     </div>
     <div className="flex-1 min-w-0">
-      <p className="text-sm font-semibold text-white truncate mb-0.5">{name}</p>
-      <p className="text-sm text-white/60">{timeAgo}</p>
+      <div className="flex items-center justify-between gap-2 mb-0.5">
+        <p className="text-sm font-medium text-white truncate">{name}</p>
+        <span className="text-xs text-white/60 flex-shrink-0 tabular-nums">{timeAgo}</span>
+      </div>
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs text-white/70 truncate">{secondaryLine}</p>
+        <ChevronRight size={16} className="text-white/40 flex-shrink-0" />
+      </div>
     </div>
-    <ChevronRight size={16} className="text-white/50 flex-shrink-0" />
   </button>
 );
 
-// ─── Main screen ───────────────────────────────────────────────────────────────
+// ─── Main screen ─────────────────────────────────────────────────────────────
 export const VenterCall = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Stable refs — prevents hook functions from being stale deps that re-trigger effects
   const callsHook = useCalls();
   const walletHook = useWallet();
   const getCallsRef = useRef(callsHook.getCalls);
@@ -88,7 +104,6 @@ export const VenterCall = () => {
   const [loading, setLoading] = useState(true);
   const [walletDetails, setWalletDetails] = useState<any>(null);
 
-  // Fetch ONCE on mount — empty deps, no loop
   useEffect(() => {
     let cancelled = false;
 
@@ -115,9 +130,11 @@ export const VenterCall = () => {
 
     fetchData();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // ← empty: fetch once on mount only
+  }, []);
 
   const handleStartCall = () => {
     dispatch(setSessionType('call'));
@@ -130,52 +147,79 @@ export const VenterCall = () => {
     }
   };
 
+  const handleCallRowPress = (call: any) => {
+    if (call?.id) {
+      navigate(`/venter/chat/${call.id}`, { state: { call } });
+    } else {
+      navigate('/venter/all-calls');
+    }
+  };
+
   return (
-    <div className="page-wrapper animate-fade-in">
-      {/* Start Call Card */}
-      <StartCallCard
-        title={t('VenterCall.startCallCard.title')}
-        subtitle={t('VenterCall.startCallCard.subtitle')}
-        onPress={handleStartCall}
-      />
+    <div className="page-wrapper page-wrapper--wide animate-fade-in">
+      <div className="w-full lg:max-w-3xl xl:max-w-4xl lg:mx-auto">
+        <header className="mb-6 text-center lg:text-left lg:mb-8">
+          <h1 className="text-lg font-semibold text-white tracking-tight lg:text-2xl lg:font-bold">
+            {t('Navigation.tabs.call', 'Voice')}
+          </h1>
+          <p className="mt-1.5 text-sm text-gray-500 max-w-md mx-auto lg:mx-0">
+            {t('VenterCall.subtitle')}
+          </p>
+        </header>
 
-      {/* Separator */}
-      <div className="w-full h-px bg-white/20 my-1" />
+        <div className="space-y-6 lg:space-y-8">
+          <StartCallCard
+            title={t('VenterCall.startCallCard.title')}
+            subtitle={t('VenterCall.startCallCard.subtitle')}
+            onPress={handleStartCall}
+          />
 
-      {/* Section title */}
-      <p className="text-base font-medium text-white">{t('VenterCall.recentCall')}</p>
+          <section>
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-3">
+              {t('VenterCall.recentCall')}
+            </h2>
 
-      {loading ? (
-        <div className="space-y-3">
-          {[1, 2, 3].map(i => <div key={i} className="skeleton h-16 rounded-2xl" />)}
+            {loading ? (
+              <div className="space-y-2">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="skeleton h-[4.5rem] rounded-2xl" />
+                ))}
+              </div>
+            ) : recentCalls.length === 0 ? (
+              <GlassCard bordered rounded="2xl" className="py-2">
+                <EmptyState
+                  title={t('VenterCall.noRecentCalls')}
+                  description={t('VenterCall.noRecentCallsDescription')}
+                  icon={<Phone size={22} />}
+                />
+              </GlassCard>
+            ) : (
+              <GlassCard padding="none" rounded="2xl" className="overflow-hidden">
+                {recentCalls.map((call: any, index: number) => (
+                  <CallEntry
+                    key={call.id ?? index}
+                    name={call.otherParticipant?.anonymousName || t('VenterCall.callEntry.name')}
+                    timeAgo={formatTimeAgo(call.createdAt || call.startedAt, t)}
+                    secondaryLine={t('VenterCall.callEntry.lastCall')}
+                    isLast={index === recentCalls.length - 1}
+                    onPress={() => handleCallRowPress(call)}
+                  />
+                ))}
+              </GlassCard>
+            )}
+          </section>
+
+          {recentCalls.length > 0 && (
+            <button
+              type="button"
+              onClick={() => navigate('/venter/all-calls')}
+              className="w-full max-w-sm mx-auto lg:max-w-none glass rounded-2xl py-3.5 text-sm font-medium text-white border border-white/10 hover:bg-white/5 transition-colors"
+            >
+              {t('VenterCall.viewAll')}
+            </button>
+          )}
         </div>
-      ) : recentCalls.length === 0 ? (
-        <EmptyState
-          title={t('VenterCall.noRecentCalls')}
-          description={t('VenterCall.noRecentCallsDescription')}
-          icon={<Phone size={22} />}
-        />
-      ) : (
-        <div>
-          {recentCalls.map((call: any) => (
-            <CallEntry
-              key={call.id}
-              name={call.otherParticipant?.anonymousName || t('VenterCall.callEntry.name', { defaultValue: 'Voice Session' })}
-              timeAgo={formatTimeAgo(call.createdAt || call.startedAt)}
-              onPress={() => {}}
-            />
-          ))}
-        </div>
-      )}
-
-      {recentCalls.length > 0 && (
-        <button
-          onClick={() => navigate('/venter/all-calls')}
-          className="w-full glass rounded-2xl py-3 text-sm font-medium text-white hover:bg-white/5 transition-colors"
-        >
-          {t('VenterCall.viewAll')}
-        </button>
-      )}
+      </div>
     </div>
   );
 };

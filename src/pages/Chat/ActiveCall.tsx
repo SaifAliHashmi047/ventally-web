@@ -151,11 +151,12 @@ export const ActiveCall = () => {
   }, [feedbackSessionId, resolvedCallId, navigate, role, leaveChannel]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-between py-12 px-4 bg-bg-deep"
-      style={{ background: 'radial-gradient(ellipse at center, rgba(194,174,191,0.08) 0%, #000 60%)' }}>
-
+    <div
+      className="h-[100dvh] min-h-0 w-full max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-stretch justify-between py-8 sm:py-12 px-4 sm:px-5 bg-bg-deep lg:border lg:border-white/10 lg:rounded-3xl lg:shadow-2xl lg:shadow-black/40 lg:overflow-hidden"
+      style={{ background: 'radial-gradient(ellipse at center, rgba(194,174,191,0.08) 0%, #000 60%)' }}
+    >
       {/* Top Bar */}
-      <div className="flex justify-between items-center w-full max-w-sm">
+      <div className="flex justify-between items-center w-full max-w-sm mx-auto shrink-0">
         <p className="text-sm text-gray-500">Session Call</p>
         <div className="badge badge-success">
           <div className="w-1.5 h-1.5 rounded-full bg-success" />
@@ -164,7 +165,7 @@ export const ActiveCall = () => {
       </div>
 
       {/* Avatar */}
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-4 flex-1 justify-center min-h-0">
         <div className="relative">
           <div className="w-28 h-28 rounded-full glass-accent flex items-center justify-center text-4xl font-bold text-white">
             L
@@ -182,7 +183,7 @@ export const ActiveCall = () => {
       </div>
 
       {/* Controls */}
-      <div className="space-y-6 w-full max-w-sm">
+      <div className="space-y-6 w-full max-w-sm mx-auto shrink-0 pb-safe">
         <div className="flex justify-center gap-6">
           <button
             onClick={() => setMuted(!muted)}

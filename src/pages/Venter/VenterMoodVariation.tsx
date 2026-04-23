@@ -127,7 +127,7 @@ export const VenterMoodVariation = () => {
   const variation = t('VenterJourney.moodVariation.moderate', 'Moderate');
 
   return (
-    <div className="page-wrapper animate-fade-in pb-10">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in pb-10">
       <PageHeader
         title={t('VenterJourney.moodVariation.title', 'Mood Variation')}
         onBack={() => navigate(-1)}

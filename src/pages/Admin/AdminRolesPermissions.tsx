@@ -113,7 +113,7 @@ export const AdminRolesPermissions = () => {
       : Object.values(sa.permissions ?? {}).filter(Boolean).length;
 
   return (
-    <div className="page-wrapper animate-fade-in pb-28">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in pb-28">
       <PageHeader title="Roles & Permissions" onBack={() => navigate('/admin/settings')} />
 
       {/* Search */}

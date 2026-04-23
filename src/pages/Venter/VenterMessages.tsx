@@ -7,6 +7,7 @@ import { useChat } from '../../api/hooks/useChat';
 import { useWallet } from '../../api/hooks/useWallet';
 import { setSessionType, setReturnToSession } from '../../store/slices/callSlice';
 import { EmptyState } from '../../components/ui/EmptyState';
+import { GlassCard } from '../../components/ui/GlassCard';
 import { toastError } from '../../utils/toast';
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
@@ -31,18 +32,24 @@ const StartChatCard = ({
   subtitle: string;
   onPress: () => void;
 }) => (
-  <button
+  <GlassCard
+    bordered
+    hover
     onClick={onPress}
-    className="w-full text-left glass rounded-2xl px-5 py-5 flex items-center gap-4 hover:bg-white/5 transition-all duration-200 active:scale-[0.99]"
+    padding="lg"
+    rounded="2xl"
+    className="w-full text-left cursor-pointer active:scale-[0.99] transition-transform shadow-lg shadow-black/10"
   >
-    <div className="w-14 h-14 rounded-full glass flex items-center justify-center flex-shrink-0">
-      <MessageSquare size={24} className="text-white" />
+    <div className="flex items-center gap-4 lg:gap-5">
+      <div className="w-14 h-14 rounded-2xl glass flex items-center justify-center flex-shrink-0 border border-white/10">
+        <MessageSquare size={24} className="text-white" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-base lg:text-lg font-semibold text-white mb-0.5">{title}</p>
+        <p className="text-sm text-white/60 leading-snug">{subtitle}</p>
+      </div>
     </div>
-    <div className="flex-1 min-w-0">
-      <p className="text-lg font-semibold text-white mb-0.5">{title}</p>
-      <p className="text-sm text-white/60">{subtitle}</p>
-    </div>
-  </button>
+  </GlassCard>
 );
 
 // ─── Chat Entry ────────────────────────────────────────────────────────────────
@@ -51,25 +58,30 @@ const ChatEntry = ({
   lastMessage,
   timeAgo,
   isActive,
+  isLast,
   onPress,
 }: {
   name: string;
   lastMessage: string;
   timeAgo: string;
   isActive?: boolean;
+  isLast?: boolean;
   onPress: () => void;
 }) => (
   <button
+    type="button"
     onClick={onPress}
-    className="w-full text-left glass-bordered rounded-2xl px-4 py-4 flex items-center gap-3 hover:bg-white/5 transition-all duration-200 mb-3"
+    className={`w-full text-left flex items-center gap-3 px-4 sm:px-5 py-4 transition-colors hover:bg-white/[0.04] ${
+      isLast !== true ? 'border-b border-white/8' : ''
+    }`}
   >
-    <div className="w-11 h-11 rounded-full glass border border-white/20 flex items-center justify-center flex-shrink-0">
+    <div className="w-11 h-11 rounded-xl glass border border-white/10 flex items-center justify-center flex-shrink-0">
       <MessageSquare size={18} className="text-white" />
     </div>
     <div className="flex-1 min-w-0">
-      <div className="flex items-center justify-between mb-0.5">
-        <p className="text-sm font-medium text-white truncate flex-1 mr-2">{name}</p>
-        <span className="text-xs text-white/60 flex-shrink-0 flex items-center gap-1.5">
+      <div className="flex items-center justify-between gap-2 mb-0.5">
+        <p className="text-sm font-medium text-white truncate">{name}</p>
+        <span className="text-xs text-white/60 flex-shrink-0 flex items-center gap-1.5 tabular-nums">
           {isActive ? (
             <>
               <span className="text-white/80">{timeAgo}</span>
@@ -80,9 +92,9 @@ const ChatEntry = ({
           )}
         </span>
       </div>
-      <div className="flex items-center justify-between">
-        <p className="text-xs text-white/70 truncate flex-1 mr-2">{lastMessage || '--'}</p>
-        <ChevronRight size={16} className="text-white/50 flex-shrink-0" />
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs text-white/70 truncate">{lastMessage || '--'}</p>
+        <ChevronRight size={16} className="text-white/40 flex-shrink-0" />
       </div>
     </div>
   </button>
@@ -147,60 +159,76 @@ export const VenterMessages = () => {
   };
 
   return (
-    <div className="page-wrapper animate-fade-in">
-      {/* Start Chat Card */}
-      <StartChatCard
-        title={t('VenterMessages.startChat.title')}
-        subtitle={t('VenterMessages.startChat.subtitle')}
-        onPress={handleStartChat}
-      />
+    <div className="page-wrapper page-wrapper--wide animate-fade-in">
+      <div className="w-full lg:max-w-3xl xl:max-w-4xl lg:mx-auto">
+        <header className="mb-6 text-center lg:text-left lg:mb-8">
+          <h1 className="text-lg font-semibold text-white tracking-tight lg:text-2xl lg:font-bold">
+            {t('VenterMessages.title')}
+          </h1>
+          <p className="mt-1.5 text-sm text-gray-500 max-w-md mx-auto lg:mx-0">
+            {t('VenterMessages.subtitle')}
+          </p>
+        </header>
 
-      {/* Separator */}
-      <div className="w-full h-px bg-white/20 my-1" />
+        <div className="space-y-6 lg:space-y-8">
+          <StartChatCard
+            title={t('VenterMessages.startChat.title')}
+            subtitle={t('VenterMessages.startChat.subtitle')}
+            onPress={handleStartChat}
+          />
 
-      {/* Section title */}
-      <p className="text-base font-medium text-white">{t('VenterMessages.recentChat')}</p>
+          <section>
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-3">
+              {t('VenterMessages.recentChat')}
+            </h2>
 
-      {loading ? (
-        <div className="space-y-3">
-          {[1, 2, 3].map(i => <div key={i} className="skeleton h-16 rounded-2xl" />)}
+            {loading ? (
+              <div className="space-y-2">
+                {[1, 2, 3].map(i => <div key={i} className="skeleton h-[4.5rem] rounded-2xl" />)}
+              </div>
+            ) : recentChats.length === 0 ? (
+              <GlassCard bordered rounded="2xl" className="py-2">
+                <EmptyState
+                  title={t('VenterMessages.noChats')}
+                  description={t('VenterMessages.noChatsDescription')}
+                  icon={<MessageSquare size={22} />}
+                />
+              </GlassCard>
+            ) : (
+              <GlassCard padding="none" rounded="2xl" className="overflow-hidden">
+                {recentChats.map((chat: any, index: number) => (
+                  <ChatEntry
+                    key={chat.id}
+                    name={chat.otherParticipant?.anonymousName || t('VenterMessages.chatEntry.name')}
+                    lastMessage={
+                      chat.lastMessage?.content ||
+                      chat.last_message ||
+                      t('VenterMessages.chatEntry.lastMessage')
+                    }
+                    timeAgo={formatTimeAgo(
+                      chat.lastMessage?.createdAt || chat.updatedAt || chat.createdAt,
+                      t
+                    )}
+                    isActive={chat.status === 'active'}
+                    isLast={index === recentChats.length - 1}
+                    onPress={() => navigate(`/venter/chat/${chat.id}`, { state: { chat } })}
+                  />
+                ))}
+              </GlassCard>
+            )}
+          </section>
+
+          {recentChats.length > 0 && (
+            <button
+              type="button"
+              onClick={() => navigate('/venter/chat/all')}
+              className="w-full max-w-sm mx-auto lg:max-w-none glass rounded-2xl py-3.5 text-sm font-medium text-white border border-white/10 hover:bg-white/5 transition-colors"
+            >
+              {t('VenterMessages.viewAll')}
+            </button>
+          )}
         </div>
-      ) : recentChats.length === 0 ? (
-        <EmptyState
-          title={t('VenterMessages.noChats')}
-          description={t('VenterMessages.noChatsDescription')}
-          icon={<MessageSquare size={22} />}
-        />
-      ) : (
-        <div>
-          {recentChats.map((chat: any) => (
-            <ChatEntry
-              key={chat.id}
-              name={chat.otherParticipant?.anonymousName || t('VenterMessages.chatEntry.name')}
-              lastMessage={
-                chat.lastMessage?.content ||
-                chat.last_message ||
-                t('VenterMessages.chatEntry.lastMessage')
-              }
-              timeAgo={formatTimeAgo(
-                chat.lastMessage?.createdAt || chat.updatedAt || chat.createdAt,
-                t
-              )}
-              isActive={chat.status === 'active'}
-              onPress={() => navigate(`/venter/chat/${chat.id}`, { state: { chat } })}
-            />
-          ))}
-        </div>
-      )}
-
-      {recentChats.length > 0 && (
-        <button
-          onClick={() => navigate('/venter/all-chats')}
-          className="w-full glass rounded-2xl py-3 text-sm font-medium text-white hover:bg-white/5 transition-colors"
-        >
-          {t('VenterMessages.viewAll')}
-        </button>
-      )}
+      </div>
     </div>
   );
 };

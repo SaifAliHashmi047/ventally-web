@@ -109,147 +109,159 @@ export const VenterDashboard = () => {
   };
 
   return (
-    <div className="page-wrapper animate-fade-in">
-      {/* Header — matches RN HomeHeader with logo + notification icon */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <AppBrandIcon className="w-9 h-9 rounded-[0.65rem] sm:w-10 sm:h-10 sm:rounded-2xl" />
-          <span className="text-lg font-bold text-white tracking-tight">{t('Home.title')}</span>
-        </div>
-        <button
-          onClick={() => navigate('/venter/notifications')}
-          className="w-10 h-10 glass rounded-2xl flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-        >
-          <Bell size={18} />
-        </button>
-      </div>
-
-      {/* Your Reflection Button — matches RN Button with title t('VenterHome.yourReflection') */}
-      <Button
-        variant="glass"
-        size="md"
-        fullWidth
-        onClick={() => {
-          if (reflection) {
-            navigate(`/venter/reflections/${reflection.id}`, { state: { reflection } });
-          } else {
-            navigate('/venter/reflections/add');
-          }
-        }}
-        className="mb-4"
-      >
-        {t('VenterHome.yourReflection')}
-      </Button>
-
-      {/* Let's Vent Section */}
-      <div className="mb-6">
-        <p className="text-sm font-semibold text-white mb-3">{t('VenterHome.letsVent')}</p>
-        <div className="grid grid-cols-2 gap-3">
-          <Button
-            variant="glass"
-            size="lg"
-            fullWidth
-            leftIcon={<Phone size={18} />}
-            onClick={handleCall}
-            className="justify-center"
-          >
-            {t('VenterHome.call')}
-          </Button>
-          <Button
-            variant="glass"
-            size="lg"
-            fullWidth
-            leftIcon={<MessageSquare size={18} />}
-            onClick={handleChat}
-            className="justify-center"
-          >
-            {t('VenterHome.chat')}
-          </Button>
-        </div>
-      </div>
-
-      {/* Mood Check In */}
-      <div className="mb-6">
-        <p className="text-sm font-semibold text-white mb-3">{t('VenterHome.moodCheckIn')}</p>
-        <MoodSelector
-          selected={selectedMood}
-          onSelect={handleMoodSelect}
-          disabled={loading}
-        />
-      </div>
-
-      {/* Reflections Section */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-3">
-          <p className="text-sm font-semibold text-white">{t('VenterHome.reflections')}</p>
-        </div>
-
-        {loading ? (
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="skeleton flex-shrink-0 w-56 h-24 rounded-2xl" />
-            ))}
+    <div className="page-wrapper page-wrapper--wide animate-fade-in">
+      <div className="w-full lg:max-w-5xl xl:max-w-6xl lg:mx-auto">
+        {/* Header — matches RN HomeHeader with logo + notification icon */}
+        <div className="flex items-center justify-between mb-4 lg:mb-6">
+          <div className="flex items-center gap-2 lg:gap-3">
+            <AppBrandIcon className="w-9 h-9 rounded-[0.65rem] sm:w-10 sm:h-10 sm:rounded-2xl" />
+            <span className="text-lg lg:text-xl font-bold text-white tracking-tight">
+              {t('Home.title')}
+            </span>
           </div>
-        ) : reflections.length > 0 ? (
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-            {reflections.map((r: any) => (
-              <GlassCard
-                key={r.id}
-                hover
-                bordered
-                onClick={() => navigate(`/venter/reflections/${r.id}`, { state: { reflection: r } })}
-                className="flex-shrink-0 w-56 cursor-pointer"
-                padding="sm"
-                rounded="2xl"
-              >
-                <p className="text-sm text-white font-medium line-clamp-2 mb-2">{r.reflection_text}</p>
-                <p className="text-xs text-gray-500">
-                  {new Date(r.reflection_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
-                </p>
-                <div className="flex justify-end mt-1">
-                  <ChevronRight size={14} className="text-gray-500" />
+          <button
+            type="button"
+            onClick={() => navigate('/venter/notifications')}
+            className="w-10 h-10 glass rounded-2xl flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+          >
+            <Bell size={18} />
+          </button>
+        </div>
+
+        {/* Mobile: single column (unchanged order). Desktop: actions | insights */}
+        <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-10 lg:items-start">
+          <div className="min-w-0 space-y-6">
+            {/* Your Reflection Button */}
+            <Button
+              variant="glass"
+              size="md"
+              fullWidth
+              onClick={() => {
+                if (reflection) {
+                  navigate(`/venter/reflections/${reflection.id}`, { state: { reflection } });
+                } else {
+                  navigate('/venter/reflections/add');
+                }
+              }}
+              className="!mb-0"
+            >
+              {t('VenterHome.yourReflection')}
+            </Button>
+
+            {/* Let's Vent Section */}
+            <div>
+              <p className="text-sm font-semibold text-white mb-3 lg:mb-3.5">{t('VenterHome.letsVent')}</p>
+              <div className="grid grid-cols-2 gap-3 lg:gap-4">
+                <Button
+                  variant="glass"
+                  size="lg"
+                  fullWidth
+                  leftIcon={<Phone size={18} />}
+                  onClick={handleCall}
+                  className="justify-center"
+                >
+                  {t('VenterHome.call')}
+                </Button>
+                <Button
+                  variant="glass"
+                  size="lg"
+                  fullWidth
+                  leftIcon={<MessageSquare size={18} />}
+                  onClick={handleChat}
+                  className="justify-center"
+                >
+                  {t('VenterHome.chat')}
+                </Button>
+              </div>
+            </div>
+
+            {/* Mood Check In */}
+            <div>
+              <p className="text-sm font-semibold text-white mb-3 lg:mb-3.5">{t('VenterHome.moodCheckIn')}</p>
+              <MoodSelector
+                selected={selectedMood}
+                onSelect={handleMoodSelect}
+                disabled={loading}
+              />
+            </div>
+          </div>
+
+          <div className="min-w-0 space-y-6">
+            {/* Reflections Section */}
+            <div>
+              <div className="flex items-center justify-between mb-3 lg:mb-3.5">
+                <p className="text-sm font-semibold text-white">{t('VenterHome.reflections')}</p>
+              </div>
+
+              {loading ? (
+                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 lg:grid lg:grid-cols-1 min-[1100px]:grid-cols-2 lg:overflow-visible lg:pb-0">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="skeleton flex-shrink-0 w-56 min-[1100px]:min-w-0 lg:w-full h-24 rounded-2xl" />
+                  ))}
+                </div>
+              ) : reflections.length > 0 ? (
+                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 lg:grid lg:grid-cols-1 min-[1100px]:grid-cols-2 lg:overflow-visible lg:pb-0">
+                  {reflections.map((r: any) => (
+                    <GlassCard
+                      key={r.id}
+                      hover
+                      bordered
+                      onClick={() => navigate(`/venter/reflections/${r.id}`, { state: { reflection: r } })}
+                      className="flex-shrink-0 w-56 min-[1100px]:min-w-0 lg:w-full cursor-pointer"
+                      padding="sm"
+                      rounded="2xl"
+                    >
+                      <p className="text-sm text-white font-medium line-clamp-2 mb-2">{r.reflection_text}</p>
+                      <p className="text-xs text-gray-500">
+                        {new Date(r.reflection_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
+                      </p>
+                      <div className="flex justify-end mt-1">
+                        <ChevronRight size={14} className="text-gray-500" />
+                      </div>
+                    </GlassCard>
+                  ))}
+                </div>
+              ) : (
+                <EmptyState
+                  title={t('VenterHome.noReflections')}
+                  description={t('VenterHome.noReflectionsDescription')}
+                  icon={<MessageSquare size={22} />}
+                />
+              )}
+
+              {/* Streak / Happy Days Card */}
+              <GlassCard bordered className="mt-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-400">{t('VenterHome.moods.happy')}</p>
+                    <p className="text-sm font-medium text-white mt-0.5">
+                      {happyDays === 1
+                        ? t('VenterHome.streakCard.totalHappyDays_one', { days: happyDays })
+                        : t('VenterHome.streakCard.totalHappyDays_other', { days: happyDays })}
+                    </p>
+                  </div>
+                  <img
+                    src={happyIcon}
+                    alt="happy"
+                    className="w-8 h-8 object-contain"
+                    style={{ filter: 'brightness(0) invert(1)', opacity: 0.85 }}
+                  />
                 </div>
               </GlassCard>
-            ))}
-          </div>
-        ) : (
-          <EmptyState
-            title={t('VenterHome.noReflections')}
-            description={t('VenterHome.noReflectionsDescription')}
-            icon={<MessageSquare size={22} />}
-          />
-        )}
-
-        {/* Streak / Happy Days Card */}
-        <GlassCard bordered className="mt-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-400">{t('VenterHome.moods.happy')}</p>
-              <p className="text-sm font-medium text-white mt-0.5">
-                {happyDays === 1
-                  ? t('VenterHome.streakCard.totalHappyDays_one', { days: happyDays })
-                  : t('VenterHome.streakCard.totalHappyDays_other', { days: happyDays })}
-              </p>
             </div>
-            <img
-              src={happyIcon}
-              alt="happy"
-              className="w-8 h-8 object-contain"
-              style={{ filter: 'brightness(0) invert(1)', opacity: 0.85 }}
-            />
-          </div>
-        </GlassCard>
-      </div>
 
-      {/* Mood Chart Section */}
-      {chartData.length > 0 && (
-        <div className="mb-6">
-          <p className="text-sm font-semibold text-white mb-3">{t('VenterHome.moodOverTime')}</p>
-          <GlassCard>
-            <MoodBarChart data={chartData} />
-          </GlassCard>
+            {/* Mood Chart Section */}
+            {chartData.length > 0 && (
+              <div>
+                <p className="text-sm font-semibold text-white mb-3 lg:mb-3.5">{t('VenterHome.moodOverTime')}</p>
+                <GlassCard>
+                  <MoodBarChart data={chartData} />
+                </GlassCard>
+              </div>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

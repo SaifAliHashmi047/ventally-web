@@ -232,9 +232,9 @@ export const ChatScreen = () => {
   const title = getOtherName();
 
   return (
-    <div className="flex border border-gray-800 rounded-2xl flex-col h-screen animate-fade-in bg-transparent">
+    <div className="flex flex-col h-[100dvh] min-h-0 w-full max-w-4xl lg:max-w-5xl mx-auto animate-fade-in bg-transparent border border-white/10 lg:border lg:rounded-3xl lg:shadow-2xl lg:shadow-black/40 lg:overflow-hidden">
       {/* Chat Header - matching mobile ChatHeader */}
-      <div className="glass rounded-2xl border-b border-white/8 px-4 py-3 flex items-center gap-3 flex-shrink-0 z-10">
+      <div className="glass border-b border-white/8 px-4 sm:px-5 py-3.5 flex items-center gap-3 flex-shrink-0 z-10 lg:rounded-t-3xl">
         <button
           onClick={() => navigate(-1)}
           className="p-2 rounded-xl glass text-gray-400 hover:text-white transition-colors flex-shrink-0"
@@ -289,7 +289,7 @@ export const ChatScreen = () => {
       </div>
 
       {/* Messages - Keyboard avoiding layout like mobile */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 scrollbar-hide">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-5 py-4 lg:py-6 space-y-4 scrollbar-hide min-h-0">
         {loading ? (
           <div className="flex items-center justify-center h-full text-gray-500">
             {t('Common.loading', 'Loading messages...')}
@@ -307,7 +307,7 @@ export const ChatScreen = () => {
 
             return (
               <div key={messageKey} className={cn('flex', isOwn ? 'justify-end' : 'justify-start')}>
-                <div className="max-w-[75%] sm:max-w-[60%]">
+                <div className="max-w-[85%] sm:max-w-[70%] lg:max-w-[65%]">
                   {/* Sender name for incoming messages */}
                   {!isOwn && senderName && (
                     <p className="text-xs text-gray-500 mb-1 ml-1">{senderName}</p>
@@ -349,7 +349,7 @@ export const ChatScreen = () => {
 
       {/* Input - only shown when chat is active, matching mobile */}
       {isChatActive && (
-        <div className="glass border-t border-white/8 px-4 py-3 flex items-end gap-3 flex-shrink-0">
+        <div className="glass border-t border-white/8 px-4 sm:px-5 py-3.5 flex items-end gap-3 flex-shrink-0 lg:rounded-b-3xl">
           <GlassCard
             className="flex-1"
             padding="none"

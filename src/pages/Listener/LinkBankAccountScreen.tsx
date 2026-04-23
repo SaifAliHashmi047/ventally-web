@@ -28,7 +28,7 @@ export const LinkBankAccountScreen = () => {
   };
 
   return (
-    <div className="page-wrapper animate-fade-in">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <PageHeader 
         title={t('PayoutMethods.addBankAccount', 'Link Bank Account')} 
         onBack={() => navigate(-1)} 

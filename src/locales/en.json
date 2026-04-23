@@ -1212,6 +1212,20 @@
       "chatSession": "Chat Session - {{duration}} min"
     }
   },
+  "ListenerWallet": {
+    "subtitle": "Payouts and session earnings",
+    "availableBalance": "Available Balance",
+    "requestPayout": "Request Payout",
+    "managePayout": "Payout Methods",
+    "lifetimeEarnings": "Lifetime Earnings",
+    "totalPaid": "Total Paid Out",
+    "earningHistory": "Earning History",
+    "noEarnings": "No earnings yet",
+    "noEarningsDesc": "Complete sessions to start earning.",
+    "sessionEarning": "Session earning",
+    "earningCall": "Voice session",
+    "earningChat": "Chat session"
+  },
   "VenterSettings": {
     "title": "Settings",
     "options": {

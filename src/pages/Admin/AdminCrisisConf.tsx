@@ -83,7 +83,7 @@ export const AdminCrisisConf = () => {
   };
 
   return (
-    <div className="page-wrapper animate-fade-in">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <PageHeader
         title={t('Admin.crisisConfig', 'Crisis Configuration')}
         onBack={() => navigate(-1)}

@@ -97,7 +97,7 @@ export const VenterMoodDetails = () => {
 
   if (loading) {
     return (
-      <div className="page-wrapper animate-fade-in">
+      <div className="page-wrapper page-wrapper--wide animate-fade-in">
         <PageHeader title={t('VenterMoodDetails.title', 'Mood Details')} onBack={() => navigate(-1)} />
         <div className="mt-8">
           <div className="skeleton h-64 rounded-3xl" />
@@ -108,7 +108,7 @@ export const VenterMoodDetails = () => {
 
   if (!mood) {
     return (
-      <div className="page-wrapper animate-fade-in">
+      <div className="page-wrapper page-wrapper--wide animate-fade-in">
         <PageHeader title={t('VenterMoodDetails.title', 'Mood Details')} onBack={() => navigate(-1)} />
         <GlassCard className="mt-8 text-center py-12">
           <AlertTriangle size={48} className="text-error mx-auto mb-4" />
@@ -119,7 +119,7 @@ export const VenterMoodDetails = () => {
   }
 
   return (
-    <div className="page-wrapper animate-fade-in">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <PageHeader
         title={t('VenterMoodDetails.title', 'Mood Details')}
         onBack={() => navigate(-1)}

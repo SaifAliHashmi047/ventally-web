@@ -62,7 +62,7 @@ export const VenterRecoveryDashboard = () => {
   const achievementsCount = status?.achievements?.filter((a: any) => a.achieved).length ?? 0;
 
   return (
-    <div className="page-wrapper animate-fade-in pb-24">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in pb-24">
       <PageHeader
         title={t('VenterRecovery.dashboard.title', 'Your Recovery')}
         onBack={() => navigate(-1)}

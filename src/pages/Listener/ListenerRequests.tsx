@@ -94,7 +94,7 @@ export const ListenerRequests = () => {
   };
 
   return (
-    <div className="page-wrapper animate-fade-in">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <PageHeader title={t('ListenerHome.incomingRequests', 'Incoming Requests')} subtitle={t('ListenerRequests.subtitle', 'Accept or decline venter connection requests')} />
 
       {requests.length === 0 ? (

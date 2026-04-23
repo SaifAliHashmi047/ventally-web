@@ -58,7 +58,7 @@ export const AdminViewChat = () => {
   };
 
   return (
-    <div className="page-wrapper animate-fade-in max-w-2xl mx-auto h-screen flex flex-col">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in h-screen flex flex-col">
       <PageHeader
         title={t('Admin.moderation.chat.title', 'Moderation Chat')}
         subtitle={t('Admin.chat.safeAndAnonymous', 'Safe & Anonymous')}

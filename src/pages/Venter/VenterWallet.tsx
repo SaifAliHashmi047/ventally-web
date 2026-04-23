@@ -5,7 +5,7 @@ import { GlassCard } from '../../components/ui/GlassCard';
 import { useWallet } from '../../api/hooks/useWallet';
 import { Button } from '../../components/ui/Button';
 import { EmptyState } from '../../components/ui/EmptyState';
-import { ArrowUpRight, ArrowDownLeft, ChevronRight } from 'lucide-react';
+import { ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { toastError } from '../../utils/toast';
 
 export const VenterWallet = () => {
@@ -57,139 +57,172 @@ export const VenterWallet = () => {
     return type === 'deposit' || type === 'top_up' || type === 'refund';
   };
 
+  // `balance` state is the numeric value from API `data.balance` (see fetch above)
+  const balanceAmount = typeof balance === 'number' ? balance : Number(balance?.balance ?? 0);
+
   return (
-    <div className="page-wrapper animate-fade-in">
-      {/* Title — centered, matching RN */}
-      <h1 className="text-lg font-medium text-white text-center mb-6">
-        {t('Wallet.title')}
-      </h1>
+    <div className="page-wrapper page-wrapper--wide animate-fade-in">
+      <div className="w-full lg:max-w-3xl xl:max-w-4xl lg:mx-auto">
+        {/* Page title — mobile: centered; web: left-aligned */}
+        <header className="mb-6 text-center lg:text-left lg:mb-8">
+          <h1 className="text-lg font-medium text-white tracking-tight lg:text-2xl lg:font-bold">
+            {t('Wallet.title')}
+          </h1>
+        </header>
 
-      {/* Balance + Add Funds */}
-      <GlassCard bordered className="mb-6 text-center">
-        <p className="text-4xl font-bold text-white mb-4">
-          {loading ? '--' : formatAmount(balance?.currency ?? balance?.balance ?? 0)}
-        </p>
-        <Button
-          variant="glass"
-          size="md"
-          fullWidth
-          onClick={() => navigate('/venter/wallet/add-funds')}
+        {/* Balance + Add Funds */}
+        <GlassCard
+          bordered
+          padding="lg"
+          className="mb-6 text-center shadow-2xl shadow-black/20 lg:mb-8"
         >
-          {t('Wallet.addFunds')}
-        </Button>
-      </GlassCard>
-
-      {/* Transactions Section */}
-      <div className="mb-6">
-        <p className="text-sm font-semibold text-white mb-3">{t('Wallet.transactions')}</p>
-
-        {loading ? (
-          <div className="space-y-2">
-            {[...Array(3)].map((_, i) => <div key={i} className="skeleton h-16 rounded-2xl" />)}
-          </div>
-        ) : transactions.length === 0 ? (
-          <EmptyState
-            title={t('VenterWallet.noTransactions')}
-            description={t('VenterWallet.noTransactionsDescription')}
-          />
-        ) : (
-          <>
-            <GlassCard padding="none" rounded="2xl">
-              {transactions.map((tx: any, i: number) => {
-                const credit = isCredit(tx);
-                return (
-                  <div
-                    key={tx.id ?? i}
-                    className={`flex items-center gap-4 px-4 py-3 ${
-                      i < transactions.length - 1 ? 'border-b border-white/5' : ''
-                    }`}
-                  >
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                      credit ? 'bg-success/15' : 'bg-error/10'
-                    }`}>
-                      {credit
-                        ? <ArrowDownLeft size={16} className="text-success" />
-                        : <ArrowUpRight size={16} className="text-error" />
-                      }
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-white truncate">{getTransactionLabel(tx)}</p>
-                      <p className="text-xs text-gray-500">
-                        {new Date(tx.createdAt ?? tx.created_at).toLocaleDateString(undefined, { dateStyle: 'medium' })}
-                      </p>
-                    </div>
-                    <p className={`text-sm font-bold flex-shrink-0 ${credit ? 'text-success' : 'text-error'}`}>
-                      {credit ? '+' : '-'}{formatAmount(Math.abs(tx.amountCurrency ?? tx.amount ?? 0))}
-                    </p>
-                  </div>
-                );
-              })}
-            </GlassCard>
-
-            {transactions.length >= 5 && (
-              <Button
-                variant="glass"
-                size="md"
-                fullWidth
-                className="mt-3"
-                onClick={() => navigate('/venter/wallet/transactions')}
-              >
-                {t('VenterWallet.viewAll')}
-              </Button>
-            )}
-          </>
-        )}
-      </div>
-
-      {/* Subscription Billing Information */}
-      <div className="mb-6">
-        <p className="text-sm font-semibold text-white mb-3">{t('SubscriptionDetails.detailsTitle')}</p>
-
-        {loading ? (
-          <div className="skeleton h-32 rounded-2xl" />
-        ) : subscription?.hasSubscription ? (
-          <GlassCard bordered>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <p className="text-sm text-gray-400">{t('SubscriptionDetails.nextBillingDate')}</p>
-                <p className="text-sm font-medium text-white">
-                  {subscription?.subscription?.billingCycleEnd
-                    ? new Date(subscription.subscription.billingCycleEnd).toLocaleDateString()
-                    : '-'}
-                </p>
-              </div>
-              <div className="flex justify-between items-center">
-                <p className="text-sm text-gray-400">{t('SubscriptionDetails.monthlyPlan')}</p>
-                <p className="text-sm font-medium text-white">
-                  {subscription?.subscription?.monthlyPrice ?? '-'}
-                </p>
-              </div>
-              <div className="flex justify-between items-center">
-                <p className="text-sm text-gray-400">{t('SubscriptionDetails.fundsUsed')}</p>
-                <p className="text-sm font-medium text-white">
-                  {subscription?.subscription?.usedMinutes
-                    ? `${subscription.subscription.usedMinutes} min`
-                    : '-'}
-                </p>
-              </div>
-            </div>
-          </GlassCard>
-        ) : (
-          <GlassCard bordered className="text-center py-4">
-            <EmptyState
-              title={t('SubscriptionDetails.noActiveSubscription')}
-              description={t('SubscriptionDetails.freePlanMessage')}
-            />
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-500 mb-2 lg:mb-3">
+            {t('VenterWallet.availableBalance')}
+          </p>
+          <p className="text-4xl font-bold text-white tabular-nums tracking-tight mb-6 sm:text-5xl lg:mb-8">
+            {loading ? '—' : formatAmount(balanceAmount)}
+          </p>
+          <div className="w-full max-w-sm mx-auto">
             <Button
               variant="glass"
               size="md"
-              className="mt-4"
-              onClick={() => navigate('/venter/subscription')}
+              fullWidth
+              onClick={() => navigate('/venter/wallet/add-funds')}
             >
-              {t('SubscriptionDetails.choosePlan')}
+              {t('Wallet.addFunds')}
             </Button>
-          </GlassCard>
-        )}
+          </div>
+        </GlassCard>
+
+        {/* Activity + subscription: stack on mobile; two columns on large screens */}
+        <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:gap-8 lg:items-start">
+          {/* Transactions Section */}
+          <section className="min-w-0">
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <p className="text-sm font-semibold text-white">{t('Wallet.transactions')}</p>
+            </div>
+
+            {loading ? (
+              <div className="space-y-2">
+                {[...Array(3)].map((_, i) => <div key={i} className="skeleton h-16 rounded-2xl" />)}
+              </div>
+            ) : transactions.length === 0 ? (
+              <EmptyState
+                title={t('VenterWallet.noTransactions')}
+                description={t('VenterWallet.noTransactionsDescription')}
+              />
+            ) : (
+              <>
+                <GlassCard padding="none" rounded="2xl" className="overflow-hidden">
+                  {transactions.map((tx: any, i: number) => {
+                    const credit = isCredit(tx);
+                    return (
+                      <div
+                        key={tx.id ?? i}
+                        className={`flex items-center gap-4 px-4 py-3.5 sm:px-5 ${
+                          i < transactions.length - 1 ? 'border-b border-white/5' : ''
+                        }`}
+                      >
+                        <div
+                          className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                            credit ? 'bg-success/15' : 'bg-error/10'
+                          }`}
+                        >
+                          {credit ? (
+                            <ArrowDownLeft size={16} className="text-success" />
+                          ) : (
+                            <ArrowUpRight size={16} className="text-error" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-white truncate">{getTransactionLabel(tx)}</p>
+                          <p className="text-xs text-gray-500">
+                            {new Date(tx.createdAt ?? tx.created_at).toLocaleDateString(undefined, {
+                              dateStyle: 'medium',
+                            })}
+                          </p>
+                        </div>
+                        <p
+                          className={`text-sm font-bold tabular-nums flex-shrink-0 ${
+                            credit ? 'text-success' : 'text-error'
+                          }`}
+                        >
+                          {credit ? '+' : '-'}
+                          {formatAmount(Math.abs(tx.amountCurrency ?? tx.amount ?? 0))}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </GlassCard>
+
+                {transactions.length >= 5 && (
+                  <Button
+                    variant="glass"
+                    size="md"
+                    fullWidth
+                    className="mt-3 lg:max-w-full"
+                    onClick={() => navigate('/venter/wallet/transactions')}
+                  >
+                    {t('VenterWallet.viewAll')}
+                  </Button>
+                )}
+              </>
+            )}
+          </section>
+
+          {/* Subscription Billing Information */}
+          <section className="min-w-0">
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <p className="text-sm font-semibold text-white">{t('SubscriptionDetails.detailsTitle')}</p>
+            </div>
+
+            {loading ? (
+              <div className="skeleton h-32 rounded-2xl" />
+            ) : subscription?.hasSubscription ? (
+              <GlassCard bordered className="h-full" padding="lg">
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center gap-4">
+                    <p className="text-sm text-gray-400">{t('SubscriptionDetails.nextBillingDate')}</p>
+                    <p className="text-sm font-medium text-white text-right tabular-nums">
+                      {subscription?.subscription?.billingCycleEnd
+                        ? new Date(subscription.subscription.billingCycleEnd).toLocaleDateString()
+                        : '-'}
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center gap-4">
+                    <p className="text-sm text-gray-400">{t('SubscriptionDetails.monthlyPlan')}</p>
+                    <p className="text-sm font-medium text-white text-right">
+                      {subscription?.subscription?.monthlyPrice ?? '-'}
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center gap-4">
+                    <p className="text-sm text-gray-400">{t('SubscriptionDetails.fundsUsed')}</p>
+                    <p className="text-sm font-medium text-white text-right">
+                      {subscription?.subscription?.usedMinutes
+                        ? `${subscription.subscription.usedMinutes} min`
+                        : '-'}
+                    </p>
+                  </div>
+                </div>
+              </GlassCard>
+            ) : (
+              <GlassCard bordered className="text-center py-2" padding="md">
+                <EmptyState
+                  title={t('SubscriptionDetails.noActiveSubscription')}
+                  description={t('SubscriptionDetails.freePlanMessage')}
+                />
+                <Button
+                  variant="glass"
+                  size="md"
+                  className="mt-4 max-w-xs mx-auto"
+                  onClick={() => navigate('/venter/subscription')}
+                >
+                  {t('SubscriptionDetails.choosePlan')}
+                </Button>
+              </GlassCard>
+            )}
+          </section>
+        </div>
       </div>
     </div>
   );

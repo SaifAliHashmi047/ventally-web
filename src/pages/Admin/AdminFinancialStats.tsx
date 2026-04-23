@@ -67,7 +67,7 @@ export const AdminFinancialStats = () => {
   ];
 
   return (
-    <div className="page-wrapper animate-fade-in pb-20">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in pb-20">
       <PageHeader title={t('Admin.financialStats.title', 'Financials')} centered onBack={() => navigate(-1)} />
 
       <div className="space-y-8 px-1">

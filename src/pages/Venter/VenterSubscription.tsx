@@ -43,7 +43,7 @@ export const VenterSubscription = () => {
     : t('VenterMySubscription.planNameValue');
 
   return (
-    <div className="page-wrapper animate-fade-in flex flex-col min-h-[calc(100vh-100px)]">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in flex flex-col min-h-[calc(100vh-100px)]">
       <PageHeader title={t('VenterMySubscription.title')} onBack={() => navigate(-1)} />
 
       <div className="flex-1">

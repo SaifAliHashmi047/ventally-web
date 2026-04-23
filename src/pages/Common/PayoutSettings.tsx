@@ -70,7 +70,7 @@ export const PayoutSettings = () => {
   useEffect(() => { fetchPayouts(true); }, []);
 
   return (
-    <div className="page-wrapper animate-fade-in">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <PageHeader title={t('Profile.payout', 'Payout')} onBack={() => navigate(-1)} />
 
       {loading ? (

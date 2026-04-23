@@ -52,7 +52,7 @@ export const AdminListenerRequests = () => {
   );
 
   return (
-    <div className="page-wrapper animate-fade-in pb-20">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in pb-20">
       <PageHeader 
         title={t('Admin.listenerRequests.title', 'Support Guide Requests')} 
         centered

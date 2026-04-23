@@ -104,7 +104,7 @@ export const AdminSubAdminProfile = () => {
   );
 
   if (!subAdmin) return (
-    <div className="page-wrapper">
+    <div className="page-wrapper page-wrapper--wide">
       <PageHeader title="Sub-Admin Not Found" onBack={() => navigate(-1)} />
     </div>
   );

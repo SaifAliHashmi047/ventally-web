@@ -32,7 +32,7 @@ export const VenterTransactions = () => {
   useEffect(() => { loadTransactions(0); }, []);
 
   return (
-    <div className="page-wrapper animate-fade-in">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <PageHeader title="Transaction History" onBack={() => navigate(-1)} />
 
       {loading ? (

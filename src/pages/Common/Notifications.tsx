@@ -31,7 +31,7 @@ export const Notifications = () => {
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
   return (
-    <div className="page-wrapper animate-fade-in">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <PageHeader
         title="Notifications"
         onBack={() => navigate(-1)}

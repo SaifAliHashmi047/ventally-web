@@ -48,7 +48,7 @@ export const AdminSubAdmins = () => {
   );
 
   return (
-    <div className="page-wrapper animate-fade-in">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <PageHeader
         title="Sub-Admins"
         subtitle="Manage platform administrators"

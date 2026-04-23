@@ -579,6 +579,23 @@ body {
     @apply flex flex-col gap-6 sm:gap-8 w-full;
   }
 
+  /* lg+: default pages get a centered column; add .page-wrapper--wide on dashboards, lists, chat, etc. */
+  @media (min-width: 1024px) {
+    .page-wrapper:not(.page-wrapper--wide) {
+      @apply max-w-2xl mx-auto w-full;
+    }
+
+    .page-wrapper--wide {
+      @apply max-w-none w-full;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .page-wrapper:not(.page-wrapper--wide) {
+      @apply max-w-3xl;
+    }
+  }
+
   .page-header {
     @apply flex items-center justify-between;
   }

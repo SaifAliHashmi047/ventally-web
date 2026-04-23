@@ -147,7 +147,7 @@ export const AdminDashboard = () => {
   }, []);
 
   return (
-    <div className="page-wrapper animate-fade-in pb-14">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in pb-14">
       {/* Header Matches Native HomeHeader */}
       <AdminHomeHeader 
         title={t('Admin.home.welcome')} 

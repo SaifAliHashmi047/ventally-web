@@ -77,7 +77,7 @@ export const VenterJourneyDashboard = () => {
   ];
 
   return (
-    <div className="page-wrapper animate-fade-in">
+    <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <PageHeader title={t('VenterJourney.title')} onBack={() => navigate(-1)} />
 
       {/* Stats table — matches RN SettingsContainer with stat rows */}
