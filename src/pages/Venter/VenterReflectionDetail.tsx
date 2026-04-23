@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import i18n from '../../locales/i18n';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
@@ -56,7 +57,7 @@ export const VenterReflectionDetail = () => {
   return (
     <div className="page-wrapper animate-fade-in">
       <PageHeader
-        title="Reflection"
+        title={t('VenterHome.reflectionDetailTitle')}
         onBack={() => navigate('/venter/reflections')}
         rightContent={
           <div className="flex gap-2">
@@ -79,7 +80,7 @@ export const VenterReflectionDetail = () => {
       {/* Date */}
       <div className="flex items-center gap-2 text-sm text-gray-500">
         <Calendar size={14} />
-        {new Date(reflection.reflection_date).toLocaleDateString('en-US', { dateStyle: 'full' })}
+        {new Date(reflection.reflection_date).toLocaleDateString(i18n.language, { dateStyle: 'full' })}
       </div>
 
       {/* Content */}
@@ -93,8 +94,8 @@ export const VenterReflectionDetail = () => {
               autoFocus
             />
             <div className="flex gap-2 mt-3">
-              <Button variant="glass" fullWidth onClick={() => { setEditMode(false); setText(reflection.reflection_text); }}>Cancel</Button>
-              <Button variant="primary" fullWidth loading={saving} onClick={handleSave}>Save Changes</Button>
+              <Button variant="glass" fullWidth onClick={() => { setEditMode(false); setText(reflection.reflection_text); }}>{t('Common.cancel')}</Button>
+              <Button variant="primary" fullWidth loading={saving} onClick={handleSave}>{t('VenterHome.saveReflection')}</Button>
             </div>
           </>
         ) : (
@@ -102,11 +103,11 @@ export const VenterReflectionDetail = () => {
         )}
       </GlassCard>
 
-      <Modal isOpen={deleteModal} onClose={() => setDeleteModal(false)} title="Delete Reflection?" size="sm">
-        <p className="text-sm text-gray-400 mb-6">This action cannot be undone. Your reflection will be permanently deleted.</p>
+      <Modal isOpen={deleteModal} onClose={() => setDeleteModal(false)} title={t('VenterHome.deleteReflection')} size="sm">
+        <p className="text-sm text-gray-400 mb-6">{t('VenterHome.deleteReflectionDescription')}</p>
         <div className="flex gap-3">
-          <Button variant="glass" fullWidth onClick={() => setDeleteModal(false)}>Cancel</Button>
-          <Button variant="danger" fullWidth loading={deleting} onClick={handleDelete}>Delete</Button>
+          <Button variant="glass" fullWidth onClick={() => setDeleteModal(false)}>{t('Common.cancel')}</Button>
+          <Button variant="danger" fullWidth loading={deleting} onClick={handleDelete}>{t('Common.delete')}</Button>
         </div>
       </Modal>
     </div>

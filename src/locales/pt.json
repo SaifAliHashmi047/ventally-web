@@ -1407,7 +1407,7 @@
     "noMoods": "No Moods Logged Yet",
     "noMoodsDescription": "You haven't logged any moods yet. Start by logging your first mood to see it appear here.",
     "viewHistory": "View History",
-    "deleteSuccess": "Mood deleted successfully",
+    "deleteSuccess": "Humor excluído com sucesso",
     "errors": {
       "selectMood": "Please select a mood"
     }
@@ -1417,7 +1417,10 @@
     "mood": "Mood:",
     "time": "Time",
     "note": "Note:",
-    "editEntry": "Edit Entry"
+    "editEntry": "Edit Entry",
+    "notFound": "Entrada de humor não encontrada",
+    "deleteConfirmTitle": "Excluir entrada de humor?",
+    "deleteConfirmDesc": "Esta ação não pode ser desfeita. A entrada de humor será removida permanentemente do seu histórico."
   },
   "VenterReflectionDetail": {
     "title": "Reflection Detail"
@@ -1883,7 +1886,10 @@
       "October",
       "November",
       "December"
-    ]
+    ],
+    "delete": "Excluir",
+    "loading": "Carregando...",
+    "loadMore": "Carregar mais"
   },
   "Security": {
     "title": "Segurança",
@@ -2006,17 +2012,17 @@
     "addedDescription": "Your Quiet Hours Have Been Updated"
   },
   "Appeal": {
-    "title": "Appeal",
-    "subtitle": "Please provide the information below to submit your \n appeal request.",
-    "emailOrPhone": "Email or Phone",
+    "title": "Recurso",
+    "subtitle": "Forneça as informações abaixo para enviar seu pedido de recurso.",
+    "emailOrPhone": "E-mail ou Telefone",
     "emailOrPhonePlaceholder": "",
-    "reportId": "Report ID",
+    "reportId": "ID do Relatório",
     "reportIdPlaceholder": "",
-    "summary": "Summary",
-    "summaryPlaceholder": "",
-    "letterUpload": "Upload Documents",
-    "uploadHint": "PDF or DOCX\nor drag and drop files here",
-    "submit": "Submit Appeal"
+    "summary": "Resumo",
+    "summaryPlaceholder": "Descreva seu recurso...",
+    "letterUpload": "Enviar Documentos",
+    "uploadHint": "PDF ou DOCX\nou arraste e solte arquivos aqui",
+    "submit": "Enviar Recurso"
   },
   "NotificationsSettings": {
     "title": "Notificações",
@@ -2292,5 +2298,8 @@
         "Ferramentas de bem-estar emocional incluídas"
       ]
     }
+  },
+  "VenterMoods": {
+    "history": "Seu registro completo de humor"
   }
 }

@@ -1407,7 +1407,7 @@
     "noMoods": "No Moods Logged Yet",
     "noMoodsDescription": "You haven't logged any moods yet. Start by logging your first mood to see it appear here.",
     "viewHistory": "View History",
-    "deleteSuccess": "Mood deleted successfully",
+    "deleteSuccess": "Humeur supprimée avec succès",
     "errors": {
       "selectMood": "Please select a mood"
     }
@@ -1417,7 +1417,10 @@
     "mood": "Mood:",
     "time": "Time",
     "note": "Note:",
-    "editEntry": "Edit Entry"
+    "editEntry": "Edit Entry",
+    "notFound": "Entrée d'humeur introuvable",
+    "deleteConfirmTitle": "Supprimer l'entrée d'humeur ?",
+    "deleteConfirmDesc": "Cette action est irréversible. L'entrée d'humeur sera définitivement supprimée de votre historique."
   },
   "VenterReflectionDetail": {
     "title": "Reflection Detail"
@@ -1883,7 +1886,10 @@
       "October",
       "November",
       "December"
-    ]
+    ],
+    "delete": "Supprimer",
+    "loading": "Chargement...",
+    "loadMore": "Charger plus"
   },
   "Security": {
     "title": "Sécurité",
@@ -2006,17 +2012,17 @@
     "addedDescription": "Your Quiet Hours Have Been Updated"
   },
   "Appeal": {
-    "title": "Appeal",
-    "subtitle": "Please provide the information below to submit your \n appeal request.",
-    "emailOrPhone": "Email or Phone",
+    "title": "Appel",
+    "subtitle": "Veuillez fournir les informations ci-dessous pour soumettre votre demande d'appel.",
+    "emailOrPhone": "E-mail ou téléphone",
     "emailOrPhonePlaceholder": "",
-    "reportId": "Report ID",
+    "reportId": "ID du rapport",
     "reportIdPlaceholder": "",
-    "summary": "Summary",
-    "summaryPlaceholder": "",
-    "letterUpload": "Upload Documents",
-    "uploadHint": "PDF or DOCX\nor drag and drop files here",
-    "submit": "Submit Appeal"
+    "summary": "Résumé",
+    "summaryPlaceholder": "Décrivez votre appel...",
+    "letterUpload": "Télécharger des documents",
+    "uploadHint": "PDF ou DOCX\nou déposez vos fichiers ici",
+    "submit": "Soumettre l'appel"
   },
   "NotificationsSettings": {
     "title": "Notifications",
@@ -2274,5 +2280,8 @@
         ]
       }
     ]
+  },
+  "VenterMoods": {
+    "history": "Votre journal d'humeur complet"
   }
 }

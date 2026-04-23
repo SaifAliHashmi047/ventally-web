@@ -1407,7 +1407,7 @@
     "noMoods": "No Moods Logged Yet",
     "noMoodsDescription": "You haven't logged any moods yet. Start by logging your first mood to see it appear here.",
     "viewHistory": "View History",
-    "deleteSuccess": "Mood deleted successfully",
+    "deleteSuccess": "Estado de ánimo eliminado con éxito",
     "errors": {
       "selectMood": "Please select a mood"
     }
@@ -1417,7 +1417,10 @@
     "mood": "Mood:",
     "time": "Time",
     "note": "Note:",
-    "editEntry": "Edit Entry"
+    "editEntry": "Edit Entry",
+    "notFound": "Entrada de estado de ánimo no encontrada",
+    "deleteConfirmTitle": "¿Eliminar entrada de estado de ánimo?",
+    "deleteConfirmDesc": "Esta acción no se puede deshacer. La entrada de estado de ánimo se eliminará permanentemente de tu historial."
   },
   "VenterReflectionDetail": {
     "title": "Reflection Detail"
@@ -1883,7 +1886,10 @@
       "October",
       "November",
       "December"
-    ]
+    ],
+    "delete": "Eliminar",
+    "loading": "Cargando...",
+    "loadMore": "Cargar más"
   },
   "Security": {
     "title": "Seguridad",
@@ -2006,17 +2012,17 @@
     "addedDescription": "Your Quiet Hours Have Been Updated"
   },
   "Appeal": {
-    "title": "Appeal",
-    "subtitle": "Please provide the information below to submit your \n appeal request.",
-    "emailOrPhone": "Email or Phone",
+    "title": "Apelación",
+    "subtitle": "Proporcione la información a continuación para enviar su solicitud de apelación.",
+    "emailOrPhone": "Correo electrónico o teléfono",
     "emailOrPhonePlaceholder": "",
-    "reportId": "Report ID",
+    "reportId": "ID del informe",
     "reportIdPlaceholder": "",
-    "summary": "Summary",
-    "summaryPlaceholder": "",
-    "letterUpload": "Upload Documents",
-    "uploadHint": "PDF or DOCX\nor drag and drop files here",
-    "submit": "Submit Appeal"
+    "summary": "Resumen",
+    "summaryPlaceholder": "Describe tu apelación...",
+    "letterUpload": "Subir documentos",
+    "uploadHint": "PDF o DOCX\no arrastra y suelta archivos aquí",
+    "submit": "Enviar apelación"
   },
   "NotificationsSettings": {
     "title": "Notificaciones",
@@ -2274,5 +2280,8 @@
         ]
       }
     ]
+  },
+  "VenterMoods": {
+    "history": "Tu registro completo de estado de ánimo"
   }
 }

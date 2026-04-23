@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { useReflections } from '../../api/hooks/useReflections';
 import { Plus, ChevronRight, BookOpen } from 'lucide-react';
+import i18n from '../../locales/i18n';
 
 export const VenterReflections = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { getReflectionHistory } = useReflections();
   const [reflections, setReflections] = useState<any[]>([]);
@@ -39,10 +42,10 @@ export const VenterReflections = () => {
   return (
     <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <PageHeader
-        title="Reflections"
+        title={t('VenterHome.yourReflections')}
         rightContent={
           <Button variant="primary" size="sm" leftIcon={<Plus size={16} />} onClick={() => navigate('/venter/reflections/add')}>
-            Add
+            {t('VenterHome.addReflection')}
           </Button>
         }
       />
@@ -51,10 +54,10 @@ export const VenterReflections = () => {
         <div className="space-y-3">{[...Array(3)].map((_, i) => <div key={i} className="skeleton h-24 rounded-2xl" />)}</div>
       ) : reflections.length === 0 ? (
         <EmptyState
-          title="No reflections yet"
-          description="Write your first reflection to start your mindfulness journey."
+          title={t('VenterHome.noReflections')}
+          description={t('VenterHome.noReflectionsDescription')}
           icon={<BookOpen size={22} />}
-          action={<Button variant="accent" size="sm" onClick={() => navigate('/venter/reflections/add')}>Write First Reflection</Button>}
+          action={<Button variant="accent" size="sm" onClick={() => navigate('/venter/reflections/add')}>{t('VenterHome.addReflection')}</Button>}
         />
       ) : (
         <div className="space-y-3">
@@ -74,7 +77,7 @@ export const VenterReflections = () => {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-white line-clamp-2">{r.reflection_text}</p>
                   <p className="text-xs text-gray-500 mt-2">
-                    {new Date(r.reflection_date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                    {new Date(r.reflection_date).toLocaleDateString(i18n.language, { weekday: 'long', month: 'long', day: 'numeric' })}
                   </p>
                 </div>
                 <ChevronRight size={16} className="text-gray-500 flex-shrink-0 mt-1" />
@@ -84,7 +87,7 @@ export const VenterReflections = () => {
 
           {hasMore && (
             <Button variant="glass" fullWidth onClick={loadMore}>
-              Load More
+              {t('Common.loadMore')}
             </Button>
           )}
         </div>

@@ -1362,7 +1362,10 @@
     "mood": "Mood:",
     "time": "Time",
     "note": "Note:",
-    "editEntry": "Edit Entry"
+    "editEntry": "Edit Entry",
+    "notFound": "Mood entry not found",
+    "deleteConfirmTitle": "Delete Mood Entry?",
+    "deleteConfirmDesc": "This action cannot be undone. The mood entry will be permanently removed from your history."
   },
   "VenterReflectionDetail": {
     "title": "Reflection Detail"
@@ -1819,7 +1822,10 @@
       "October",
       "November",
       "December"
-    ]
+    ],
+    "delete": "Delete",
+    "loading": "Loading...",
+    "loadMore": "Load More"
   },
   "Security": {
     "title": "Security",
@@ -1949,7 +1955,7 @@
     "reportId": "Report ID",
     "reportIdPlaceholder": "",
     "summary": "Summary",
-    "summaryPlaceholder": "",
+    "summaryPlaceholder": "Describe your appeal...",
     "letterUpload": "Upload Documents",
     "uploadHint": "PDF or DOCX\nor drag and drop files here",
     "submit": "Submit Appeal"
@@ -2210,5 +2216,8 @@
         ]
       }
     ]
+  },
+  "VenterMoods": {
+    "history": "Your complete mood log"
   }
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import i18n from '../../locales/i18n';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
@@ -11,7 +12,7 @@ import { ChevronRight, Calendar } from 'lucide-react';
 import happyIcon from '../../assets/icons/happy.png';
 
 const formatDate = (dateStr: string) =>
-  new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(
+  new Intl.DateTimeFormat(i18n.language, { month: 'short', day: 'numeric', year: 'numeric' }).format(
     new Date(dateStr)
   );
 
@@ -106,7 +107,7 @@ export const VenterMoods = () => {
                     className="text-sm font-medium capitalize"
                     style={{ color: config?.text || '#aaa' }}
                   >
-                    {item.mood_type}
+                    {config ? t(config.labelKey, config.label) : item.mood_type}
                   </span>
                 </div>
               );
