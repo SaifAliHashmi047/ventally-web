@@ -42,7 +42,7 @@ export const VenterSettings = () => {
     },
     {
       key: 'darkTheme',
-      title: 'Dark Theme',
+      title: t('VenterSettings.options.darkTheme.title', 'Dark Theme'),
       icon: Moon,
       onPress: handleDarkToggle,
       type: 'toggle' as const,

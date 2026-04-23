@@ -21,10 +21,12 @@ export interface RequestItem {
 
 interface ListenerState {
     requests: RequestItem[];
+    isAvailable: boolean;
 }
 
 const initialState: ListenerState = {
     requests: [],
+    isAvailable: false,
 };
 
 const listenerSlice = createSlice({
@@ -40,8 +42,11 @@ const listenerSlice = createSlice({
         clearRequests: (state) => {
             state.requests = [];
         },
+        setAvailability: (state, action: PayloadAction<boolean>) => {
+            state.isAvailable = action.payload;
+        },
     },
 });
 
-export const { setRequests, removeRequest, clearRequests } = listenerSlice.actions;
+export const { setRequests, removeRequest, clearRequests, setAvailability } = listenerSlice.actions;
 export default listenerSlice.reducer;

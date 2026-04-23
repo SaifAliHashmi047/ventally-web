@@ -7,7 +7,8 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { logout } from '../../store/slices/userSlice';
-import { setRequests, clearRequests } from '../../store/slices/listenerSlice';
+import { setRequests, clearRequests, setAvailability } from '../../store/slices/listenerSlice';
+import { useAvailability } from '../../api/hooks/useAvailability';
 import type { RootState } from '../../store/store';
 import { cn } from '../../utils/cn';
 import socketService from '../../api/socketService';
@@ -34,6 +35,15 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { getStatus } = useAvailability();
+  const isAvailable = useSelector((state: RootState) => (state.listener as any).isAvailable as boolean);
+
+  useEffect(() => {
+    getStatus()
+      .then(res => dispatch(setAvailability(res?.status?.isOnline ?? false)))
+      .catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleLogout = () => {
     dispatch(logout() as any);
@@ -115,8 +125,10 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
 
         {/* Availability Status */}
         <div className="mx-3 mb-4 glass-accent rounded-2xl px-4 py-3 flex items-center gap-3">
-          <div className="w-2 h-2 rounded-full bg-success animate-pulse-soft" />
-          <span className="text-sm font-medium text-accent">{t('Common.Available', 'Available')}</span>
+          <div className={`w-2 h-2 rounded-full ${isAvailable ? 'bg-success animate-pulse-soft' : 'bg-white/30'}`} />
+          <span className={`text-sm font-medium ${isAvailable ? 'text-accent' : 'text-white/40'}`}>
+            {isAvailable ? t('Common.Available', 'Available') : t('Common.Unavailable', 'Unavailable')}
+          </span>
         </div>
 
         {/* Nav */}

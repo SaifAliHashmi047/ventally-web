@@ -13,6 +13,7 @@ import { useReflections } from '../../api/hooks/useReflections';
 import { MoodBarChart } from '../../components/charts/MoodBarChart';
 import happyIcon from '../../assets/icons/happy.png';
 import { AppBrandIcon } from '../../components/ui/AppBrandIcon';
+import i18n from '../../locales/i18n';
 
 export const VenterDashboard = () => {
   const { t } = useTranslation();
@@ -51,12 +52,12 @@ export const VenterDashboard = () => {
         }
 
         if (statsRes.status === 'fulfilled' && statsRes.value?.mood_distribution) {
-          const allMoods = ['happy', 'neutral', 'sad', 'anxious', 'mad'];
+          const allMoods = ['happy', 'neutral', 'sad', 'anxious', 'mad'] as const;
           const moodMap: Record<string, number> = {};
           statsRes.value.mood_distribution.forEach((d: any) => {
             if (d.mood_type) moodMap[d.mood_type.toLowerCase()] = parseInt(d.count, 10);
           });
-          const mapped = allMoods.map(m => ({ value: moodMap[m] || 0, label: m }));
+          const mapped = allMoods.map(m => ({ value: moodMap[m] || 0, label: t(`VenterHome.moods.${m}`) }));
           setChartData(mapped);
           setHappyDays(moodMap['happy'] || 0);
         }
@@ -213,7 +214,7 @@ export const VenterDashboard = () => {
                     >
                       <p className="text-sm text-white font-medium line-clamp-2 mb-2">{r.reflection_text}</p>
                       <p className="text-xs text-gray-500">
-                        {new Date(r.reflection_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
+                        {new Date(r.reflection_date).toLocaleDateString(i18n.language, { month: 'long', day: 'numeric' })}
                       </p>
                       <div className="flex justify-end mt-1">
                         <ChevronRight size={14} className="text-gray-500" />

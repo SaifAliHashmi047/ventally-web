@@ -205,10 +205,10 @@ export const VenterChangeBackground = () => {
             />
             <div className="w-full h-20 rounded-2xl border-2 border-dashed border-white/20 flex flex-col items-center justify-center gap-1 hover:border-accent/50 hover:bg-white/3 transition-all duration-200">
               <Plus size={18} className="text-gray-500" />
-              <span className="text-xs text-gray-500">Add</span>
+              <span className="text-xs text-gray-500">{t('ChangeBackground.addLabel')}</span>
             </div>
           </label>
-          <p className="text-xs text-center text-gray-600 mt-1">Custom</p>
+          <p className="text-xs text-center text-gray-600 mt-1">{t('ChangeBackground.customLabel')}</p>
         </div>
       </div>
 

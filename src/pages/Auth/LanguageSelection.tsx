@@ -37,6 +37,8 @@ export const LanguageSelection = () => {
     { id: 'es', name: t('LanguageSelection.languages.spanish'), flags: [es1, es2, es3] },
   ];
 
+  const isSignupFlow = location.pathname.startsWith('/signup');
+
   const handleSelect = async (langId: PreferredLanguage) => {
     if (!langId) return;
     try {
@@ -48,12 +50,11 @@ export const LanguageSelection = () => {
     dispatch(updateUser({ preferredLanguage: langId }));
     await i18n.changeLanguage(langId);
 
-    // This screen is only reached from /signup/otp. User is already authenticated after verify;
-    // navigate(-1) would send them back to OTP. Always continue the signup funnel to terms.
-    navigate('/signup/terms', {
-      state: { userType: signupUserType },
-      replace: true,
-    });
+    if (isSignupFlow) {
+      navigate('/signup/terms', { state: { userType: signupUserType }, replace: true });
+    } else {
+      navigate(-1);
+    }
   };
 
   return (

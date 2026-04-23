@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Toggle } from '../../components/ui/Toggle';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { useAvailability } from '../../api/hooks/useAvailability';
+import { setAvailability } from '../../store/slices/listenerSlice';
 import type { RootState } from '../../store/store';
 import { Phone, MessageSquare, ChevronRight, Bell, Sparkles, Wallet } from 'lucide-react';
 import { cn } from '../../utils/cn';
@@ -14,35 +15,23 @@ import { toastError } from '../../utils/toast';
 export const ListenerDashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.user as any);
   const requests = useSelector((state: RootState) => state.listener.requests);
-  const { getStatus, goOnline, goOffline } = useAvailability();
+  const isAvailable = useSelector((state: RootState) => (state.listener as any).isAvailable as boolean);
+  const { goOnline, goOffline } = useAvailability();
 
-  const [isAvailable, setIsAvailable] = useState(false);
   const [loadingToggle, setLoadingToggle] = useState(false);
-
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const statusRes = await getStatus();
-        setIsAvailable(statusRes?.status?.isOnline ?? false);
-      } catch {
-        /* ignore */
-      }
-    };
-    void init();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleAvailabilityToggle = async () => {
     setLoadingToggle(true);
     try {
       if (isAvailable) {
         await goOffline();
-        setIsAvailable(false);
+        dispatch(setAvailability(false));
       } else {
         await goOnline();
-        setIsAvailable(true);
+        dispatch(setAvailability(true));
       }
     } catch (e: any) {
       toastError(e?.error || t('Common.somethingWentWrong'));

@@ -256,5 +256,5 @@ export const VenterQuestionsFlow = () => {
     );
   }
 
-  return <AuthLayout>{content}</AuthLayout>;
+  return <AuthLayout hideGlass>{content}</AuthLayout>;
 };
