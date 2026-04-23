@@ -12,6 +12,7 @@ import type { RootState } from '../../store/store';
 import { cn } from '../../utils/cn';
 import { useTranslation } from 'react-i18next';
 import { MainBackground } from '../ui/MainBackground';
+import { AppBrandIcon } from '../ui/AppBrandIcon';
 
 const NAV_ITEMS = [
   { path: '/admin/dashboard', labelKey: 'Navigation.tabs.home', fallback: 'Dashboard', icon: BarChart3 },
@@ -61,9 +62,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
       )}>
         {/* Logo */}
         <div className="flex items-center gap-3 px-6 pt-8 pb-8">
-          <div className="w-9 h-9 rounded-2xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #C2AEBF, #A89BB0)' }}>
-            <ShieldCheck size={16} className="text-white" />
-          </div>
+          <AppBrandIcon className="w-10 h-10 rounded-2xl shadow-glow-primary" />
           <div>
             <h1 className="text-xl font-bold text-white tracking-tight">Ventally</h1>
             <p className="text-xs text-gray-400 capitalize">{user?.userType === 'sub_admin' ? 'Sub-Admin' : 'Admin'}</p>
@@ -102,9 +101,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
       {/* Mobile Top Bar */}
       <div className="fixed top-0 left-0 right-0 z-30 h-16 glass border-b border-white/8 flex items-center justify-between px-4 lg:hidden">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #C2AEBF, #A89BB0)' }}>
-            <ShieldCheck size={14} className="text-white" />
-          </div>
+          <AppBrandIcon className="w-9 h-9 rounded-2xl" />
           <span className="font-bold text-white">Admin Panel</span>
         </div>
         <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 rounded-xl glass text-gray-400 hover:text-white transition-colors">

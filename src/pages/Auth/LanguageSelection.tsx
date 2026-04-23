@@ -26,8 +26,9 @@ export const LanguageSelection = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user.user);
-  const isAuthenticated = useSelector((state: any) => state.user.isAuthenticated);
   const name = user?.displayName || user?.email?.split('@')[0] || 'User';
+  const signupUserType =
+    (location.state as { userType?: string } | null)?.userType ?? user?.userType ?? user?.role;
 
   const languages: { id: Exclude<PreferredLanguage, null>; name: string; flags: string[] }[] = [
     { id: 'en', name: t('LanguageSelection.languages.english'), flags: [en1, en2, en3] },
@@ -46,12 +47,13 @@ export const LanguageSelection = () => {
     dispatch(setPreferredLanguage(langId));
     dispatch(updateUser({ preferredLanguage: langId }));
     await i18n.changeLanguage(langId);
-    
-    if (isAuthenticated) {
-      navigate(-1);
-    } else {
-      navigate('/signup/terms', { state: { userType: location.state?.userType } });
-    }
+
+    // This screen is only reached from /signup/otp. User is already authenticated after verify;
+    // navigate(-1) would send them back to OTP. Always continue the signup funnel to terms.
+    navigate('/signup/terms', {
+      state: { userType: signupUserType },
+      replace: true,
+    });
   };
 
   return (

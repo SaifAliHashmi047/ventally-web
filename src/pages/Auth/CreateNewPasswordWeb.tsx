@@ -5,8 +5,8 @@ import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { Lock, ArrowLeft } from 'lucide-react';
 import { resetPasswordWithOtp } from '../../api';
-import chatIcon from '../../assets/icons/chat.png';
 import { AuthPageFrame } from '../../components/ui/AuthPageFrame';
+import { AppBrandIcon } from '../../components/ui/AppBrandIcon';
 
 const validateStrongPassword = (pwd: string): string | null => {
   if (!pwd?.trim()) return 'Password is required';
@@ -78,9 +78,7 @@ export const CreateNewPasswordWeb = () => {
         </button>
 
         <div className="flex flex-col items-center mb-6">
-          <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 p-3 shadow-sm">
-            <img src={chatIcon} alt="" className="w-full h-full object-contain" />
-          </div>
+          <AppBrandIcon className="w-16 h-16 rounded-[1.1rem] mb-4 shadow-xl ring-white/15" />
           <h2 className="text-2xl font-bold text-white mb-2">{t('CreateNewPassword.title')}</h2>
         </div>
 

@@ -12,6 +12,7 @@ import { useMood } from '../../api/hooks/useMood';
 import { useReflections } from '../../api/hooks/useReflections';
 import { MoodBarChart } from '../../components/charts/MoodBarChart';
 import happyIcon from '../../assets/icons/happy.png';
+import { AppBrandIcon } from '../../components/ui/AppBrandIcon';
 
 export const VenterDashboard = () => {
   const { t } = useTranslation();
@@ -112,9 +113,7 @@ export const VenterDashboard = () => {
       {/* Header — matches RN HomeHeader with logo + notification icon */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-gradient-primary flex items-center justify-center">
-            <div className="w-2.5 h-2.5 border-2 border-white rounded-full" />
-          </div>
+          <AppBrandIcon className="w-9 h-9 rounded-[0.65rem] sm:w-10 sm:h-10 sm:rounded-2xl" />
           <span className="text-lg font-bold text-white tracking-tight">{t('Home.title')}</span>
         </div>
         <button

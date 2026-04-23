@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '../../components/ui/Button';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { MainBackground } from '../../components/ui/MainBackground';
+import { AppBrandIcon } from '../../components/ui/AppBrandIcon';
 import { Sparkles, Shield, Heart, MessageCircle } from 'lucide-react';
 
 export const Onboarding = () => {
@@ -38,9 +39,7 @@ export const Onboarding = () => {
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-10 py-12 sm:py-16">
         {/* Logo */}
         <div className="mb-8">
-          <div className="w-20 h-20 rounded-3xl bg-gradient-primary flex items-center justify-center shadow-glow-primary mx-auto">
-            <div className="w-8 h-8 border-3 border-white rounded-full" />
-          </div>
+          <AppBrandIcon className="w-20 h-20 rounded-[1.4rem] mx-auto shadow-2xl ring-white/15" />
         </div>
 
         {/* App Name */}

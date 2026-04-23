@@ -1,7 +1,7 @@
 import React from 'react';
 import { Bell, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { GlassCard } from './GlassCard';
+import { AppBrandIcon } from './AppBrandIcon';
 
 interface AdminHomeHeaderProps {
   title: string;
@@ -19,14 +19,7 @@ export const AdminHomeHeader: React.FC<AdminHomeHeaderProps> = ({
   return (
     <div className="flex items-center justify-between mb-8 px-1">
       <div className="flex items-center gap-3">
-        <GlassCard 
-          padding="none" 
-          className="w-12 h-12 flex items-center justify-center rounded-full border-white/10 bg-white/5"
-        >
-          <div className="w-10 h-10 rounded-full flex items-center justify-center bg-accent/20 text-accent font-bold">
-            V
-          </div>
-        </GlassCard>
+        <AppBrandIcon className="w-12 h-12 rounded-2xl" />
         <div className="flex flex-col">
           <h1 className="text-sm font-medium text-white/60 leading-none mb-1">
             {title}

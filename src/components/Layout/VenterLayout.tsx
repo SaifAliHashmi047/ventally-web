@@ -12,6 +12,7 @@ import type { RootState } from '../../store/store';
 import { cn } from '../../utils/cn';
 
 import { MainBackground } from '../ui/MainBackground';
+import { AppBrandIcon } from '../ui/AppBrandIcon';
 
 interface NavItem {
   path: string;
@@ -85,9 +86,7 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
       >
         {/* Logo */}
         <div className="flex items-center gap-3 px-6 pt-8 pb-8">
-          <div className="w-9 h-9 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-glow-primary">
-            <div className="w-3 h-3 border-2 border-white rounded-full" />
-          </div>
+          <AppBrandIcon className="w-10 h-10 rounded-2xl shadow-glow-primary" />
           <div>
             <h1 className="text-xl font-bold text-white tracking-tight">Ventally</h1>
             <p className="text-xs text-gray-500 capitalize">{user?.userType || 'Venter'}</p>
@@ -136,9 +135,7 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
         }}
       >
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-gradient-primary flex items-center justify-center">
-            <div className="w-2.5 h-2.5 border-2 border-white rounded-full" />
-          </div>
+          <AppBrandIcon className="w-9 h-9 rounded-2xl" />
           <span className="font-bold text-white">Ventally</span>
         </div>
         <button

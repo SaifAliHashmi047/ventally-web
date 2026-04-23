@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { setUser, setAuthenticated, setIsVenter } from '../../store/slices/userSlice';
 import { Mail, Lock } from 'lucide-react';
 import { AuthPageFrame } from '../../components/ui/AuthPageFrame';
+import { AppBrandIcon } from '../../components/ui/AppBrandIcon';
 
 export const SignUpWeb = () => {
   const { t } = useTranslation();
@@ -94,9 +95,7 @@ export const SignUpWeb = () => {
       <div className="auth-card animate-slide-up w-full max-w-lg">
         {/* Logo */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-primary flex items-center justify-center">
-            <div className="w-3 h-3 border-2 border-white rounded-full" />
-          </div>
+          <AppBrandIcon className="w-11 h-11 rounded-2xl" />
           <h1 className="text-xl font-bold text-white">Ventally</h1>
         </div>
 
