@@ -88,8 +88,8 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
         <div className="flex items-center gap-3 px-6 pt-8 pb-8">
           <AppBrandIcon className="w-10 h-10 rounded-2xl shadow-glow-primary" />
           <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">Ventally</h1>
-            <p className="text-xs text-gray-500 capitalize">{user?.userType || 'Venter'}</p>
+            <h1 className="text-xl font-bold text-white tracking-tight">{t('Common.appName')}</h1>
+            <p className="text-xs text-gray-500 capitalize">{user?.userType || t('Common.venter')}</p>
           </div>
         </div>
 
@@ -136,7 +136,7 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
       >
         <div className="flex items-center gap-3">
           <AppBrandIcon className="w-9 h-9 rounded-2xl" />
-          <span className="font-bold text-white">Ventally</span>
+          <span className="font-bold text-white">{t('Common.appName')}</span>
         </div>
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}

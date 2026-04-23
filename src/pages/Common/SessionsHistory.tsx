@@ -21,25 +21,26 @@ interface SessionItem {
   status?: string;
 }
 
-const formatTime = (dateStr?: string) => {
-  if (!dateStr) return '';
-  const date = new Date(dateStr);
-  if (isNaN(date.getTime())) return '';
-  const now = new Date();
-  const isToday = date.toDateString() === now.toDateString();
-  const yesterday = new Date(now);
-  yesterday.setDate(now.getDate() - 1);
-  const isYesterday = date.toDateString() === yesterday.toDateString();
-  if (isToday) return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
-  if (isYesterday) return 'Yesterday';
-  return date.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
-};
 
 const LIMIT = 10;
 
 export const SessionsHistory = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const formatTime = (dateStr?: string) => {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return '';
+    const now = new Date();
+    const isToday = date.toDateString() === now.toDateString();
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    const isYesterday = date.toDateString() === yesterday.toDateString();
+    if (isToday) return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+    if (isYesterday) return t('Common.yesterday');
+    return date.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+  };
   const { getCalls } = useCalls();
   const { getConversations } = useChat();
 
@@ -65,7 +66,7 @@ export const SessionsHistory = () => {
       const res = await getCalls(LIMIT, offset);
       const mapped: SessionItem[] = (res?.calls || []).map((c: any) => ({
         id: c.id,
-        name: c.otherParticipant?.anonymousName || c.otherParticipant?.displayName || 'Voice Session',
+        name: c.otherParticipant?.anonymousName || c.otherParticipant?.displayName || t('VenterCall.callEntry.name'),
         duration: `${Math.round((c.duration || c.durationSeconds || 0) / 60)} min`,
         time: formatTime(c.createdAt),
         status: c.status,
@@ -87,7 +88,7 @@ export const SessionsHistory = () => {
       const res = await getConversations(undefined, LIMIT, offset);
       const mapped: SessionItem[] = (res?.conversations || []).map((c: any) => ({
         id: c.id,
-        name: c.otherParticipant?.anonymousName || c.otherParticipant?.displayName || 'Chat Session',
+        name: c.otherParticipant?.anonymousName || c.otherParticipant?.displayName || t('VenterMessages.chatEntry.name'),
         duration: `${c.durationMinutes || 0} min`,
         time: formatTime(c.createdAt),
         preview: c.lastMessage?.content,
@@ -208,7 +209,7 @@ export const SessionsHistory = () => {
               loading={isLoading}
               onClick={handleLoadMore}
             >
-              Load More
+              {t('Common.loadMore')}
             </Button>
           )}
         </div>

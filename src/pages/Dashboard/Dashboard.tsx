@@ -1,13 +1,15 @@
 import { TrendingUp, Users, Star, ArrowUpRight, Activity, ChevronRight } from 'lucide-react';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 export const Dashboard = () => {
+  const { t } = useTranslation();
   const user = useSelector((state: any) => state.user.user);
 
   const stats = [
-    { label: 'Wallet Balance', value: `$${user?.balance?.toFixed(2) || '0.00'}`, icon: TrendingUp, color: '#10b981', trend: '+12.5%' },
-    { label: 'Active Sessions', value: '3', icon: Users, color: 'var(--primary)', trend: '+2 this week' },
-    { label: 'Total Rating', value: '4.9 ★', icon: Star, color: '#f59e0b', trend: 'Top 5%' },
+    { label: t('dashboard.stats.walletBalance'), value: `$${user?.balance?.toFixed(2) || '0.00'}`, icon: TrendingUp, color: '#10b981', trend: '+12.5%' },
+    { label: t('dashboard.stats.activeSessions'), value: '3', icon: Users, color: 'var(--primary)', trend: '+2 this week' },
+    { label: t('dashboard.stats.totalRating'), value: '4.9 ★', icon: Star, color: '#f59e0b', trend: 'Top 5%' },
   ];
 
   const activities = [
@@ -21,10 +23,10 @@ export const Dashboard = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       <header style={{ position: 'relative' }}>
         <h1 style={{ fontSize: '36px', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '8px' }}>
-          Good afternoon, {user?.name?.split(' ')[0] || 'User'}!
+          {t('dashboard.welcome', { name: user?.name?.split(' ')[0] || 'User' })}
         </h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Activity size={18} /> Here's what's happening with your Ventally account.
+          <Activity size={18} /> {t('dashboard.statusIntro')}
         </p>
       </header>
       
@@ -49,9 +51,9 @@ export const Dashboard = () => {
       <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: '24px' }} className="dashboard-grid-main">
         <div className="glass" style={{ padding: '32px', borderRadius: '24px', display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
-            <h2 style={{ fontSize: '22px', fontWeight: 700 }}>Recent Activity</h2>
+            <h2 style={{ fontSize: '22px', fontWeight: 700 }}>{t('dashboard.recentActivity')}</h2>
             <button style={{ background: 'transparent', border: 'none', color: 'var(--primary)', fontWeight: 600, fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              View All History <ArrowUpRight size={16} />
+              {t('dashboard.viewAllHistory')} <ArrowUpRight size={16} />
             </button>
           </div>
           
@@ -74,17 +76,22 @@ export const Dashboard = () => {
         </div>
 
         <div className="glass" style={{ padding: '32px', borderRadius: '24px', background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%)' }}>
-          <h2 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '24px' }}>Quick Actions</h2>
+          <h2 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '24px' }}>{t('dashboard.quickActions')}</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {['Request a Session', 'Add Funds to Wallet', 'Download Report', 'Contact Support'].map((action, i) => (
-              <button key={i} className="btn-primary" style={{ 
+            {[
+              { label: t('dashboard.actions.requestSession'), key: 'request' },
+              { label: t('dashboard.actions.addFunds'), key: 'funds' },
+              { label: t('dashboard.actions.downloadReport'), key: 'report' },
+              { label: t('dashboard.actions.contactSupport'), key: 'support' }
+            ].map((action, i) => (
+              <button key={action.key} className="btn-primary" style={{ 
                 width: '100%', justifyContent: 'space-between', 
                 background: i === 0 ? 'var(--primary)' : 'rgba(255,255,255,0.03)',
                 border: i === 0 ? 'none' : '1px solid var(--border)',
                 color: i === 0 ? 'white' : 'var(--text-main)',
                 padding: '16px 20px'
               }}>
-                {action} <ChevronRight size={18} />
+                {action.label} <ChevronRight size={18} />
               </button>
             ))}
           </div>

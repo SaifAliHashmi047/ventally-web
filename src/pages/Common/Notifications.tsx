@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Badge } from '../../components/ui/Badge';
@@ -8,8 +9,10 @@ import { Button } from '../../components/ui/Button';
 import { getNotificationHistory } from '../../api/notificationsApi';
 import apiInstance from '../../api/apiInstance';
 import { Bell, ChevronRight, Settings } from 'lucide-react';
+import i18n from '../../locales/i18n';
 
 export const Notifications = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,11 +36,11 @@ export const Notifications = () => {
   return (
     <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <PageHeader
-        title="Notifications"
+        title={t('Notifications.title')}
         onBack={() => navigate(-1)}
         rightContent={
           unreadCount > 0 ? (
-            <Button variant="glass" size="sm" onClick={markAllRead}>Mark All Read</Button>
+            <Button variant="glass" size="sm" onClick={markAllRead}>{t('Notifications.markAllRead')}</Button>
           ) : undefined
         }
       />
@@ -45,7 +48,7 @@ export const Notifications = () => {
       {loading ? (
         <div className="space-y-3">{[...Array(4)].map((_, i) => <div key={i} className="skeleton h-16 rounded-2xl" />)}</div>
       ) : notifications.length === 0 ? (
-        <EmptyState title="No notifications" description="You're all caught up!" icon={<Bell size={22} />} />
+        <EmptyState title={t('Notifications.noNotifications')} description={t('Notifications.noNotificationsDescription')} icon={<Bell size={22} />} />
       ) : (
         <div className="space-y-2">
           {notifications.map((n: any) => (
@@ -68,7 +71,7 @@ export const Notifications = () => {
                   </div>
                   {n.body && <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.body}</p>}
                   <p className="text-xs text-gray-600 mt-1">
-                    {new Date(n.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                    {new Date(n.createdAt).toLocaleDateString(i18n.language, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
                   </p>
                 </div>
               </div>

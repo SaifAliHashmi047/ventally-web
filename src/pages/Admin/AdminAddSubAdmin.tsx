@@ -58,7 +58,7 @@ export const AdminAddSubAdmin = () => {
         navigate('/admin/dashboard');
       }, 3000);
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || t('Common.error', 'Failed to create sub-admin'));
+      toast.error(error?.error || error?.data?.message || t('Common.error', 'Failed to create sub-admin'));
     } finally {
       setLoading(false);
     }

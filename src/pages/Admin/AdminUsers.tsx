@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Search, UserCheck } from 'lucide-react';
+import { Search, Users } from 'lucide-react';
 import { useAdmin } from '../../api/hooks/useAdmin';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
@@ -55,10 +55,10 @@ export const AdminUsers = () => {
         centered
         rightContent={
           <button 
-            onClick={() => navigate('/admin/requests')}
+            onClick={() => navigate('/admin/listener-requests')}
             className="w-10 h-10 glass rounded-2xl flex items-center justify-center text-white/80 hover:bg-white/10"
           >
-            <UserCheck size={20} />
+            <Users size={20} />
           </button>
         }
       />

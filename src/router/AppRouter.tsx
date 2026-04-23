@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../store/store';
 
@@ -37,9 +37,27 @@ import { PaymentMethodSavedScreen } from '../pages/Auth/PaymentMethodSavedScreen
 import { SubscriptionSuccessScreen } from '../pages/Auth/SubscriptionSuccessScreen';
 import { MainBackground } from '../components/ui/MainBackground';
 
+import { useRoleNavigation } from '../hooks/useRoleNavigation';
+
+const StateGuard = ({ children, role }: { children: React.ReactNode, role: string }) => {
+  const user = useSelector((state: RootState) => state.user.user);
+  const location = useLocation();
+  const { getNextStep } = useRoleNavigation();
+  const nextStep = getNextStep(user, location.pathname);
+
+  // If nextStep is a dashboard path, it means they are ready. 
+  // If nextStep is an onboarding path (OTP, Nickname, etc), redirect them.
+  if (nextStep && nextStep.startsWith('/signup')) {
+    return <Navigate to={nextStep} replace />;
+  }
+
+  return <>{children}</>;
+};
+
 const AppRouter = () => {
   const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
-  const userType = useSelector((state: RootState) => (state.user.user as any)?.userType);
+  const user = useSelector((state: RootState) => state.user.user as any);
+  const userType = user?.userType || user?.role;
 
   // Determine post-login redirect based on role
   const getRoleHome = () => {
@@ -93,19 +111,19 @@ const AppRouter = () => {
           <Route path="/venter/*" element={
             userType === 'listener' ? <Navigate to="/listener" replace /> :
             userType === 'admin' || userType === 'sub_admin' ? <Navigate to="/admin" replace /> :
-            <VenterRouter />
+            <StateGuard role="venter"><VenterRouter /></StateGuard>
           } />
 
           {/* Listener Routes */}
           <Route path="/listener/*" element={
             userType !== 'listener' ? <Navigate to={getRoleHome()} replace /> :
-            <ListenerRouter />
+            <StateGuard role="listener"><ListenerRouter /></StateGuard>
           } />
 
           {/* Admin Routes */}
           <Route path="/admin/*" element={
             userType !== 'admin' && userType !== 'sub_admin' ? <Navigate to={getRoleHome()} replace /> :
-            <AdminRouter />
+            <StateGuard role="admin"><AdminRouter /></StateGuard>
           } />
 
           {/* Root redirect based on role */}

@@ -62,19 +62,19 @@ export const AdminCrisisLog = () => {
                 }}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-lg font-medium text-white">Id: {log.id}</span>
+                  <span className="text-lg font-medium text-white">{t('Admin.crisisManagement.id', { id: log.id })}</span>
                   <div className="px-3 py-1 bg-white/15 rounded-full">
                     <span className="text-[10px] font-bold text-white/80 uppercase tracking-widest">
                       {log.type === 'call'
-                        ? t('Admin.crisisManagement.crisisCall', 'Crisis Session')
-                        : t('Admin.crisisManagement.crisisChat', 'Crisis Chat')}
+                        ? t('Admin.crisisManagement.crisisCall')
+                        : t('Admin.crisisManagement.crisisChat')}
                     </span>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-white/70">
-                    {log.type === 'call' ? 'Call by: ' : 'Chat by: '}
+                    {log.type === 'call' ? t('Admin.crisisManagement.callBy') : t('Admin.crisisManagement.chatBy')}
                     <span className="font-medium text-white/50">{log.email}</span>
                   </span>
                   <span className="text-xs text-white/40 font-medium">{log.date}</span>

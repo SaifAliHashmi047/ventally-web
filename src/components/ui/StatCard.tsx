@@ -58,7 +58,7 @@ export const StatCard: React.FC<StatCardProps> = ({
         )}
       </div>
 
-      <p className="text-sm text-gray-500 font-medium mb-1">{label}</p>
+      <p className="text-sm text-gray-500 font-medium mb-1 whitespace-pre-line">{label}</p>
       <p className="text-3xl font-bold text-white tracking-tight">{value}</p>
     </div>
   );

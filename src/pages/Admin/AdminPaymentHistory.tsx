@@ -89,7 +89,7 @@ export const AdminPaymentHistory = () => {
           ))
         ) : payments.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-white/40 font-medium">No payment history found.</p>
+            <p className="text-white/40 font-medium">{t('Admin.financialStats.paymentHistory.noHistory')}</p>
           </div>
         ) : (
           <>
@@ -112,7 +112,7 @@ export const AdminPaymentHistory = () => {
                 className="w-full py-4 text-white/40 text-sm font-medium hover:text-white transition-colors"
                 disabled={loadingMore}
               >
-                {loadingMore ? <Loader2 className="animate-spin mx-auto" size={20} /> : 'Load More'}
+                {loadingMore ? <Loader2 className="animate-spin mx-auto" size={20} /> : t('Admin.financialStats.paymentHistory.loadMore')}
               </button>
             )}
           </>

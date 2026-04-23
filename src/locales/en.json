@@ -1,4 +1,18 @@
 {
+  "Common": {
+    "appName": "Ventally",
+    "adminPanel": "Admin Panel",
+    "ventallyListener": "Ventally Listener",
+    "subAdmin": "Sub-Admin",
+    "admin": "Admin",
+    "venter": "Venter",
+    "logoutSession": "Logout Session",
+    "connected": "Connected",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "SupportGuide": "Support Guide",
+    "LogOut": "Logout"
+  },
   "Errors": {
     "adminUnavailableOnMobile": "Administrator access isn’t available in this app. Please use the web dashboard."
   },
@@ -660,75 +674,297 @@
     "introText1": "This Liability Waiver (\"Waiver\") is entered into by and between Ventally Limited Liability Company, a corporation duly organized and existing under the laws of its jurisdiction, with its principal place of business in the State of Connecticut (hereinafter referred to as \"Ventally\" or the \"Company\"), and the undersigned individual (\"Support Guide\"). Collectively, Ventally and the Support Guide shall be referred to as the \"Parties.\"",
     "sections": [
       {
-        "title": "1. ASSUMPTION OF RISK",
+        "title": "1. VOLUNTARY PARTICIPATION AND ASSUMPTION OF RISK",
         "bullets": [
-          "The Support Guide expressly assumes full responsibility for all risks associated with their engagement, including but not limited to emotional fatigue, secondary trauma, reputational exposure, and any psychological discomfort resulting from user interactions.",
-          "The Support Guide acknowledges that they are solely responsible for determining their own mental and emotional readiness and ongoing capacity to perform services in a safe and competent manner.",
-          "The Support Guide agrees to promptly notify Ventally if they experience any mental, emotional, or physical condition that may impair their ability to fulfill their duties safely or ethically."
+          "• The Support Guide affirms that their participation on the Ventally platform is entirely voluntary and may involve exposure to emotionally sensitive, distressing, or triggering subject matter shared by users.",
+          "• The Support Guide expressly assumes full responsibility for all risks associated with their engagement, including but not limited to emotional fatigue, secondary trauma, reputational exposure, and any psychological discomfort resulting from user interactions.",
+          "• The Support Guide acknowledges that they are solely responsible for determining their own mental and emotional readiness and ongoing capacity to perform services in a safe and competent manner.",
+          "• The Support Guide agrees to promptly notify Ventally if they experience any mental, emotional, or physical condition that may impair their ability to fulfill their duties safely or ethically."
         ]
       },
       {
         "title": "2. NO MEDICAL OR MENTAL HEALTH CLAIMS",
         "bullets": [
-          "The Support Guide confirms that they are not licensed to provide mental health care, and shall not represent themselves as a medical, psychological, or clinical professional.",
-          "The Support Guide acknowledges that Ventally is a non-clinical support platform and that all interactions are designed solely for peer support purposes."
+          "• The Support Guide confirms that they are not licensed to provide mental health care, and shall not represent themselves as a medical, psychological, or clinical professional.",
+          "• The Support Guide acknowledges that Ventally is a non-clinical support platform and that all interactions are designed solely for peer support purposes. Ventally makes no representations or guarantees regarding therapeutic outcomes or the mental health benefits of using the platform."
         ]
       },
       {
         "title": "3. RELEASE AND WAIVER OF CLAIMS",
         "bullets": [
-          "To the maximum extent permitted by law, the Support Guide hereby fully and irrevocably releases, waives, and discharges Ventally and its directors, officers, employees, contractors, agents, successors, and assigns from any and all claims arising out of or related to the Support Guide's participation on the platform.",
-          "This release includes, but is not limited to, claims for personal injury, emotional distress, defamation, negligence, or any other loss or damage incurred by the Support Guide."
+          "• To the maximum extent permitted by law, the Support Guide hereby fully and irrevocably releases, waives, and discharges Ventally and its directors, officers, employees, contractors, agents, successors, and assigns (the \"Released Parties\") from any and all claims, demands, liabilities, actions, or causes of action arising out of or related to the Support Guide's participation on the platform.",
+          "• This release includes, but is not limited to, claims for personal injury, emotional distress, defamation, negligence, or any other loss or damage incurred by the Support Guide."
+        ]
+      },
+      {
+        "title": "4. INDEPENDENT CONTRACTOR RELATIONSHIP",
+        "bullets": [
+          "• The Support Guide acknowledges and agrees that they are an independent contractor and not an employee, agent, or partner of Ventally.",
+          "• Nothing in this Waiver or any other agreement shall be construed as creating an employment, partnership, agency, or joint venture relationship between the Parties.",
+          "• The Support Guide understands and accepts that they are not entitled to employee benefits, unemployment compensation, insurance coverage, or statutory employment protections.",
+          "• The Support Guide shall be solely responsible for all taxes, withholdings, filings, and regulatory obligations arising from their compensation, and agrees to indemnify Ventally against any claims related to such liabilities."
+        ]
+      },
+      {
+        "title": "5. NON-RELIANCE",
+        "bullets": [
+          "• The Support Guide affirms that they have not relied upon any representations, promises, or warranties made by Ventally or its representatives that are not expressly set forth in this Waiver.",
+          "• Any prior discussions, oral agreements, or implied understandings are hereby superseded and rendered null and void."
+        ]
+      },
+      {
+        "title": "6. CONFIDENTIALITY OF INVESTIGATIONS",
+        "bullets": [
+          "• The Support Guide agrees to maintain the confidentiality of any internal review, investigation, or compliance procedure initiated by Ventally concerning the Support Guide's conduct or use of the platform.",
+          "• The Support Guide shall not disclose or discuss the substance, scope, or findings of any such process without prior written consent from Ventally."
+        ]
+      },
+      {
+        "title": "7. INDEMNIFICATION",
+        "bullets": [
+          "• The Support Guide shall indemnify, defend, and hold harmless Ventally and the Released Parties from and against any and all third-party claims, liabilities, damages, losses, costs, and expenses (including attorneys' fees) arising from:",
+          "  • The Support Guide's violation of this Waiver or any related agreement;",
+          "  • Acts of negligence, willful misconduct, or omission by the Support Guide;",
+          "  • Any misrepresentations or unauthorized activities conducted on or through the platform."
+        ]
+      },
+      {
+        "title": "8. LIMITATION OF LIABILITY",
+        "bullets": [
+          "• Under no circumstances shall Ventally be liable for any indirect, incidental, consequential, special, punitive, or exemplary damages arising from or relating to the Support Guide's engagement.",
+          "• Ventally's aggregate liability for any and all claims shall not exceed the total amount of compensation paid to the Support Guide by Ventally in the six (6) months preceding the occurrence giving rise to such claim.",
+          "• The limitations set forth herein shall apply regardless of the form of action, whether in contract, tort (including negligence), strict liability, or otherwise, even if Ventally has been advised of the possibility of such damages."
+        ]
+      },
+      {
+        "title": "9. SURVIVAL",
+        "bullets": [
+          "• All provisions of this Waiver which by their nature are intended to survive termination—including but not limited to those concerning indemnification, limitation of liability, dispute resolution, and waiver of claims—shall remain in full force and effect.",
+          "• The Support Guide acknowledges and agrees that the obligations under this Waiver shall continue to apply even after the cessation of their participation on the platform, regardless of the reason for termination or expiration of the engagement."
+        ]
+      },
+      {
+        "title": "10. GOVERNING LAW AND DISPUTE RESOLUTION",
+        "bullets": [
+          "• This Waiver shall be governed by and construed in accordance with the laws of the State of Connecticut, and, where applicable, the laws of the Support Guide’s state of residence, without regard to conflict of laws principles.",
+          "• Any arbitration or legal proceeding arising from this Acknowledgment shall be conducted in Connecticut, where Ventally maintains its principal place of business. The Support Guide irrevocably consents to such venue and also agrees to comply with the applicable laws of their state of residence, where relevant. The Support Guide waives objections based on forum non conveniens."
+        ]
+      },
+      {
+        "title": "9. RIGHT TO SUSPEND PAYMENTS",
+        "bullets": [
+          "• Ventally retains the right to suspend or withhold any disbursements during the pendency of any investigation related to platform violations, fraud, abuse, or operational irregularities linked to the Support Guide’s activity.",
+          "• Such withholding is precautionary and shall not be interpreted as a finding of guilt or liability on the part of Ventally. Payment shall resume or be adjusted once the matter is resolved."
+        ]
+      },
+      {
+        "title": "10. LIMITATION OF LIABILITY",
+        "bullets": [
+          "• Ventally shall not be liable for any indirect, incidental, consequential, or punitive damages, including but not limited to lost profits, delays in payment, or technical malfunctions of external payment processors.",
+          "• In no event shall Ventally’s aggregate liability exceed the verifiable amount of unpaid compensation due under this Acknowledgment, based on valid and documented activity within the preceding ninety (90) days."
         ]
       }
     ],
     "signatures": {
       "title": "ACKNOWLEDGMENT AND SIGNATURE",
-      "text": "By signing below, the Support Guide affirms that they have reviewed and understood the foregoing Liability Waiver, and agrees to be legally bound by its terms."
-    }
+      "text": "By signing below, the Support Guide affirms that they have reviewed and understood the foregoing Payment Terms Acknowledgment, and agrees to be legally bound by its terms as a condition of continued participation on the Ventally platform."
+    },
+    "introText2": "By executing this Waiver, the Support Guide affirms that they have carefully read, understood, and voluntarily agreed to the terms and conditions contained herein, which govern the Support Guide's access to and participation in the Ventally platform and the provision of non-clinical, peer-based support session services.",
+    "continue": "Continue"
   },
   "ListenerAgreement": {
-    "title": "Listener Agreement",
+    "title": "Support Guide Agreement",
     "effectiveDate": "Effective Date: August 11, 2025",
-    "introText1": "This Support Guide Service Agreement (\"Agreement\") is entered into by and between Ventally Limited Liability Company (\"Ventally\" or the \"Company\"), and the undersigned individual (\"Support Guide\").",
+    "introText1": "This This Support Guide Agreement (the \"Agreement\") is entered into by and between Ventally Limited Liability Company, a Connecticut limited liability company and provider of mental health peer-support services (\"Ventally,\" \"we,\" \"us,\" or the \"Company\"), and the undersigned individual (\"Support Guide,\" \"you\") who has been accepted to serve as a trained Support Guide on the Ventally platform.",
     "sections": [
       {
-        "title": "1. SCOPE OF SERVICES",
+        "title": "1. ROLE & SCOPE OF ENGAGEMENT",
         "subsections": [
           {
-            "title": "Provision of Peer Support",
-            "text": "You agree to provide active listening, emotional validation, and non-clinical peer support session to users of the Ventally platform."
+            "title": "• Non-Clinical Support Role",
+            "text": "You acknowledge and agree that your role as a Support Guide on the Ventally platform is limited exclusively to providing empathetic, non-clinical support session. You are not a licensed therapist, counselor, crisis responder, or medical or legal professional, and shall not purport to be one."
           },
           {
-            "title": "Independent Contractor Status",
-            "text": "You acknowledge that you are providing services as an independent contractor and not as an employee."
+            "title": "• Prohibited Conduct",
+            "text": "You expressly agree not to provide any form of diagnosis, treatment, therapeutic intervention, medical, legal, financial, or relationship advice under any circumstances. Any such behavior shall constitute a material breach of this Agreement."
           }
         ]
       },
       {
-        "title": "2. NON-CLINICAL DISCLAIMER",
+        "title": "2. INDEPENDENT CONTRACTOR STATUS",
         "subsections": [
           {
-            "title": "Prohibitions on Medical Advice",
-            "text": "You shall not represent yourself as a licensed therapist or medical professional. You are strictly prohibited from providing medical, clinical, or professional advice."
+            "title": "• No Employment Relationship",
+            "text": "You acknowledge and agree that your engagement with Ventally is as an independent contractor. Nothing herein shall be construed as creating any form of employment, partnership, agency, or joint venture relationship between you and the Company."
+          },
+          {
+            "title": "• Waiver of Employee Benefits",
+            "text": "You shall not be entitled to, and hereby waive any claim to, employee benefits including but not limited to salary, health benefits, insurance coverage, paid time off, or unemployment compensation. All remuneration is based strictly on platform usage, as detailed in Ventally's Support Guide Payment Policy."
           }
         ]
       },
       {
-        "title": "3. CONDUCT & BOUNDARIES",
+        "title": "3. PROFESSIONAL CONDUCT & BOUNDARIES",
         "subsections": [
           {
-            "title": "Boundary Enforcement",
-            "text": "You shall not exchange personal contact details, engage in romantic interactions, or arrange in-person meetings with users."
+            "title": "• Standards of Conduct",
+            "text": "You agree to:",
+            "bullets": [
+              "Maintain a respectful, empathetic, and nonjudgmental demeanor;",
+              "Practice active listening and emotional validation;",
+              "Refrain from imposing personal opinions, ideologies, or beliefs."
+            ]
+          },
+          {
+            "title": "• Boundary Enforcement",
+            "text": "You shall not:",
+            "bullets": [
+              "Exchange personal contact details or social media information with users;",
+              "Engage in romantic, sexual, or suggestive interactions with users;",
+              "Arrange or attempt to arrange any in-person meetings with users;",
+              "Exhibit conduct deemed inappropriate or unprofessional"
+            ]
+          },
+          {
+            "title": "• Zero-Tolerance Policy",
+            "text": "You acknowledge that any form of harassment, hate speech, discrimination, or sexual misconduct will result in immediate and permanent termination from the platform, and may result in legal action."
           }
         ]
       },
       {
-        "title": "4. CONFIDENTIALITY",
+        "title": "4. CONFIDENTIALITY & DATA PROTECTION",
         "subsections": [
           {
-            "title": "Confidentiality of User Information",
-            "text": "You agree not to record, store, replicate, or disclose any information obtained from users during a session."
+            "title": "• Confidentiality of User Information",
+            "text": "You agree not to record, store, replicate, share, or disclose any information obtained from users during a session, whether written, verbal, or digital."
+          },
+          {
+            "title": "• Platform Confidentiality",
+            "text": "You shall maintain strict confidentiality concerning all proprietary and confidential information related to Ventally's systems, operations, scripts, materials, and infrastructure."
+          }
+        ]
+      },
+      {
+        "title": "5. ESCALATION & EMERGENCY PROTOCOLS",
+        "subsections": [
+          {
+            "title": "• Obligation to Report",
+            "text": "You agree to immediately flag and report any sessions that involve suicidal ideation, intent to harm, or disclosures of abuse or other high-risk behaviors, in accordance with the official Red Flag Reporting Protocol."
+          },
+          {
+            "title": "• Crisis Disclaimer Requirement",
+            "text": "You shall proactively inform users that you are not a crisis intervention professional, and refer them to local emergency services or national helplines such as 911 or 988 where applicable."
+          }
+        ]
+      },
+      {
+        "title": "6. INTELLECTUAL PROPERTY RIGHTS",
+        "subsections": [
+          {
+            "title": "• Obligation to Report",
+            "text": "All documentation, training resources, scripts, branding, and platform content provided to you by Ventally remain the exclusive intellectual property of Ventally."
+          },
+          {
+            "title": "• Use Restrictions",
+            "text": "You agree not to use, reproduce, distribute, or share any proprietary material outside of your responsibilities on the platform."
+          }
+        ]
+      },
+      {
+        "title": "7. COMPENSATION & TAXES",
+        "subsections": [
+          {
+            "title": "• Payment Terms",
+            "text": "You will be compensated in accordance with the per-session or per-minute rates established in the Support Guide Payment Policy, which Ventally may amend with thirty (30) days' advance notice."
+          },
+          {
+            "title": "• Disbursement Schedule",
+            "text": "Payments will be made on a biweekly basis, calculated based on revenue earned by the Support Guide, and disbursed through an approved payment processor, subject to full compliance with onboarding and performance obligations."
+          },
+          {
+            "title": "• Tax Responsibilities",
+            "text": "You acknowledge and accept sole responsibility for any and all tax obligations arising from your income under this Agreement, including local, federal, and self-employment tax."
+          }
+        ]
+      },
+      {
+        "title": "8. TERMINATION OF AGREEMENT",
+        "subsections": [
+          {
+            "title": "• Voluntary Termination",
+            "text": "You may terminate this Agreement at any time by closing your Support Guide account and providing written notice to Ventally."
+          },
+          {
+            "title": "• Termination by Ventally",
+            "text": "Ventally reserves the right to suspend or terminate this Agreement and your access to the platform at its sole discretion, including but not limited to violations of this Agreement or related policies."
+          }
+        ]
+      },
+      {
+        "title": "9. LIMITATION OF LIABILITY",
+        "subsections": [
+          {
+            "title": "• Indemnification",
+            "text": "You agree to indemnify and hold harmless Ventally, its affiliates, officers, directors, and agents from any and all claims, liabilities, losses, or expenses arising from your conduct or violation of this Agreement."
+          },
+          {
+            "title": "• No Income Guarantee",
+            "text": "Ventally makes no guarantees regarding the availability of sessions or minimum earnings."
+          }
+        ]
+      },
+      {
+        "title": "10. DISPUTE RESOLUTION",
+        "subsections": [
+          {
+            "title": "• Governing Law",
+            "text": "This Agreement shall be governed by and interpreted under the laws of the State of Connecticut, without regard to its conflict of law principles."
+          },
+          {
+            "title": "• Arbitration",
+            "text": "Any disputes arising under or in connection with this Agreement shall be resolved exclusively through binding arbitration conducted in New Haven County, Connecticut in accordance with the rules of the American Arbitration Association."
+          }
+        ]
+      },
+      {
+        "title": "11. ADDITIONAL PROVISIONS",
+        "subsections": [
+          {
+            "title": "• Data Privacy Compliance",
+            "text": "You agree to comply with applicable data protection laws, including GDPR, CCPA, and HIPAA-adjacent standards. Unauthorized disclosure constitutes a material breach."
+          },
+          {
+            "title": "• Device Use & Recording Prohibition",
+            "text": "You shall only use secure, approved devices for sessions and shall not employ third-party recording or transcription software."
+          },
+          {
+            "title": "• Session Abandonment",
+            "text": "Consistent or unexcused session drops, absences, or disengagement may result in forfeiture of payment and potential termination."
+          },
+          {
+            "title": "• Non-Solicitation & Non-Competition",
+            "text": "You may not direct users to external services, solicit for personal gain, or promote competing platforms without Ventally's prior written consent."
+          },
+          {
+            "title": "• Certification Maintenance",
+            "text": "Ventally may require periodic completion of training modules or re-certification as a condition of continued participation on the platform."
+          },
+          {
+            "title": "• Monitoring Consent",
+            "text": "You consent to the secure logging and quality review of all sessions for compliance, training, and dispute resolution purposes."
+          },
+          {
+            "title": "• Withholding of Compensation",
+            "text": "Ventally may withhold or revoke compensation for any session found to be in breach of this Agreement or Company policies."
+          }
+        ]
+      },
+      {
+        "title": "12. ENTIRE AGREEMENT",
+        "subsections": [
+          {
+            "title": "",
+            "text": "This Agreement constitutes the entire understanding between the Parties with respect to the subject matter hereof and supersedes all prior negotiations, communications, or understandings. No amendment shall be effective unless in writing and signed by both Parties."
           }
         ]
       }
@@ -736,79 +972,354 @@
     "signatures": {
       "title": "SIGNATURES",
       "text": "By signing below, the Parties acknowledge that they have read, understood, and agree to be legally bound by the terms of this Agreement."
-    }
+    },
+    "continue": "Continue"
   },
   "PaymentTermsAcknowledgment": {
     "title": "Payment Terms Acknowledgment",
     "effectiveDate": "Effective Date: August 11, 2025",
-    "introText1": "This Payment Terms Acknowledgment (\"Acknowledgment\") is entered into by and between Ventally Limited Liability Company (\"Ventally\" or the \"Company\"), and the undersigned individual (\"Support Guide\").",
+    "introText1": "This Payment Terms Acknowledgment (\"Acknowledgment\") is entered into by and between Ventally Limited Liability Company, a corporation duly organized and existing under the laws of its jurisdiction, with its principal place of business in the State of Connecticut (\"Ventally\" or the \"Company\"), and the undersigned individual (\"Support Guide\"). Ventally and the Support Guide are hereinafter collectively referred to as the \"Parties.\"",
     "sections": [
       {
         "title": "1. INDEPENDENT CONTRACTOR STATUS",
         "bullets": [
-          "The Support Guide acknowledges and agrees that their engagement with Ventally is that of an independent contractor.",
-          "The Support Guide is solely responsible for all taxes and withholdings."
+          "• The Support Guide acknowledges and agrees that their engagement with Ventally is that of an independent contractor. Nothing in this Acknowledgment shall be construed to establish an employment, agency, fiduciary, or partnership relationship between the Parties.",
+          "• The Support Guide is solely and exclusively responsible for the reporting and payment of all applicable taxes, withholdings, levies, and other government-imposed charges related to the compensation received from Ventally."
         ]
       },
       {
         "title": "2. PAYMENT STRUCTURE",
         "bullets": [
-          "Compensation is strictly performance-based and calculated according to verified sessions completed.",
-          "Ventally provides no assurance or guarantee of any minimum earnings."
+          "• Compensation is strictly performance-based and calculated according to the number and type of eligible sessions completed in accordance with platform standards, as verified by Ventally's internal systems.",
+          "• Ventally provides no assurance or guarantee of any minimum earnings, hours, or session volumes. Compensation is contingent upon verified service delivery and does not include retainers or guaranteed base pay.",
+          "• All rates, bonuses, and incentive structures are subject to modification at the sole discretion of Ventally, with reasonable advance notice provided through written communication or platform alerts."
+        ]
+      },
+      {
+        "title": "3. ELIGIBILITY FOR PAYMENT",
+        "bullets": [
+          "• The Support Guide shall only be entitled to payment for sessions that are fully compliant with Ventally's quality standards, technical protocols, and behavioral expectations, and which have been properly recorded and verified.",
+          "• Sessions that are incomplete, cancelled, disputed, or fail to meet platform requirements may be withheld from payment eligibility, subject to further investigation or clarification.",
+          "• Payment shall not be issued for any session during which the Support Guide has violated platform rules, provided inadequate service, or failed to uphold professional obligations, as determined solely by Ventally.",
+          "• In instances of misconduct, fraud, misrepresentation, or willful breach of this Acknowledgment or related agreements, the Support Guide shall forfeit all rights to pending or accrued compensation, and Ventally shall be entitled to recover any overpayments or unearned disbursements by offset or other lawful means."
+        ]
+      },
+      {
+        "title": "4. PAYMENT TIMING AND METHOD",
+        "bullets": [
+          "• Payment disbursements shall be processed through authorized third-party providers (e.g., Stripe, PayPal, ACH), on a recurring basis as outlined in the Support Guide's dashboard or official communication.",
+          "• The Support Guide bears the responsibility to maintain current, accurate, and secure payment credentials. Ventally shall not be held liable for any failed, delayed, or misdirected payments resulting from user error.",
+          "• The Support Guide shall bear any applicable transaction fees, processing charges, foreign exchange deductions, or platform-imposed service costs associated with payment receipt."
+        ]
+      },
+      {
+        "title": "5. DISPUTES AND RECONCILIATION",
+        "bullets": [
+          "• Any discrepancies or concerns regarding payment must be reported in writing to Ventally within seven (7) calendar days from the issuance date of the disputed transaction. Claims submitted beyond this period are irrevocably waived.",
+          "• The Support Guide agrees to cooperate fully with any investigation, audit, or review initiated by Ventally relating to financial activity, and to furnish any requested records, logs, or documentation as reasonably required.",
+          "• Ventally may, in its discretion, suspend or withhold payments during investigations of suspected errors, irregularities, or misconduct.",
+          "• Any claim for missing, delayed, or unpaid compensation must be submitted no later than ninety (90) calendar days from the date payment was due. After such period, the claim is permanently barred."
+        ]
+      },
+      {
+        "title": "6. NON-CIRCUMVENTION AND NON-SOLICITATION",
+        "bullets": [
+          "• The Support Guide shall not accept, solicit, or facilitate payments, gifts, or monetary benefits from any user of the platform outside of the official payment infrastructure.",
+          "• Any attempt to bypass Ventally's payment system, whether directly or indirectly, constitutes a material breach of this Acknowledgment and may result in immediate suspension, termination, and potential legal liability."
+        ]
+      },
+      {
+        "title": "7. MODIFICATION AND TERMINATION",
+        "bullets": [
+          "• Ventally reserves the right to revise, update, or modify its compensation policies, including but not limited to rates, timing, qualification criteria, and incentive structures, with reasonable prior notice.",
+          "• Upon termination of the Support Guide's access to the platform, payment shall only be issued for fully completed and verified sessions delivered before the effective termination date. No compensation shall be due for any session canceled or invalidated due to breach."
+        ]
+      },
+      {
+        "title": "8. GOVERNING LAW AND DISPUTE WAIVER",
+        "bullets": [
+          "• This Acknowledgment shall be governed by and construed under the laws of the State of Connecticut, without regard to conflict of laws principles.",
+          "• The Parties expressly waive any right to initiate or participate in class, collective, or representative actions in relation to any dispute arising out of this Acknowledgment. All disputes shall be resolved individually through the applicable dispute resolution procedures."
+        ]
+      },
+      {
+        "title": "9. RIGHT TO SUSPEND PAYMENTS",
+        "bullets": [
+          "• Ventally reserves the right to suspend, withhold, or delay payment disbursements in the event of a suspected breach of this Acknowledgment, internal audit, or during the investigation of any reported irregularities or misconduct."
+        ]
+      },
+      {
+        "title": "10. LIMITATION OF LIABILITY",
+        "bullets": [
+          "• In no event shall Ventally be liable for any indirect, incidental, special, or consequential damages arising out of or in connection with the payment of compensation, including but not limited to loss of profits, data, or business opportunities, even if Ventally has been advised of the possibility of such damages."
         ]
       }
     ],
     "signatures": {
       "title": "ACKNOWLEDGMENT AND SIGNATURE",
-      "text": "By signing below, the Support Guide affirms that they have read and understood this Payment Terms Acknowledgment."
-    }
+      "text": "By signing below, the Support Guide affirms that they have read and understood this Payment Terms Acknowledgment and agree to be bound by its terms."
+    },
+    "introText2": "By executing this Acknowledgment, the Support Guide expressly affirms that they have thoroughly reviewed, fully understood, and voluntarily accepted the terms, policies, and procedures governing compensation and financial obligations applicable to their engagement as an independent contractor on the Ventally platform.",
+    "continue": "Continue"
   },
   "ListenerNDA": {
-    "title": "Non-Disclosure Agreement (NDA)",
+    "title": "Non-Disclosure Agreement",
     "effectiveDate": "Effective Date: August 11, 2025",
     "sections": [
       {
-        "title": "1. CONFIDENTIAL INFORMATION",
-        "text": "Confidential Information includes all non-public information disclosed by Ventally or users, including business strategies, user data, and session content."
+        "title": "1. PURPOSE",
+        "bullets": [
+          "• The purpose of this NDA is to protect the confidentiality, integrity, and privacy of user data, proprietary business information, and intellectual property that the Support Guide may access during their engagement with Ventally."
+        ]
       },
       {
-        "title": "2. NON-DISCLOSURE OBLIGATIONS",
-        "bullets": [
-          "Use Confidential Information solely for providing services.",
-          "Maintain strict confidentiality and not disclose to third parties.",
-          "Prevent unauthorized access through reasonable security measures."
+        "title": "2. DEFINITION OF CONFIDENTIAL INFORMATION",
+        "subsections": [
+          {
+            "text": "\"Confidential Information\" shall mean all non-public, proprietary, sensitive, or commercially valuable information disclosed by Ventally to the Support Guide, whether directly or indirectly, in oral, written, electronic, visual, or other tangible form, including but not limited to:",
+            "bullets": [
+              "Platform architecture, algorithms, internal systems, and workflows;",
+              "Support Guide training modules, internal documentation, and proprietary scripts;",
+              "Personal user information, including names, contact data, mental health disclosures, or any content shared in sessions;",
+              "Technical infrastructure, backend systems, source code, software, APIs;",
+              "Business plans, product development strategies, and financial data;",
+              "Information expressly marked as \"confidential\" or that a reasonable person under similar circumstances would understand to be confidential."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "3. EXCLUSIONS FROM CONFIDENTIAL INFORMATION",
+        "subsections": [
+          {
+            "text": "Confidential Information shall not include information that: (a) was lawfully in the possession of the Support Guide prior to disclosure by Ventally, as evidenced by written records; (b) becomes publicly available through no wrongful act or omission of the Support Guide; (c) is disclosed to the Support Guide by a third party lawfully entitled to disclose such information; (d) is independently developed by the Support Guide without the use of or reference to any Confidential Information."
+          }
+        ]
+      },
+      {
+        "title": "4. OBLIGATIONS OF THE LISTENER",
+        "subsections": [
+          {
+            "title": "• Duty of Confidentiality",
+            "text": "The Support Guide shall maintain the strict confidentiality of all Confidential Information and shall not disclose, disseminate, copy, publish, or otherwise make available such information to any third party without the prior written consent of Ventally."
+          },
+          {
+            "title": "• Limitations on Use",
+            "text": "The Support Guide shall use the Confidential Information solely for the limited purpose of performing their designated responsibilities as a Support Guide on the platform, and for no other personal, financial, or commercial purpose."
+          },
+          {
+            "title": "• Reasonable Safeguards",
+            "text": "The Support Guide agrees to implement and maintain reasonable physical, technical, and administrative safeguards to protect the confidentiality and security of all Confidential Information in their possession."
+          },
+          {
+            "title": "• Return or Destruction of Information",
+            "text": "Upon the termination of this Agreement, or upon written request by Ventally, the Support Guide shall promptly return all materials containing Confidential Information or, if directed by Ventally, shall certify in writing that all such materials have been permanently deleted or destroyed."
+          },
+          {
+            "title": "• Duty to Report Breach",
+            "text": "The Support Guide agrees to notify Ventally immediately in the event of any unauthorized access, use, or disclosure of Confidential Information, including but not limited to any loss or compromise of credentials, devices, or data."
+          }
+        ]
+      },
+      {
+        "title": "5. CONFIDENTIALITY OF USER DATA",
+        "subsections": [
+          {
+            "text": "The Support Guide expressly acknowledges that all user-related data, session content, and any personally identifiable information (\"PII\") shared on the Ventally platform are subject to strict confidentiality and data protection laws. Unauthorized disclosure may result in termination of the Support Guide's access, legal liability, and reporting to authorities as required under applicable laws, including but not limited to the General Data Protection Regulation (GDPR) and California Consumer Privacy Act (CCPA)."
+          }
+        ]
+      },
+      {
+        "title": "6. THIRD-PARTY PROCESSORS",
+        "subsections": [
+          {
+            "text": "The Support Guide acknowledges that Ventally may use reputable third-party processors (including but not limited to cloud hosting, payment gateways, and analytics providers) to support platform functionality. The use of such services, where consistent with Ventally's Privacy Policy and applicable law, shall not constitute a breach of this Agreement. These service providers are contractually obligated to implement robust security and confidentiality measures. The Support Guide further agrees not to transmit, delegate, or share any platform-related data or user information with any third party without the prior written consent of Ventally."
+          }
+        ]
+      },
+      {
+        "title": "7. INTERNATIONAL COMPLIANCE & EXPORT CONTROL",
+        "subsections": [
+          {
+            "text": "The Support Guide shall comply with all applicable data privacy, information security, and export control laws in their respective jurisdiction. The Support Guide shall not transfer or disclose Confidential Information across national boundaries except as expressly permitted by law and Ventally policy. All cross-border data handling must adhere to recognized frameworks such as GDPR, SCCs, or equivalent safeguards. The Support Guide further agrees to avoid engaging in any activity that would subject Ventally to sanctions, export violations, or regulatory penalties."
+          }
+        ]
+      },
+      {
+        "title": "8. FIDUCIARY OBLIGATIONS",
+        "subsections": [
+          {
+            "text": "The Support Guide agrees to exercise the highest degree of care and professionalism when handling Confidential Information, and shall act in a manner consistent with fiduciary duties of trust, loyalty, and discretion owed to Ventally. This obligation includes avoiding any conflicts of interest, self-dealing, or conduct that could compromise the integrity of the platform. The Support Guide shall promptly disclose to Ventally any circumstance that may impair their ability to act impartially or in the best interests of the Company."
+          }
+        ]
+      },
+      {
+        "title": "9. TERM AND SURVIVAL",
+        "subsections": [
+          {
+            "text": "This Agreement shall become effective on the Effective Date and shall remain in effect for the duration of the Support Guide’s engagement with Ventally. The obligation to maintain confidentiality shall survive the termination of such engagement for a period of three (3) years, or as otherwise required by law."
+          }
+        ]
+      },
+      {
+        "title": "10. NO LICENSE OR INTELLECTUAL PROPERTY TRANSFER",
+        "subsections": [
+          {
+            "text": "No license, ownership interest, or right to use any Ventally intellectual property or Confidential Information is granted to the Support Guide under this Agreement, except as required for the performance of their authorized duties as a Support Guide. All copyrights, trademarks, trade secrets, and proprietary materials remain the sole and exclusive property of Ventally. The Support Guide shall not copy, reverse-engineer, modify, or create derivative works based on any Ventally materials. Any unauthorized use, replication, or disclosure shall constitute a material breach of this Agreement and may result in legal action."
+          }
+        ]
+      },
+      {
+        "title": "11. REMEDIES AND ENFORCEMENT",
+        "subsections": [
+          {
+            "text": "In the event of a breach or threatened breach of this Agreement, the Support Guide acknowledges that Ventally shall be entitled to injunctive relief, specific performance, and other equitable remedies in addition to monetary damages, attorneys’ fees, and costs incurred in enforcing its rights under this Agreement. Such remedies shall be cumulative and not exclusive of any rights or remedies provided by law or in equity. The Support Guide further agrees that any violation involving user data or trade secrets shall be deemed a material breach. Ventally’s delay or failure to enforce any provision shall not constitute a waiver of its rights to enforce this Agreement at any time."
+          }
+        ]
+      },
+      {
+        "title": "12. SEVERABILITY",
+        "subsections": [
+          {
+            "text": "If any provision of this Agreement is held by a court of competent jurisdiction to be invalid, illegal, or unenforceable, such provision shall be modified to the minimum extent necessary to render it enforceable, and the remainder of this Agreement shall remain in full force and effect. The Parties agree to replace any unenforceable provision with a valid and enforceable one that most closely reflects the original intent. The validity and enforceability of the remaining provisions shall not be affected or impaired thereby. This clause shall apply notwithstanding any material reliance by either Party on the original language of the provision."
+          }
+        ]
+      },
+      {
+        "title": "13. GOVERNING LAW AND DISPUTE RESOLUTION",
+        "subsections": [
+          {
+            "text": "This Agreement shall be governed by and construed in accordance with the laws of the State of Connecticut, and, where applicable, the laws of the state in which the Support Guide is domiciled, without regard to conflict of law rules."
+          },
+          {
+            "text": "Any dispute arising out of or relating to this Agreement shall be submitted to binding arbitration before a single arbitrator in New Haven County, Connecticut, in accordance with the rules of the American Arbitration Association."
+          }
+        ]
+      },
+      {
+        "title": "14. ENTIRE AGREEMENT",
+        "subsections": [
+          {
+            "text": "This Agreement constitutes the entire agreement between the Parties with respect to its subject matter and supersedes all prior and contemporaneous agreements or understandings, whether written or oral. No amendment or modification shall be valid unless in writing and signed by both Parties."
+          }
         ]
       }
     ],
     "signatures": {
-      "title": "SIGNATURE",
-      "text": "The Parties have executed this Non-Disclosure Agreement as of the Effective Date."
-    }
+      "title": "IN WITNESS WHEREOF,",
+      "text": "the Parties have executed this Non-Disclosure Agreement as of the Effective Date written above."
+    },
+    "introText1": "This Non-Disclosure Agreement (\"NDA\") is entered into by and between Ventally Limited Liability Company (\"Ventally,\" \"we,\" \"us,\"), and the undersigned individual (\"Support Guide\"), in connection with the Support Guide's access to proprietary, confidential, and sensitive information on the Ventally platform.",
+    "continue": "Continue"
   },
   "ListenerCodeOfConduct": {
-    "title": "Code Of Conduct",
+    "title": "Code of Conduct",
     "effectiveDate": "Effective Date: August 11, 2025",
-    "introText1": "This Support Guide Code of Conduct (\"Code\") sets forth the mandatory standards of behavior for all Support Guides.",
+    "introText1": "This Support Guide Code of Conduct (\"Code\") establishes the mandatory standards of professional conduct required of all individuals who have been accepted and engaged as Support Guides on the Ventally platform. Compliance with this Code is a binding condition of participation in the Ventally platform. Support Guides are expected to maintain the highest level of professionalism, empathy, and ethical conduct in all interactions.",
     "sections": [
       {
-        "title": "1. PROFESSIONALISM & NEUTRALITY",
+        "title": "1. PROFESSIONALISM & INTEGRITY",
         "bullets": [
-          "Support Guides shall maintain a professional demeanor, providing non-judgmental peer support.",
-          "Support Guides must remain neutral and refrain from imposing personal beliefs."
+          "• Support Guides shall maintain the highest levels of professionalism, impartiality, and emotional presence in all user interactions. They are expected to exhibit empathy, patience, and active listening skills without judgment or assumption.",
+          "• Support Guides must not misrepresent their role, qualifications, or capabilities. The Support Guide role is strictly non-clinical and does not authorize the provision of therapy, diagnosis, or crisis counseling.",
+          "• Support Guides shall conduct themselves in a manner that upholds the dignity, trust, and reputation of Ventally at all times, both on and off the platform, including in public discourse, social media, and peer communications."
         ]
       },
       {
-        "title": "2. SAFETY & ZERO TOLERANCE",
+        "title": "2. BOUNDARIES & PROHIBITED CONDUCT",
         "bullets": [
-          "Harassment, discrimination, or sexual impropriety will result in immediate removal.",
-          "Support Guides shall not provide professional medical or legal advice."
+          "• Support Guides shall preserve professional boundaries at all times and must not:",
+          "    • Engage in flirtatious, romantic, or sexual dialogue;",
+          "    • Exchange personal contact information or connect with users outside the platform;",
+          "    • Initiate in-person meetings or social media interactions with users;",
+          "    • Introduce religious, political, or ideological discourse unless user-initiated and approached with neutrality. These actions are considered violations of professional trust and are strictly prohibited.",
+          "• Any conduct involving harassment, discriminatory language, hate speech, or sexual impropriety will result in immediate removal from the platform and may be subject to criminal or civil proceedings.",
+          "• Support Guides shall refrain from giving any form of professional advice, including medical, legal, psychological, or financial recommendations. The Support Guide’s role is limited to offering supportive conversation and emotional presence."
+        ]
+      },
+      {
+        "title": "3. CONFIDENTIALITY & DATA PROTECTION",
+        "bullets": [
+          "• All user data and session content shall be treated as strictly confidential and managed in accordance with Ventally’s Privacy Policy, Non-Disclosure Agreement (NDA), and applicable data protection regulations including GDPR and CCPA. Breaches will be taken seriously and investigated thoroughly.",
+          "• Support Guides shall not record, duplicate, transcribe, or preserve any portion of a session without the Company’s prior written authorization. Covert or unauthorized recordings are grounds for immediate dismissal.",
+          "• Any unauthorized access, disclosure, or misuse of confidential information constitutes a material breach and may be prosecuted under applicable local or international data protection laws.",
+          "• Support Guides may not retain session notes, logs, or personal documentation related to user conversations unless explicitly directed by Ventally. Temporary notes, if used, must be securely deleted within 24 hours to prevent data misuse."
+        ]
+      },
+      {
+        "title": "4. COMMUNICATION STANDARDS",
+        "bullets": [
+          "• Support Guides shall engage with users respectfully, empathetically, and without judgment. Tone, body language (if applicable), and word choice must convey safety and acceptance.",
+          "• All communication must avoid coercion, sarcasm, unsolicited advice, or opinionated commentary. The Support Guide’s role is not to give direction, but to create space for reflection and expression.",
+          "• Support Guides shall refrain from disclosing personal trauma or unrelated personal experiences unless specifically approved by Ventally as contextually appropriate for Support Guide rapport."
+        ]
+      },
+      {
+        "title": "5. COMPLIANCE, ESCALATION & REPORTING DUTY",
+        "bullets": [
+          "• Support Guides must comply with all platform policies, user conduct protocols, training materials, and signed legal agreements. Compliance is monitored actively.",
+          "• Support Guides are required to immediately escalate any signs of suicidal ideation, imminent harm, abuse, or unlawful activity via the official Red Flag Protocol. Delay or omission may endanger users and result in account termination.",
+          "• Failure to report high-risk situations constitutes a serious violation and may result in immediate deactivation, reporting to authorities, and civil liability.",
+          "• Any Support Guide who becomes aware of peer misconduct, noncompliance, or user harm must report such behavior to Ventally’s compliance team. Silence or complicity may be treated as a secondary breach of conduct."
+        ]
+      },
+      {
+        "title": "6. CONFLICTS OF INTEREST",
+        "bullets": [
+          "• Support Guides shall proactively disclose any situation that could give rise to a personal, financial, or relational conflict affecting neutrality or objectivity, including concurrent engagements or business affiliations.",
+          "• The platform may not be used to promote personal services, solicit clients, or redirect users to external businesses, communities, or competitors. Use of the platform for personal marketing is strictly prohibited."
+        ]
+      },
+      {
+        "title": "7. TECHNOLOGY USE, PLATFORM SECURITY & MONITORING",
+        "bullets": [
+          "• All sessions must occur exclusively on Ventally’s secure platform using approved, secure devices that meet minimum technology standards.",
+          "• The use of unauthorized software, apps, AI tools, browser extensions, or any data-capturing mechanisms during sessions is strictly prohibited and considered a breach of user trust.",
+          "• Devices used for Ventally-related services must be password-protected, encrypted, and kept current with security updates. Support Guides must notify Ventally if a device is lost or compromised.",
+          "• Support Guides consent to the monitoring, auditing, and secure logging of session data for purposes of quality control, complaint resolution, and regulatory compliance. Monitored data will be retained only as long as legally or operationally necessary.",
+          "• Support Guides are strictly prohibited from accessing the Ventally platform from public or unsecured Wi-Fi networks, and must ensure that their internet connection is stable, private, and secure at all times to protect the confidentiality and integrity of user interactions."
+        ]
+      },
+      {
+        "title": "8. ATTENDANCE & ENGAGEMENT",
+        "bullets": [
+          "• Support Guides are expected to honor all scheduled sessions and maintain timely, responsive engagement with users. Repeated lateness or absenteeism undermines trust and user reliability.",
+          "• Chronic absence, repeated disconnections, or patterns of disengagement will result in performance review, account suspension, and possible contract termination."
+        ]
+      },
+      {
+        "title": "9. CONTINUING CERTIFICATION",
+        "bullets": [
+          "• Support Guides must complete all required onboarding, recertification, and training as specified by Ventally, including refresher sessions and policy updates.",
+          "• Failure to maintain compliance with certification requirements may result in loss of session eligibility and compensation. Participation may be paused or revoked pending recertification."
+        ]
+      },
+      {
+        "title": "10. ENFORCEMENT, ASSUMPTION OF RISK & TERMINATION RIGHTS",
+        "bullets": [
+          "• Violations of this Code may result in:",
+          "    • Written or verbal warnings;",
+          "    • Temporary or permanent deactivation of platform access;",
+          "    • Forfeiture of earnings and bonuses;",
+          "    • Civil or criminal liability for misconduct or breach. All enforcement actions will be documented and may be disclosed to relevant authorities.",
+          "• This Code does not entitle any Support Guide to continued access, engagement, or remuneration. Ventally retains sole discretion to suspend or terminate Support Guide access, with or without cause, based on performance or conduct.",
+          "• Support Guides acknowledge that engaging in peer support may involve exposure to distressing or triggering content. By participating, Support Guides voluntarily assume such risks and waive any claim against Ventally related to psychological, reputational, or emotional injury.",
+          "• Ventally may, at its discretion, conduct internal investigations into any suspected violations, during which the Support Guide’s access to the platform may be restricted or suspended without prior notice, pending the outcome of the review."
+        ]
+      },
+      {
+        "title": "11. RELATIONSHIP TO OTHER AGREEMENTS",
+        "bullets": [
+          "• This Code forms part of the Support Guide’s overall contractual obligations and is deemed incorporated into the Support Guide Service Agreement, NDA, and all other policies in force.",
+          "• Any violation of this Code may concurrently constitute a material breach of related agreements and be enforced accordingly, including through arbitration or legal proceedings in accordance with the laws of the State of Connecticut and, where applicable, the laws of the Support Guide’s state of residence."
         ]
       }
     ],
     "signatures": {
-      "title": "ACKNOWLEDGMENT",
-      "text": "By signing below, the Support Guide agrees to adhere to this Code of Conduct."
-    }
+      "title": "ACKNOWLEDGMENT & SIGNATURE",
+      "text": "By signing below, the undersigned Support Guide affirms that they have read, understood, and agree to adhere to the terms set forth in this Code of Conduct in its entirety."
+    },
+    "continue": "Continue"
   },
   "ListenerVerification": {
     "title": "Verification",
@@ -1605,59 +2116,197 @@
         "adminRemovedSub": "The selected sub-admin accounts have been removed from the platform."
       }
     },
-    "Security": {
+    "aiSettings": {
+      "title": "AI Settings",
+      "oversight": "AI Oversight & Policy",
+      "description": "Configure how the platform uses artificial intelligence for moderation, risk detection, and automated user support.",
+      "coreConfig": "Core Configuration",
+      "enableAI": "Enable AI Systems",
+      "enableAIDesc": "Global toggle for all AI-driven features",
+      "autoModeration": "Auto-Moderation",
+      "autoModerationDesc": "Automatically flag or hide extreme content",
+      "languageFilter": "Inappropriate Language Filter",
+      "languageFilterDesc": "Real-time filtering of prohibited keywords",
+      "riskManagement": "Risk Management",
+      "riskThreshold": "Risk Threshold",
+      "cautious": "Cautious",
+      "aggressive": "Aggressive",
+      "riskWarning": "Lowering the threshold will cause the AI to be more aggressive in flagging users, which may increase false positives.",
+      "reset": "Reset",
+      "saveChanges": "Save Changes",
+      "success": "AI settings updated successfully",
+      "error": "Failed to update AI settings"
+    },
+    "home": {
+      "welcome": "Welcome!",
+      "adminStore": "Admin Store",
+      "overview": "Overview",
+      "activeUsers": "Active \n Users",
+      "monthlySessions": "Monthly \n Sessions",
+      "newSignups": "New \n Signups",
+      "listenerOnlineMinutes": "Support Guide \n Online Minutes",
+      "userProgress": "User Progress (Engagement Ratio)",
+      "sessionTraffic": "Session Traffic"
+    },
+    "users": {
+      "title": "Users",
+      "searchPlaceholder": "Search users...",
+      "tabs": {
+        "venters": "Venters",
+        "listeners": "Support Guides"
+      },
+      "card": {
+        "role": "Role",
+        "sessions": "Sessions",
+        "minutes": "Minutes",
+        "both": "Both"
+      }
+    },
+    "userDetail": {
+      "title": "User Detail",
+      "venterBadge": "Venter",
+      "listenerBadge": "Support Guide",
+      "gender": "Gender",
+      "ageGroup": "Age Group",
+      "listenerInfo": "Support Guide info",
+      "venterInfo": "Venter info",
+      "stats": {
+        "totalSessions": "Total Sessions",
+        "totalMinutes": "Total Minutes",
+        "totalEarnings": "Total Earnings",
+        "joined": "Joined"
+      }
+    },
+    "settings": {
+      "title": "Admin Settings",
+      "options": {
+        "account": "Account",
+        "security": "Security",
+        "financialStats": "Financial Stats",
+        "notifications": "Notifications",
+        "paymentHistory": "Payment History",
+        "crisisConfig": "Crisis config",
+        "exportsIntegrations": "Exports & Integrations",
+        "rolesPermissions": "Roles & Permissions",
+        "aiSettings": "AI Settings",
+        "language": "Language",
+        "logout": "Logout"
+      }
+    },
+    "security": {
       "title": "Security",
       "enableBiometrics": "Enable Biometrics",
       "resetPassword": "Reset Password",
-      "changeEmailPhone": "Change email or Phone",
-      "twoFactorAuth": "Two Factor Authentication",
-      "resetPasswordScreen": {
-        "title": "Reset Password",
-        "oldPassword": "Old Password",
-        "newPassword": "New Password",
-        "confirmPassword": "Confirm New Password",
-        "button": "Update Password"
+      "changeEmailPhone": "Change Email or Phone",
+      "twoFactorAuth": "Two Factor Authentication"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Keep your account secure by updating your password periodically.",
+      "oldPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "passwordMismatch": "Passwords do not match",
+      "button": "Update Password"
+    },
+    "changeEmail": {
+      "title": "Change Email",
+      "subtitle": "Enter your current and new email address.",
+      "currentEmail": "Current Email",
+      "newEmail": "New Email",
+      "button": "Send Code"
+    },
+    "financialStats": {
+      "title": "Financials",
+      "cards": {
+        "update": "Update",
+        "revenueIncrease": "Sales revenue increased {{percentage}}% in {{period}}",
+        "nextExpected": "Next Expected Revenue",
+        "weeklySales": "Weekly Sales",
+        "inNextDays": "📊 In next {{days}} days",
+        "lastWeeks": "Last {{weeks}} weeks"
       },
-      "changeEmail": {
-        "title": "Change Your Email",
-        "subtitle": "Change your email address",
-        "currentEmail": "Current Email",
-        "newEmail": "New Email",
-        "button": "Get code"
+      "taskProgress": {
+        "title": "Task Progress",
+        "filter": "12 Months"
       },
-      "verification": {
-        "emailTitle": "Email Verification",
-        "phoneTitle": "Phone Verification",
-        "emailSubtitle": "We've sent a code to your email",
-        "phoneSubtitle": "We've sent a code to your phone",
-        "didntReceive": "Didn't receive the code?",
-        "resend": "Resend",
-        "button": "Verify Account"
+      "revenueSources": {
+        "title": "Top Revenue Sources",
+        "revenue": "Revenue",
+        "basic": "Basic",
+        "standard": "Standard",
+        "premium": "Premium",
+        "addOns": "Add-ons"
       },
-      "success": {
-        "passwordReset": "Password Reset",
-        "passwordSubtitle": "Your email has been Reset",
-        "emailChanged": "Email Changed",
-        "emailSubtitle": "Your email has been changed"
+      "paymentHistory": {
+        "title": "Payment History",
+        "noHistory": "No payment history found.",
+        "loadMore": "Load More"
       }
     },
     "crisisManagement": {
-      "title": "Crisis Conf",
-      "searchPlaceholder": "Search ...",
+      "title": "Crisis config",
+      "searchPlaceholder": "Search...",
       "crisisCall": "Crisis Session",
       "crisisChat": "Crisis Chat",
-      "callBy": "Session by: {{email}}",
+      "callBy": "Session by: ",
+      "chatBy": "Chat by: ",
       "id": "Id: {{id}}"
     },
     "exportsIntegrations": {
       "title": "Exports & Integrations",
-      "searchPlaceholder": "Search ...",
-      "sessions": "Sessions: {{count}}",
-      "minutes": "Minutes: {{count}}",
+      "searchPlaceholder": "Search integrations...",
+      "sessions": "Sessions",
+      "minutes": "Minutes",
       "totalSessions": "Total Sessions",
       "totalMinutes": "Total Minutes",
       "totalPayout": "Total Payout",
-      "exported": "Exported"
+      "exported": "Exported",
+      "export": "Export",
+      "id": "ID: {{id}}",
+      "exportSuccess": "Marked as exported",
+      "pdfSuccess": "PDF generated successfully",
+      "exportError": "Export failed"
+    },
+    "roles": {
+      "title": "Roles & Permissions",
+      "searchPlaceholder": "Search sub-admins...",
+      "noResults": "No sub-admins found",
+      "permissionsEnabled": "permissions enabled",
+      "changeRole": "Change Role",
+      "remove": "Remove",
+      "permissions": "Permissions",
+      "saveChanges": "Save Changes",
+      "subAdmin": "Sub Admin"
+    },
+    "subAdmins": {
+      "title": "Sub-Admins",
+      "subtitle": "Manage platform administrators",
+      "add": "Add Sub-Admin",
+      "searchPlaceholder": "Search by email or ID...",
+      "noResults": "No sub-admins yet",
+      "noResultsDesc": "Add sub-admins to help manage the platform.",
+      "addFirst": "Add First Sub-Admin"
+    },
+    "reports": {
+      "title": "Reports",
+      "noReports": "No reports found.",
+      "id": "ID: {{id}}",
+      "tabs": {
+        "pending": "Pending",
+        "resolved": "Resolved"
+      }
+    },
+    "addSubAdmin": {
+      "title": "Add Sub Admin",
+      "email": "Email Address",
+      "emailPlaceholder": "Enter email address",
+      "password": "Password",
+      "passwordPlaceholder": "Set password",
+      "permissions": "Permissions",
+      "create": "Create",
+      "emptyFields": "Please fill in all fields",
+      "successMsg": "Sub Admin account has been created successfully."
     }
   },
   "Listener": {
@@ -1755,6 +2404,7 @@
     "title": "VENTALLY"
   },
   "Common": {
+    "appName": "VENTALLY",
     "search": "Search",
     "accept": "Begin Session",
     "cancel": "Cancel",
@@ -1955,7 +2605,7 @@
     "reportId": "Report ID",
     "reportIdPlaceholder": "",
     "summary": "Summary",
-    "summaryPlaceholder": "Describe your appeal...",
+    "summaryPlaceholder": "",
     "letterUpload": "Upload Documents",
     "uploadHint": "PDF or DOCX\nor drag and drop files here",
     "submit": "Submit Appeal"

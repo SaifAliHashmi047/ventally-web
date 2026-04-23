@@ -39,8 +39,8 @@ export const AdminChangeEmailPhone = () => {
   return (
     <div className="page-wrapper animate-fade-in max-w-2xl mx-auto flex flex-col h-full">
       <PageHeader 
-        title={t('Admin.security.changeEmail.title', 'Change Email')} 
-        subtitle={t('Admin.security.changeEmail.subtitle', 'Enter your current and new email address.')}
+        title={t('Admin.changeEmail.title')} 
+        subtitle={t('Admin.changeEmail.subtitle')}
         onBack={() => navigate('/admin/security')} 
         centered
       />
@@ -49,14 +49,14 @@ export const AdminChangeEmailPhone = () => {
 
         <div className="space-y-4 text-left">
           <Input
-            label={t('Admin.security.changeEmail.currentEmail', 'Current Email')}
+            label={t('Admin.changeEmail.currentEmail')}
             value={currentEmail}
             onChange={(e) => setCurrentEmail(e.target.value)}
             placeholder="admin@example.com"
             className="h-14"
           />
           <Input
-            label={t('Admin.security.changeEmail.newEmail', 'New Email')}
+            label={t('Admin.changeEmail.newEmail')}
             value={newEmail}
             onChange={(e) => setNewEmail(e.target.value)}
             placeholder="newemail@example.com"
@@ -75,7 +75,7 @@ export const AdminChangeEmailPhone = () => {
           loading={loading}
           onClick={handleSendOTP}
         >
-          {t('Admin.security.changeEmail.button', 'Send Code')}
+          {t('Admin.changeEmail.button')}
         </Button>
       </div>
     </div>

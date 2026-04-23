@@ -15,8 +15,8 @@ export const AdminReports = () => {
   const { getReports } = useAdmin();
   
   const TABS = [
-    t('Admin.review.pending', 'Pending'),
-    t('Common.status.resolved', 'Resolved')
+    t('Admin.reports.tabs.pending'),
+    t('Admin.reports.tabs.resolved')
   ];
 
   const [activeTab, setActiveTab] = useState(TABS[0]);
@@ -43,7 +43,7 @@ export const AdminReports = () => {
 
   return (
     <div className="page-wrapper page-wrapper--wide animate-fade-in pb-20">
-      <PageHeader title={t('Admin.reports.title', 'Reports')} centered />
+      <PageHeader title={t('Admin.reports.title')} centered />
 
       <div className="px-1">
         {/* Tabs */}
@@ -63,7 +63,7 @@ export const AdminReports = () => {
         ) : reports.length === 0 ? (
           <div className="text-center py-20">
              <Flag className="mx-auto text-white/10 mb-4" size={48} />
-             <p className="text-white/40 font-medium">{t('Admin.reports.noReports', 'No reports found.')}</p>
+             <p className="text-white/40 font-medium">{t('Admin.reports.noReports')}</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -77,7 +77,7 @@ export const AdminReports = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-3">
                       <h3 className="text-base font-bold text-white truncate">
-                        ID: {report.id}
+                        {t('Admin.reports.id', { id: report.id })}
                       </h3>
                       <Badge variant={report.status === 'open' ? 'error' : 'success'} dot className="uppercase text-[9px] font-bold">
                         {report.status}

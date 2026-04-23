@@ -114,11 +114,10 @@ export const AdminRolesPermissions = () => {
 
   return (
     <div className="page-wrapper page-wrapper--wide animate-fade-in pb-28">
-      <PageHeader title="Roles & Permissions" onBack={() => navigate('/admin/settings')} />
+      <PageHeader title={t('Admin.roles.title')} onBack={() => navigate('/admin/settings')} />
 
-      {/* Search */}
       <Input
-        placeholder="Search sub-admins..."
+        placeholder={t('Admin.roles.searchPlaceholder')}
         value={search}
         onChange={e => setSearch(e.target.value)}
         leftIcon={<Search size={16} />}
@@ -128,7 +127,7 @@ export const AdminRolesPermissions = () => {
         {loading ? (
           <div className="space-y-2">{[...Array(4)].map((_, i) => <div key={i} className="skeleton h-14 rounded-2xl" />)}</div>
         ) : filtered.length === 0 ? (
-          <EmptyState title="No sub-admins found" icon={<ShieldCheck size={22} />} />
+          <EmptyState title={t('Admin.roles.noResults')} icon={<ShieldCheck size={22} />} />
         ) : (
           <GlassCard padding="none" rounded="2xl" bordered>
             {filtered.map((sa, i) => {
@@ -163,11 +162,11 @@ export const AdminRolesPermissions = () => {
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-white truncate">{sa.email}</p>
-                    <p className="text-xs text-gray-500">{count} permissions enabled</p>
+                    <p className="text-xs text-gray-500">{count} {t('Admin.roles.permissionsEnabled')}</p>
                   </div>
 
                   <span className="px-2.5 py-1 rounded-full bg-white/10 text-[10px] font-bold text-white/50 uppercase tracking-wider flex-shrink-0">
-                    {role}
+                    {role === 'Admin' ? t('Common.admin', 'Admin') : t('Admin.users.tabs.listeners', 'Support Guides')}
                   </span>
                 </div>
               );
@@ -197,7 +196,7 @@ export const AdminRolesPermissions = () => {
               disabled={actioning}
               className="rounded-full h-12 border-white/10"
             >
-              Change Role
+              {t('Admin.roles.changeRole')}
             </Button>
           </div>
         </div>
@@ -207,11 +206,11 @@ export const AdminRolesPermissions = () => {
       <GlassModal
         isOpen={showPermModal}
         onClose={() => setShowPermModal(false)}
-        title="Permissions"
+        title={t('Admin.roles.permissions')}
         showButtons={true}
-        primaryButtonText="Save Changes"
+        primaryButtonText={t('Admin.roles.saveChanges')}
         onPrimaryPress={handleSavePermissions}
-        secondaryButtonText="Cancel"
+        secondaryButtonText={t('Common.cancel')}
         onSecondaryPress={() => setShowPermModal(false)}
         loading={actioning}
       >

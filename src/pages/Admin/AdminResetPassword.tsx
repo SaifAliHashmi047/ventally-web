@@ -34,8 +34,8 @@ export const AdminResetPassword = () => {
       navigate('/admin/security-success', {
         state: {
           type: 'password',
-          title: t('Admin.security.success.passwordReset', 'Password Changed Successfully'),
-          subtitle: t('Admin.security.success.passwordSubtitle', 'Your account password has been updated. Please use your new password for future logins.')
+          title: t('Admin.security.success.passwordReset'),
+          subtitle: t('Admin.security.success.passwordSubtitle')
         }
       });
     } catch (error: any) {
@@ -49,15 +49,15 @@ export const AdminResetPassword = () => {
   return (
     <div className="page-wrapper animate-fade-in max-w-2xl mx-auto flex flex-col h-full">
       <PageHeader 
-        title={t('Admin.security.resetPasswordScreen.title', 'Reset Password')} 
-        subtitle={t('Admin.security.resetPasswordScreen.subtitle', 'Keep your account secure by updating your password periodically.')}
+        title={t('Admin.resetPassword.title')} 
+        subtitle={t('Admin.resetPassword.subtitle')}
         onBack={() => navigate('/admin/security')} 
         centered
       />
 
       <div className="flex-1 px-4 pt-10 space-y-6">
         <Input
-          label={t('Admin.security.resetPasswordScreen.oldPassword', 'Current Password')}
+          label={t('Admin.resetPassword.oldPassword')}
           isPassword
           value={oldPassword}
           onChange={(e) => setOldPassword(e.target.value)}
@@ -65,7 +65,7 @@ export const AdminResetPassword = () => {
           className="h-14"
         />
         <Input
-          label={t('Admin.security.resetPasswordScreen.newPassword', 'New Password')}
+          label={t('Admin.resetPassword.newPassword')}
           isPassword
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
@@ -73,7 +73,7 @@ export const AdminResetPassword = () => {
           className="h-14"
         />
         <Input
-          label={t('Admin.security.resetPasswordScreen.confirmPassword', 'Confirm New Password')}
+          label={t('Admin.resetPassword.confirmPassword')}
           isPassword
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
@@ -92,7 +92,7 @@ export const AdminResetPassword = () => {
           loading={loading}
           onClick={handleUpdate}
         >
-          {t('Admin.security.resetPasswordScreen.button', 'Update Password')}
+          {t('Admin.resetPassword.button')}
         </Button>
       </div>
     </div>

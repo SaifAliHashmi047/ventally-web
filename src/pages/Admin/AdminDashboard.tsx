@@ -228,8 +228,8 @@ export const AdminDashboard = () => {
               onChange={(e) => setPeriod(e.target.value as 'week' | 'month')}
               className="bg-white/10 text-white text-xs border border-white/10 rounded-xl px-3 py-1.5 outline-none focus:border-accent"
             >
-              <option value="week" className="bg-gray-800 text-white">Week</option>
-              <option value="month" className="bg-gray-800 text-white">Month</option>
+              <option value="week" className="bg-gray-800 text-white">{t('Common.week', 'Week')}</option>
+              <option value="month" className="bg-gray-800 text-white">{t('Common.month', 'Month')}</option>
             </select>
           </div>
           

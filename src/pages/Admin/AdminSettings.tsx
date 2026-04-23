@@ -44,47 +44,47 @@ export const AdminSettings = () => {
 
       <GlassCard padding="none" rounded="2xl" className="overflow-hidden">
         <SettingsItem
-          title={t('Admin.settings.options.account', 'Account')}
+          title={t('Admin.settings.options.account')}
           type="toggle"
           value={isAccountActive}
           onValueChange={setIsAccountActive}
         />
         <SettingsItem
-          title={t('Admin.settings.options.security', 'Security')}
+          title={t('Admin.settings.options.security')}
           onPress={() => navigate('/admin/security')}
         />
         <SettingsItem
-          title={t('Admin.settings.options.financialStats', 'Financial Stats')}
+          title={t('Admin.settings.options.financialStats')}
           onPress={() => navigate('/admin/financial')}
         />
         <SettingsItem
-          title={t('Admin.settings.options.notifications', 'Notifications')}
+          title={t('Admin.settings.options.notifications')}
           onPress={() => navigate('/admin/notifications')}
         />
         <SettingsItem
-          title={t('Admin.settings.options.paymentHistory', 'Payment History')}
+          title={t('Admin.settings.options.paymentHistory')}
           onPress={() => navigate('/admin/payments')}
         />
         <SettingsItem
-          title={t('Admin.settings.options.crisisConfig', 'Crisis config')}
+          title={t('Admin.settings.options.crisisConfig')}
           onPress={() => navigate('/admin/crisis')}
         />
         <SettingsItem
-          title={t('Admin.settings.options.exportsIntegrations', 'Exports & Integrations')}
+          title={t('Admin.settings.options.exportsIntegrations')}
           onPress={() => navigate('/admin/exports')}
         />
         <SettingsItem
-          title={t('Admin.settings.options.rolesPermissions', 'Roles & Permissions')}
+          title={t('Admin.settings.options.rolesPermissions')}
           onPress={() => navigate('/admin/roles')}
         />
         <SettingsItem
-          title={t('Admin.settings.options.aiSettings', 'AI Settings')}
+          title={t('Admin.settings.options.aiSettings')}
           onPress={() => navigate('/admin/ai-settings')}
         />
         
         {/* Remove bottom border for the last item in the list visually by targeting pseudo or inline, though border-b won't break layout */}
         <SettingsItem
-          title={t('Admin.settings.options.logout', 'Logout')}
+          title={t('Admin.settings.options.logout')}
           onPress={() => setIsLogoutModalVisible(true)}
         />
       </GlassCard>

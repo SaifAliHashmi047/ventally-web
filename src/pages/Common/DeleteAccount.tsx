@@ -89,7 +89,7 @@ export const DeleteAccount = () => {
           placeholder="********"
         />
         <div className="flex gap-3 mt-4">
-          <Button variant="glass" fullWidth onClick={() => setConfirmModal(false)}>Cancel</Button>
+          <Button variant="glass" fullWidth onClick={() => setConfirmModal(false)}>{t('Common.cancel')}</Button>
           <Button variant="danger" fullWidth loading={deleting} onClick={handleDelete}>
             {t('DeleteAccount.button')}
           </Button>

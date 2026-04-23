@@ -77,7 +77,7 @@ export const EditProfile = () => {
   const getPreferenceValue = (item: typeof PREFERENCE_ITEMS[0]) => {
     const val = user?.[item.displayKey];
     if (!val) return '';
-    if (item.isArray && Array.isArray(val)) return `${val.length} selected`;
+    if (item.isArray && Array.isArray(val)) return t('EditProfile.selectedCount', { count: val.length });
     return typeof val === 'string' ? val : '';
   };
 

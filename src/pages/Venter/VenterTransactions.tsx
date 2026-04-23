@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
@@ -7,8 +8,10 @@ import { EmptyState } from '../../components/ui/EmptyState';
 import { useWallet } from '../../api/hooks/useWallet';
 import { ArrowUpRight, ArrowDownLeft, DollarSign } from 'lucide-react';
 import { Badge } from '../../components/ui/Badge';
+import i18n from '../../locales/i18n';
 
 export const VenterTransactions = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { getTransactions } = useWallet();
   const [transactions, setTransactions] = useState<any[]>([]);
@@ -33,12 +36,12 @@ export const VenterTransactions = () => {
 
   return (
     <div className="page-wrapper page-wrapper--wide animate-fade-in">
-      <PageHeader title="Transaction History" onBack={() => navigate(-1)} />
+      <PageHeader title={t('VenterWallet.transactionHistory')} onBack={() => navigate(-1)} />
 
       {loading ? (
         <div className="space-y-2">{[...Array(5)].map((_, i) => <div key={i} className="skeleton h-16 rounded-2xl" />)}</div>
       ) : transactions.length === 0 ? (
-        <EmptyState title="No transactions yet" icon={<DollarSign size={22} />} />
+        <EmptyState title={t('VenterWallet.noTransactions')} icon={<DollarSign size={22} />} />
       ) : (
         <>
           <GlassCard padding="none" rounded="2xl">
@@ -51,7 +54,7 @@ export const VenterTransactions = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-white capitalize">{tx.type?.replace(/_/g, ' ')}</p>
-                    <p className="text-xs text-gray-500">{new Date(tx.createdAt).toLocaleDateString('en-US', { dateStyle: 'medium' })}</p>
+                    <p className="text-xs text-gray-500">{new Date(tx.createdAt).toLocaleDateString(i18n.language, { dateStyle: 'medium' })}</p>
                   </div>
                   <div className="text-right">
                     <p className={`text-sm font-bold ${isCredit ? 'text-success' : 'text-error'}`}>
@@ -65,7 +68,7 @@ export const VenterTransactions = () => {
           </GlassCard>
           {hasMore && (
             <Button variant="glass" fullWidth onClick={() => { const next = page + 1; setPage(next); loadTransactions(next * LIMIT); }}>
-              Load More
+              {t('Common.loadMore')}
             </Button>
           )}
         </>

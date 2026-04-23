@@ -8,22 +8,6 @@ import { Button } from '../../components/ui/Button';
 import { useCalls, type Call } from '../../api/hooks/useCalls';
 import { Phone, Loader2, ChevronDown, Clock, User } from 'lucide-react';
 
-const formatTimeAgo = (dateString: string): string => {
-  const now = new Date();
-  const past = new Date(dateString);
-  const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
-
-  if (diffInSeconds < 60) return 'Just now';
-
-  const diffInMinutes = Math.floor(diffInSeconds / 60);
-  if (diffInMinutes < 60) return `${diffInMinutes} min ago`;
-
-  const diffInHours = Math.floor(diffInMinutes / 60);
-  if (diffInHours < 24) return `${diffInHours} h ago`;
-
-  const diffInDays = Math.floor(diffInHours / 24);
-  return `${diffInDays} d ago`;
-};
 
 const formatDuration = (seconds?: number): string => {
   if (!seconds) return '0:00';
@@ -35,6 +19,19 @@ const formatDuration = (seconds?: number): string => {
 export const VenterAllCallsScreen = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const formatTimeAgo = (dateString: string): string => {
+    const now = new Date();
+    const past = new Date(dateString);
+    const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+    if (diffInSeconds < 60) return t('Common.time.justNow');
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) return `${diffInMinutes} ${t('Common.time.minutesAgo')}`;
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours} ${t('Common.time.hoursAgo')}`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    return `${diffInDays} ${t('Common.time.daysAgo')}`;
+  };
   const { getCalls } = useCalls();
 
   const [calls, setCalls] = useState<Call[]>([]);

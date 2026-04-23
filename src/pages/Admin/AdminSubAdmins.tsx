@@ -50,18 +50,18 @@ export const AdminSubAdmins = () => {
   return (
     <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <PageHeader
-        title="Sub-Admins"
-        subtitle="Manage platform administrators"
+        title={t('Admin.subAdmins.title')}
+        subtitle={t('Admin.subAdmins.subtitle')}
         rightContent={
           <Button variant="primary" size="sm" leftIcon={<Plus size={16} />} onClick={() => navigate('/admin/sub-admins/add')}>
-            Add Sub-Admin
+            {t('Admin.subAdmins.add')}
           </Button>
         }
       />
 
       {/* Search */}
       <Input
-        placeholder="Search by email or ID..."
+        placeholder={t('Admin.subAdmins.searchPlaceholder')}
         value={search}
         onChange={e => setSearch(e.target.value)}
         leftIcon={<Search size={16} />}
@@ -72,10 +72,10 @@ export const AdminSubAdmins = () => {
           <div className="space-y-3">{[...Array(3)].map((_, i) => <div key={i} className="skeleton h-20 rounded-2xl" />)}</div>
         ) : filtered.length === 0 ? (
           <EmptyState
-            title="No sub-admins yet"
-            description="Add sub-admins to help manage the platform."
+            title={t('Admin.subAdmins.noResults')}
+            description={t('Admin.subAdmins.noResultsDesc')}
             icon={<ShieldCheck size={22} />}
-            action={<Button variant="accent" size="sm" onClick={() => navigate('/admin/sub-admins/add')}>Add First Sub-Admin</Button>}
+            action={<Button variant="accent" size="sm" onClick={() => navigate('/admin/sub-admins/add')}>{t('Admin.subAdmins.addFirst')}</Button>}
           />
         ) : (
           <div className="space-y-3 pb-24">
@@ -107,10 +107,12 @@ export const AdminSubAdmins = () => {
                           {sa.user?.displayName || sa.email}
                         </p>
                         <Badge variant={statusVariant(sa.status || 'active')} dot className="capitalize flex-shrink-0">
-                          {sa.status || 'active'}
+                          {t(`Common.status.${sa.status || 'active'}`)}
                         </Badge>
                       </div>
-                      <p className="text-xs text-gray-500">{role} · {permCount} permission{permCount !== 1 ? 's' : ''}</p>
+                      <p className="text-xs text-gray-500">
+                        {role === 'Admin' ? t('Common.admin') : t('Admin.roles.subAdmin', 'Sub Admin')} · {permCount} {t('Admin.roles.permissionsEnabled')}
+                      </p>
                     </div>
 
                     <ChevronRight size={16} className="text-gray-500 flex-shrink-0" />

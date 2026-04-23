@@ -123,7 +123,7 @@ export const ProfileScreen = () => {
               <p className="text-sm text-accent mt-0.5">@{user.nickname}</p>
             )}
             <p className="text-xs text-gray-500 mt-1 capitalize px-3 py-1 glass rounded-full">
-              {isVenter ? 'Venter' : 'Support Guide'}
+              {isVenter ? t('Profile.roleVenter') : t('Profile.roleListener')}
             </p>
           </>
         )}

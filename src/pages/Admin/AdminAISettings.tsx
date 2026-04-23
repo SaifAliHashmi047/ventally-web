@@ -39,9 +39,9 @@ export const AdminAISettings = () => {
     setSaving(true);
     try {
       await updateAdminAISettings(settings);
-      toast.success('AI settings updated successfully');
+      toast.success(t('Admin.aiSettings.success'));
     } catch {
-      toast.error('Failed to update AI settings');
+      toast.error(t('Admin.aiSettings.error'));
     } finally {
       setSaving(false);
     }
@@ -56,7 +56,7 @@ export const AdminAISettings = () => {
   return (
     <div className="page-wrapper animate-fade-in max-w-2xl mx-auto">
       <PageHeader 
-        title={t('Admin.settings.options.aiSettings', 'AI Settings')} 
+        title={t('Admin.aiSettings.title')} 
         onBack={() => navigate('/admin/settings')} 
       />
 
@@ -67,9 +67,9 @@ export const AdminAISettings = () => {
               <Bot size={22} />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white mb-1">AI Oversight & Policy</h3>
+              <h3 className="text-sm font-bold text-white mb-1">{t('Admin.aiSettings.oversight')}</h3>
               <p className="text-xs text-white/50 leading-relaxed font-medium">
-                Configure how the platform uses artificial intelligence for moderation, risk detection, and automated user support.
+                {t('Admin.aiSettings.description')}
               </p>
             </div>
           </div>
@@ -77,12 +77,12 @@ export const AdminAISettings = () => {
 
         {/* Core Configuration */}
         <div className="space-y-4">
-          <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-widest px-2">Core Configuration</h4>
+          <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-widest px-2">{t('Admin.aiSettings.coreConfig')}</h4>
           
           <GlassCard className="flex items-center justify-between py-5 border-white/5">
             <div>
-              <p className="text-sm font-bold text-white">Enable AI Systems</p>
-              <p className="text-xs text-white/40">Global toggle for all AI-driven features</p>
+              <p className="text-sm font-bold text-white">{t('Admin.aiSettings.enableAI')}</p>
+              <p className="text-xs text-white/40">{t('Admin.aiSettings.enableAIDesc')}</p>
             </div>
             <Toggle 
               checked={settings.enabled} 
@@ -92,8 +92,8 @@ export const AdminAISettings = () => {
 
           <GlassCard className="flex items-center justify-between py-5 border-white/5">
             <div>
-              <p className="text-sm font-bold text-white">Auto-Moderation</p>
-              <p className="text-xs text-white/40">Automatically flag or hide extreme content</p>
+              <p className="text-sm font-bold text-white">{t('Admin.aiSettings.autoModeration')}</p>
+              <p className="text-xs text-white/40">{t('Admin.aiSettings.autoModerationDesc')}</p>
             </div>
             <Toggle 
               checked={settings.autoModeration} 
@@ -103,8 +103,8 @@ export const AdminAISettings = () => {
 
           <GlassCard className="flex items-center justify-between py-5 border-white/5">
             <div>
-              <p className="text-sm font-bold text-white">Inappropriate Language Filter</p>
-              <p className="text-xs text-white/40">Real-time filtering of prohibited keywords</p>
+              <p className="text-sm font-bold text-white">{t('Admin.aiSettings.languageFilter')}</p>
+              <p className="text-xs text-white/40">{t('Admin.aiSettings.languageFilterDesc')}</p>
             </div>
             <Toggle 
               checked={settings.languageFilter} 
@@ -115,11 +115,11 @@ export const AdminAISettings = () => {
 
         {/* Risk Management */}
         <div className="space-y-4">
-          <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-widest px-2">Risk Management</h4>
+          <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-widest px-2">{t('Admin.aiSettings.riskManagement')}</h4>
           
           <GlassCard className="bg-white/[0.02] border border-white/5">
             <div className="flex justify-between mb-4">
-              <span className="text-sm font-bold text-white">Risk Threshold</span>
+              <span className="text-sm font-bold text-white">{t('Admin.aiSettings.riskThreshold')}</span>
               <span className="text-sm font-bold text-primary">{settings.riskThreshold}%</span>
             </div>
             <input 
@@ -131,15 +131,15 @@ export const AdminAISettings = () => {
               className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-primary"
             />
             <div className="flex justify-between mt-3">
-              <span className="text-[10px] text-white/20 font-bold uppercase tracking-tight">Cautious</span>
-              <span className="text-[10px] text-white/20 font-bold uppercase tracking-tight">Aggressive</span>
+              <span className="text-[10px] text-white/20 font-bold uppercase tracking-tight">{t('Admin.aiSettings.cautious')}</span>
+              <span className="text-[10px] text-white/20 font-bold uppercase tracking-tight">{t('Admin.aiSettings.aggressive')}</span>
             </div>
           </GlassCard>
 
           <div className="flex gap-2 p-3 bg-error/10 rounded-2xl border border-error/10">
             <AlertCircle size={16} className="text-error mt-0.5 flex-shrink-0" />
             <p className="text-[10px] text-error/80 leading-normal">
-              Lowering the threshold will cause the AI to be more aggressive in flagging users, which may increase false positives.
+              {t('Admin.aiSettings.riskWarning')}
             </p>
           </div>
         </div>
@@ -152,7 +152,7 @@ export const AdminAISettings = () => {
           className="h-12 flex-1"
           leftIcon={<RotateCcw size={16} />}
         >
-          Reset
+          {t('Admin.aiSettings.reset')}
         </Button>
         <Button
           variant="primary"
@@ -161,7 +161,7 @@ export const AdminAISettings = () => {
           className="h-12 flex-1 font-bold"
           leftIcon={<Save size={16} />}
         >
-          Save Changes
+          {t('Admin.aiSettings.saveChanges')}
         </Button>
       </div>
     </div>

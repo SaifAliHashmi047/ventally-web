@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import i18n from '../../locales/i18n';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Badge } from '../../components/ui/Badge';
@@ -25,7 +26,7 @@ const getStatusVariant = (status: Payout['status']): 'success' | 'warning' | 'er
 
 const formatDate = (dateStr?: string) => {
   if (!dateStr) return '';
-  return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return new Date(dateStr).toLocaleDateString(i18n.language, { month: 'short', day: 'numeric', year: 'numeric' });
 };
 
 export const PayoutSettings = () => {
@@ -111,7 +112,7 @@ export const PayoutSettings = () => {
 
           {hasMore && (
             <Button variant="glass" fullWidth loading={loadingMore} onClick={() => fetchPayouts(false)}>
-              Load More
+              {t('Common.loadMore')}
             </Button>
           )}
         </div>

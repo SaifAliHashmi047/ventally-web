@@ -131,26 +131,28 @@ export const AdminUserDetail = () => {
               onClick={() => setExpandedSection(expandedSection === 'support' ? null : 'support')}
               className="w-full flex items-center justify-between px-5 py-4 hover:bg-white/5 transition-colors"
             >
-              <span className="text-sm font-bold text-white uppercase tracking-wider">{t('Admin.userDetail.listenerInfo', 'Support Guide info')}</span>
+              <span className="text-sm font-bold text-white uppercase tracking-wider">
+                {user.role === 'listener' ? t('Admin.userDetail.listenerInfo') : t('Admin.userDetail.venterInfo', 'Venter info')}
+              </span>
               {expandedSection === 'support' ? <ChevronDown size={18} className="text-white/40" /> : <ChevronRight size={18} className="text-white/40" />}
             </button>
             
             {expandedSection === 'support' && (
               <div className="px-5 pb-5 space-y-4 animate-slide-down">
-                 <div className="space-y-3">
+                  <div className="space-y-3">
                     <div className="flex justify-between items-center text-sm">
-                      <span className="text-white/40">Gender</span>
+                      <span className="text-white/40">{t('Admin.userDetail.gender')}</span>
                       <span className="text-white/90 font-medium">{user.gender || 'N/A'}</span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
-                      <span className="text-white/40">Age Group</span>
+                      <span className="text-white/40">{t('Admin.userDetail.ageGroup')}</span>
                       <span className="text-white/90 font-medium">{user.ageGroup || 'N/A'}</span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
-                      <span className="text-white/40">Joined</span>
+                      <span className="text-white/40">{t('Admin.userDetail.stats.joined')}</span>
                       <span className="text-white/90 font-medium">{new Date(user.createdAt).toLocaleDateString()}</span>
                     </div>
-                 </div>
+                  </div>
               </div>
             )}
           </GlassCard>

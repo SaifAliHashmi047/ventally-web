@@ -19,27 +19,24 @@ export const VerificationInProgress = () => {
     const checkVerificationStatus = async () => {
       try {
         const response = await apiInstance.get('auth/profile');
-        if (response.data?.success && response.data?.data?.user?.isVerified) {
-          dispatch(updateUser(response.data.data.user));
+        const user = response.data?.user || response.data?.data?.user;
+        
+        if (user?.verificationDocumentStatus === 'verified' || user?.isVerified === true) {
+          dispatch(updateUser(user));
           navigate('/signup/verification-verified', { replace: true });
-          if (intervalId) clearInterval(intervalId);
         }
       } catch (error) {
         console.error('Error checking verification status:', error);
       }
     };
 
-    // In a real staging/prod env, we'd poll checkVerificationStatus here.
-    // intervalId = setInterval(checkVerificationStatus, 10000);
-
-    // Development Environment: Redirect automatically after 3 seconds mimicking native
-    const devTimer = setTimeout(() => {
-        navigate('/signup/verification-verified', { replace: true });
-    }, 3000);
+    // Poll every 15 seconds
+    intervalId = setInterval(checkVerificationStatus, 15000);
+    // Also check immediately on mount
+    checkVerificationStatus();
 
     return () => {
        if (intervalId) clearInterval(intervalId);
-       if (devTimer) clearTimeout(devTimer);
     };
   }, [navigate, dispatch]);
 

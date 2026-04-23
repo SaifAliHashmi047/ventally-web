@@ -69,10 +69,10 @@ export const AdminExports = () => {
         document.body.appendChild(link);
         link.click();
         link.remove();
-        toast.success('PDF generated successfully');
+        toast.success(t('Admin.exportsIntegrations.pdfSuccess', 'PDF generated successfully'));
       }
     } catch (error) {
-      toast.error('Export failed');
+      toast.error(t('Admin.exportsIntegrations.exportError', 'Export failed'));
     } finally {
       setExportingId(null);
     }
@@ -115,18 +115,26 @@ export const AdminExports = () => {
                     <div className="flex justify-between items-start mb-1">
                       <h3 className="text-lg font-bold text-white truncate max-w-[70%]">{item.email}</h3>
                       <div className="px-3 py-0.5 bg-white/10 rounded-full">
-                        <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">{item.accountType}</span>
+                        <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">
+                          {item.accountType === 'Listener' ? t('Admin.userDetail.listenerBadge') : item.accountType}
+                        </span>
                       </div>
                     </div>
-                    <p className="text-sm text-white/40 mb-3 underline decoration-white/10">ID: {item.id}</p>
+                    <p className="text-sm text-white/40 mb-3 underline decoration-white/10">
+                      {t('Admin.exportsIntegrations.id', { id: item.id })}
+                    </p>
                     
                     <div className="flex gap-6 mt-4">
                       <div className="flex flex-col">
-                        <span className="text-[10px] uppercase tracking-tighter text-white/30 font-bold mb-1">Sessions</span>
+                        <span className="text-[10px] uppercase tracking-tighter text-white/30 font-bold mb-1">
+                          {t('Admin.exportsIntegrations.sessions')}
+                        </span>
                         <span className="text-sm font-medium text-white/80">{item.stats?.totalSessions || 0}</span>
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[10px] uppercase tracking-tighter text-white/30 font-bold mb-1">Minutes</span>
+                        <span className="text-[10px] uppercase tracking-tighter text-white/30 font-bold mb-1">
+                          {t('Admin.exportsIntegrations.minutes')}
+                        </span>
                         <span className="text-sm font-medium text-white/80">{item.stats?.totalMinutes || 0}</span>
                       </div>
                     </div>
@@ -135,15 +143,15 @@ export const AdminExports = () => {
                   {/* Stats Grid */}
                   <div className="grid grid-cols-3 gap-0 border-y border-white/5 bg-white/[0.02]">
                     <div className="p-4 border-r border-white/5 flex flex-col gap-1">
-                      <span className="text-[10px] text-white/30 leading-none">Total Sessions</span>
+                      <span className="text-[10px] text-white/30 leading-none">{t('Admin.exportsIntegrations.totalSessions')}</span>
                       <span className="text-lg font-bold text-white">{item.stats?.totalSessions?.toLocaleString() || 0}</span>
                     </div>
                     <div className="p-4 border-r border-white/5 flex flex-col gap-1">
-                      <span className="text-[10px] text-white/30 leading-none">Total Minutes</span>
+                      <span className="text-[10px] text-white/30 leading-none">{t('Admin.exportsIntegrations.totalMinutes')}</span>
                       <span className="text-lg font-bold text-white">{item.stats?.totalMinutes?.toLocaleString() || 0}</span>
                     </div>
                     <div className="p-4 flex flex-col gap-1">
-                      <span className="text-[10px] text-white/30 leading-none">Total Payout</span>
+                      <span className="text-[10px] text-white/30 leading-none">{t('Admin.exportsIntegrations.totalPayout')}</span>
                       <span className="text-lg font-bold text-white">${item.stats?.totalPayout?.toLocaleString() || 0}</span>
                     </div>
                   </div>

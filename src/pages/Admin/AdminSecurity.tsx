@@ -41,27 +41,27 @@ export const AdminSecurity = () => {
   return (
     <div className="page-wrapper animate-fade-in max-w-2xl mx-auto">
       <PageHeader 
-        title={t('Admin.security.title', 'Security')} 
+        title={t('Admin.security.title')} 
         onBack={() => navigate('/admin/settings')} 
       />
 
       <GlassCard padding="none" rounded="2xl" className="overflow-hidden mt-2">
         <SecurityItem
-          title={t('Admin.security.enableBiometrics', 'Enable Biometrics')}
+          title={t('Admin.security.enableBiometrics')}
           type="toggle"
           value={isBiometricsEnabled}
           onValueChange={toggleBiometrics}
         />
         <SecurityItem
-          title={t('Admin.security.resetPassword', 'Reset Password')}
+          title={t('Admin.security.resetPassword')}
           onPress={() => navigate('/admin/reset-password')}
         />
         <SecurityItem
-          title={t('Admin.security.changeEmailPhone', 'Change Email/Phone')}
+          title={t('Admin.security.changeEmailPhone')}
           onPress={() => navigate('/admin/change-email')}
         />
         <SecurityItem
-          title={t('Admin.security.twoFactorAuth', 'Two-Factor Authentication')}
+          title={t('Admin.security.twoFactorAuth')}
           type="toggle"
           value={isTwoFactorEnabled}
           onValueChange={toggle2FA}

@@ -118,8 +118,8 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
         <div className="flex items-center gap-3 px-6 pt-8 pb-8">
           <AppBrandIcon className="w-10 h-10 rounded-2xl shadow-glow-primary" />
           <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">Ventally</h1>
-            <p className="text-xs text-gray-400">{t('Common.SupportGuide', 'Support Guide')}</p>
+            <h1 className="text-xl font-bold text-white tracking-tight">{t('Common.appName')}</h1>
+            <p className="text-xs text-gray-400">{t('Common.SupportGuide')}</p>
           </div>
         </div>
 
@@ -170,7 +170,7 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
       <div className="fixed top-0 left-0 right-0 z-30 h-16 glass border-b border-white/8 flex items-center justify-between px-4 lg:hidden">
         <div className="flex items-center gap-3">
           <AppBrandIcon className="w-9 h-9 rounded-2xl" />
-          <span className="font-bold text-white">Ventally Listener</span>
+          <span className="font-bold text-white">{t('Common.ventallyListener')}</span>
         </div>
         <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 rounded-xl glass text-gray-400 hover:text-white transition-colors">
           {sidebarOpen ? <X size={20} /> : <Menu size={20} />}

@@ -60,10 +60,10 @@ export const AdminFinancialStats = () => {
   }, []);
 
   const pieData = [
-    { name: 'Basic', value: 400, color: '#B692C2' },
-    { name: 'Standard', value: 300, color: '#694F8E' },
-    { name: 'Premium', value: 300, color: '#E3A5C7' },
-    { name: 'Add-ons', value: 200, color: '#FFDFEF' },
+    { name: t('Admin.financialStats.revenueSources.basic', 'Basic'), value: 400, color: '#B692C2' },
+    { name: t('Admin.financialStats.revenueSources.standard', 'Standard'), value: 300, color: '#694F8E' },
+    { name: t('Admin.financialStats.revenueSources.premium', 'Premium'), value: 300, color: '#E3A5C7' },
+    { name: t('Admin.financialStats.revenueSources.addOns', 'Add-ons'), value: 200, color: '#FFDFEF' },
   ];
 
   return (
@@ -74,7 +74,7 @@ export const AdminFinancialStats = () => {
         {/* Horizontal Scrollable Stat Cards */}
         <div className="flex overflow-x-auto scrollbar-hide gap-4 snap-x pb-4">
           <GlassCard className="min-w-[280px] h-44 flex flex-col justify-between p-6 snap-center bg-white/[0.02] border-white/5">
-            <span className="text-[11px] uppercase tracking-widest text-white/40 font-bold">Update</span>
+            <span className="text-[11px] uppercase tracking-widest text-white/40 font-bold">{t('Admin.financialStats.cards.update')}</span>
             {loading ? <div className="skeleton h-8 w-2/3 rounded-lg" /> : (
               <div>
                 <h3 className="text-xl font-bold text-white leading-tight">
@@ -91,28 +91,28 @@ export const AdminFinancialStats = () => {
           </GlassCard>
 
           <GlassCard className="min-w-[280px] h-44 flex flex-col justify-between p-6 snap-center bg-white/[0.02] border-white/5">
-            <span className="text-[11px] uppercase tracking-widest text-white/40 font-bold">Next Expected Revenue</span>
+            <span className="text-[11px] uppercase tracking-widest text-white/40 font-bold">{t('Admin.financialStats.cards.nextExpected')}</span>
             {loading ? <div className="skeleton h-8 w-2/3 rounded-lg" /> : (
               <div>
                 <h3 className="text-3xl font-bold text-white">
                   ${paymentStats?.nextExpectedRevenue?.totalRevenue?.toLocaleString() || '0.00'}
                 </h3>
                 <p className="mt-2 text-[11px] text-white/40 font-medium uppercase tracking-widest">
-                  📊 In next {paymentStats?.nextExpectedRevenue?.windowDays || 7} days
+                  {t('Admin.financialStats.cards.inNextDays', { days: paymentStats?.nextExpectedRevenue?.windowDays || 7 })}
                 </p>
               </div>
             )}
           </GlassCard>
 
           <GlassCard className="min-w-[280px] h-44 flex flex-col justify-between p-6 snap-center bg-white/[0.02] border-white/5">
-            <span className="text-[11px] uppercase tracking-widest text-white/40 font-bold">Weekly Sales</span>
+            <span className="text-[11px] uppercase tracking-widest text-white/40 font-bold">{t('Admin.financialStats.cards.weeklySales')}</span>
             {loading ? <div className="skeleton h-8 w-2/3 rounded-lg" /> : (
               <div>
                 <h3 className="text-3xl font-bold text-white">
                   ${(paymentStats?.weeklySalesData?.series?.reduce((a: any, b: any) => a + (b.revenue || 0), 0) || 0).toLocaleString()}
                 </h3>
                 <p className="mt-2 text-[11px] text-white/40 font-medium uppercase tracking-widest">
-                  Last 8 weeks
+                  {t('Admin.financialStats.cards.lastWeeks', { weeks: 8 })}
                 </p>
               </div>
             )}
@@ -122,9 +122,9 @@ export const AdminFinancialStats = () => {
         {/* Task Progress Chart */}
         <GlassCard bordered className="bg-white/[0.02] p-6">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-lg font-bold text-white">{t('Admin.financialStats.taskProgress.title', 'Task Progress')}</h2>
+            <h2 className="text-lg font-bold text-white">{t('Admin.financialStats.taskProgress.title')}</h2>
             <div className="bg-white/10 px-4 py-1.5 rounded-full text-[11px] text-white/60 font-bold uppercase tracking-widest">
-              12 Months
+              {t('Admin.financialStats.taskProgress.filter', '12 Months')}
             </div>
           </div>
           
@@ -162,9 +162,9 @@ export const AdminFinancialStats = () => {
         {/* Revenue Sources Pie Chart */}
         <GlassCard bordered className="bg-white/[0.02] p-6">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-lg font-bold text-white">{t('Admin.financialStats.revenueSources.title', 'Revenue Sources')}</h2>
+            <h2 className="text-lg font-bold text-white">{t('Admin.financialStats.revenueSources.title')}</h2>
             <div className="flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full text-[11px] text-white/60 font-bold uppercase tracking-widest">
-              Revenue <ChevronRight size={12} className="rotate-90" />
+              {t('Admin.financialStats.revenueSources.revenue')} <ChevronRight size={12} className="rotate-90" />
             </div>
           </div>
           
