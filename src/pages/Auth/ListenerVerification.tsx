@@ -85,7 +85,7 @@ export const ListenerVerification = () => {
               const reduxUser = {
                 ...switchRes.user,
                 role: switchRes.user.activeRole?.toLowerCase() || 'listener',
-                verificationStatus: 'pending'
+                verificationDocumentStatus: 'pending'
               };
               dispatch(setUser(reduxUser as any));
               dispatch(setIsVenter(false));
@@ -97,7 +97,7 @@ export const ListenerVerification = () => {
         const updatedUser = {
           ...user,
           role: 'listener',
-          verificationStatus: 'pending'
+          verificationDocumentStatus: 'pending'
         };
         dispatch(setUser(updatedUser));
       }

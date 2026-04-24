@@ -921,12 +921,14 @@
   },
   "Notifications": {
     "title": "Notifications",
-    "incomingCall": "Incoming Voice Session",
-    "incomingChat": "Incomig Text Session",
-    "notificationTitle": "Activity notification",
-    "notificationMessage": "You have a new activity in your account",
-    "noNotifications": "No notifications yet",
-    "noNotificationsDescription": "When you receive notifications, they'll show up here."
+    "incomingCall": "Appel vocal entrant",
+    "incomingChat": "Session texte entrante",
+    "notificationTitle": "Notification d'activité",
+    "notificationMessage": "Vous avez une nouvelle activité sur votre compte",
+    "noNotifications": "Pas encore de notifications",
+    "noNotificationsDescription": "Lorsque vous recevrez des notifications, elles apparaîtront ici.",
+    "markAllRead": "Tout marquer comme lu",
+    "notificationDetail": "Notification"
   },
   "VenterHome": {
     "greeting": "Bonjour {{name}},",
@@ -951,8 +953,8 @@
       "mad": "En colère"
     },
     "reflectionCard": {
-      "sampleText": "I was proud of myself for reaching out for support.",
-      "sampleDate": "December 05"
+      "sampleText": "J'étais fier d'avoir demandé de l'aide.",
+      "sampleDate": "05 décembre"
     },
     "streakCard": {
       "happyStreak": "Vous êtes heureux depuis {{days}} jours",
@@ -997,8 +999,8 @@
       "noMessages": "Pas encore de messages",
       "active": "Actif"
     },
-    "noChats": "No chats yet",
-    "noChatsDescription": "No sessions yet\nStart a text session to begin your support journey"
+    "noChats": "Aucune conversation pour l'instant",
+    "noChatsDescription": "Aucune session pour l'instant\nCommencez une session texte pour démarrer votre parcours de soutien"
   },
   "VenterFindingListener": {
     "title": "Préparation de votre session...",
@@ -1240,7 +1242,8 @@
       "callSession": "Session d'Appel - {{duration}} min",
       "fundsAdded": "Fonds Ajoutés",
       "chatSession": "Session de Chat - {{duration}} min"
-    }
+    },
+    "transactionHistory": "Historique des transactions"
   },
   "ListenerWallet": {
     "subtitle": "Payouts and session earnings",
@@ -1365,13 +1368,13 @@
   },
   "VenterMoodLog": {
     "title": "Journal d'Humeur",
-    "editTitle": "Edit Mood Log",
+    "editTitle": "Modifier le journal d'humeur",
     "subtitle": "Comment vous sentez-vous aujourd'hui ?",
     "whatsGoingOn": "Que se passe-t-il ?",
     "notes": "Notes",
     "notesPlaceholder": "Ajoutez des pensées ou des détails supplémentaires...",
     "logMood": "Enregistrer l'Humeur",
-    "updateMoodLog": "Update Mood log",
+    "updateMoodLog": "Mettre à jour le journal d'humeur",
     "cancel": "Annuler",
     "categories": {
       "work": "Travail",
@@ -1382,19 +1385,19 @@
     "success": {
       "title": "Humeur Enregistrée",
       "message": "Vous avez enregistré votre humeur avec succès.",
-      "logged": "Mood logged successfully",
-      "updated": "Mood updated successfully",
+      "logged": "Humeur enregistrée avec succès",
+      "updated": "Humeur mise à jour avec succès",
       "done": "Terminé"
     },
     "errors": {
-      "selectMoodAndCategory": "Please select both a mood and a category"
+      "selectMoodAndCategory": "Veuillez sélectionner une humeur et une catégorie"
     }
   },
   "VenterYourMood": {
-    "title": "Your Mood",
-    "todaysMood": "Today's Mood",
-    "recentMoods": "Recent Moods",
-    "moodHistory": "Mood History"
+    "title": "Votre humeur",
+    "todaysMood": "Humeur du jour",
+    "recentMoods": "Humeurs récentes",
+    "moodHistory": "Historique des humeurs"
   },
   "VenterMoodMonthly": {
     "title": "Monthly Mood Tracker",
@@ -1403,21 +1406,21 @@
     "viewHistory": "View History"
   },
   "VenterMoodHistory": {
-    "title": "Mood History",
-    "noMoods": "No Moods Logged Yet",
-    "noMoodsDescription": "You haven't logged any moods yet. Start by logging your first mood to see it appear here.",
-    "viewHistory": "View History",
+    "title": "Historique des humeurs",
+    "noMoods": "Aucune humeur enregistrée",
+    "noMoodsDescription": "Vous n'avez pas encore enregistré d'humeur. Commencez par enregistrer votre première humeur pour la voir apparaître ici.",
+    "viewHistory": "Voir l'historique",
     "deleteSuccess": "Humeur supprimée avec succès",
     "errors": {
-      "selectMood": "Please select a mood"
+      "selectMood": "Veuillez sélectionner une humeur"
     }
   },
   "VenterMoodDetails": {
-    "title": "Mood Details",
-    "mood": "Mood:",
-    "time": "Time",
-    "note": "Note:",
-    "editEntry": "Edit Entry",
+    "title": "Détails de l'humeur",
+    "mood": "Humeur :",
+    "time": "Heure",
+    "note": "Note :",
+    "editEntry": "Modifier l'entrée",
     "notFound": "Entrée d'humeur introuvable",
     "deleteConfirmTitle": "Supprimer l'entrée d'humeur ?",
     "deleteConfirmDesc": "Cette action est irréversible. L'entrée d'humeur sera définitivement supprimée de votre historique."
@@ -1737,7 +1740,7 @@
       "subtitle": "Portefeuille et paiements pour les auditeurs.",
       "availableBalance": "Solde disponible",
       "pendingBalance": "Solde en attente",
-      "totalEarnings": "Total sur la durée",
+      "totalEarnings": "Total à vie",
       "activityBreakdown": "Activité récente",
       "payoutMethod": "Mode de paiement",
       "addPayoutMethod": "Ajouter un mode de paiement",
@@ -1745,7 +1748,7 @@
       "withdrawAmount": "Montant du Retrait",
       "withdrawEarnings": "Retirer des fonds",
       "pendingEarnings": "Solde en attente",
-      "availableForPayout": "Disponible pour le Retrait",
+      "availableForPayout": "Disponible pour le paiement",
       "noBalance": "Vous n'avez pas assez de solde pour retirer",
       "withdrawError": "Veuillez entrer un montant valide",
       "exceedsBalance": "Le montant dépasse votre solde disponible",
@@ -1819,50 +1822,52 @@
     "title": "VENTALLY"
   },
   "Common": {
-    "search": "Search",
+    "search": "Rechercher",
     "accept": "Accepter",
     "cancel": "Annuler",
-    "decline": "Cancel",
-    "failed": "Failed",
-    "unknown": "Unknown",
-    "acceptAndContinue": "Continue",
-    "documentRequired": "Document Required",
-    "noData": "No data",
-    "createdAt": "Created At",
+    "decline": "Annuler",
+    "failed": "Échoué",
+    "unknown": "Inconnu",
+    "acceptAndContinue": "Continuer",
+    "documentRequired": "Document requis",
+    "noData": "Aucune donnée",
+    "createdAt": "Créé le",
     "okay": "D'accord",
-    "skip": "Skip",
-    "submit": "Submit",
+    "skip": "Passer",
+    "submit": "Soumettre",
     "getStarted": "Commencer",
-    "signatureRequired": "Signature is required",
+    "signatureRequired": "Signature requise",
     "start": "Démarrer",
     "yes": "Oui",
     "ok": "OK",
     "no": "Non",
     "success": "Succès",
-    "emailRequired": "Email/Phone is required",
-    "permissionsRequired": "At least 1 Permission is required",
-    "summaryRequired": "Summary is required",
+    "emailRequired": "E-mail/Téléphone est obligatoire",
+    "permissionsRequired": "Au moins 1 permission est requise",
+    "summaryRequired": "Résumé requis",
     "invalidEmail": "Veuillez saisir une adresse e-mail valide",
     "fillRequiredFields": "Veuillez remplir tous les champs obligatoires",
-    "somethingWentWrong": "Something went wrong",
+    "somethingWentWrong": "Quelque chose s'est mal passé",
     "error": "Erreur",
     "passwordValidationError": "Le mot de passe doit contenir au moins 8 caractères, avec majuscules, minuscules, chiffres et symboles",
     "confirmAction": "Confirmer l'action",
     "areYouSure": "Êtes-vous sûr de vouloir continuer ?",
     "operationSuccess": "Opération terminée avec succès",
     "done": "Terminé",
-    "update": "Update",
+    "update": "Mettre à jour",
     "next": "Suivant",
     "continue": "Continuer",
-    "pleaseUploadDocument": "Please upload a document",
-    "pleaseCompleteAllFields": "Please complete all fields",
-    "reportConcern": "Report a Concern",
+    "pleaseUploadDocument": "Veuillez télécharger un document",
+    "pleaseCompleteAllFields": "Veuillez remplir tous les champs",
+    "reportConcern": "Signaler une préoccupation",
     "errors": {
       "fetchingData": "Erreur lors de la récupération des données"
     },
     "time": {
-      "minutesAgo": "min ago",
-      "justNow": "just now"
+      "minutesAgo": "min",
+      "justNow": "à l'instant",
+      "hoursAgo": "h passées",
+      "daysAgo": "j passés"
     },
     "days": [
       "Sun",
@@ -1889,20 +1894,22 @@
     ],
     "delete": "Supprimer",
     "loading": "Chargement...",
-    "loadMore": "Charger plus"
+    "loadMore": "Charger plus",
+    "yesterday": "Hier",
+    "appName": "VENTALLY"
   },
   "Security": {
     "title": "Sécurité",
-    "changePassword": "Change Password",
+    "changePassword": "Changer le mot de passe",
     "twoFactorEnabledSuccess": "Authentification à deux facteurs activée",
     "twoFactorDisabledSuccess": "Authentification à deux facteurs désactivée",
     "resetPassword": "Réinitialiser le mot de passe",
-    "twoFactor": "Two Factor Authentication",
+    "twoFactor": "Authentification à deux facteurs",
     "twoFactorEnabled": "Authentification à deux facteurs",
     "enableBiometrics": "Activer la biométrie",
-    "changeEmailOrPhone": "Change Email or Phone",
+    "changeEmailOrPhone": "Changer l'e-mail ou le téléphone",
     "changeEmail": "Changer l'e-mail",
-    "changePhone": "Change Phone",
+    "changePhone": "Changer le téléphone",
     "success": {
       "emailChanged": "E-mail mis à jour avec succès"
     }
@@ -2009,7 +2016,7 @@
     "placeholder": "hh/mm",
     "addButton": "Enregistrer",
     "addedTitle": "Heures Silencieuses Enregistrées",
-    "addedDescription": "Your Quiet Hours Have Been Updated"
+    "addedDescription": "Vos heures de silence ont été mises à jour"
   },
   "Appeal": {
     "title": "Appel",
@@ -2026,7 +2033,7 @@
   },
   "NotificationsSettings": {
     "title": "Notifications",
-    "push": "Push Notifications",
+    "push": "Notifications push",
     "pauseAll": "Tout Suspendre",
     "messages": "Notifications de Messages",
     "call": "Notifications d'Appels",
@@ -2039,25 +2046,25 @@
     "moodLog": "Journal d'Humeur",
     "reflectionLog": "Journal de Réflexion",
     "wellnessNudges": "Rappels de Bien-être",
-    "activityStatus": "Activity Status"
+    "activityStatus": "Statut d'activité"
   },
   "Feedback": {
     "title": "Commentaires",
     "placeholder": "Ajoutez vos commentaires",
-    "successTitle": "Feedback Submitted",
+    "successTitle": "Commentaire envoyé",
     "successMessage": "Vos commentaires ont été soumis.",
     "description": "Vos commentaires nous aident à améliorer l'espace que nous avons créé pour vous.",
     "submit": "Envoyer"
   },
   "ChangeAccount": {
     "title": "Changer le Type de Compte",
-    "selectDescription": "Select the role you want to switch to or become. Some roles may require additional setup.",
-    "roles": "Roles",
-    "currentlyActive": "Currently Active",
-    "needsOnboarding": "Requires setup",
-    "switchNode": "Switch to {{role}}",
-    "becomeNode": "Become a {{role}}",
-    "roleSwitchedSuccess": "Role switched successfully",
+    "selectDescription": "Sélectionnez le rôle vers lequel vous souhaitez basculer ou devenir. Certains rôles peuvent nécessiter des étapes supplémentaires.",
+    "roles": "Rôles",
+    "currentlyActive": "Actuellement actif",
+    "needsOnboarding": "Nécessite une configuration",
+    "switchNode": "Passer à {{role}}",
+    "becomeNode": "Devenir {{role}}",
+    "roleSwitchedSuccess": "Rôle changé avec succès",
     "failedToSwitch": "Impossible de changer de rôle",
     "failedToFetch": "Impossible de récupérer les rôles",
     "switchAccountTitle": "Changer de Compte",
@@ -2071,7 +2078,7 @@
     "confirmPassword": "Confirmer le mot de passe",
     "update": "Mettre à jour",
     "resetSuccessTitle": "Mot de passe réinitialisé",
-    "resetSuccessMessage": "Your password has been chnaged"
+    "resetSuccessMessage": "Votre mot de passe a été modifié"
   },
   "VenterRecovery": {
     "dashboard": {
@@ -2176,38 +2183,40 @@
     }
   },
   "DeleteAccount": {
-    "title": "Delete Your Account",
-    "warning": "Deleting your account is permanent and cannot be undone.",
-    "description": "Deleting your account will permanently remove your profile, messages, session history, and all associated data from Ventally. This action cannot be undone. Any active subscriptions, credits, or pending wallet balances will be forfeited upon deletion.\n\nIf you have an active subscription, you must cancel it before deleting your account. Deleting your account does not automatically stop billing, and you may continue to be charged by your app store provider.\n\nEnter your password below to confirm and proceed with permanent account deletion.",
-    "password": "Password",
-    "button": "Delete Account",
-    "confirmDelete": "Would you like to delete this account?",
-    "deleted": "Account Deleted",
-    "passwordRequired": "Password is required"
+    "title": "Supprimer votre compte",
+    "warning": "La suppression de votre compte est permanente et irréversible.",
+    "description": "La suppression de votre compte effacera définitivement votre profil, vos messages, votre historique de sessions et toutes les données associées de Ventally. Cette action est irréversible. Tout abonnement actif, crédit ou solde de portefeuille en attente sera perdu lors de la suppression.\n\nSi vous avez un abonnement actif, vous devez l'annuler avant de supprimer votre compte. La suppression de votre compte n'arrête pas automatiquement la facturation.\n\nEntrez votre mot de passe ci-dessous pour confirmer la suppression définitive de votre compte.",
+    "password": "Mot de passe",
+    "button": "Supprimer le compte",
+    "confirmDelete": "Souhaitez-vous supprimer ce compte ?",
+    "deleted": "Compte supprimé",
+    "passwordRequired": "Le mot de passe est obligatoire"
   },
   "Profile": {
-    "title": "Profile",
-    "subtitle": "Manage your profile and preferences.",
+    "title": "Profil",
+    "subtitle": "Gérez votre profil et vos préférences.",
     "personalInfo": "Informations Personnelles",
     "payout": "Paiement",
     "yourSessions": "Vos Sessions",
     "deleteAccount": "Supprimer le compte",
-    "deleteConfirm": "This action is permanent. Are you sure you want to delete your account?",
+    "deleteConfirm": "Cette action est permanente. Êtes-vous sûr de vouloir supprimer votre compte ?",
     "choosePlan": "Choisir un Plan",
     "terms": "Conditions d'Utilisation",
     "privacy": "Politique de Confidentialité",
     "logout": "Déconnexion",
-    "editProfile": "Edit Profile",
+    "editProfile": "Modifier le profil",
     "logoutConfirmTitle": "Déconnexion",
-    "logoutConfirmMessage": "Êtes-vous sûr de vouloir vous déconnecter ?"
+    "logoutConfirmMessage": "Êtes-vous sûr de vouloir vous déconnecter ?",
+    "roleVenter": "Venter",
+    "roleListener": "Guide de soutien"
   },
   "SessionsHistory": {
     "title": "Historique des Sessions",
     "subtitle": "Historique de session guidé et modéré",
     "call": "Voix",
     "chat": "Messages",
-    "emptyState": "Aucune session passée",
-    "emptyStateDescription": "L'historique de vos sessions apparaîtra ici"
+    "emptyState": "Aucune session passée pour l'instant",
+    "emptyStateDescription": "Votre historique de sessions apparaîtra ici"
   },
   "EditProfile": {
     "title": "Modifier le Profil",
@@ -2222,7 +2231,8 @@
     "optionalQuestionsSubtitle": "Utilisées pour personnaliser votre expérience",
     "optionalQuestionsBody1": "Nous posons quelques questions facultatives pour mieux comprendre ce qui vous semble être un soutien.\n\nVos réponses aident à guider une expérience structurée et modérée.\n\nVos réponses nous aident à :\n• Adapter votre expérience de soutien à ce qui vous convient\n• Respecter l'identité, la culture et les valeurs\n• Réduire les suppositions sur vos préférences de soutien\n\nVous êtes toujours aux commandes, vous pouvez ignorer toute question et rien de ce que vous partagez ne modifie votre accès à Ventally.",
     "optionalQuestionsBody2": "Vos informations sont privées et ne sont jamais partagées avec d'autres utilisateurs.",
-    "optionalQuestionsFooter": "Conçu pour une utilisation respectueuse et basée sur des lignes directrices"
+    "optionalQuestionsFooter": "Conçu pour une utilisation respectueuse et basée sur des lignes directrices",
+    "selectedCount": "{{count}} sélectionné(s)"
   },
   "ListenerFeedback": {
     "title": "Session Feedback",

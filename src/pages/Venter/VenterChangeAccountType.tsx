@@ -151,7 +151,7 @@ export const VenterChangeAccountType = () => {
           </p>
 
           <div className="bg-white/5 rounded-xl p-3 flex gap-3 text-left mb-2">
-            <AlertCircle size={18} className="text-warning flex-shrink-0 mt-0.5" />
+            <AlertCircle size={18} className="text-accent flex-shrink-0 mt-0.5" />
             <p className="text-xs text-gray-400">
               {t('ChangeAccount.switchWarning', 'You will be logged out of your active sessions and sent to the Support Guide dashboard.')}
             </p>

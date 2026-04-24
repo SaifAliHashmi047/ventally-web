@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import i18n from '../../locales/i18n';
 import { useDispatch } from 'react-redux';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
 import { GlassCard } from '../../components/ui/GlassCard';
@@ -136,8 +137,8 @@ export const SubscriptionSuccessScreen = () => {
   const defaultDesc = t(planInfoDescKey, t('SubscriptionSuccess.subtitle', 'Access premium features'));
 
   const renewalDate = activeSub?.currentPeriodEnd 
-    ? new Date(activeSub.currentPeriodEnd).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-    : new Date(new Date().setMonth(new Date().getMonth() + 1)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    ? new Date(activeSub.currentPeriodEnd).toLocaleDateString(i18n.language, { month: 'short', day: 'numeric', year: 'numeric' })
+    : new Date(new Date().setMonth(new Date().getMonth() + 1)).toLocaleDateString(i18n.language, { month: 'short', day: 'numeric', year: 'numeric' });
 
   return (
     <AuthLayout>

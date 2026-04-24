@@ -158,7 +158,7 @@ export const VenterMoodDetails = () => {
               )}
               <div>
                 <p className="text-lg font-semibold capitalize" style={{ color: config?.text || '#aaa' }}>
-                  {mood.mood_type}
+                  {config ? t(config.labelKey, config.label) : mood.mood_type}
                 </p>
                 <p className="text-xs text-gray-500">
                   {dateObj?.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}

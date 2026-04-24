@@ -1,17 +1,80 @@
 {
   "Common": {
-    "appName": "Ventally",
-    "adminPanel": "Admin Panel",
-    "ventallyListener": "Ventally Listener",
-    "subAdmin": "Sub-Admin",
-    "admin": "Admin",
-    "venter": "Venter",
-    "logoutSession": "Logout Session",
-    "connected": "Connected",
-    "available": "Available",
-    "unavailable": "Unavailable",
-    "SupportGuide": "Support Guide",
-    "LogOut": "Logout"
+    "appName": "VENTALLY",
+    "search": "Search",
+    "accept": "Begin Session",
+    "cancel": "Cancel",
+    "decline": "Cancel",
+    "failed": "Failed",
+    "unknown": "Unknown",
+    "acceptAndContinue": "Continue",
+    "documentRequired": "Document Required",
+    "noData": "No data",
+    "createdAt": "Created At",
+    "okay": "Okay",
+    "skip": "Skip",
+    "submit": "Submit",
+    "getStarted": "Get Started",
+    "signatureRequired": "Signature is required",
+    "start": "Start",
+    "yes": "Yes",
+    "ok": "OK",
+    "no": "No",
+    "success": "Success",
+    "emailRequired": "Email/Phone is required",
+    "permissionsRequired": "At least 1 Permission is required",
+    "summaryRequired": "Summary is required",
+    "invalidEmail": "Please enter a valid email address",
+    "fillRequiredFields": "Please fill out all required fields",
+    "somethingWentWrong": "Something went wrong",
+    "error": "Error",
+    "passwordValidationError": "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+    "confirmAction": "Confirm Action",
+    "areYouSure": "Are you sure you want to proceed?",
+    "operationSuccess": "Operation completed successfully",
+    "done": "Done",
+    "update": "Update",
+    "next": "Next",
+    "continue": "Continue",
+    "pleaseUploadDocument": "Please upload a document",
+    "pleaseCompleteAllFields": "Please complete all fields",
+    "reportConcern": "Report a Concern",
+    "errors": {
+      "fetchingData": "Error Fetching Data"
+    },
+    "time": {
+      "minutesAgo": "min ago",
+      "justNow": "just now",
+      "hoursAgo": "h ago",
+      "daysAgo": "d ago"
+    },
+    "days": [
+      "Sun",
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat"
+    ],
+    "months": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "delete": "Delete",
+    "loading": "Loading...",
+    "loadMore": "Load More",
+    "yesterday": "Yesterday"
   },
   "Errors": {
     "adminUnavailableOnMobile": "Administrator access isn’t available in this app. Please use the web dashboard."
@@ -1407,7 +1470,9 @@
     "notificationTitle": "Activity notification",
     "notificationMessage": "You have a new activity in your account",
     "noNotifications": "No notifications yet",
-    "noNotificationsDescription": "When you receive notifications, they'll show up here."
+    "noNotificationsDescription": "When you receive notifications, they'll show up here.",
+    "markAllRead": "Mark All Read",
+    "notificationDetail": "Notification"
   },
   "VenterHome": {
     "greeting": "Hi {{name}},",
@@ -1721,7 +1786,8 @@
       "callSession": "Voice Session - {{duration}} min",
       "fundsAdded": "Funds Added",
       "chatSession": "Chat Session - {{duration}} min"
-    }
+    },
+    "transactionHistory": "Transaction History"
   },
   "ListenerWallet": {
     "subtitle": "Payouts and session earnings",
@@ -1927,17 +1993,15 @@
       "title": "User Detail",
       "venterBadge": "Venter",
       "listenerBadge": "Support Guide",
+      "gender": "Gender",
+      "ageGroup": "Age Group",
+      "listenerInfo": "Support Guide info",
+      "venterInfo": "Venter info",
       "stats": {
         "totalSessions": "Total Sessions",
         "totalMinutes": "Total Minutes",
-        "totalPayout": "Total Payout"
-      },
-      "exportCsv": "Export CSV",
-      "exportPdf": "Export PDF",
-      "listenerInfo": "Support Guide info",
-      "exportSuccess": {
-        "title": "Export Completed",
-        "subtitle": "Your user data has been exported successfully."
+        "totalEarnings": "Total Earnings",
+        "joined": "Joined"
       }
     },
     "listenerRequests": {
@@ -1970,14 +2034,13 @@
       "active": "Active"
     },
     "subAdmins": {
-      "title": "Sub Admins",
-      "searchPlaceholder": "Search sub admins...",
-      "addSubAdmin": "Add Sub Admin",
-      "emptyState": "No sub admins found",
-      "emptyStateMessage": "Create your first sub admin to delegate responsibilities",
-      "card": {
-        "permissions": "Permissions"
-      }
+      "title": "Sub-Admins",
+      "subtitle": "Manage platform administrators",
+      "add": "Add Sub-Admin",
+      "searchPlaceholder": "Search by email or ID...",
+      "noResults": "No sub-admins yet",
+      "noResultsDesc": "Add sub-admins to help manage the platform.",
+      "addFirst": "Add First Sub-Admin"
     },
     "subAdminProfile": {
       "title": "Sub Admin Profile",
@@ -1997,9 +2060,10 @@
       "emailPlaceholder": "Enter email address",
       "password": "Password",
       "passwordPlaceholder": "Set password",
-      "selectPermissions": "Select Permissions",
+      "permissions": "Permissions",
       "create": "Create",
-      "permissionsSelected": "{{count}} permissions selected"
+      "emptyFields": "Please fill in all fields",
+      "successMsg": "Sub Admin account has been created successfully."
     },
     "permissions": {
       "title": "Select Permissions",
@@ -2034,6 +2098,7 @@
         "crisisConfig": "Crisis config",
         "exportsIntegrations": "Exports & Integrations",
         "rolesPermissions": "Roles & Permissions",
+        "aiSettings": "AI Settings",
         "language": "Language",
         "logout": "Logout"
       }
@@ -2075,23 +2140,31 @@
       }
     },
     "financialStats": {
-      "title": "Financial Admin",
+      "title": "Financials",
       "cards": {
         "update": "Update",
-        "seeAnalytics": "See analytics",
-        "netRevenue": "Net Revenue",
-        "revenueIncrease": "Sales revenue increased {{percentage}}% in {{period}}"
+        "revenueIncrease": "Sales revenue increased {{percentage}}% in {{period}}",
+        "nextExpected": "Next Expected Revenue",
+        "weeklySales": "Weekly Sales",
+        "inNextDays": "📊 In next {{days}} days",
+        "lastWeeks": "Last {{weeks}} weeks"
       },
       "taskProgress": {
         "title": "Task Progress",
-        "filter": "30 Days"
+        "filter": "12 Months"
       },
       "revenueSources": {
         "title": "Top Revenue Sources",
-        "revenue": "Revenue"
+        "revenue": "Revenue",
+        "basic": "Basic",
+        "standard": "Standard",
+        "premium": "Premium",
+        "addOns": "Add-ons"
       },
       "paymentHistory": {
-        "title": "Payment History"
+        "title": "Payment History",
+        "noHistory": "No payment history found.",
+        "loadMore": "Load More"
       }
     },
     "rolesPermissions": {
@@ -2137,62 +2210,6 @@
       "success": "AI settings updated successfully",
       "error": "Failed to update AI settings"
     },
-    "home": {
-      "welcome": "Welcome!",
-      "adminStore": "Admin Store",
-      "overview": "Overview",
-      "activeUsers": "Active \n Users",
-      "monthlySessions": "Monthly \n Sessions",
-      "newSignups": "New \n Signups",
-      "listenerOnlineMinutes": "Support Guide \n Online Minutes",
-      "userProgress": "User Progress (Engagement Ratio)",
-      "sessionTraffic": "Session Traffic"
-    },
-    "users": {
-      "title": "Users",
-      "searchPlaceholder": "Search users...",
-      "tabs": {
-        "venters": "Venters",
-        "listeners": "Support Guides"
-      },
-      "card": {
-        "role": "Role",
-        "sessions": "Sessions",
-        "minutes": "Minutes",
-        "both": "Both"
-      }
-    },
-    "userDetail": {
-      "title": "User Detail",
-      "venterBadge": "Venter",
-      "listenerBadge": "Support Guide",
-      "gender": "Gender",
-      "ageGroup": "Age Group",
-      "listenerInfo": "Support Guide info",
-      "venterInfo": "Venter info",
-      "stats": {
-        "totalSessions": "Total Sessions",
-        "totalMinutes": "Total Minutes",
-        "totalEarnings": "Total Earnings",
-        "joined": "Joined"
-      }
-    },
-    "settings": {
-      "title": "Admin Settings",
-      "options": {
-        "account": "Account",
-        "security": "Security",
-        "financialStats": "Financial Stats",
-        "notifications": "Notifications",
-        "paymentHistory": "Payment History",
-        "crisisConfig": "Crisis config",
-        "exportsIntegrations": "Exports & Integrations",
-        "rolesPermissions": "Roles & Permissions",
-        "aiSettings": "AI Settings",
-        "language": "Language",
-        "logout": "Logout"
-      }
-    },
     "security": {
       "title": "Security",
       "enableBiometrics": "Enable Biometrics",
@@ -2215,34 +2232,6 @@
       "currentEmail": "Current Email",
       "newEmail": "New Email",
       "button": "Send Code"
-    },
-    "financialStats": {
-      "title": "Financials",
-      "cards": {
-        "update": "Update",
-        "revenueIncrease": "Sales revenue increased {{percentage}}% in {{period}}",
-        "nextExpected": "Next Expected Revenue",
-        "weeklySales": "Weekly Sales",
-        "inNextDays": "📊 In next {{days}} days",
-        "lastWeeks": "Last {{weeks}} weeks"
-      },
-      "taskProgress": {
-        "title": "Task Progress",
-        "filter": "12 Months"
-      },
-      "revenueSources": {
-        "title": "Top Revenue Sources",
-        "revenue": "Revenue",
-        "basic": "Basic",
-        "standard": "Standard",
-        "premium": "Premium",
-        "addOns": "Add-ons"
-      },
-      "paymentHistory": {
-        "title": "Payment History",
-        "noHistory": "No payment history found.",
-        "loadMore": "Load More"
-      }
     },
     "crisisManagement": {
       "title": "Crisis config",
@@ -2279,15 +2268,6 @@
       "saveChanges": "Save Changes",
       "subAdmin": "Sub Admin"
     },
-    "subAdmins": {
-      "title": "Sub-Admins",
-      "subtitle": "Manage platform administrators",
-      "add": "Add Sub-Admin",
-      "searchPlaceholder": "Search by email or ID...",
-      "noResults": "No sub-admins yet",
-      "noResultsDesc": "Add sub-admins to help manage the platform.",
-      "addFirst": "Add First Sub-Admin"
-    },
     "reports": {
       "title": "Reports",
       "noReports": "No reports found.",
@@ -2296,17 +2276,6 @@
         "pending": "Pending",
         "resolved": "Resolved"
       }
-    },
-    "addSubAdmin": {
-      "title": "Add Sub Admin",
-      "email": "Email Address",
-      "emailPlaceholder": "Enter email address",
-      "password": "Password",
-      "passwordPlaceholder": "Set password",
-      "permissions": "Permissions",
-      "create": "Create",
-      "emptyFields": "Please fill in all fields",
-      "successMsg": "Sub Admin account has been created successfully."
     }
   },
   "Listener": {
@@ -2327,19 +2296,19 @@
       "noRequestsSubtitle": "No session requests at the moment."
     },
     "wallet": {
-      "title": "Balance",
+      "title": "Wallet",
       "subtitle": "Wallet and transfers for Support Guides.",
       "availableBalance": "Available Balance",
       "pendingBalance": "Pending Balance",
-      "totalEarnings": "Account Balance",
+      "totalEarnings": "Lifetime total",
       "activityBreakdown": "Recent Activity",
       "payoutMethod": "Transfer Method",
       "addPayoutMethod": "Add Transfer Method",
       "withdraw": "Withdraw",
       "withdrawAmount": "Withdraw Amount",
       "withdrawEarnings": "Withdraw Funds",
-      "pendingEarnings": "Pending Balance",
-      "availableForPayout": "Available Balance",
+      "pendingEarnings": "Pending balance",
+      "availableForPayout": "Available for Payout",
       "noBalance": "You don't have enough balance to withdraw",
       "withdrawError": "Please enter a valid amount",
       "exceedsBalance": "Amount exceeds your available balance",
@@ -2402,80 +2371,6 @@
   },
   "Home": {
     "title": "VENTALLY"
-  },
-  "Common": {
-    "appName": "VENTALLY",
-    "search": "Search",
-    "accept": "Begin Session",
-    "cancel": "Cancel",
-    "decline": "Cancel",
-    "failed": "Failed",
-    "unknown": "Unknown",
-    "acceptAndContinue": "Continue",
-    "documentRequired": "Document Required",
-    "noData": "No data",
-    "createdAt": "Created At",
-    "okay": "Okay",
-    "skip": "Skip",
-    "submit": "Submit",
-    "getStarted": "Get Started",
-    "signatureRequired": "Signature is required",
-    "start": "Start",
-    "yes": "Yes",
-    "ok": "OK",
-    "no": "No",
-    "success": "Success",
-    "emailRequired": "Email/Phone is required",
-    "permissionsRequired": "At least 1 Permission is required",
-    "summaryRequired": "Summary is required",
-    "invalidEmail": "Please enter a valid email address",
-    "fillRequiredFields": "Please fill out all required fields",
-    "somethingWentWrong": "Something went wrong",
-    "error": "Error",
-    "passwordValidationError": "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character",
-    "confirmAction": "Confirm Action",
-    "areYouSure": "Are you sure you want to proceed?",
-    "operationSuccess": "Operation completed successfully",
-    "done": "Done",
-    "update": "Update",
-    "next": "Next",
-    "continue": "Continue",
-    "pleaseUploadDocument": "Please upload a document",
-    "pleaseCompleteAllFields": "Please complete all fields",
-    "reportConcern": "Report a Concern",
-    "errors": {
-      "fetchingData": "Error Fetching Data"
-    },
-    "time": {
-      "minutesAgo": "min ago",
-      "justNow": "just now"
-    },
-    "days": [
-      "Sun",
-      "Mon",
-      "Tue",
-      "Wed",
-      "Thu",
-      "Fri",
-      "Sat"
-    ],
-    "months": [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"
-    ],
-    "delete": "Delete",
-    "loading": "Loading...",
-    "loadMore": "Load More"
   },
   "Security": {
     "title": "Security",
@@ -2785,7 +2680,9 @@
     "logout": "Logout",
     "editProfile": "Edit Profile",
     "logoutConfirmTitle": "Logout",
-    "logoutConfirmMessage": "Are you sure you want to logout?"
+    "logoutConfirmMessage": "Are you sure you want to logout?",
+    "roleVenter": "Venter",
+    "roleListener": "Support Guide"
   },
   "SessionsHistory": {
     "title": "Session History",
@@ -2808,7 +2705,8 @@
     "optionalQuestionsSubtitle": "Used to personalize your experience",
     "optionalQuestionsBody1": "We ask a few optional questions to better understand what feels supportive to you.\n\nYour responses help guide a structured, moderated experience.\n\nYour answers help us:\n• Tailor your support experience to what feels right for you\n• Respect identity, culture, and values\n• Reduce assumptions about your support preferences\n\nYou're always in control you can skip any questions and nothing you share changes your access to Ventally.",
     "optionalQuestionsBody2": "Your information is private and never shared with other users.",
-    "optionalQuestionsFooter": "Designed for respectful, guideline based use"
+    "optionalQuestionsFooter": "Designed for respectful, guideline based use",
+    "selectedCount": "{{count}} selected"
   },
   "ListenerFeedback": {
     "title": "Session Feedback",

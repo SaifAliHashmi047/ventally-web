@@ -1,108 +1,144 @@
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../../components/ui/Button';
-import { GlassCard } from '../../components/ui/GlassCard';
 import { MainBackground } from '../../components/ui/MainBackground';
 import { AppBrandIcon } from '../../components/ui/AppBrandIcon';
-import { Sparkles, Shield, Heart, MessageCircle } from 'lucide-react';
+import { Mouse } from 'lucide-react';
+
+const InterconnectedDots = () => (
+  <div className="relative w-10 h-10 mb-6">
+    {/* Top center */}
+    <div className="absolute w-3 h-3 rounded-full bg-white/90" style={{ top: 0, left: '50%', transform: 'translateX(-50%)' }} />
+    {/* Middle left */}
+    <div className="absolute w-3 h-3 rounded-full bg-white/90" style={{ top: '50%', left: 0, transform: 'translateY(-50%)' }} />
+    {/* Middle right */}
+    <div className="absolute w-3 h-3 rounded-full bg-white/90" style={{ top: '50%', right: 0, transform: 'translateY(-50%)' }} />
+    {/* Bottom center */}
+    <div className="absolute w-3 h-3 rounded-full bg-white/90" style={{ bottom: 0, left: '50%', transform: 'translateX(-50%)' }} />
+  </div>
+);
 
 export const Onboarding = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  const features = [
+  const slides = [
     {
-      icon: Shield,
-      title: t('OnBoarding.stayAnonymous', 'Stay Anonymous'),
-      description: t('OnBoarding.anonymousDesc', 'Your identity is always protected. No names, no profiles, just support.'),
+      id: 1,
+      content: (
+        <div className="flex flex-col items-center justify-center flex-1 w-full px-5">
+          <div className="p-4 rounded-3xl bg-white/5 border border-white/20 mb-4">
+            <AppBrandIcon className="w-24 h-24 rounded-2xl shadow-2xl" />
+          </div>
+          <p className="text-4xl font-bold text-white/60 text-center tracking-tight">
+            {t('OnBoarding.appName', 'VENTALLY')}
+          </p>
+        </div>
+      ),
     },
     {
-      icon: Heart,
-      title: t('OnBoarding.voiceRules', 'Your Voice. Your Rules.'),
-      description: t('OnBoarding.voiceDesc', 'Connect on your terms. Voice or text, whenever you need it.'),
+      id: 2,
+      content: (
+        <div className="flex flex-col justify-center flex-1 w-full px-5">
+          <InterconnectedDots />
+          <p className="text-2xl font-medium text-white leading-relaxed">
+            {t('OnBoarding.quote', '"Sometimes the most honest conversations happen when no one knows your name."')}
+          </p>
+        </div>
+      ),
     },
     {
-      icon: MessageCircle,
-      title: t('OnBoarding.guidedSupport', 'Guided Support'),
-      description: t('OnBoarding.guidedDesc', 'Trained listeners ready to provide compassionate, moderated support.'),
-    },
-    {
-      icon: Sparkles,
-      title: t('OnBoarding.safeSpace', 'A Safe Space'),
-      description: t('OnBoarding.safeDesc', 'Built on privacy, respect, and community guidelines.'),
+      id: 3,
+      content: (
+        <div className="flex flex-col justify-center flex-1 w-full px-5">
+          <p className="text-2xl font-medium text-white mb-6">
+            {t('OnBoarding.fetchingData', 'Fetching Data...')}
+          </p>
+          <div className="flex items-center gap-3">
+            <Mouse size={32} className="text-white flex-shrink-0" />
+            <p className="text-sm font-medium text-white leading-relaxed">
+              {t('OnBoarding.voiceRules', 'Your voice. Your rules.')}{'\n'}
+              {t('OnBoarding.stayAnonymous', 'Stay anonymous while you get support')}
+            </p>
+          </div>
+        </div>
+      ),
     },
   ];
 
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const scrollLeft = scrollRef.current.scrollLeft;
+    const width = scrollRef.current.clientWidth;
+    const index = Math.round(scrollLeft / width);
+    setCurrentIndex(index);
+  };
+
+  const handleGetStarted = () => {
+    navigate('/signup');
+  };
+
   return (
-    <div className="relative min-h-[100dvh] flex flex-col w-full overflow-x-hidden">
+    <div className="relative min-h-[100dvh] flex flex-col w-full overflow-hidden">
       <MainBackground />
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-10 py-12 sm:py-16">
-        {/* Logo */}
-        <div className="mb-8">
-          <AppBrandIcon className="w-20 h-20 rounded-[1.4rem] mx-auto shadow-2xl ring-white/15" />
-        </div>
-
-        {/* App Name */}
-        <h1 className="text-4xl font-bold text-white tracking-tight mb-2">
-          {t('OnBoarding.appName', 'VENTALLY')}
-        </h1>
-
-        {/* Quote */}
-        <p className="text-center text-gray-400 text-lg mb-12 max-w-md leading-relaxed">
-          {t('OnBoarding.quote', 'Sometimes the most honest conversations happen when no one knows your name.')}
-        </p>
-
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl mb-12">
-          {features.map((feature, index) => (
-            <GlassCard
-              key={index}
-              padding="lg"
-              rounded="2xl"
-              className="flex items-start gap-4"
+      <div className="relative z-10 flex-1 flex flex-col w-full">
+        {/* Slides */}
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex-1 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+          style={{ scrollSnapType: 'x mandatory' }}
+        >
+          {slides.map((slide) => (
+            <div
+              key={slide.id}
+              className="flex-shrink-0 w-full snap-center flex flex-col"
+              style={{ scrollSnapAlign: 'center' }}
             >
-              <div className="w-10 h-10 rounded-2xl glass-accent flex items-center justify-center flex-shrink-0">
-                <feature.icon size={20} className="text-accent" />
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-white mb-1">{feature.title}</h3>
-                <p className="text-xs text-gray-500 leading-relaxed">{feature.description}</p>
-              </div>
-            </GlassCard>
+              {slide.content}
+            </div>
           ))}
         </div>
 
-        {/* CTA Buttons */}
-        <div className="w-full max-w-md space-y-3">
+        {/* Bottom: button + pagination */}
+        <div className="px-5 pb-10 pt-4 flex flex-col items-center gap-4">
           <Button
             variant="primary"
             size="lg"
             fullWidth
-            onClick={() => navigate('/signup')}
+            onClick={handleGetStarted}
           >
-            {t('OnBoarding.getStarted', 'Get Started')}
+            {currentIndex === slides.length - 1
+              ? t('OnBoarding.enterSafeSpace', 'Enter Safe Space')
+              : t('OnBoarding.getStarted', 'Get Started')}
           </Button>
 
-          <Button
-            variant="glass"
-            size="lg"
-            fullWidth
+          {/* Pagination dots */}
+          <div className="flex items-center gap-2">
+            {slides.map((_, i) => (
+              <div
+                key={i}
+                className="rounded-full transition-all duration-200"
+                style={{
+                  width: i === currentIndex ? 10 : 8,
+                  height: i === currentIndex ? 10 : 8,
+                  backgroundColor: i === currentIndex ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Log In link */}
+          <button
             onClick={() => navigate('/login')}
+            className="text-sm text-gray-400 hover:text-white transition-colors"
           >
             {t('LogIn.logIn', 'Log In')}
-          </Button>
-        </div>
-
-        {/* Footer */}
-        <p className="text-xs text-gray-600 mt-8 text-center">
-          {t('OnBoarding.byContinuing', 'By continuing, you agree to our')}{' '}
-          <button
-            onClick={() => navigate('/terms')}
-            className="text-accent hover:underline"
-          >
-            {t('TermsAndConditions.title', 'Terms & Conditions')}
           </button>
-        </p>
+        </div>
       </div>
     </div>
   );

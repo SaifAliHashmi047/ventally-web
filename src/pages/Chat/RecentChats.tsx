@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import i18n from '../../locales/i18n';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { EmptyState } from '../../components/ui/EmptyState';
@@ -101,7 +102,7 @@ export const RecentChats = () => {
                       </p>
                       <p className="text-xs text-gray-500 flex-shrink-0 tabular-nums">
                         {chat.lastMessage?.createdAt
-                          ? new Date(chat.lastMessage.createdAt).toLocaleTimeString('en-US', {
+                          ? new Date(chat.lastMessage.createdAt).toLocaleTimeString(i18n.language, {
                               hour: 'numeric',
                               minute: '2-digit',
                             })

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import i18n from '../../locales/i18n';
 import type { RootState, AppDispatch } from '../../store/store';
 import apiInstance from '../../api/apiInstance';
 import socketService from '../../api/socketService';
@@ -15,7 +16,7 @@ import { endChatSession } from '../../store/slices/callSlice';
 // Format date like mobile app
 const formatDateDayTime = (dateStr: string): string => {
   const date = new Date(dateStr);
-  return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  return date.toLocaleTimeString(i18n.language, { hour: 'numeric', minute: '2-digit' });
 };
 
 export const ChatScreen = () => {

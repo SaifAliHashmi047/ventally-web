@@ -40,7 +40,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         <div className="absolute left-4 top-1/2 -translate-y-1/2">
           <button
             onClick={handleBack}
-            className="w-10 h-10 glass rounded-2xl flex items-center justify-center text-white/60 hover:text-white hover:bg-white/8 transition-all"
+            className="w-10 h-10 rounded-full flex items-center justify-center bg-white/[0.03] hover:bg-white/[0.08] text-white transition-all"
           >
             <ArrowLeft size={18} />
           </button>
@@ -48,9 +48,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
       )}
       
       <div className={cn('flex flex-col items-center text-center px-14 w-full', centered ? 'mx-auto' : 'mr-auto')}>
-        <h1 className="text-lg font-bold text-white tracking-tight uppercase">{title}</h1>
+        <h1 className="text-xl font-semibold text-white text-center">{title}</h1>
         {subtitle && (
-          <p className="text-sm text-white/60 mt-0.5">{subtitle}</p>
+          <p className="text-sm text-white/80 mt-0.5 text-center">{subtitle}</p>
         )}
       </div>
 

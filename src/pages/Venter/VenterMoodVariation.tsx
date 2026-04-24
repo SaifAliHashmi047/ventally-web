@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import i18n from '../../locales/i18n';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { MoodBarChart } from '../../components/charts/MoodBarChart';
@@ -119,7 +120,7 @@ export const VenterMoodVariation = () => {
     return cells;
   }, [currentYear, currentMonth]);
 
-  const monthLabel = new Date(currentYear, currentMonth, 1).toLocaleString('en-US', {
+  const monthLabel = new Date(currentYear, currentMonth, 1).toLocaleString(i18n.language, {
     month: 'long', year: 'numeric',
   });
 

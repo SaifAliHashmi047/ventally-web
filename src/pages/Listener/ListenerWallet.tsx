@@ -2,21 +2,18 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { GlassCard } from '../../components/ui/GlassCard';
-import { StatCard } from '../../components/ui/StatCard';
 import { Button } from '../../components/ui/Button';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { useEarnings } from '../../api/hooks/useEarnings';
-import { DollarSign, ArrowUpRight, TrendingUp, CreditCard, ChevronRight, Building } from 'lucide-react';
-import { toastError } from '../../utils/toast';
+import { DollarSign, ArrowUpRight, ChevronRight } from 'lucide-react';
 
 export const ListenerWallet = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { getEarningsSummary, getEarningsHistory, requestPayout } = useEarnings();
+  const { getEarningsSummary, getEarningsHistory } = useEarnings();
   const [summary, setSummary] = useState<any>(null);
   const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [payoutLoading, setPayoutLoading] = useState(false);
 
   useEffect(() => {
     const fetch = async () => {
@@ -36,85 +33,58 @@ export const ListenerWallet = () => {
     void fetch();
   }, [getEarningsHistory, getEarningsSummary]);
 
-  const handlePayout = async () => {
-    if (!summary?.availableBalance || summary.availableBalance < 1) return;
-    setPayoutLoading(true);
-    try {
-      await requestPayout(summary.availableBalance);
-      setSummary((prev: any) => ({ ...prev, availableBalance: 0 }));
-    } catch (e: any) {
-      toastError(e?.message || t('Common.somethingWentWrong'));
-    } finally {
-      setPayoutLoading(false);
-    }
+  const handleWithdraw = () => {
+    navigate('/listener/payout-method');
   };
 
-  const available = loading ? null : (summary?.availableBalance ?? 0);
   const formatMoney = (n: number | null | undefined) =>
     n != null && !Number.isNaN(Number(n)) ? Number(n).toFixed(2) : '0.00';
 
   return (
     <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <div className="w-full lg:max-w-3xl xl:max-w-4xl lg:mx-auto">
-        <header className="mb-6 text-center lg:text-left lg:mb-8">
+        <header className="mb-6 text-center lg:mb-8">
           <h1 className="text-lg font-semibold text-white tracking-tight lg:text-2xl lg:font-bold">
-            {t('Navigation.tabs.wallet', 'Balance')}
+            {t('Listener.wallet.title', 'Wallet')}
           </h1>
-          <p className="mt-1.5 text-sm text-gray-500 max-w-md mx-auto lg:mx-0">
-            {t('ListenerWallet.subtitle', 'Payouts and session earnings')}
-          </p>
         </header>
 
-        {/* Available balance + actions */}
+        {/* Lifetime earnings hero — matches native mainCard */}
         <GlassCard
           bordered
           padding="lg"
-          className="mb-6 text-center shadow-2xl shadow-black/20 lg:mb-8"
+          className="mb-4 text-center shadow-2xl shadow-black/20"
         >
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-500 mb-2 lg:mb-3">
-            {t('ListenerWallet.availableBalance', 'Available Balance')}
+          <p className="text-4xl sm:text-5xl font-bold text-white tabular-nums tracking-tight mb-1">
+            {loading ? '—' : formatMoney(summary?.lifetimeEarnings)}
           </p>
-          <p className="text-4xl sm:text-5xl font-bold text-white tabular-nums tracking-tight mb-6 lg:mb-8">
-            {loading ? '—' : formatMoney(available)}
+          <p className="text-sm text-white/60 mb-6">
+            {t('Listener.wallet.totalEarnings', 'Lifetime total')}
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto">
-            <Button
-              variant="accent"
-              size="md"
-              fullWidth
-              leftIcon={<CreditCard size={16} />}
-              loading={payoutLoading}
-              disabled={!summary?.availableBalance || summary.availableBalance < 1}
-              onClick={handlePayout}
-            >
-              {t('ListenerWallet.requestPayout', 'Request Payout')}
-            </Button>
-            <Button
-              variant="glass"
-              size="md"
-              fullWidth
-              leftIcon={<Building size={16} />}
-              onClick={() => navigate('/listener/payout-method')}
-            >
-              {t('ListenerWallet.managePayout', 'Payout Methods')}
-            </Button>
-          </div>
+          <Button
+            variant="primary"
+            size="md"
+            fullWidth
+            onClick={handleWithdraw}
+          >
+            {t('Listener.wallet.withdraw', 'Withdraw')}
+          </Button>
         </GlassCard>
 
-        {/* Summary stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4 mb-6 lg:mb-8">
-          <StatCard
-            label={t('ListenerWallet.lifetimeEarnings', 'Lifetime Earnings')}
-            value={loading ? '—' : formatMoney(summary?.lifetimeEarnings)}
-            icon={<DollarSign size={18} />}
-            iconColor="#32D74B"
-          />
-          <StatCard
-            label={t('ListenerWallet.totalPaid', 'Total Paid Out')}
-            value={loading ? '—' : formatMoney(summary?.totalPaid)}
-            icon={<TrendingUp size={18} />}
-            iconColor="#C2AEBF"
-          />
+        {/* Stats row — Available for Payout + Pending balance */}
+        <div className="grid grid-cols-2 gap-3 mb-6 lg:mb-8">
+          <GlassCard bordered padding="md" className="text-center">
+            <p className="text-xl font-bold text-white tabular-nums mb-1">
+              {loading ? '—' : formatMoney(summary?.availableBalance)}
+            </p>
+            <p className="text-xs text-white/70">{t('Listener.wallet.availableForPayout', 'Available for Payout')}</p>
+          </GlassCard>
+          <GlassCard bordered padding="md" className="text-center">
+            <p className="text-xl font-bold text-white tabular-nums mb-1">
+              {loading ? '—' : formatMoney(summary?.pendingBalance)}
+            </p>
+            <p className="text-xs text-white/70">{t('Listener.wallet.pendingEarnings', 'Pending balance')}</p>
+          </GlassCard>
         </div>
 
         {/* Earning history */}

@@ -27,7 +27,6 @@ export const VenterNoCreditScreen = () => {
             <Button 
                 variant="primary" 
                 fullWidth 
-                leftIcon={<Wallet size={18} />}
                 onClick={() => navigate('/venter/subscription')}
             >
                 {t('VenterSubscription.title', 'My Subscription')}
@@ -35,7 +34,6 @@ export const VenterNoCreditScreen = () => {
             <Button 
                 variant="glass" 
                 fullWidth 
-                leftIcon={<span className="text-lg font-bold mr-1">$</span>}
                 onClick={() => navigate('/venter/wallet/add-funds')}
             >
                 {t('VenterWallet.addFunds', 'Add Funds')}

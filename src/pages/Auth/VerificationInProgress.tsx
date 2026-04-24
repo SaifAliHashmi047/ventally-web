@@ -21,9 +21,11 @@ export const VerificationInProgress = () => {
         const response = await apiInstance.get('auth/profile');
         const user = response.data?.user || response.data?.data?.user;
         
-        if (user?.verificationDocumentStatus === 'verified' || user?.isVerified === true) {
+        if (user) {
           dispatch(updateUser(user));
-          navigate('/signup/verification-verified', { replace: true });
+          if (user.verificationDocumentStatus === 'verified' || user.isVerified === true) {
+            navigate('/signup/verification-verified', { replace: true });
+          }
         }
       } catch (error) {
         console.error('Error checking verification status:', error);
