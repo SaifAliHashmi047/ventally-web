@@ -81,12 +81,24 @@
   },
   "OnBoarding": {
     "appName": "VENTALLY",
-    "quote": "\"Sometimes the most honest conversations\nhappen when no one\nknows your name.\"",
+    "quote": "Sometimes the most honest conversations happen when no one knows your name.",
     "fetchingData": "Fetching Data...",
     "voiceRules": "Your voice. Your rules.",
-    "stayAnonymous": "Stay anonymous while you get support",
+    "voiceTitle": "Your Voice. Your Rules.",
+    "voiceDesc": "Connect on your terms. Voice or text, whenever you need it.",
+    "stayAnonymous": "Stay Anonymous",
+    "anonymousDesc": "Your identity is always protected. No names, no profiles, just support.",
+    "guidedSupport": "Guided Support",
+    "guidedDesc": "Trained listeners ready to provide compassionate, moderated support.",
+    "safeSpace": "A Safe Space",
+    "safeDesc": "Built on privacy, respect, and community guidelines.",
     "getStarted": "Get Started",
-    "enterSafeSpace": "Enter Safe Space"
+    "enterSafeSpace": "Enter Safe Space",
+    "byContinuing": "By continuing, you agree to our",
+    "getItOn": "GET IT ON",
+    "googlePlayBrand": "Google Play",
+    "playStoreCta": "Get it on Google Play",
+    "playStoreAria": "Open Ventally on Google Play in a new tab"
   },
   "SignUp": {
     "title": "Sign Up",
