@@ -98,36 +98,38 @@ export const ProfileScreen = () => {
     <div className="page-wrapper animate-fade-in">
       <PageHeader title={t('Profile.title', 'Profile')} onBack={() => navigate(-1)} />
 
-      {/* Avatar + Name */}
-      <div className="flex flex-col items-center text-center py-5">
-        {loading ? (
-          <>
-            <div className="w-24 h-24 rounded-full skeleton mb-4" />
-            <div className="w-36 h-6 skeleton rounded mb-2" />
-            <div className="w-20 h-4 skeleton rounded" />
-          </>
-        ) : (
-          <>
-            <div
-              className="w-24 h-24 rounded-full glass flex items-center justify-center text-3xl font-bold text-white mb-3 border-2 border-white/20 cursor-pointer hover:border-accent/50 transition-colors relative overflow-hidden"
-              onClick={() => navigate(`${basePath}/profile/edit`)}
-            >
-              {user?.avatar ? (
-                <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
-              ) : (
-                <span>{initials}</span>
+      {/* Avatar + Name — hidden for listeners */}
+      {isVenter && (
+        <div className="flex flex-col items-center text-center py-5">
+          {loading ? (
+            <>
+              <div className="w-24 h-24 rounded-full skeleton mb-4" />
+              <div className="w-36 h-6 skeleton rounded mb-2" />
+              <div className="w-20 h-4 skeleton rounded" />
+            </>
+          ) : (
+            <>
+              <div
+                className="w-24 h-24 rounded-full glass flex items-center justify-center text-3xl font-bold text-white mb-3 border-2 border-white/20 cursor-pointer hover:border-accent/50 transition-colors relative overflow-hidden"
+                onClick={() => navigate(`${basePath}/profile/edit`)}
+              >
+                {user?.avatar ? (
+                  <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <span>{initials}</span>
+                )}
+              </div>
+              <h2 className="text-xl font-bold text-white">{displayName}</h2>
+              {user?.nickname && (
+                <p className="text-sm text-accent mt-0.5">@{user.nickname}</p>
               )}
-            </div>
-            <h2 className="text-xl font-bold text-white">{displayName}</h2>
-            {user?.nickname && (
-              <p className="text-sm text-accent mt-0.5">@{user.nickname}</p>
-            )}
-            <p className="text-xs text-gray-500 mt-1 capitalize px-3 py-1 glass rounded-full">
-              {isVenter ? t('Profile.roleVenter') : t('Profile.roleListener')}
-            </p>
-          </>
-        )}
-      </div>
+              <p className="text-xs text-gray-500 mt-1 capitalize px-3 py-1 glass rounded-full">
+                {t('Profile.roleVenter')}
+              </p>
+            </>
+          )}
+        </div>
+      )}
 
       {/* Menu Items */}
       <GlassCard padding="none" rounded="2xl" className="mb-4">

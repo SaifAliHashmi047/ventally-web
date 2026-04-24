@@ -14,7 +14,6 @@ export const ListenerSettings = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.user.user as any);
   const isDark = useSelector((state: RootState) => (state.app as any)?.isDarkMode ?? true);
 
   const handleLogout = () => {
@@ -26,24 +25,8 @@ export const ListenerSettings = () => {
     <div className="page-wrapper animate-fade-in">
       <PageHeader title={t('Listener.settings.title', 'Settings')} />
 
-      {/* Profile Card */}
-      <GlassCard bordered hover onClick={() => navigate('/listener/profile')} className="cursor-pointer">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-full glass flex items-center justify-center text-xl font-bold text-white">
-            {(user?.firstName?.[0] || user?.displayName?.[0] || 'L').toUpperCase()}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-base font-bold text-white truncate">
-              {user?.displayName || user?.firstName || t('ListenerHome.listener', 'Listener')}
-            </p>
-            <p className="text-sm text-gray-500 truncate">{user?.email}</p>
-          </div>
-          <ChevronRight size={16} className="text-gray-500 flex-shrink-0" />
-        </div>
-      </GlassCard>
-
       {/* Settings List */}
-      <div className="mt-6">
+      <div>
         <GlassCard padding="none" rounded="2xl">
           {/* Notifications */}
           <div

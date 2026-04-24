@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
+import { PageHeader } from '../../components/ui/PageHeader';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPreferredLanguage, type PreferredLanguage } from '../../store/slices/appSlice';
 import { updateUser } from '../../store/slices/userSlice';
@@ -57,37 +58,63 @@ export const LanguageSelection = () => {
     }
   };
 
-  return (
-    <AuthLayout>
-      <button
-        onClick={() => navigate(-1)}
-        style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}
-      >
-        <ArrowLeft size={20} /> Back
-      </button>
+  const content = (
+    <div className="w-full max-w-md mx-auto flex flex-col items-center justify-center flex-1 py-4">
+      {isSignupFlow ? (
+        <button
+          onClick={() => navigate(-1)}
+          className="self-start flex items-center gap-2 text-white/60 hover:text-white transition-colors mb-6"
+        >
+          <ArrowLeft size={20} /> {t('Common.back', 'Back')}
+        </button>
+      ) : null}
 
-      <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text-pure)', marginBottom: '8px' }}>
+      <div className="w-full mb-8">
+        <h1 className="text-2xl font-bold text-white mb-1">
           {t('LanguageSelection.greeting')} {name}
         </h1>
-        <p style={{ color: 'var(--text-dim)', fontSize: '15px' }}>{t('LanguageSelection.subtitle')}</p>
+        <p className="text-white/80 text-[15px]">{t('LanguageSelection.subtitle')}</p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+      <div className="w-full grid grid-cols-2 gap-4 justify-items-center">
         {languages.map((lang) => (
-          <div key={lang.id} className="glass card-hover" style={{ borderRadius: '20px', padding: '24px 16px', textAlign: 'center', cursor: 'pointer' }} onClick={() => handleSelect(lang.id)}>
-            <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>{lang.name}</h3>
-            <div className="flex-center flex justify-center " style={{ gap: '8px', marginBottom: '20px' }}>
+          <div
+            key={lang.id}
+            className="glass card-hover w-full flex flex-col items-center justify-center text-center cursor-pointer"
+            style={{ borderRadius: '20px', padding: '24px 16px' }}
+            onClick={() => handleSelect(lang.id)}
+          >
+            <h3 className="text-base font-semibold text-white mb-4">{lang.name}</h3>
+            <div className="flex justify-center items-center gap-2 mb-5">
               {lang.flags.map((flag, idx) => (
-                <img key={idx} src={flag} alt="flag" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
+                <img
+                  key={idx}
+                  src={flag}
+                  alt="flag"
+                  className="w-8 h-8 rounded-full object-cover"
+                />
               ))}
             </div>
-            <button className="btn-primary" style={{ width: '100%', height: '36px', padding: '0', justifyContent: 'center', fontSize: '13px' }}>
+            <button
+              className="btn-primary w-full flex items-center justify-center"
+              style={{ height: '36px', padding: '0', fontSize: '13px' }}
+            >
               {t('Common.start')}
             </button>
           </div>
         ))}
       </div>
-    </AuthLayout>
+    </div>
+  );
+
+  if (isSignupFlow) {
+    return <AuthLayout hideGlass>{content}</AuthLayout>;
+  }
+
+  return (
+    <div className="page-wrapper page-wrapper--wide animate-fade-in">
+      <PageHeader title={t('LanguageSelection.title', 'Language')} onBack={() => navigate(-1)} />
+      {content}
+    </div>
   );
 };

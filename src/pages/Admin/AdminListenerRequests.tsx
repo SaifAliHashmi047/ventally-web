@@ -91,12 +91,31 @@ export const AdminListenerRequests = () => {
                     </div>
                     
                     <div className="flex-1 min-w-0">
+                      {/* listener_email is the correct field from the API */}
                       <h3 className="text-sm font-bold text-white truncate mb-1">
-                        {req.email || req.user?.email || 'Unknown User'}
+                        {req.listener_email || req.email || req.user?.email || t('Common.unknown')}
                       </h3>
-                      <div className="flex items-center gap-3">
-                        <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold">
-                          {req.user?.gender || 'N/A'} • {req.user?.ageGroup || 'N/A'}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {/* Status badge */}
+                        <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${
+                          req.status === 'pending'  ? 'bg-warning/15 text-[--color-primary]' :
+                          req.status === 'verified' ? 'bg-success/15 text-success' :
+                          req.status === 'rejected' ? 'bg-error/15 text-error'     :
+                          'bg-white/10 text-white/40'
+                        }`}>
+                          {req.status || t('Admin.status.pending')}
+                        </span>
+                        {/* File name */}
+                        {req.original_file_name && (
+                          <p className="text-[10px] text-white/40 truncate max-w-[160px]">
+                            {req.original_file_name}
+                          </p>
+                        )}
+                        {/* Date */}
+                        <p className="text-[10px] text-white/30 ml-auto flex-shrink-0">
+                          {req.created_at
+                            ? new Date(req.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+                            : ''}
                         </p>
                       </div>
                     </div>

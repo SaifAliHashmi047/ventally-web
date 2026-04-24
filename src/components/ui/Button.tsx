@@ -3,17 +3,11 @@ import { cn } from '../../utils/cn';
 import { Loader2 } from 'lucide-react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  /**
-   * glass        — native GlassWrapper (gradient side borders, backdrop blur, ~transparent)
-   * glass-bordered — native borderedGlassButton (solid border, backdrop blur, ~transparent)
-   * primary      — filled blue
-   * accent       — accent color fill
-   * danger       — red tint
-   * ghost        — no background
-   */
   variant?: 'primary' | 'glass' | 'glass-bordered' | 'secondary' | 'accent' | 'danger' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
+  /** When true, stays w-full at all breakpoints (use inside cards/containers) */
+  contained?: boolean;
   loading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
@@ -24,6 +18,7 @@ export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',
   fullWidth = false,
+  contained = false,
   loading = false,
   leftIcon,
   rightIcon,
@@ -54,7 +49,14 @@ export const Button: React.FC<ButtonProps> = ({
         'btn',
         variantMap[variant],
         sizeMap[size],
-        fullWidth && 'w-full',
+        // Width logic:
+        // - contained=true  → always w-full (inside a card/container)
+        // - fullWidth=true  → responsive: 100% → 70% → 50%
+        fullWidth && contained
+          ? 'w-full'
+          : fullWidth
+          ? 'w-full md:w-[70%] lg:w-1/2 mx-auto'
+          : '',
         (disabled || loading) && 'opacity-50 cursor-not-allowed pointer-events-none',
         className
       )}

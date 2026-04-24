@@ -149,7 +149,7 @@ export const LoginWeb = () => {
 
           <Button
             variant="primary"
-            size="lg"
+           className='!w-full'
             fullWidth
             loading={loading}
             onClick={handleLogin}

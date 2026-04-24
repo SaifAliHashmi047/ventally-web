@@ -2,6 +2,7 @@
   "Common": {
     "appName": "VENTALLY",
     "search": "Search",
+    "SupportGuide":"Support Guide",
     "accept": "Begin Session",
     "cancel": "Cancel",
     "decline": "Cancel",

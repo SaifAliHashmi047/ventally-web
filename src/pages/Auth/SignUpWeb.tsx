@@ -102,23 +102,28 @@ export const SignUpWeb = () => {
         <h2 className="text-xl font-bold text-white mb-1">{t('SignUp.title')}</h2>
         <p className="text-sm text-gray-500 mb-6">{t('SignUp.subtitle', 'Start your wellness journey today')}</p>
 
-        {/* ── Role Selector — matches native Dropdown (wantToListen / wantToVent) ── */}
-        <p className="text-sm font-medium text-white mb-2">{t('SignUp.howWillYouUse', 'How will you use the app?')}</p>
+        {/* ── Role Selector ── */}
+        <p className="text-sm font-medium text-white mb-2">{t('SignUp.howWillYouUse')}</p>
         <div className="flex gap-3 mb-2">
           {([
-            { value: 'venter' as const, label: `🎙️ ${t('SignUp.usageOptions.venter', 'I want to Vent')}` },
-            { value: 'listener' as const, label: `🎧 ${t('SignUp.usageOptions.listener', 'I want to Listen')}` },
-          ] as const).map(role => (
-            <button
-              key={role.value}
-              onClick={() => update('userType', role.value)}
-              className={`btn flex-1 py-3 text-sm font-semibold transition-all ${
-                form.userType === role.value ? 'btn-glass-bordered' : 'btn-glass'
-              }`}
-            >
-              {role.label}
-            </button>
-          ))}
+            { value: 'venter'   as const, label: `🎙️ ${t('SignUp.usageOptions.wantToVent')}` },
+            { value: 'listener' as const, label: `🎧 ${t('SignUp.usageOptions.wantToListen')}` },
+          ] as const).map(role => {
+            const isSelected = form.userType === role.value;
+            return (
+              <button
+                key={role.value}
+                onClick={() => update('userType', role.value)}
+                className={`flex-1 py-3 px-4 rounded-2xl text-sm font-semibold transition-all duration-200 border ${
+                  isSelected
+                    ? 'bg-primary/20 border-primary text-white shadow-[0_0_0_1px_var(--primary)] scale-[1.02]'
+                    : 'bg-white/4 border-white/12 text-white/55 hover:bg-white/8 hover:border-white/20'
+                }`}
+              >
+                {role.label}
+              </button>
+            );
+          })}
         </div>
         {errors.userType && (
           <p className="text-xs text-error mb-4 ml-1">{errors.userType}</p>
@@ -155,7 +160,10 @@ export const SignUpWeb = () => {
             <p className="text-sm text-error bg-error/8 border border-error/20 rounded-xl px-3 py-2">{errors.general}</p>
           )}
 
-          <Button variant="primary" size="lg" fullWidth loading={loading} onClick={handleSignUp} id="signup-submit-btn">
+          <Button variant="primary" 
+           className='!w-full'
+
+            fullWidth loading={loading} onClick={handleSignUp} id="signup-submit-btn">
             {t('SignUp.createAccount')}
           </Button>
         </div>
