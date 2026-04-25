@@ -94,14 +94,10 @@ export const VenterChangeAccountType = () => {
     if (isOwned) {
       handleSwitchRole();
     } else {
-      // Not owned → onboarding
-      // RN Venter screen: listener → listenerTraining, venter → choosePlan
-      if (selectedRole.toLowerCase() === 'listener') {
-        navigate('/signup/listener-training', { state: { accountTypeChanging: true } });
-      } else {
-        // Venter onboarding starts at Choose Plan (matches RN routes.choosePlan)
-        navigate('/signup/choose-plan', { state: { accountTypeChanging: true } });
-      }
+      // Not owned → onboarding inside home layout (no AuthLayout double-wrap)
+      // Venter → Listener: start at listener-training under /venter/change-account/*
+      // Venter → Venter path not needed; venter already is venter
+      navigate('/venter/change-account/listener-training');
     }
   };
 

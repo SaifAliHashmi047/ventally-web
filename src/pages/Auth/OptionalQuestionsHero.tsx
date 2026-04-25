@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
+import { Button } from '../../components/ui/Button';
 import { useSelector } from 'react-redux';
 import { ArrowLeft, Check } from 'lucide-react';
 
@@ -58,29 +59,23 @@ export const OptionalQuestionsHero = () => {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <button 
+        <Button
+        className='!w-full'
+          variant="primary"
+ 
+          fullWidth
           onClick={() => navigate('/signup/questions/gender')}
-          className="btn-primary" 
-          style={{ height: '56px', justifyContent: 'center', fontSize: '17px', borderRadius: '16px', width: '100%' }}
         >
           {t('OptionalQuestions.continue')}
-        </button>
-        <button 
+        </Button>
+        <Button
+        className='!w-full'
+ 
+          fullWidth
           onClick={handleSkipAll}
-          style={{ 
-            height: '56px', 
-            justifyContent: 'center', 
-            fontSize: '17px', 
-            borderRadius: '16px', 
-            width: '100%',
-            background: 'transparent',
-            border: '1px solid rgba(255,255,255,0.2)',
-            color: 'white',
-            cursor: 'pointer'
-          }}
         >
           {t('OptionalQuestions.skipAll')}
-        </button>
+        </Button>
       </div>
     </AuthLayout>
   );

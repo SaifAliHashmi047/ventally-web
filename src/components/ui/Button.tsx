@@ -16,7 +16,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
-  size = 'md',
+  // size = 'md',
   fullWidth = false,
   contained = false,
   loading = false,
@@ -27,6 +27,7 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
+  const  size = 'md'
   const variantMap: Record<string, string> = {
     primary:          'btn-primary',
     glass:            'btn-glass',

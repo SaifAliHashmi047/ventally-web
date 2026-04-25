@@ -46,6 +46,14 @@ import { FaithOrBeliefSelect } from '../pages/Common/FaithOrBeliefSelect';
 import { SpecialTopicsSelect } from '../pages/Common/SpecialTopicsSelect';
 import { LanguageSelection } from '../pages/Auth/LanguageSelection';
 
+// Change-account flow screens (listener → venter)
+import { NicknameScreen } from '../pages/Auth/NicknameScreen';
+import { ChoosePlan } from '../pages/Auth/ChoosePlan';
+import { PaymentMethodsScreen } from '../pages/Auth/PaymentMethodsScreen';
+import { AddPaymentMethodScreen } from '../pages/Auth/AddPaymentMethodScreen';
+import { PaymentMethodSavedScreen } from '../pages/Auth/PaymentMethodSavedScreen';
+import { SubscriptionSuccessScreen } from '../pages/Auth/SubscriptionSuccessScreen';
+
 export const ListenerRouter = () => {
   return (
     <ListenerLayout>
@@ -91,6 +99,15 @@ export const ListenerRouter = () => {
         <Route path="bank-account" element={<LinkBankAccountScreen />} />
         <Route path="crisis-escalation" element={<ListenerCrisisEscalation />} />
         <Route path="change-account-type" element={<ListenerChangeAccountType />} />
+
+        {/* Listener → Venter account-change flow (stays inside home layout) */}
+        <Route path="change-account/nickname"       element={<NicknameScreen />} />
+        <Route path="change-account/choose-plan"    element={<ChoosePlan />} />
+        <Route path="change-account/payment"        element={<PaymentMethodsScreen />} />
+        <Route path="change-account/payment/add"    element={<AddPaymentMethodScreen />} />
+        <Route path="change-account/payment/saved"  element={<PaymentMethodSavedScreen />} />
+        <Route path="change-account/success"        element={<SubscriptionSuccessScreen />} />
+
         <Route path="*" element={<Navigate to="home" replace />} />
       </Routes>
     </ListenerLayout>

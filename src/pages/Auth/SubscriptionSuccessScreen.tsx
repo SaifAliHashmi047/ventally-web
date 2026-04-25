@@ -8,8 +8,9 @@ import { GlassCard } from '../../components/ui/GlassCard';
 import apiInstance, { setTokens } from '../../api/apiInstance';
 import { useRoles } from '../../api/hooks/useRoles';
 import { setUser, setIsVenter } from '../../store/slices/userSlice';
-import { toastError, toastSuccess } from '../../utils/toast';
+import { toastError } from '../../utils/toast';
 import { Check, RotateCcw } from 'lucide-react';
+import { useAccountChangeFlow } from '../../hooks/useAccountChangeFlow';
 
 export const SubscriptionSuccessScreen = () => {
   const { t } = useTranslation();
@@ -17,6 +18,7 @@ export const SubscriptionSuccessScreen = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { updateAvailableRoles, switchRole } = useRoles();
+  const { isAccountChanging } = useAccountChangeFlow();
 
   const [loading, setLoading] = useState(true);
   const [cancelling, setCancelling] = useState(false);
@@ -66,9 +68,10 @@ export const SubscriptionSuccessScreen = () => {
 
   const handleLetsStart = async () => {
     const searchParams = new URLSearchParams(location.search);
-    const accountTypeChanging = searchParams.get('accountTypeChanging') === 'true';
+    const legacyAccountTypeChanging = searchParams.get('accountTypeChanging') === 'true';
+    const effectiveChanging = isAccountChanging || legacyAccountTypeChanging;
 
-    if (accountTypeChanging) {
+    if (effectiveChanging) {
       setLoading(true); // Re-use the spinner
       try {
         const response = await updateAvailableRoles({ rolesToAdd: ['venter'], rolesToRemove: [] });

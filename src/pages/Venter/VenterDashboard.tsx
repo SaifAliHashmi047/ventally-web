@@ -155,21 +155,21 @@ export const VenterDashboard = () => {
               <div className="grid grid-cols-2 gap-3 lg:gap-4">
                 <Button
                   variant="glass"
-                  size="lg"
+                
                   fullWidth
                   leftIcon={<Phone size={18} />}
                   onClick={handleCall}
-                  className="justify-center"
+                               className="justify-center !w-full"
+
                 >
                   {t('VenterHome.call')}
                 </Button>
                 <Button
                   variant="glass"
-                  size="lg"
                   fullWidth
                   leftIcon={<MessageSquare size={18} />}
                   onClick={handleChat}
-                  className="justify-center"
+                  className="justify-center !w-full"
                 >
                   {t('VenterHome.chat')}
                 </Button>

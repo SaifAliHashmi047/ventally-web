@@ -66,6 +66,11 @@ import { FaithOrBeliefSelect } from '../pages/Common/FaithOrBeliefSelect';
 import { SpecialTopicsSelect } from '../pages/Common/SpecialTopicsSelect';
 import { LanguageSelection } from '../pages/Auth/LanguageSelection';
 
+// Change-account flow screens (venter → listener)
+import { ListenerTraining } from '../pages/Auth/ListenerTraining';
+import { ListenerLegalFlow } from '../pages/Auth/ListenerLegalFlow';
+import { ListenerVerification } from '../pages/Auth/ListenerVerification';
+
 // Chat Pages
 import { VenterMessages } from '../pages/Venter/VenterMessages';
 import { VenterCall } from '../pages/Venter/VenterCall';
@@ -125,6 +130,11 @@ export const VenterRouter = () => {
         <Route path="notifications-settings" element={<VenterNotificationsSettings />} />
         <Route path="notifications/quiet-hours" element={<VenterQuietHours />} />
         <Route path="change-account-type" element={<VenterChangeAccountType />} />
+
+        {/* Venter → Listener account-change flow (stays inside home layout) */}
+        <Route path="change-account/listener-training" element={<ListenerTraining />} />
+        <Route path="change-account/listener-legal"    element={<ListenerLegalFlow />} />
+        <Route path="change-account/verification"      element={<ListenerVerification />} />
         {/* Common */}
         <Route path="profile" element={<ProfileScreen />} />
         <Route path="profile/edit" element={<EditProfile />} />

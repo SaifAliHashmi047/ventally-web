@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
@@ -11,24 +11,23 @@ import { useAuth } from '../../api/hooks/useAuth';
 import { toastSuccess, toastError } from '../../utils/toast';
 import { ChevronRight, Camera } from 'lucide-react';
 
-// Maps EditProfile row → stepId in VenterQuestionsFlow
 const PREFERENCE_ITEMS = [
-  { key: 'gender',            label: 'EditProfile.gender',            stepId: 'gender',    displayKey: 'gender' },
-  { key: 'race',              label: 'EditProfile.culturalBackground', stepId: 'race',      displayKey: 'race' },
-  { key: 'culturalBackground',label: 'EditProfile.ethnicity',         stepId: 'ethnicity', displayKey: 'culturalBackground' },
-  { key: 'ageGroup',          label: 'EditProfile.ageGroup',          stepId: 'age',       displayKey: 'ageGroup' },
-  { key: 'lgbtqIdentity',     label: 'EditProfile.lgbtq',             stepId: 'lgbtq',     displayKey: 'lgbtqIdentity' },
-  { key: 'faithOrBelief',     label: 'EditProfile.faith',             stepId: 'faith',     displayKey: 'faithOrBelief' },
-  { key: 'specialTopics',     label: 'EditProfile.specialTopics',     stepId: 'topics',    displayKey: 'specialTopics', isArray: true },
+  { key: 'gender',            label: 'EditProfile.gender',            route: 'gender',         displayKey: 'gender' },
+  { key: 'race',              label: 'EditProfile.culturalBackground', route: 'racial-identity', displayKey: 'race' },
+  { key: 'culturalBackground',label: 'EditProfile.ethnicity',         route: 'ethnicity',      displayKey: 'culturalBackground' },
+  { key: 'ageGroup',          label: 'EditProfile.ageGroup',          route: 'age-group',      displayKey: 'ageGroup' },
+  { key: 'lgbtqIdentity',     label: 'EditProfile.lgbtq',             route: 'lgbtq',          displayKey: 'lgbtqIdentity' },
+  { key: 'faithOrBelief',     label: 'EditProfile.faith',             route: 'faith',          displayKey: 'faithOrBelief' },
+  { key: 'specialTopics',     label: 'EditProfile.specialTopics',     route: 'special-topics', displayKey: 'specialTopics', isArray: true },
 ];
 
 export const EditProfile = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { updateProfile } = useAuth();
   const user = useSelector((state: RootState) => state.user.user as any);
-  const role = user?.userType || 'venter';
+  const isVenter = useSelector((state: RootState) => (state.user as any).isVenter ?? (user?.userType === 'venter'));
+  const rolePrefix = isVenter ? '/venter' : '/listener';
 
   const [form, setForm] = useState({
     firstName: user?.firstName || '',
@@ -95,7 +94,7 @@ export const EditProfile = () => {
             <div
               key={item.key}
               className={`settings-item flex justify-between items-center px-4 py-8 cursor-pointer ${!isLast ? 'border-b border-white/5' : ''}`}
-              onClick={() => navigate(`/signup/questions/${(item as any).stepId}`, { state: { editMode: true } })}
+              onClick={() => navigate(`${rolePrefix}/profile/${item.route}?edit=true`)}
             >
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-white">{t(item.label, item.label)}</p>

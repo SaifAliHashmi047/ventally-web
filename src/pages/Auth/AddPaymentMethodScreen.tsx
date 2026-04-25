@@ -6,31 +6,30 @@ import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { ArrowLeft, CreditCard, Lock } from 'lucide-react';
 import apiInstance from '../../api/apiInstance';
+import { useAccountChangeFlow } from '../../hooks/useAccountChangeFlow';
 
 export const AddPaymentMethodScreen = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { isAccountChanging, resolve } = useAccountChangeFlow();
   const [form, setForm] = useState({ cardName: '', cardNumber: '', expiry: '', cvc: '' });
   const [loading, setLoading] = useState(false);
 
   const handleSave = async () => {
     setLoading(true);
     try {
-      // In a real app this would typically go through Stripe Elements
-      // For now, we mock saving a payment method
       await apiInstance.post('payments/methods/add', form);
-      // Fallback redirect if API fails or succeeds (as per gap recovery logic port)
-      navigate('/signup/payment/saved');
+      navigate(resolve('payment/saved'));
     } catch {
-      navigate('/signup/payment/saved');
+      navigate(resolve('payment/saved'));
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <AuthLayout>
-      <button 
+  const content = (
+    <>
+      <button
         onClick={() => navigate(-1)}
         className="text-gray-500 hover:text-white flex items-center gap-2 mb-6 transition-colors"
       >
@@ -43,32 +42,32 @@ export const AddPaymentMethodScreen = () => {
       </div>
 
       <div className="space-y-4 mb-8">
-        <Input 
-          label={t('Payment.nameOnCard', 'Name on Card')} 
-          placeholder="John Doe" 
-          value={form.cardName} 
-          onChange={e => setForm(p => ({ ...p, cardName: e.target.value }))} 
+        <Input
+          label={t('Payment.nameOnCard', 'Name on Card')}
+          placeholder="John Doe"
+          value={form.cardName}
+          onChange={e => setForm(p => ({ ...p, cardName: e.target.value }))}
         />
-        <Input 
-          label={t('Payment.cardNumber', 'Card Number')} 
-          placeholder="0000 0000 0000 0000" 
-          value={form.cardNumber} 
-          onChange={e => setForm(p => ({ ...p, cardNumber: e.target.value }))} 
+        <Input
+          label={t('Payment.cardNumber', 'Card Number')}
+          placeholder="0000 0000 0000 0000"
+          value={form.cardNumber}
+          onChange={e => setForm(p => ({ ...p, cardNumber: e.target.value }))}
           leftIcon={<CreditCard size={16} />}
         />
         <div className="grid grid-cols-2 gap-4">
-          <Input 
-            label={t('Payment.expiry', 'Expiry Date')} 
-            placeholder="MM/YY" 
-            value={form.expiry} 
-            onChange={e => setForm(p => ({ ...p, expiry: e.target.value }))} 
+          <Input
+            label={t('Payment.expiry', 'Expiry Date')}
+            placeholder="MM/YY"
+            value={form.expiry}
+            onChange={e => setForm(p => ({ ...p, expiry: e.target.value }))}
           />
-          <Input 
-            label={t('Payment.cvc', 'CVC')} 
-            placeholder="123" 
+          <Input
+            label={t('Payment.cvc', 'CVC')}
+            placeholder="123"
             type="password"
-            value={form.cvc} 
-            onChange={e => setForm(p => ({ ...p, cvc: e.target.value }))} 
+            value={form.cvc}
+            onChange={e => setForm(p => ({ ...p, cvc: e.target.value }))}
             leftIcon={<Lock size={16} />}
           />
         </div>
@@ -79,15 +78,20 @@ export const AddPaymentMethodScreen = () => {
         <span>{t('Payment.sslEncrypted', 'Payments are SSL encrypted and secure')}</span>
       </div>
 
-      <Button 
-        variant="primary" 
-        fullWidth 
+      <Button
+        variant="primary"
+        fullWidth
         disabled={!form.cardNumber || !form.expiry || !form.cvc}
         loading={loading}
         onClick={handleSave}
       >
         {t('Payment.saveCard', 'Save Card')}
       </Button>
-    </AuthLayout>
+    </>
   );
+
+  if (isAccountChanging) {
+    return <div className="page-wrapper page-wrapper--wide animate-fade-in">{content}</div>;
+  }
+  return <AuthLayout>{content}</AuthLayout>;
 };

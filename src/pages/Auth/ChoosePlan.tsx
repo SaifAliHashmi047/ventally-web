@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
+import { useAccountChangeFlow } from '../../hooks/useAccountChangeFlow';
 import { Input } from '../../components/ui/Input';
 import { GlassCard } from '../../components/ui/GlassCard';
 import apiInstance from '../../api/apiInstance';
@@ -29,6 +30,10 @@ export const ChoosePlan = () => {
   const location = useLocation();
   const user = useSelector((state: any) => state.user.user);
   
+  const { isAccountChanging, changeBasePath, resolve } = useAccountChangeFlow();
+  const legacyAccountTypeChanging = (location.state as any)?.accountTypeChanging;
+  const effectiveChanging = isAccountChanging || legacyAccountTypeChanging;
+
   const [plans, setPlans] = useState<PlanOption[]>([]);
   const [planType, setPlanType] = useState<'monthly' | 'annual'>('monthly');
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
@@ -46,8 +51,7 @@ export const ChoosePlan = () => {
     try {
       const res: any = await apiInstance.get('wallet/subscription');
       if (res.success && res.data?.subscription) {
-        // If user already has an active subscription, skip the plan selection screen
-        navigate('/signup/success', { replace: true });
+        navigate(resolve('success'), { replace: true });
       }
     } catch (error) {
       // Expected if no subscription exists
@@ -139,17 +143,18 @@ export const ChoosePlan = () => {
     
     setCheckoutLoading(true);
     try {
-      // Pass the successUrl back to the web portal success page.
-      // E.g., if the backend takes successUrl it will use it. Otherwise,
-      // the backend Stripe webhook handles DB updates and redirect might fail back to API URL.
-      const accountTypeChanging = (location.state as any)?.accountTypeChanging;
-      const successUrlParams = accountTypeChanging ? '?accountTypeChanging=true' : '';
-      
+      const successPath = effectiveChanging
+        ? (changeBasePath ?? '/signup') + '/success'
+        : '/signup/success';
+      const cancelPath = effectiveChanging
+        ? (changeBasePath ?? '/signup') + '/choose-plan'
+        : '/signup/choose-plan';
+
       const res = await apiInstance.post('payments/create-subscription-checkout', {
         planId: selectedPlan,
         billingCycle: planType,
-        successUrl: window.location.origin + '/signup/success' + successUrlParams,
-        cancelUrl: window.location.origin + '/signup/choose-plan'
+        successUrl: window.location.origin + successPath,
+        cancelUrl: window.location.origin + cancelPath,
       });
       
       if (res.data?.url) {
@@ -164,9 +169,9 @@ export const ChoosePlan = () => {
     }
   };
 
-  return (
-    <AuthLayout>
-      <button 
+  const planContent = (
+    <>
+      <button
         onClick={() => navigate(-1)}
         className="text-white/60 hover:text-white flex items-center gap-2 mb-6 transition-colors"
       >
@@ -310,6 +315,11 @@ export const ChoosePlan = () => {
       >
         {checkoutLoading ? <Loader2 size={24} className="animate-spin" /> : t('ChoosePlan.continue')}
       </button>
-    </AuthLayout>
+    </>
   );
+
+  if (effectiveChanging) {
+    return <div className="page-wrapper page-wrapper--wide animate-fade-in">{planContent}</div>;
+  }
+  return <AuthLayout>{planContent}</AuthLayout>;
 };

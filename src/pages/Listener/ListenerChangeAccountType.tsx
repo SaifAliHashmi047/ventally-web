@@ -93,14 +93,10 @@ export const ListenerChangeAccountType = () => {
     if (isOwned) {
       handleSwitchRole();
     } else {
-      // Not owned → onboarding
-      // RN Listener screen: listener → listenerTraining, venter → nickname
-      if (selectedRole.toLowerCase() === 'listener') {
-        navigate('/signup/listener-training', { state: { accountTypeChanging: true } });
-      } else {
-        // Venter onboarding starts at nickname (matches RN routes.nickname)
-        navigate('/signup/nickname', { state: { accountTypeChanging: true } });
-      }
+      // Not owned → onboarding inside home layout (no AuthLayout double-wrap)
+      // Listener → Venter: start at nickname under /listener/change-account/*
+      // (listener → listener-training path not needed; listener already is listener)
+      navigate('/listener/change-account/nickname');
     }
   };
 

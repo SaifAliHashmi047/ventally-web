@@ -7,6 +7,7 @@ import { updateUser } from '../../store/slices/userSlice';
 import { updateProfile } from '../../api';
 import { ArrowLeft } from 'lucide-react';
 import { AuthPageFrame } from '../../components/ui/AuthPageFrame';
+import { useAccountChangeFlow } from '../../hooks/useAccountChangeFlow';
 
 export const NicknameScreen = () => {
   const { t } = useTranslation();
@@ -22,6 +23,7 @@ export const NicknameScreen = () => {
   const stateUserType = (location.state as any)?.userType || '';
   const reduxUser = useSelector((state: RootState) => state.user.user);
   const userType = stateUserType || reduxUser?.userType || reduxUser?.role || 'venter';
+  const { isAccountChanging, resolve } = useAccountChangeFlow();
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,12 +38,13 @@ export const NicknameScreen = () => {
       if ((response as any).success !== false) {
         dispatch(updateUser({ displayName: nickname.trim(), name: nickname.trim() }));
 
-        const accountTypeChanging = (location.state as any)?.accountTypeChanging;
-        
+        const legacyAccountTypeChanging = (location.state as any)?.accountTypeChanging;
+        const effectiveChanging = isAccountChanging || legacyAccountTypeChanging;
+
         // ── Role-based branching — matches native NicknameScreen handleSave ──
-        if (accountTypeChanging) {
+        if (effectiveChanging) {
           // When changing account type to Venter, skip optional questions and head straight to subscription
-          navigate('/signup/choose-plan', { state: { accountTypeChanging: true } });
+          navigate(resolve('choose-plan'));
         } else if (userType === 'listener') {
           navigate('/signup/listener-training', { state: { userType } });
         } else {
@@ -58,16 +61,15 @@ export const NicknameScreen = () => {
     }
   };
 
-  return (
-    <AuthPageFrame>
-      <div className="auth-card animate-slide-up w-full max-w-md">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors mb-6"
-        >
-          <ArrowLeft size={16} /> Back
-        </button>
+  const inner = (
+    <>
+      <button
+        type="button"
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors mb-6"
+      >
+        <ArrowLeft size={16} /> Back
+      </button>
 
         <div className="text-center mb-12">
           <h1 className="text-xl font-bold text-white">
@@ -99,7 +101,20 @@ export const NicknameScreen = () => {
             {loading ? '…' : t('Nickname.save')}
           </button>
         </form>
+    </>
+  );
+
+  if (isAccountChanging) {
+    return (
+      <div className="page-wrapper animate-fade-in">
+        <div className="max-w-md mx-auto w-full">{inner}</div>
       </div>
+    );
+  }
+
+  return (
+    <AuthPageFrame>
+      <div className="auth-card animate-slide-up w-full max-w-md">{inner}</div>
     </AuthPageFrame>
   );
 };

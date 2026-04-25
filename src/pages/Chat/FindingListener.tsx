@@ -198,15 +198,15 @@ export const FindingListener = () => {
         </div>
 
         {status === 'searching' && (
-          <>
+          <div className='w-full flex flex-col items-center'>
             <h1 className="text-xl font-bold text-white mb-2">{isChat ? chatTitle : title}{dots}</h1>
             <p className="text-gray-500 mb-8">
               {t('VenterFindingListener.description', "We're connecting you with an available listener for your {{type}} session.", { type })}
             </p>
-            <Button variant="glass" onClick={handleCancel} leftIcon={<X size={16} />}>
+            <Button variant="glass"   onClick={handleCancel} leftIcon={<X size={16} />}>
               {t('VenterFindingListener.buttonText', 'Cancel')}
             </Button>
-          </>
+          </div>
         )}
 
         {status === 'timeout' && (

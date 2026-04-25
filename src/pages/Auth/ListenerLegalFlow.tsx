@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
+import { useAccountChangeFlow } from '../../hooks/useAccountChangeFlow';
 import { ArrowLeft } from 'lucide-react';
 
 const LEGAL_STEPS = [
@@ -18,14 +19,16 @@ export const ListenerLegalFlow = () => {
   const location = useLocation();
   const [currentStep, setCurrentStep] = useState(0);
 
-  const accountTypeChanging = (location.state as any)?.accountTypeChanging;
+  const { isAccountChanging, resolve } = useAccountChangeFlow();
+  const legacyAccountTypeChanging = (location.state as any)?.accountTypeChanging;
+  const effectiveChanging = isAccountChanging || legacyAccountTypeChanging;
   const step = LEGAL_STEPS[currentStep];
 
   const handleContinue = () => {
     if (currentStep < LEGAL_STEPS.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      navigate('/signup/verification', { state: { accountTypeChanging } });
+      navigate(resolve('verification'));
     }
   };
 
@@ -39,8 +42,8 @@ export const ListenerLegalFlow = () => {
 
   const sections = t(`${step.contentKey}.sections`, { returnObjects: true }) as any[];
 
-  return (
-    <AuthLayout>
+  const legalContent = (
+    <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <button 
           onClick={handleBack}
@@ -121,6 +124,11 @@ export const ListenerLegalFlow = () => {
       >
         {t('Common.acceptAndContinue')}
       </button>
-    </AuthLayout>
+    </>
   );
+
+  if (effectiveChanging) {
+    return <div className="page-wrapper page-wrapper--wide animate-fade-in">{legalContent}</div>;
+  }
+  return <AuthLayout>{legalContent}</AuthLayout>;
 };

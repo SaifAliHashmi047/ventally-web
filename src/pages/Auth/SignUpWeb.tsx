@@ -106,8 +106,8 @@ export const SignUpWeb = () => {
         <p className="text-sm font-medium text-white mb-2">{t('SignUp.howWillYouUse')}</p>
         <div className="flex gap-3 mb-2">
           {([
-            { value: 'venter'   as const, label: `🎙️ ${t('SignUp.usageOptions.wantToVent')}` },
-            { value: 'listener' as const, label: `🎧 ${t('SignUp.usageOptions.wantToListen')}` },
+            { value: 'venter'   as const, label: `${t('SignUp.usageOptions.wantToVent')}` },
+            { value: 'listener' as const, label: `${t('SignUp.usageOptions.wantToListen')}` },
           ] as const).map(role => {
             const isSelected = form.userType === role.value;
             return (
@@ -163,7 +163,9 @@ export const SignUpWeb = () => {
           <Button variant="primary" 
            className='!w-full'
 
-            fullWidth loading={loading} onClick={handleSignUp} id="signup-submit-btn">
+            fullWidth
+             loading={loading}
+             onClick={handleSignUp} id="signup-submit-btn">
             {t('SignUp.createAccount')}
           </Button>
         </div>

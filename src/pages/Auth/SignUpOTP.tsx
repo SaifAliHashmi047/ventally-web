@@ -110,8 +110,8 @@ export const SignUpOTP = () => {
 
           <Button
             variant="primary"
-            size="lg"
             fullWidth
+            className='!w-full'
             type="submit"
             loading={loading}
             disabled={code.length !== 4}

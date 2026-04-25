@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
+import { useAccountChangeFlow } from '../../hooks/useAccountChangeFlow';
 import { AccordionItem } from '../../components/Shared/AccordionItem';
 import { ArrowLeft, Clock, BookOpen } from 'lucide-react';
 import listenerTopImage from '../../assets/images/listenerTopImage.png';
@@ -33,18 +34,20 @@ export const ListenerTraining = () => {
 
   const isAllChecked = modules?.every(m => checkedItems[m.id]);
 
-  const accountTypeChanging = (location.state as any)?.accountTypeChanging;
+  const { isAccountChanging, resolve } = useAccountChangeFlow();
+  const legacyAccountTypeChanging = (location.state as any)?.accountTypeChanging;
+  const effectiveChanging = isAccountChanging || legacyAccountTypeChanging;
 
   const handleContinue = () => {
     if (isAllChecked) {
-      navigate('/signup/listener-legal', { state: { accountTypeChanging } });
+      navigate(resolve('listener-legal'));
     } else {
       setShowError(true);
     }
   };
 
-  return (
-    <AuthLayout>
+  const trainingContent = (
+    <>
       <button 
         onClick={() => navigate(-1)}
         style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}
@@ -151,6 +154,11 @@ export const ListenerTraining = () => {
           {t('ListenerTraining.continue')}
         </button>
       </div>
-    </AuthLayout>
+    </>
   );
+
+  if (effectiveChanging) {
+    return <div className="page-wrapper page-wrapper--wide animate-fade-in">{trainingContent}</div>;
+  }
+  return <AuthLayout>{trainingContent}</AuthLayout>;
 };

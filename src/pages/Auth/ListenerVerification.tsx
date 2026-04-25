@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
+import { useAccountChangeFlow } from '../../hooks/useAccountChangeFlow';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
 import { ArrowLeft, UploadCloud, File, Image as ImageIcon } from 'lucide-react';
@@ -21,7 +22,9 @@ export const ListenerVerification = () => {
   const { updateAvailableRoles, switchRole } = useRoles();
   const { submitVerification } = useListenerVerification();
 
-  const accountTypeChanging = (location.state as any)?.accountTypeChanging;
+  const { isAccountChanging } = useAccountChangeFlow();
+  const legacyAccountTypeChanging = (location.state as any)?.accountTypeChanging;
+  const accountTypeChanging = isAccountChanging || legacyAccountTypeChanging;
   const user = useSelector((state: RootState) => state.user.user as any);
 
   const [loading, setLoading] = useState(false);
@@ -120,8 +123,8 @@ export const ListenerVerification = () => {
     }
   };
 
-  return (
-    <AuthLayout>
+  const verificationContent = (
+    <>
       <button
         onClick={() => navigate(-1)}
         className="flex items-center gap-2 text-white/60 hover:text-white transition-colors mb-6 pb-2"
@@ -245,6 +248,11 @@ export const ListenerVerification = () => {
           </GlassCard>
         </div>
       )}
-    </AuthLayout>
+    </>
   );
+
+  if (accountTypeChanging) {
+    return <div className="page-wrapper page-wrapper--wide animate-fade-in">{verificationContent}</div>;
+  }
+  return <AuthLayout>{verificationContent}</AuthLayout>;
 };

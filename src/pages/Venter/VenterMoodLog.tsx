@@ -249,7 +249,6 @@ export const VenterMoodLog = () => {
       {/* ── Action buttons ─────────────────────────────────────────────────── */}
       <Button
         variant="primary"
-        size="lg"
         fullWidth
         loading={loading}
         disabled={!selectedMood || loading}
@@ -262,11 +261,9 @@ export const VenterMoodLog = () => {
 
       <Button
         variant="glass"
-        size="lg"
         fullWidth
         disabled={loading}
         onClick={() => navigate(-1)}
-        className="mt-2"
       >
         {t('VenterMoodLog.cancel')}
       </Button>
