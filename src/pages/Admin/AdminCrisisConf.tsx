@@ -64,9 +64,9 @@ export const AdminCrisisConf = () => {
     setSaving(true);
     try {
       await updateCrisisConfig(config);
-      toast.success('Crisis configuration saved successfully');
+      toast.success(t('AdminCrisisConf.saveSuccess', 'Crisis configuration saved successfully'));
     } catch (error) {
-      toast.error('Failed to save crisis configuration');
+      toast.error(t('AdminCrisisConf.saveError', 'Failed to save crisis configuration'));
       console.error('Failed to save crisis config:', error);
     } finally {
       setSaving(false);
@@ -157,7 +157,7 @@ export const AdminCrisisConf = () => {
                     )}
                     {resource.text && (
                       <span className="flex items-center gap-1">
-                        Text: {resource.text}
+                        {t('AdminCrisisConf.textLabel', 'Text')}: {resource.text}
                       </span>
                     )}
                     {resource.website && (

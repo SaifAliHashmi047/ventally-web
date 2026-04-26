@@ -4,17 +4,19 @@ import type { ReactNode } from 'react';
 import { Home, MessageSquare, Bell, Settings, LogOut, Beaker, Menu, X } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/slices/userSlice';
+import { useTranslation } from 'react-i18next';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 export const WebLayout = ({ children }: LayoutProps) => {
+  const { t } = useTranslation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user.user);
-  
+
   const handleLogout = () => {
     dispatch(logout() as any);
   };
@@ -39,7 +41,7 @@ export const WebLayout = ({ children }: LayoutProps) => {
       }} className="mobile-only-flex">
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--primary)' }} />
-          <span style={{ fontWeight: 700, fontSize: '18px' }}>Ventally</span>
+          <span style={{ fontWeight: 700, fontSize: '18px' }}>{t('Common.appName', 'VENTALLY')}</span>
         </div>
         <button 
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -72,7 +74,7 @@ export const WebLayout = ({ children }: LayoutProps) => {
            }}>
              <div style={{ width: '12px', height: '12px', border: '2px solid white', borderRadius: '50%' }} />
            </div>
-           <h2 style={{ fontSize: '22px', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>Ventally</h2>
+           <h2 style={{ fontSize: '22px', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>{t('Common.appName', 'VENTALLY')}</h2>
         </div>
         
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
@@ -126,7 +128,7 @@ export const WebLayout = ({ children }: LayoutProps) => {
                transition: 'var(--transition-normal)'
              }}
            >
-             <LogOut size={18} /> Logout Session
+             <LogOut size={18} /> {t('WebLayout.logoutSession', 'Logout Session')}
            </button>
         </div>
       </aside>

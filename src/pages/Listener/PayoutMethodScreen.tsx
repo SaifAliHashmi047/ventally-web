@@ -120,7 +120,7 @@ export const PayoutMethodScreen = () => {
           {bankConnected && (
             <div className="mt-2 flex items-center gap-1.5">
               <div className="w-1.5 h-1.5 rounded-full bg-success" />
-              <span className="text-xs text-success font-medium">Connected</span>
+              <span className="text-xs text-success font-medium">{t('Listener.payout.connected', 'Connected')}</span>
             </div>
           )}
         </GlassCard>

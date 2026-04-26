@@ -105,7 +105,7 @@ export const AdminSubAdminProfile = () => {
 
   if (!subAdmin) return (
     <div className="page-wrapper page-wrapper--wide">
-      <PageHeader title="Sub-Admin Not Found" onBack={() => navigate(-1)} />
+      <PageHeader title={t('Admin.subAdminProfile.notFound', 'Sub-Admin Not Found')} onBack={() => navigate(-1)} />
     </div>
   );
 
@@ -115,7 +115,7 @@ export const AdminSubAdminProfile = () => {
 
   return (
     <div className="  animate-fade-in">
-      <PageHeader title="Sub-Admin Profile" onBack={() => navigate('/admin/sub-admins')} />
+      <PageHeader title={t('Admin.subAdminProfile.title', 'Sub-Admin Profile')} onBack={() => navigate('/admin/sub-admins')} />
 
       {/* Profile Card */}
       <GlassCard bordered className="mb-4">
@@ -138,7 +138,7 @@ export const AdminSubAdminProfile = () => {
       {/* Permissions Card */}
       <GlassCard bordered className="mb-4" padding="none">
         <div className="px-5 py-4 border-b border-white/5">
-          <p className="text-base font-semibold text-white text-center">Permissions</p>
+          <p className="text-base font-semibold text-white text-center">{t('Admin.subAdminProfile.permissions', 'Permissions')}</p>
         </div>
         <div className="divide-y divide-white/5">
           {permKeys.map(key => (
@@ -158,7 +158,7 @@ export const AdminSubAdminProfile = () => {
 
       {/* Actions */}
       <Button variant="primary" fullWidth loading={saving} onClick={handleUpdate} className='mb-3 mt-5' >
-        Update Permissions
+        {t('Admin.subAdminProfile.updatePermissions', 'Update Permissions')}
       </Button>
       <Button
         variant="danger"
@@ -174,7 +174,7 @@ export const AdminSubAdminProfile = () => {
         onClose={() => setShowSuccessModal(false)}
         icon={<CheckCircle className="text-accent" />}
         title={t('Admin.success.permissionsUpdated', 'Permissions Updated')}
-        message={t('Admin.success.permissionsSubtitle', 'The sub-admin permissions have been successfully updated.')}
+        message={t('Admin.success.permissionsUpdatedMessage', 'The sub-admin permissions have been successfully updated.')}
         primaryButtonText={t('Common.done', 'Done')}
         onPrimaryPress={() => navigate('/admin/sub-admins')}
       />

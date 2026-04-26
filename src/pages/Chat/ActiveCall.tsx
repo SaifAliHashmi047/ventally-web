@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import type { RootState } from '../../store/store';
 import { Mic, MicOff, Volume2, VolumeX, Phone } from 'lucide-react';
 import apiInstance from '../../api/apiInstance';
@@ -38,6 +39,7 @@ function useResolvedCallId(
 }
 
 export const ActiveCall = () => {
+  const { t } = useTranslation();
   const { roomId } = useParams<{ roomId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -157,10 +159,10 @@ export const ActiveCall = () => {
     >
       {/* Top Bar */}
       <div className="flex justify-between items-center w-full max-w-sm mx-auto shrink-0">
-        <p className="text-sm text-white/80">Session Call</p>
+        <p className="text-sm text-white/80">{t('ActiveCall.sessionCall', 'Session Call')}</p>
         <div className="badge badge-success">
           <div className="w-1.5 h-1.5 rounded-full bg-success" />
-          {callStatus === 'connected' ? 'Connected' : 'Connecting...'}
+          {callStatus === 'connected' ? t('ActiveCall.connected', 'Connected') : t('ActiveCall.connectingStatus', 'Connecting...')}
         </div>
       </div>
 
@@ -175,9 +177,9 @@ export const ActiveCall = () => {
           )}
         </div>
         <div className="text-center">
-          <h2 className="text-xl font-bold text-white">Your Listener</h2>
+          <h2 className="text-xl font-bold text-white">{t('ActiveCall.yourListener', 'Your Listener')}</h2>
           <p className="text-sm text-white/80 mt-1">
-            {callStatus === 'connecting' ? 'Connecting...' : formatDuration(duration)}
+            {callStatus === 'connecting' ? t('ActiveCall.connectingStatus', 'Connecting...') : formatDuration(duration)}
           </p>
         </div>
       </div>

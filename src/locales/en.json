@@ -75,7 +75,13 @@
     "delete": "Delete",
     "loading": "Loading...",
     "loadMore": "Load More",
-    "yesterday": "Yesterday"
+    "yesterday": "Yesterday",
+    "remove": "Remove",
+    "back": "Back",
+    "confirmPassword": "Confirm Password",
+    "viewAll": "View All",
+    "save": "Save",
+    "backToHome": "Back to Home"
   },
   "Errors": {
     "adminUnavailableOnMobile": "Administrator access isn’t available in this app. Please use the web dashboard."
@@ -1601,13 +1607,13 @@
     "crisis": "Crisis"
   },
   "CrisisWarning": {
-    "titleLine1": "Ventally Is For Emotional",
-    "titleLine2": "Release, Not Crisis",
-    "titleLine3": "Support",
-    "acknowledgment": "I understand ventally cannot help with emergencies.",
-    "agreeContinue": "I Agree",
-    "emergencyProtocolTitle": "Crisis Protocol",
-    "emergencyProtocolMessage": "We detected signs of distress. Please contact an emergency service or your trusted person immediately.",
+    "titleLine1": "If you are having thoughts of suicide or self-harm,",
+    "titleLine2": "please reach out to a crisis counselor immediately.",
+    "titleLine3": "You don't have to go through this alone.",
+    "acknowledgment": "I understand and agree to seek immediate professional help if needed",
+    "agreeContinue": "Agree & Continue",
+    "emergencyProtocolTitle": "988 Suicide & Crisis Lifeline",
+    "emergencyProtocolMessage": "Free, confidential support available 24/7. You will be connected to trained crisis counselors.",
     "contact988": "Call 988",
     "chat988": "Text 988",
     "safeTitle": "We want you to be safe.",
@@ -1627,11 +1633,13 @@
     "immediateHelpTitle": "Immediate Help Recommended",
     "immediateHelpMessage": "We've detected signs of distress. Please connect with trained crisis professionals who can offer immediate support.",
     "support988Number": "988",
-    "support988TitleLine1": "You deserve immediate",
-    "support988TitleLine2": "support.",
-    "support988Subtext": "A trained crisis professional is available 24/7.",
+    "support988TitleLine1": "988 Suicide &",
+    "support988TitleLine2": "Crisis Lifeline",
+    "support988Subtext": "Free, confidential support available 24/7 for people in distress",
     "imSafe": "I'm Safe",
-    "ok": "Okay"
+    "ok": "Okay",
+    "crisisSupport": "Crisis support",
+    "available247": "Available 24/7"
   },
   "NeedMoreSupport": {
     "title": "Do you need more support?",
@@ -1731,7 +1739,11 @@
     "accept": "Join",
     "decline": "Dismiss",
     "incoming": "Support request",
-    "outgoing": "Support request"
+    "outgoing": "Support request",
+    "sessionCall": "Session Call",
+    "connected": "Connected",
+    "connectingStatus": "Connecting...",
+    "yourListener": "Your Listener"
   },
   "VenterPaymentCheck": {
     "title": "Session Payment",
@@ -2065,7 +2077,11 @@
       "delete": "Delete Sub Admin",
       "update": "Update",
       "deleteConfirmation": "Are you sure you want to delete this sub admin?",
-      "deleteMessage": "This action cannot be undone"
+      "deleteMessage": "This action cannot be undone",
+      "notFound": "Sub-Admin Not Found",
+      "updatePermissions": "Update Permissions",
+      "deleteConfirmTitle": "Remove Sub Admin",
+      "deleteConfirmMessage": "Are you sure you want to remove this sub admin? This action cannot be undone."
     },
     "addSubAdmin": {
       "title": "Add Sub Admin",
@@ -2098,7 +2114,8 @@
       "adminDeleted": "Admin Deleted",
       "adminDeletedMessage": "Sub admin account has been deleted",
       "issueClosed": "Issue Closed",
-      "issueClosedMessage": "You closed the moderation request"
+      "issueClosedMessage": "You closed the moderation request",
+      "permissionsUpdatedMessage": "The sub-admin permissions have been successfully updated."
     },
     "settings": {
       "title": "Admin Settings",
@@ -2151,6 +2168,10 @@
       "chat": {
         "title": "Venter Chat"
       }
+    },
+    "chat": {
+      "safeAndAnonymous": "Safe & Anonymous",
+      "loadingConversation": "Loading conversation..."
     },
     "financialStats": {
       "title": "Financials",
@@ -2359,7 +2380,116 @@
     "yes": "Yes",
     "no": "No",
     "okay": "Okay",
-    "exit": "Exit"
+    "exit": "Exit",
+    "disclaimer": "Important Information",
+    "disclaimer1": "Ventally is not a substitute for professional mental health services.",
+    "disclaimer2": "Our listeners are trained peers, not licensed therapists.",
+    "disclaimer3": "If you are experiencing a life-threatening emergency, please call 911.",
+    "disclaimer4": "Crisis resources are available 24/7 through the 988 Lifeline.",
+    "resources": "Crisis Resources",
+    "988Support": "988 Suicide & Crisis Lifeline",
+    "988SupportDesc": "Connect with trained crisis counselors 24/7 for free, confidential support.",
+    "additionalResources": "Additional Resources",
+    "remember": "Remember: You matter, and support is always available.",
+    "crisisLifelineDesc": "24/7 free, confidential support",
+    "crisisTextDesc": "Text HOME to 741741",
+    "connecticut211Desc": "Community resources and crisis support",
+    "samhsa": "SAMHSA National Helpline",
+    "nami": "NAMI HelpLine",
+    "call988": "Call 988",
+    "call988Desc": "24/7 Suicide & Crisis Lifeline",
+    "text988": "Text 988",
+    "text988Desc": "Text HELLO to 988 for chat support",
+    "notAlone": "You are not alone. Reach out for support — it is a sign of strength.",
+    "moreResources": "More Crisis Resources",
+    "immediateHelp": "Immediate Help Available",
+    "immediateHelpDesc": "Connect with trained crisis counselors 24/7. Free, confidential support is just a call or text away.",
+    "safe": "You are safe",
+    "safeDesc": "We are here to support you. Let us guide you to the resources that can help.",
+    "youMatter": "You matter",
+    "youMatterDesc": "Whatever you are going through, you do not have to face it alone. Support is available.",
+    "getHelp": "Get Help Now",
+    "sessionEnded": "Session ended",
+    "thanksMessage": "Thanks for being here. You made a difference."
+  },
+  "VenterCrisis": {
+    "step1": {
+      "title": "We're here for you",
+      "description": "It looks like you might be going through something very difficult. That's okay. You are not alone."
+    },
+    "step2": {
+      "title": "Important Information",
+      "description": "Ventally is a peer support platform and not a substitute for professional mental health care. In a mental health emergency, please contact emergency services."
+    },
+    "step3": {
+      "title": "Get Immediate Support",
+      "description": "Choose how you'd like to get help right now."
+    },
+    "call988": "Call 988 (Suicide & Crisis Lifeline)",
+    "textHome": "Text HOME to 741741",
+    "talkToListener": "Talk to a Listener",
+    "safeGoBack": "I'm safe, go back"
+  },
+  "ListenerHome": {
+    "listener": "Listener",
+    "welcomeBack": "Welcome back,",
+    "availability": "Availability",
+    "acceptingSessions": "You are accepting new sessions",
+    "offlineStatus": "You are currently offline",
+    "onlineReady": "Online and ready",
+    "incomingRequests": "Incoming Requests",
+    "noRequests": "No incoming requests",
+    "noRequestsDesc": "New requests will appear here when venters seek support.",
+    "callSession": "Call Session",
+    "chatSession": "Chat Session",
+    "quickAccess": "Quick Access",
+    "sessionHistory": "Session History"
+  },
+  "ListenerCall": {
+    "voiceSession": "Voice session",
+    "statusLive": "Connected — you're live",
+    "connecting": "Connecting…",
+    "duration": "Duration",
+    "badgeLive": "Live",
+    "badgeConnecting": "Connecting",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "crisis": "Crisis",
+    "end": "End",
+    "endSession": "End session?",
+    "endSessionConfirm": "You'll leave this call and go to rate the session. You won't return to this call screen."
+  },
+  "Payment": {
+    "addMethod": "Add Payment Method",
+    "secureInfo": "Your payment information is strictly confidential and secure.",
+    "nameOnCard": "Name on Card",
+    "cardNumber": "Card Number",
+    "expiry": "Expiry Date",
+    "cvc": "CVC",
+    "sslEncrypted": "Payments are SSL encrypted and secure",
+    "saveCard": "Save Card",
+    "paymentMethods": "Payment Methods",
+    "manageMethods": "Manage your payment methods",
+    "expires": "Expires",
+    "noMethods": "No payment methods added yet.",
+    "addNewMethod": "Add New Payment Method",
+    "savedSuccess": "Payment Method Saved!",
+    "savedDesc": "Your payment method has been securely added to your account. You can now proceed to subscribe."
+  },
+  "AdminCrisisConf": {
+    "generalSettings": "General Settings",
+    "enableCrisis": "Enable Crisis Support",
+    "enableCrisisDesc": "Show crisis support options to users",
+    "showWarning": "Show Danger Warning",
+    "showWarningDesc": "Ask users if they are in immediate danger",
+    "resources": "Crisis Resources",
+    "resourcesDesc": "Configure which resources are available to users",
+    "textLabel": "Text",
+    "saveSuccess": "Crisis configuration saved successfully",
+    "saveError": "Failed to save crisis configuration"
+  },
+  "WebLayout": {
+    "logoutSession": "Logout Session"
   },
   "Wallet": {
     "title": "Balance",

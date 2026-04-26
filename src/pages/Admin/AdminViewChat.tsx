@@ -70,7 +70,7 @@ export const AdminViewChat = () => {
         {loading ? (
           <div className="flex flex-col items-center justify-center h-full gap-4">
             <Loader2 className="animate-spin text-accent" size={40} />
-            <p className="text-white/40 text-sm animate-pulse">Loading conversation...</p>
+            <p className="text-white/40 text-sm animate-pulse">{t('Admin.chat.loadingConversation', 'Loading conversation...')}</p>
           </div>
         ) : messages.length === 0 ? (
           <div className="glass rounded-3xl p-10 text-center mx-4">

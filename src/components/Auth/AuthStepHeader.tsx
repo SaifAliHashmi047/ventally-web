@@ -1,5 +1,6 @@
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   title?: string;
@@ -7,6 +8,7 @@ type Props = {
 };
 
 export const AuthStepHeader = ({ title, backTo }: Props) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleBack = () => {
@@ -27,7 +29,7 @@ export const AuthStepHeader = ({ title, backTo }: Props) => {
       <button
         type="button"
         onClick={handleBack}
-        aria-label="Back"
+        aria-label={t('Common.back', 'Back')}
         className="auth-back-btn"
         style={{
           display: 'flex',

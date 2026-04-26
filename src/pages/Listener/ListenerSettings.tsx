@@ -46,7 +46,7 @@ export const ListenerSettings = () => {
           <div className="settings-item flex justify-between items-center px-4 py-3 border-b border-white/5">
             <div className="flex items-center gap-3">
               <Moon size={16} className="text-white/80" />
-              <p className="text-sm font-medium text-white">Dark Theme</p>
+              <p className="text-sm font-medium text-white">{t('VenterSettings.options.darkTheme.title', 'Dark Theme')}</p>
             </div>
             <Toggle checked={isDark} onChange={() => dispatch(toggleDarkMode())} size="sm" />
           </div>
