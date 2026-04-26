@@ -1074,7 +1074,9 @@
     "support988TitleLine2": "imediato.",
     "support988Subtext": "Um profissional de crise treinado está disponível 24 horas por dia, 7 dias por semana.",
     "imSafe": "Estou seguro",
-    "ok": "Okay"
+    "ok": "Okay",
+    "crisisSupport": "Crisis support",
+    "available247": "Available 24/7"
   },
   "NeedMoreSupport": {
     "title": "Você precisa de mais apoio?",
@@ -1174,7 +1176,11 @@
     "accept": "Juntar-se",
     "decline": "Ignorar",
     "incoming": "Pedido de apoio",
-    "outgoing": "Pedido de apoio"
+    "outgoing": "Pedido de apoio",
+    "sessionCall": "Session Call",
+    "connected": "Connected",
+    "connectingStatus": "Connecting...",
+    "yourListener": "Your Listener"
   },
   "VenterPaymentCheck": {
     "title": "Session Payment",
@@ -1536,7 +1542,11 @@
       "delete": "Delete Sub Admin",
       "update": "Update",
       "deleteConfirmation": "Are you sure you want to delete this sub admin?",
-      "deleteMessage": "This action cannot be undone"
+      "deleteMessage": "This action cannot be undone",
+      "notFound": "Sub-Admin Not Found",
+      "updatePermissions": "Update Permissions",
+      "deleteConfirmTitle": "Remove Sub Admin",
+      "deleteConfirmMessage": "Are you sure you want to remove this sub admin? This action cannot be undone."
     },
     "addSubAdmin": {
       "title": "Add Sub Admin",
@@ -1568,7 +1578,8 @@
       "adminDeleted": "Admin Deleted",
       "adminDeletedMessage": "Sub admin account has been deleted",
       "issueClosed": "Issue Closed",
-      "issueClosedMessage": "You closed the moderation request"
+      "issueClosedMessage": "You closed the moderation request",
+      "permissionsUpdatedMessage": "The sub-admin permissions have been successfully updated."
     },
     "settings": {
       "title": "Admin Settings",
@@ -1620,6 +1631,10 @@
       "chat": {
         "title": "Venter Chat"
       }
+    },
+    "chat": {
+      "safeAndAnonymous": "Safe & Anonymous",
+      "loadingConversation": "Loading conversation..."
     },
     "financialStats": {
       "title": "Financial Admin",
@@ -1896,7 +1911,13 @@
     "loading": "Carregando...",
     "loadMore": "Carregar mais",
     "yesterday": "Ontem",
-    "appName": "VENTALLY"
+    "appName": "VENTALLY",
+    "remove": "Remove",
+    "back": "Back",
+    "confirmPassword": "Confirm Password",
+    "viewAll": "View All",
+    "save": "Save",
+    "backToHome": "Back to Home"
   },
   "Security": {
     "title": "Segurança",
