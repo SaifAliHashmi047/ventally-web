@@ -147,7 +147,7 @@ export const ListenerNotificationsSettings = () => {
               <div className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400">
                 <Icon size={15} />
               </div>
-              <span className={`text-sm font-medium ${notifs.pauseAll ? 'text-gray-500' : 'text-white'}`}>{label}</span>
+              <span className={`text-sm font-medium ${notifs.pauseAll ? 'text-white/80' : 'text-white'}`}>{label}</span>
             </div>
             <Toggle
               checked={notifs[key]}

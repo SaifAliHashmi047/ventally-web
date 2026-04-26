@@ -101,7 +101,7 @@ export const VenterCrisisImmediateHelp = () => {
                 <h3 className="text-base font-semibold text-white">{resource.title}</h3>
                 <p className="text-sm text-gray-400">{resource.description}</p>
               </div>
-              <ArrowRight size={20} className="text-gray-500" />
+              <ArrowRight size={20} className="text-white/80" />
             </div>
           </GlassCard>
         ))}

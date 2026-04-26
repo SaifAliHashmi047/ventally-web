@@ -98,7 +98,7 @@ export const VenterSettings = () => {
               onClick={item.type === 'nav' ? item.onPress : undefined}
             >
               <div className="flex items-center gap-3">
-                <Icon size={16} className="text-gray-500" />
+                <Icon size={16} className="text-white/80" />
                 <p className="text-sm font-medium text-white">{item.title}</p>
               </div>
               {item.type === 'toggle' ? (
@@ -108,7 +108,7 @@ export const VenterSettings = () => {
                   size="sm"
                 />
               ) : (
-                <ChevronRight size={16} className="text-gray-500" />
+                <ChevronRight size={16} className="text-white/80" />
               )}
             </div>
           );

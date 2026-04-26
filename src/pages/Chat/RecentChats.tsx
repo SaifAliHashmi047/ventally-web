@@ -100,7 +100,7 @@ export const RecentChats = () => {
                       >
                         {other?.displayName || other?.firstName || 'User'}
                       </p>
-                      <p className="text-xs text-gray-500 flex-shrink-0 tabular-nums">
+                      <p className="text-xs text-white/80 flex-shrink-0 tabular-nums">
                         {chat.lastMessage?.createdAt
                           ? new Date(chat.lastMessage.createdAt).toLocaleTimeString(i18n.language, {
                               hour: 'numeric',
@@ -111,7 +111,7 @@ export const RecentChats = () => {
                     </div>
                     <div className="flex items-center justify-between gap-2 mt-0.5">
                       <p
-                        className={`text-xs truncate ${hasUnread ? 'text-gray-300' : 'text-gray-500'}`}
+                        className={`text-xs truncate ${hasUnread ? 'text-gray-300' : 'text-white/80'}`}
                       >
                         {chat.lastMessage?.content ||
                           t('VenterMessages.chatEntry.noMessages', 'No messages yet')}

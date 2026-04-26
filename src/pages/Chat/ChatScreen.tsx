@@ -245,7 +245,7 @@ export const ChatScreen = () => {
 
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-white truncate">{title}</p>
-          <p className="text-xs text-gray-500">{t('VenterChat.subtitle', 'You are chatting with a listener')}</p>
+          <p className="text-xs text-white/80">{t('VenterChat.subtitle', 'You are chatting with a listener')}</p>
         </div>
 
         {/* Crisis Button - only when chat is active */}
@@ -292,11 +292,11 @@ export const ChatScreen = () => {
       {/* Messages - Keyboard avoiding layout like mobile */}
       <div className="flex-1 overflow-y-auto px-4 sm:px-5 py-4 lg:py-6 space-y-4 scrollbar-hide min-h-0">
         {loading ? (
-          <div className="flex items-center justify-center h-full text-gray-500">
+          <div className="flex items-center justify-center h-full text-white/80">
             {t('Common.loading', 'Loading messages...')}
           </div>
         ) : messages.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-gray-500 text-sm">
+          <div className="flex items-center justify-center h-full text-white/80 text-sm">
             {t('Chat.startConversation', 'Start the conversation!')}
           </div>
         ) : (
@@ -311,7 +311,7 @@ export const ChatScreen = () => {
                 <div className="max-w-[85%] sm:max-w-[70%] lg:max-w-[65%]">
                   {/* Sender name for incoming messages */}
                   {!isOwn && senderName && (
-                    <p className="text-xs text-gray-500 mb-1 ml-1">{senderName}</p>
+                    <p className="text-xs text-white/80 mb-1 ml-1">{senderName}</p>
                   )}
 
                   {/* Message bubble with glass styling like mobile */}
@@ -334,7 +334,7 @@ export const ChatScreen = () => {
                   {/* Timestamp */}
                   {ts && (
                     <p className={cn(
-                      'text-xs mt-1 text-gray-500',
+                      'text-xs mt-1 text-white/80',
                       isOwn ? 'text-right' : 'text-left'
                     )}>
                       {formatDateDayTime(ts)}
@@ -385,7 +385,7 @@ export const ChatScreen = () => {
                 : 'rgba(255, 255, 255, 0.03)',
             }}
           >
-            <Send size={18} className={input.trim() ? 'text-primary' : 'text-gray-500'} />
+            <Send size={18} className={input.trim() ? 'text-primary' : 'text-white/80'} />
           </button>
         </div>
       )}

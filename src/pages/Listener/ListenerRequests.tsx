@@ -113,7 +113,7 @@ export const ListenerRequests = () => {
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-semibold text-white">{req.title || 'Anonymous'}</p>
-                  <div className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
+                  <div className="flex items-center gap-1 text-xs text-white/80 mt-0.5">
                     {req.type === 'call' ? <Phone size={11} /> : <MessageSquare size={11} />}
                     <span className="capitalize">{req.type === 'call' ? t('ListenerHome.callSession', 'Call Session') : t('ListenerHome.chatSession', 'Chat Session')}</span>
                   </div>

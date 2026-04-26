@@ -110,12 +110,12 @@ export const AdminSubAdmins = () => {
                           {t(`Common.status.${sa.status || 'active'}`)}
                         </Badge>
                       </div>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-white/80">
                         {role === 'Admin' ? t('Common.admin') : t('Admin.roles.subAdmin', 'Sub Admin')} · {permCount} {t('Admin.roles.permissionsEnabled')}
                       </p>
                     </div>
 
-                    <ChevronRight size={16} className="text-gray-500 flex-shrink-0" />
+                    <ChevronRight size={16} className="text-white/80 flex-shrink-0" />
                   </div>
                 </GlassCard>
               );

@@ -27,7 +27,7 @@ export const NotificationDetail = () => {
           </div>
           <div>
             <h2 className="text-lg font-bold text-white">{notification.title}</h2>
-            <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
+            <p className="text-xs text-white/80 flex items-center gap-1 mt-1">
               <Calendar size={11} />
               {new Date(notification.createdAt).toLocaleDateString(i18n.language, { dateStyle: 'full', timeStyle: 'short' })}
             </p>

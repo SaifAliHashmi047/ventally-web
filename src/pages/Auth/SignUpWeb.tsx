@@ -100,7 +100,7 @@ export const SignUpWeb = () => {
         </div>
 
         <h2 className="text-xl font-bold text-white mb-1">{t('SignUp.title')}</h2>
-        <p className="text-sm text-gray-500 mb-6">{t('SignUp.subtitle', 'Start your wellness journey today')}</p>
+        <p className="text-sm text-white/80 mb-6">{t('SignUp.subtitle', 'Start your wellness journey today')}</p>
 
         {/* ── Role Selector ── */}
         <p className="text-sm font-medium text-white mb-2">{t('SignUp.howWillYouUse')}</p>
@@ -170,7 +170,7 @@ export const SignUpWeb = () => {
           </Button>
         </div>
 
-        <p className="text-center text-sm text-gray-500 mt-6">
+        <p className="text-center text-sm text-white/80 mt-6">
           {t('SignUp.alreadyHaveAccount')}{' '}
           <Link to="/login" className="text-primary hover:text-primary-hover font-medium transition-colors">{t('SignUp.logIn')}</Link>
         </p>

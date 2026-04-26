@@ -110,7 +110,7 @@ export const VenterMoodHistory = () => {
                                 {t(config.labelKey, config.label)}
                               </p>
                               {m.category && (
-                                <span className="text-[10px] text-gray-500 bg-white/5 border border-white/5 px-2 py-0.5 rounded-full flex-shrink-0">
+                                <span className="text-[10px] text-white/80 bg-white/5 border border-white/5 px-2 py-0.5 rounded-full flex-shrink-0">
                                   {m.category}
                                 </span>
                               )}

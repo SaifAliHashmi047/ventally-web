@@ -160,26 +160,26 @@ export const VenterMoodDetails = () => {
                 <p className="text-lg font-semibold capitalize" style={{ color: config?.text || '#aaa' }}>
                   {config ? t(config.labelKey, config.label) : mood.mood_type}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-white/80">
                   {dateObj?.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}
                 </p>
               </div>
             </div>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-white/80">
               {dateObj?.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}
             </p>
           </div>
 
           {mood.category && (
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs text-gray-500">{t('VenterMoodLog.whatsGoingOn', 'Category')}:</span>
+              <span className="text-xs text-white/80">{t('VenterMoodLog.whatsGoingOn', 'Category')}:</span>
               <span className="text-xs bg-white/10 px-2 py-1 rounded-full text-white">{mood.category}</span>
             </div>
           )}
 
           {mood.notes && (
             <div className="mt-4 pt-4 border-t border-white/10">
-              <p className="text-xs text-gray-500 mb-2">{t('VenterMoodDetails.note', 'Notes')}</p>
+              <p className="text-xs text-white/80 mb-2">{t('VenterMoodDetails.note', 'Notes')}</p>
               <p className="text-sm text-white leading-relaxed">{mood.notes}</p>
             </div>
           )}

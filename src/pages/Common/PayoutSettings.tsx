@@ -96,7 +96,7 @@ export const PayoutSettings = () => {
                   </div>
                   <div>
                     <p className="text-base font-bold text-white">${payout.amount?.toFixed(2)}</p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-white/80">
                       {formatDate(payout.processedAt || payout.createdAt)}
                     </p>
                   </div>

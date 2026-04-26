@@ -54,7 +54,7 @@ export const VenterTransactions = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-white capitalize">{tx.type?.replace(/_/g, ' ')}</p>
-                    <p className="text-xs text-gray-500">{new Date(tx.createdAt).toLocaleDateString(i18n.language, { dateStyle: 'medium' })}</p>
+                    <p className="text-xs text-white/80">{new Date(tx.createdAt).toLocaleDateString(i18n.language, { dateStyle: 'medium' })}</p>
                   </div>
                   <div className="text-right">
                     <p className={`text-sm font-bold ${isCredit ? 'text-success' : 'text-error'}`}>

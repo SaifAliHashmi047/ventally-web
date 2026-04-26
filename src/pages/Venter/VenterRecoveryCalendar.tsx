@@ -89,7 +89,7 @@ export const VenterRecoveryCalendar = () => {
         {/* Days of week */}
         <div className="grid grid-cols-7 gap-1 mb-2">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-            <div key={day} className="text-center text-xs text-gray-500 font-medium">
+            <div key={day} className="text-center text-xs text-white/80 font-medium">
               {day}
             </div>
           ))}

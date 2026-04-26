@@ -114,7 +114,7 @@ export const ProfileScreen = () => {
                 </div>
                 <span className="text-sm font-medium text-white">{label}</span>
               </div>
-              <ChevronRight size={16} className="text-gray-500" />
+              <ChevronRight size={16} className="text-white/80" />
             </div>
           );
           return el;
@@ -133,7 +133,7 @@ export const ProfileScreen = () => {
             </div>
             <span className="text-sm font-medium text-white">{t('Profile.logout', 'Logout')}</span>
           </div>
-          <ChevronRight size={16} className="text-gray-500" />
+          <ChevronRight size={16} className="text-white/80" />
         </div>
         <div
           className="settings-item flex justify-between items-center px-4 py-3 cursor-pointer"

@@ -76,11 +76,11 @@ export const VenterReflections = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-white line-clamp-2">{r.reflection_text}</p>
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p className="text-xs text-white/80 mt-2">
                     {new Date(r.reflection_date).toLocaleDateString(i18n.language, { weekday: 'long', month: 'long', day: 'numeric' })}
                   </p>
                 </div>
-                <ChevronRight size={16} className="text-gray-500 flex-shrink-0 mt-1" />
+                <ChevronRight size={16} className="text-white/80 flex-shrink-0 mt-1" />
               </div>
             </GlassCard>
           ))}

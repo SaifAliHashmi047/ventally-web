@@ -36,7 +36,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({
       )}
       <div className="input-wrapper">
         {leftIcon && (
-          <span className="input-icon-left text-gray-500">
+          <span className="input-icon-left text-white/80">
             {leftIcon}
           </span>
         )}
@@ -55,7 +55,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({
         {isPassword && (
           <button
             type="button"
-            className="input-icon-right p-2 text-gray-500 hover:text-white transition-colors rounded-lg"
+            className="input-icon-right p-2 text-white/80 hover:text-white transition-colors rounded-lg"
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -69,7 +69,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({
         <p className="text-xs text-red-400">{error}</p>
       )}
       {hint && !error && (
-        <p className="text-xs text-gray-500">{hint}</p>
+        <p className="text-xs text-white/80">{hint}</p>
       )}
     </div>
   );

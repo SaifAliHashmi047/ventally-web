@@ -48,7 +48,7 @@ export const ListenerDashboard = () => {
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-sm text-gray-500 mb-1">
+            <p className="text-sm text-white/80 mb-1">
               {t('ListenerHome.welcomeBack', 'Welcome back,')}
             </p>
             <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
@@ -71,7 +71,7 @@ export const ListenerDashboard = () => {
               <p className="text-base font-semibold text-white">
                 {t('ListenerHome.availability', 'Availability')}
               </p>
-              <p className="text-sm text-gray-500 mt-0.5">
+              <p className="text-sm text-white/80 mt-0.5">
                 {isAvailable
                   ? t('ListenerHome.acceptingSessions', 'You are accepting new sessions')
                   : t('ListenerHome.offlineStatus', 'You are currently offline')}
@@ -97,14 +97,14 @@ export const ListenerDashboard = () => {
         {/* Incoming requests */}
         <section>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-white/80">
               {t('ListenerHome.incomingRequests', 'Incoming Requests')}
             </h2>
             {requests.length > 0 && (
               <button
                 type="button"
                 onClick={() => navigate('/listener/requests')}
-                className="text-xs text-gray-500 hover:text-white transition-colors flex items-center gap-1"
+                className="text-xs text-white/80 hover:text-white transition-colors flex items-center gap-1"
               >
                 {t('Common.viewAll', 'View All')} <ChevronRight size={12} />
               </button>
@@ -142,10 +142,10 @@ export const ListenerDashboard = () => {
                           ? t('ListenerHome.callSession', 'Call Session')
                           : t('ListenerHome.chatSession', 'Chat Session')}
                       </p>
-                      <p className="text-xs text-gray-500 mt-0.5 truncate">{item.title}</p>
+                      <p className="text-xs text-white/80 mt-0.5 truncate">{item.title}</p>
                     </div>
                   </div>
-                  <ChevronRight size={16} className="text-gray-500 flex-shrink-0" />
+                  <ChevronRight size={16} className="text-white/80 flex-shrink-0" />
                 </div>
               ))}
             </GlassCard>
@@ -154,7 +154,7 @@ export const ListenerDashboard = () => {
 
         {/* Quick access — wallet + history (no earnings summary on this screen) */}
         <section>
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-3">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-white/80 mb-3">
             {t('ListenerHome.quickAccess', 'Quick Access')}
           </h2>
           <div className="grid grid-cols-2 gap-3">

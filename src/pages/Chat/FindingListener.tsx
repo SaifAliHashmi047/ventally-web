@@ -200,7 +200,7 @@ export const FindingListener = () => {
         {status === 'searching' && (
           <div className='w-full flex flex-col items-center'>
             <h1 className="text-xl font-bold text-white mb-2">{isChat ? chatTitle : title}{dots}</h1>
-            <p className="text-gray-500 mb-8">
+            <p className="text-white/80 mb-8">
               {t('VenterFindingListener.description', "We're connecting you with an available listener for your {{type}} session.", { type })}
             </p>
             <Button variant="glass"   onClick={handleCancel} leftIcon={<X size={16} />}>
@@ -214,7 +214,7 @@ export const FindingListener = () => {
             <h1 className="text-xl font-bold text-white mb-2">
               {t('VenterFindingListener.timeoutTitle', 'No Match Found')}
             </h1>
-            <p className="text-gray-500 mb-8">
+            <p className="text-white/80 mb-8">
               {t('VenterFindingListener.timeoutMessage', "We couldn't find an available listener at this moment. Would you like to try again?")}
             </p>
             <div className="space-y-3">
@@ -236,7 +236,7 @@ export const FindingListener = () => {
             <h1 className="text-xl font-bold text-white mb-2">
               {t('VenterPaymentCheck.insufficientTitle', 'Insufficient Balance')}
             </h1>
-            <p className="text-gray-500 mb-8">
+            <p className="text-white/80 mb-8">
               {t('VenterPaymentCheck.insufficientMessage', 'You need to add funds to start a session.')}
             </p>
             <div className="space-y-3">

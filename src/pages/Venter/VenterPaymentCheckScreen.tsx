@@ -45,7 +45,7 @@ export const VenterPaymentCheckScreen = () => {
         <Shield size={40} className="text-success animate-pulse" />
       </div>
       <h2 className="text-2xl font-bold text-white mb-2">{t('Common.loading', 'Loading...')}</h2>
-      <p className="text-sm text-gray-500 text-center max-w-xs leading-relaxed">
+      <p className="text-sm text-white/80 text-center max-w-xs leading-relaxed">
         {t('VenterPayment.checking', 'Checking your account balances.')}
       </p>
     </div>

@@ -31,14 +31,14 @@ export const AddPaymentMethodScreen = () => {
     <>
       <button
         onClick={() => navigate(-1)}
-        className="text-gray-500 hover:text-white flex items-center gap-2 mb-6 transition-colors"
+        className="text-white/80 hover:text-white flex items-center gap-2 mb-6 transition-colors"
       >
         <ArrowLeft size={20} /> {t('Common.back', 'Back')}
       </button>
 
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-white mb-2">{t('Payment.addMethod', 'Add Payment Method')}</h1>
-        <p className="text-sm text-gray-500">{t('Payment.secureInfo', 'Your payment information is strictly confidential and secure.')}</p>
+        <p className="text-sm text-white/80">{t('Payment.secureInfo', 'Your payment information is strictly confidential and secure.')}</p>
       </div>
 
       <div className="space-y-4 mb-8">
@@ -73,7 +73,7 @@ export const AddPaymentMethodScreen = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 justify-center text-xs text-gray-500 mb-6">
+      <div className="flex items-center gap-2 justify-center text-xs text-white/80 mb-6">
         <Lock size={12} />
         <span>{t('Payment.sslEncrypted', 'Payments are SSL encrypted and secure')}</span>
       </div>

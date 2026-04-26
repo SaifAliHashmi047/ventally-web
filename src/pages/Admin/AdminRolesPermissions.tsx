@@ -162,7 +162,7 @@ export const AdminRolesPermissions = () => {
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-white truncate">{sa.email}</p>
-                    <p className="text-xs text-gray-500">{count} {t('Admin.roles.permissionsEnabled')}</p>
+                    <p className="text-xs text-white/80">{count} {t('Admin.roles.permissionsEnabled')}</p>
                   </div>
 
                   <span className="px-2.5 py-1 rounded-full bg-white/10 text-[10px] font-bold text-white/50 uppercase tracking-wider flex-shrink-0">

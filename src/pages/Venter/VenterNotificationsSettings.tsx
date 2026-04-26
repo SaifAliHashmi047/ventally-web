@@ -297,7 +297,7 @@ export const VenterNotificationsSettings = () => {
             <div className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400">
               <Clock size={15} />
             </div>
-            <span className={`text-sm font-medium ${state.pauseAll ? 'text-gray-500' : 'text-white'}`}>
+            <span className={`text-sm font-medium ${state.pauseAll ? 'text-white/80' : 'text-white'}`}>
               {t('NotificationsSettings.reminderMeAt')}
             </span>
           </div>
@@ -326,11 +326,11 @@ export const VenterNotificationsSettings = () => {
             <div className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400">
               <BellOff size={15} />
             </div>
-            <span className={`text-sm font-medium ${state.pauseAll ? 'text-gray-500' : 'text-white'}`}>
+            <span className={`text-sm font-medium ${state.pauseAll ? 'text-white/80' : 'text-white'}`}>
               {t('NotificationsSettings.quietHours')}
             </span>
           </div>
-          <ChevronRight size={16} className="text-gray-500" />
+          <ChevronRight size={16} className="text-white/80" />
         </button>
       </GlassCard>
 
@@ -347,7 +347,7 @@ export const VenterNotificationsSettings = () => {
               <div className="w-9 h-9 rounded-xl glass flex items-center justify-center text-gray-400">
                 <Icon size={15} />
               </div>
-              <span className={`text-sm font-medium ${state.pauseAll ? 'text-gray-500' : 'text-white'}`}>
+              <span className={`text-sm font-medium ${state.pauseAll ? 'text-white/80' : 'text-white'}`}>
                 {label}
               </span>
             </div>

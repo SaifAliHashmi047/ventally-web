@@ -101,7 +101,7 @@ export const AdminCrisisConf = () => {
               <p className="text-sm font-medium text-white">
                 {t('AdminCrisisConf.enableCrisis', 'Enable Crisis Support')}
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-white/80">
                 {t('AdminCrisisConf.enableCrisisDesc', 'Show crisis support options to users')}
               </p>
             </div>
@@ -116,7 +116,7 @@ export const AdminCrisisConf = () => {
               <p className="text-sm font-medium text-white">
                 {t('AdminCrisisConf.showWarning', 'Show Danger Warning')}
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-white/80">
                 {t('AdminCrisisConf.showWarningDesc', 'Ask users if they are in immediate danger')}
               </p>
             </div>
@@ -148,7 +148,7 @@ export const AdminCrisisConf = () => {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white">{resource.name}</p>
-                  <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                  <div className="flex items-center gap-3 mt-1 text-xs text-white/80">
                     {resource.phone && (
                       <span className="flex items-center gap-1">
                         <Phone size={12} />

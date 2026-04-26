@@ -33,7 +33,7 @@ export const AdminSecurity = () => {
       {type === 'toggle' ? (
         <Toggle checked={value} onChange={onValueChange} size="sm" />
       ) : (
-        <ChevronRight size={16} className="text-gray-500" />
+        <ChevronRight size={16} className="text-white/80" />
       )}
     </div>
   );

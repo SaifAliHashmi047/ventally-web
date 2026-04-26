@@ -90,14 +90,14 @@ export const ListenerWallet = () => {
         {/* Earning history */}
         <section>
           <div className="flex items-center justify-between gap-3 mb-3">
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-white/80">
               {t('ListenerWallet.earningHistory', 'Earning History')}
             </h2>
             {history.length > 0 && (
               <button
                 type="button"
                 onClick={() => navigate('/listener/sessions')}
-                className="text-xs text-gray-500 hover:text-white flex items-center gap-1 transition-colors"
+                className="text-xs text-white/80 hover:text-white flex items-center gap-1 transition-colors"
               >
                 {t('Common.viewAll', 'View All')} <ChevronRight size={12} />
               </button>
@@ -138,7 +138,7 @@ export const ListenerWallet = () => {
                           ? t('ListenerWallet.earningChat', 'Chat session')
                           : t('ListenerWallet.sessionEarning', 'Session earning')}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-white/80">
                       {e.createdAt
                         ? new Date(e.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })
                         : '—'}

@@ -82,7 +82,7 @@ export const Onboarding = () => {
                 </div>
                 <div className="min-w-0">
                   <h3 className="mb-0.5 text-xs font-semibold text-white sm:text-sm">{feature.title}</h3>
-                  <p className="text-[11px] leading-relaxed text-gray-500 sm:text-xs">
+                  <p className="text-[11px] leading-relaxed text-white/80 sm:text-xs">
                     {feature.description}
                   </p>
                 </div>

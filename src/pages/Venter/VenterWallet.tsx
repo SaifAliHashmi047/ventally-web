@@ -76,7 +76,7 @@ export const VenterWallet = () => {
           padding="lg"
           className="mb-6 text-center shadow-2xl shadow-black/20 lg:mb-8"
         >
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-500 mb-2 lg:mb-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/80 mb-2 lg:mb-3">
             {t('VenterWallet.availableBalance')}
           </p>
           <p className="text-4xl font-bold text-white tabular-nums tracking-tight mb-6 sm:text-5xl lg:mb-8">
@@ -136,7 +136,7 @@ export const VenterWallet = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-white truncate">{getTransactionLabel(tx)}</p>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-white/80">
                             {new Date(tx.createdAt ?? tx.created_at).toLocaleDateString(undefined, {
                               dateStyle: 'medium',
                             })}

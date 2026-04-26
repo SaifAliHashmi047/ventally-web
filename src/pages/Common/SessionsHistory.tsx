@@ -145,7 +145,7 @@ export const SessionsHistory = () => {
               </Badge>
             )}
           </div>
-          <p className="text-xs text-gray-500">{item.duration}</p>
+          <p className="text-xs text-white/80">{item.duration}</p>
           {item.preview && (
             <p className="text-xs text-gray-600 truncate mt-0.5">{item.preview}</p>
           )}
@@ -178,7 +178,7 @@ export const SessionsHistory = () => {
             className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
               activeTab === key
                 ? 'bg-accent/15 text-accent border border-accent/20'
-                : 'text-gray-500 hover:text-white'
+                : 'text-white/80 hover:text-white'
             }`}
           >
             <Icon size={15} />

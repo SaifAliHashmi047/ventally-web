@@ -126,7 +126,7 @@ export const VenterAllCallsScreen = () => {
                       {call.otherParticipant?.anonymousName ||
                        t('Common.anonymous', 'Anonymous')}
                     </p>
-                    <span className="text-xs text-gray-500 flex-shrink-0">
+                    <span className="text-xs text-white/80 flex-shrink-0">
                       {call.createdAt ? formatTimeAgo(call.createdAt) : ''}
                     </span>
                   </div>
@@ -136,7 +136,7 @@ export const VenterAllCallsScreen = () => {
                       {t('VenterCall.callEntry.lastCall', 'Last call')}
                     </span>
                     {call.durationSeconds !== undefined && (
-                      <span className="text-xs text-gray-500 flex items-center gap-1">
+                      <span className="text-xs text-white/80 flex items-center gap-1">
                         <Clock size={12} />
                         {formatDuration(call.durationSeconds)}
                       </span>

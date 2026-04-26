@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import type { ReactNode } from 'react';
 import {
   Home, MessageSquare, Phone, Wallet, Settings, MoreHorizontal,
-  Menu, X, ChevronRight, LogOut
+  ChevronRight, LogOut, Menu, Bell
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/slices/userSlice';
@@ -89,7 +89,7 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
           <AppBrandIcon className="w-10 h-10 rounded-2xl shadow-glow-primary" />
           <div>
             <h1 className="text-xl font-bold text-white tracking-tight">{t('Common.appName')}</h1>
-            <p className="text-xs text-gray-500 capitalize">{user?.userType || t('Common.venter')}</p>
+            <p className="text-xs text-white/80 capitalize">{user?.userType || t('Common.venter')}</p>
           </div>
         </div>
 
@@ -125,29 +125,25 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
         </div>
       </aside>
 
-      {/* Mobile Top Bar */}
-      <div
-        className="fixed top-0 left-0 right-0 z-30 h-16 border-b border-white/8 flex items-center justify-between px-4 lg:hidden"
-        style={{
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          background: 'rgba(0,0,0,0.4)',
-        }}
-      >
-        <div className="flex items-center gap-3">
-          <AppBrandIcon className="w-9 h-9 rounded-2xl" />
-          <span className="font-bold text-white">{t('Common.appName')}</span>
-        </div>
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 rounded-xl glass text-gray-400 hover:text-white transition-colors"
-        >
-          {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
-
       {/* Main Content */}
-      <main className="flex-1 lg:ml-0 pt-16 lg:pt-0 overflow-y-auto">
+      <main className="flex-1 lg:ml-0 overflow-y-auto">
+        {/* Mobile top bar — hidden on desktop */}
+        <div className="sticky top-0 z-30 flex items-center justify-between px-4 h-14 lg:hidden"
+          style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', background: 'rgba(0,0,0,0.35)' }}
+        >
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] hover:bg-white/[0.12] text-white transition-all"
+          >
+            <Menu size={18} />
+          </button>
+          <button
+            onClick={() => navigate('/venter/notifications')}
+            className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] hover:bg-white/[0.12] text-white transition-all"
+          >
+            <Bell size={18} />
+          </button>
+        </div>
         <div className="max-w-6xl xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-6 lg:py-10 w-full">
           {children}
         </div>

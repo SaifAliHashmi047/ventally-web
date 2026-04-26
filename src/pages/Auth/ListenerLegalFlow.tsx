@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { AuthLayout } from '../../components/Layout/AuthLayout';
 import { useAccountChangeFlow } from '../../hooks/useAccountChangeFlow';
 import { ArrowLeft } from 'lucide-react';
+import { Button } from '../../components/ui/Button';
 
 const LEGAL_STEPS = [
   { id: 'waiver', titleKey: 'ListenerLiabilityWaiver.title', contentKey: 'ListenerLiabilityWaiver' },
@@ -117,13 +118,9 @@ export const ListenerLegalFlow = () => {
         )}
       </div>
 
-      <button 
-        onClick={handleContinue}
-        className="btn-primary" 
-        style={{ height: '56px', justifyContent: 'center', fontSize: '17px', borderRadius: '16px', width: '100%' }}
-      >
+      <Button variant="primary" size="lg" fullWidth onClick={handleContinue}>
         {t('Common.acceptAndContinue')}
-      </button>
+      </Button>
     </>
   );
 

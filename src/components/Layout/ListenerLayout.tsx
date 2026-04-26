@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import {
-  Home, Users, Wallet, User, Settings, LogOut, Menu, X, ChevronRight
+  Home, Users, Wallet, User, Settings, LogOut, ChevronRight, Menu, Bell
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -166,19 +166,26 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
         </div>
       </aside>
 
-      {/* Mobile Top Bar */}
-      <div className="fixed top-0 left-0 right-0 z-30 h-16 glass border-b border-white/8 flex items-center justify-between px-4 lg:hidden">
-        <div className="flex items-center gap-3">
-          <AppBrandIcon className="w-9 h-9 rounded-2xl" />
-          <span className="font-bold text-white">{t('Common.ventallyListener')}</span>
-        </div>
-        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 rounded-xl glass text-gray-400 hover:text-white transition-colors">
-          {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
-
       {/* Main Content */}
-      <main className="flex-1 lg:ml-0 pt-16 lg:pt-0 overflow-y-auto">
+      <main className="flex-1 lg:ml-0 overflow-y-auto">
+        {/* Mobile top bar — hidden on desktop */}
+        <div
+          className="sticky top-0 z-30 flex items-center justify-between px-4 h-14 lg:hidden"
+          style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', background: 'rgba(0,0,0,0.35)' }}
+        >
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] hover:bg-white/[0.12] text-white transition-all"
+          >
+            <Menu size={18} />
+          </button>
+          <button
+            onClick={() => navigate('/listener/notifications')}
+            className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] hover:bg-white/[0.12] text-white transition-all"
+          >
+            <Bell size={18} />
+          </button>
+        </div>
         <div className="max-w-6xl xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-6 lg:py-10 w-full">
           {children}
         </div>

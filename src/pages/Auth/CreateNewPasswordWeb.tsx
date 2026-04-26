@@ -72,7 +72,7 @@ export const CreateNewPasswordWeb = () => {
       <div className="auth-card animate-slide-up relative">
         <button 
           onClick={() => navigate('/forgot-password/verify-email', { state })}
-          className="text-gray-500 hover:text-white flex items-center gap-2 mb-6 transition-colors"
+          className="text-white/80 hover:text-white flex items-center gap-2 mb-6 transition-colors"
         >
           <ArrowLeft size={20} /> {t('Common.back', 'Back')}
         </button>

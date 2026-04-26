@@ -56,13 +56,13 @@ export const EmailVerificationWeb = () => {
       <div className="auth-card animate-slide-up relative text-center">
         <button 
           onClick={() => navigate('/forgot-password')}
-          className="text-gray-500 hover:text-white flex items-center gap-2 mb-6 transition-colors absolute top-0 left-0"
+          className="text-white/80 hover:text-white flex items-center gap-2 mb-6 transition-colors absolute top-0 left-0"
         >
           <ArrowLeft size={20} /> {t('Common.back', 'Back')}
         </button>
 
         <h2 className="text-2xl font-bold text-white mb-2 mt-10">{t('EmailVerification.title')}</h2>
-        <p className="text-sm text-gray-500 mb-8 leading-relaxed">
+        <p className="text-sm text-white/80 mb-8 leading-relaxed">
           {t('EmailVerification.subtitle')}
           <br />
           <span className="text-gray-300 font-medium">{email}</span>
@@ -85,7 +85,7 @@ export const EmailVerificationWeb = () => {
             ))}
           </div>
           
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-white/80">
             {t('EmailVerification.didntReceive')}{' '}
             <button type="button" className="text-white hover:text-primary transition-colors font-semibold underline">
               {t('EmailVerification.resend')}

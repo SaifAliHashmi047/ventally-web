@@ -165,7 +165,7 @@ export const VenterMessages = () => {
           <h1 className="text-lg font-semibold text-white tracking-tight lg:text-2xl lg:font-bold">
             {t('VenterMessages.title')}
           </h1>
-          <p className="mt-1.5 text-sm text-gray-500 max-w-md mx-auto lg:mx-0">
+          <p className="mt-1.5 text-sm text-white/80 max-w-md mx-auto lg:mx-0">
             {t('VenterMessages.subtitle')}
           </p>
         </header>
@@ -178,7 +178,7 @@ export const VenterMessages = () => {
           />
 
           <section>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-3">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-white/80 mb-3">
               {t('VenterMessages.recentChat')}
             </h2>
 

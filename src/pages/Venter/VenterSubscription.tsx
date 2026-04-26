@@ -57,14 +57,14 @@ export const VenterSubscription = () => {
 
             <div className="space-y-4 mb-8">
               <div className="flex flex-col gap-1">
-                <span className="text-sm text-gray-500">{t('VenterMySubscription.planName')}</span>
+                <span className="text-sm text-white/80">{t('VenterMySubscription.planName')}</span>
                 <span className="text-sm font-medium text-white">
                   {planName}
                 </span>
               </div>
 
               <div className="flex flex-col gap-1">
-                <span className="text-sm text-gray-500">{t('VenterMySubscription.endsIn')}</span>
+                <span className="text-sm text-white/80">{t('VenterMySubscription.endsIn')}</span>
                 <span className="text-sm font-medium text-white">
                   {subscription?.renewalDate || subscription?.billingCycleEnd
                     ? new Date(subscription.renewalDate || subscription.billingCycleEnd).toLocaleDateString('en-GB')
@@ -84,7 +84,7 @@ export const VenterSubscription = () => {
                 <span className="text-sm font-medium text-white group-hover:text-accent transition-colors">
                   {t('VenterMySubscription.subscription')}
                 </span>
-                <ChevronRight size={16} className="text-gray-500 group-hover:text-accent transition-colors" />
+                <ChevronRight size={16} className="text-white/80 group-hover:text-accent transition-colors" />
               </div>
             </div>
           </GlassCard>

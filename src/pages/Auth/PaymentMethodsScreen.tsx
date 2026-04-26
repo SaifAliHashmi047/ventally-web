@@ -26,14 +26,14 @@ export const PaymentMethodsScreen = () => {
     <>
       <button
         onClick={() => navigate(-1)}
-        className="text-gray-500 hover:text-white flex items-center gap-2 mb-6 transition-colors"
+        className="text-white/80 hover:text-white flex items-center gap-2 mb-6 transition-colors"
       >
         <ArrowLeft size={20} /> {t('Common.back', 'Back')}
       </button>
 
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-white mb-2">{t('Payment.paymentMethods', 'Payment Methods')}</h1>
-        <p className="text-sm text-gray-500">{t('Payment.manageMethods', 'Manage your payment methods')}</p>
+        <p className="text-sm text-white/80">{t('Payment.manageMethods', 'Manage your payment methods')}</p>
       </div>
 
       <div className="space-y-3 mb-8">
@@ -51,12 +51,12 @@ export const PaymentMethodsScreen = () => {
                   <p className="text-xs text-gray-400 uppercase">{method.brand} - {t('Payment.expires', 'Expires')} {method.expMonth}/{method.expYear}</p>
                 </div>
               </div>
-              <ChevronRight size={16} className="text-gray-500" />
+              <ChevronRight size={16} className="text-white/80" />
             </GlassCard>
           ))
         ) : (
           <GlassCard className="flex flex-col items-center justify-center py-8 text-center border border-dashed border-white/20">
-            <CreditCard size={32} className="text-gray-500 mb-3" />
+            <CreditCard size={32} className="text-white/80 mb-3" />
             <p className="text-sm text-gray-400">{t('Payment.noMethods', 'No payment methods added yet.')}</p>
           </GlassCard>
         )}

@@ -186,7 +186,7 @@ export const VenterChangeBackground = () => {
                 </button>
               )}
 
-              <p className="text-xs text-center text-gray-500 mt-1 truncate px-1">
+              <p className="text-xs text-center text-white/80 mt-1 truncate px-1">
                 {bg.name}
               </p>
             </div>
@@ -204,8 +204,8 @@ export const VenterChangeBackground = () => {
               onChange={handleFileChange}
             />
             <div className="w-full h-20 rounded-2xl border-2 border-dashed border-white/20 flex flex-col items-center justify-center gap-1 hover:border-accent/50 hover:bg-white/3 transition-all duration-200">
-              <Plus size={18} className="text-gray-500" />
-              <span className="text-xs text-gray-500">{t('ChangeBackground.addLabel')}</span>
+              <Plus size={18} className="text-white/80" />
+              <span className="text-xs text-white/80">{t('ChangeBackground.addLabel')}</span>
             </div>
           </label>
           <p className="text-xs text-center text-gray-600 mt-1">{t('ChangeBackground.customLabel')}</p>

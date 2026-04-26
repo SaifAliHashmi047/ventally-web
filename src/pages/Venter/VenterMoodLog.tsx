@@ -182,7 +182,7 @@ export const VenterMoodLog = () => {
           />
           <div>
             <p className="text-xl font-bold" style={{ color: moodConfig.text }}>{t(moodConfig.labelKey, moodConfig.label)}</p>
-            <p className="text-sm text-gray-500">{t('VenterMoodLog.subtitle')}</p>
+            <p className="text-sm text-white/80">{t('VenterMoodLog.subtitle')}</p>
           </div>
         </div>
       )}

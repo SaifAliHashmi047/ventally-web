@@ -115,7 +115,7 @@ export const LoginWeb = () => {
         </div>
 
         <h2 className="text-xl font-bold text-white mb-1">{t('LogIn.title')}</h2>
-        <p className="text-sm text-gray-500 mb-8">{t('LogIn.subtitle', 'Sign in to continue your journey')}</p>
+        <p className="text-sm text-white/80 mb-8">{t('LogIn.subtitle', 'Sign in to continue your journey')}</p>
 
         <div className="space-y-4">
           <Input
@@ -142,7 +142,7 @@ export const LoginWeb = () => {
           )}
 
           <div className="flex justify-end">
-            <Link to="/forgot-password" className="text-sm text-gray-500 hover:text-white transition-colors">
+            <Link to="/forgot-password" className="text-sm text-white/80 hover:text-white transition-colors">
               {t('LogIn.forgotPassword')}
             </Link>
           </div>
@@ -159,7 +159,7 @@ export const LoginWeb = () => {
           </Button>
         </div>
 
-        <p className="text-center text-sm text-gray-500 mt-6">
+        <p className="text-center text-sm text-white/80 mt-6">
           {t('LogIn.dontHaveAccount')}{' '}
           <Link to="/signup" className="text-primary hover:text-primary-hover font-medium transition-colors">
             {t('LogIn.signUp')}

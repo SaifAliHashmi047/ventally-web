@@ -38,7 +38,7 @@ export const VenterAddReflection = () => {
         </div>
         <div>
           <p className="text-base font-semibold text-white">{t('VenterHome.addReflectionSubtitle')}</p>
-          <p className="text-xs text-gray-500">{t('VenterHome.reflectionPrompt')}</p>
+          <p className="text-xs text-white/80">{t('VenterHome.reflectionPrompt')}</p>
         </div>
       </div>
 

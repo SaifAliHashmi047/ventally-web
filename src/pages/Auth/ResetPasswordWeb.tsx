@@ -47,13 +47,13 @@ export const ResetPasswordWeb = () => {
       <div className="auth-card animate-slide-up relative">
         <button 
           onClick={() => navigate('/login')}
-          className="text-gray-500 hover:text-white flex items-center gap-2 mb-6 transition-colors"
+          className="text-white/80 hover:text-white flex items-center gap-2 mb-6 transition-colors"
         >
           <ArrowLeft size={20} /> {t('Common.back', 'Back')}
         </button>
 
         <h2 className="text-2xl font-bold text-white mb-2">{t('ResetPassword.title')}</h2>
-        <p className="text-sm text-gray-500 mb-8">{t('ResetPassword.subtitle')}</p>
+        <p className="text-sm text-white/80 mb-8">{t('ResetPassword.subtitle')}</p>
 
         <form onSubmit={handleSend} className="space-y-4">
           <Input

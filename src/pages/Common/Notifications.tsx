@@ -61,7 +61,7 @@ export const Notifications = () => {
               className={`cursor-pointer transition-all ${!n.isRead ? 'border-l-2 border-primary' : ''}`}
             >
               <div className="flex items-start gap-3">
-                <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${n.isRead ? 'glass text-gray-500' : 'bg-primary/15 text-primary'}`}>
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${n.isRead ? 'glass text-white/80' : 'bg-primary/15 text-primary'}`}>
                   <Bell size={15} />
                 </div>
                 <div className="flex-1">
@@ -69,7 +69,7 @@ export const Notifications = () => {
                     <p className={`text-sm font-semibold ${n.isRead ? 'text-gray-300' : 'text-white'}`}>{n.title}</p>
                     {!n.isRead && <div className="w-2 h-2 rounded-full bg-primary ml-auto flex-shrink-0" />}
                   </div>
-                  {n.body && <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.body}</p>}
+                  {n.body && <p className="text-xs text-white/80 mt-0.5 line-clamp-2">{n.body}</p>}
                   <p className="text-xs text-gray-600 mt-1">
                     {new Date(n.createdAt).toLocaleDateString(i18n.language, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
                   </p>

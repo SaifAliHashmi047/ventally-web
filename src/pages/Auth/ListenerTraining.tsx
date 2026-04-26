@@ -6,6 +6,7 @@ import { useAccountChangeFlow } from '../../hooks/useAccountChangeFlow';
 import { AccordionItem } from '../../components/Shared/AccordionItem';
 import { ArrowLeft, Clock, BookOpen } from 'lucide-react';
 import listenerTopImage from '../../assets/images/listenerTopImage.png';
+import { Button } from '../../components/ui/Button';
 
 export const ListenerTraining = () => {
   const { t } = useTranslation();
@@ -146,13 +147,9 @@ export const ListenerTraining = () => {
             {t('ListenerTraining.agreeAllTerms')}
           </p>
         )}
-        <button 
-          onClick={handleContinue}
-          className="btn-primary" 
-          style={{ height: '56px', justifyContent: 'center', fontSize: '17px', borderRadius: '16px', width: '100%', opacity: isAllChecked ? 1 : 0.7 }}
-        >
+        <Button variant="primary" size="lg" fullWidth onClick={handleContinue}>
           {t('ListenerTraining.continue')}
-        </button>
+        </Button>
       </div>
     </>
   );

@@ -170,7 +170,7 @@ export const ReportScreen = () => {
               maxLength={500}
             />
           </GlassCard>
-          <p className="text-xs text-gray-500 text-right">
+          <p className="text-xs text-white/80 text-right">
             {description.length}/500
           </p>
         </div>

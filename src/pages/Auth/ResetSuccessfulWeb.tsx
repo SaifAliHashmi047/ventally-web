@@ -34,7 +34,7 @@ export const ResetSuccessfulWeb = () => {
         >
           {t('ResetSuccessful.continue')}
         </Button>
-        <p className="text-xs text-gray-500 mt-4">Redirecting to log in…</p>
+        <p className="text-xs text-white/80 mt-4">Redirecting to log in…</p>
       </div>
     </AuthPageFrame>
   );

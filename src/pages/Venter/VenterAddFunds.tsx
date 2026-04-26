@@ -142,7 +142,7 @@ export const VenterAddFunds = () => {
             })}
 
             {packs.length === 0 && !loading && (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-white/80">
                 {t('VenterAddFunds.noPlans')}
               </div>
             )}
@@ -152,7 +152,7 @@ export const VenterAddFunds = () => {
           {selectedPack && (
             <GlassCard padding="sm" rounded="2xl" className="mb-6">
               <div className="flex justify-between items-center text-sm mb-2">
-                <span className="text-gray-500">{selectedPack.name}</span>
+                <span className="text-white/80">{selectedPack.name}</span>
                 <span className="text-white font-semibold">${selectedPack.price.toFixed(2)}</span>
               </div>
               <div className="divider my-2" />

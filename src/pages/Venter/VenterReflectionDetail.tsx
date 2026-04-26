@@ -78,7 +78,7 @@ export const VenterReflectionDetail = () => {
       />
 
       {/* Date */}
-      <div className="flex items-center gap-2 text-sm text-gray-500">
+      <div className="flex items-center gap-2 text-sm text-white/80">
         <Calendar size={14} />
         {new Date(reflection.reflection_date).toLocaleDateString(i18n.language, { dateStyle: 'full' })}
       </div>

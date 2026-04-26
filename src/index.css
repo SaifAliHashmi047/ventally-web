@@ -26,7 +26,7 @@
   --text-pure: #FFFFFF;
   --text-main: #F5F5F5;
   --text-muted: #8E8E93;
-  --text-dim: #636366;
+  --text-dim: #ffffffcc;
 
   /* Borders */
   --border: rgba(255, 255, 255, 0.12);
@@ -482,7 +482,7 @@ body {
   }
 
   .input-icon-left {
-    @apply absolute left-4 top-1/2 -translate-y-1/2 text-gray-500;
+    @apply absolute left-4 top-1/2 -translate-y-1/2 text-white/80;
   }
 
   .input-icon-right {
@@ -605,7 +605,7 @@ body {
   }
 
   .section-label {
-    @apply text-sm font-medium text-gray-500 uppercase tracking-wide;
+    @apply text-sm font-medium text-white/80 uppercase tracking-wide;
   }
 
   /* =============================================
@@ -734,7 +734,7 @@ body {
   }
 
   .data-table th {
-    @apply px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wide;
+    @apply px-4 py-3 text-left font-semibold text-white/80 text-xs uppercase tracking-wide;
     border-bottom: 1px solid var(--divider);
   }
 

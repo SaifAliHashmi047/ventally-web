@@ -191,18 +191,16 @@ export const ListenerVerification = () => {
           ))}
         </div>
 
-        {/* Submit button — matches RN submitButton at bottom of card */}
-        <button
+        <Button
+          variant="primary"
+          size="lg"
+          fullWidth
           onClick={handleSubmit}
           disabled={loading}
-          className="w-full py-4 text-sm font-medium text-white text-center hover:bg-white/5 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 border-t border-white/20"
-          style={{ background: 'rgba(255,255,255,0.06)' }}
+          loading={loading}
         >
-          {loading ? (
-            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-          ) : null}
           {t('ListenerVerification.submit')}
-        </button>
+        </Button>
 
         <p className="text-xs leading-relaxed text-white/60 mt-6 text-center px-4">
           {t('ListenerVerification.footertext')}
