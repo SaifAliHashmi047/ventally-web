@@ -1780,7 +1780,8 @@
       "debitCardDesc": "Les virements instantanés vers votre carte de débit seront disponibles dans une future mise à jour.",
       "bankAccount": "Compte Bancaire",
       "bankAccountDesc": "Les virements sont envoyés automatiquement sur votre compte bancaire lié. Tous les virements sont traités en toute sécurité par Stripe.",
-      "footer": "Les transferts peuvent prendre 1-3 jours ouvrables selon votre banque."
+      "footer": "Les transferts peuvent prendre 1-3 jours ouvrables selon votre banque.",
+      "connected": "Connected"
     },
     "linkBank": {
       "title": "Connect Bank",

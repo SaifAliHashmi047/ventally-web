@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { RootState, AppDispatch } from '../../store/store';
 import { initializeAuth } from '../../store/slices/userSlice';
 import { useAuth } from '../../api/hooks/useAuth';
@@ -13,6 +14,7 @@ interface BootLoaderProps {
 }
 
 export const BootLoader: React.FC<BootLoaderProps> = ({ children }) => {
+  const { t } = useTranslation();
   const [isBooting, setIsBooting] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
   const { getProfile } = useAuth();
@@ -74,7 +76,7 @@ export const BootLoader: React.FC<BootLoaderProps> = ({ children }) => {
             <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150 animate-pulse-soft" />
             <AppBrandIcon className="w-24 h-24 rounded-[2rem] shadow-glow-primary relative z-10" />
           </div>
-          <h1 className="text-3xl font-bold text-white tracking-tighter mb-2">Ventally</h1>
+          <h1 className="text-3xl font-bold text-white tracking-tighter mb-2">{t('Common.appName', 'Ventally')}</h1>
           <div className="flex gap-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: '0ms' }} />
             <div className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: '150ms' }} />

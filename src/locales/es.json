@@ -1780,7 +1780,8 @@
       "debitCardDesc": "Los retiros instantáneos a tu tarjeta de débito estarán disponibles en una futura actualización.",
       "bankAccount": "Cuenta Bancaria",
       "bankAccountDesc": "Las transferencias se envían automáticamente a tu cuenta bancaria vinculada. Todas las transferencias se procesan de forma segura a través de Stripe.",
-      "footer": "Las transferencias pueden tardar de 1-3 días hábiles dependiendo de tu banco."
+      "footer": "Las transferencias pueden tardar de 1-3 días hábiles dependiendo de tu banco.",
+      "connected": "Connected"
     },
     "linkBank": {
       "title": "Connect Bank",

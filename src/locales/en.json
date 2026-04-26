@@ -2359,7 +2359,8 @@
       "debitCardDesc": "Instant transfers to your debit card will be available in a future update.",
       "bankAccount": "Bank Account",
       "bankAccountDesc": "Funds are transferred to your linked bank account. All transfers are securely processed through Stripe.",
-      "footer": "Transfers typically arrive within 1 to 3 business days, depending on your bank."
+      "footer": "Transfers typically arrive within 1 to 3 business days, depending on your bank.",
+      "connected": "Connected"
     },
     "linkBank": {
       "title": "Connect Bank",
