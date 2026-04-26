@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import {
   BarChart3, Users, UserCheck, Flag, DollarSign,
-  Settings, LogOut, Menu, X, Bell, Download,
+  Settings, LogOut, Menu, Bell, Download,
   ShieldCheck, ChevronRight, User, Lock
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -55,7 +55,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
       {/* Sidebar */}
       <aside className={cn(
         'fixed top-0 left-0 bottom-0 z-50 flex flex-col w-72',
-        'glass border-r border-white/8',
+        'glass border-r border-white/8 [&::before]:hidden [&::after]:hidden',
         'transition-transform duration-300 ease-smooth',
         'lg:translate-x-0 lg:static lg:z-auto',
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -98,19 +98,36 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
         </div>
       </aside>
 
-      {/* Mobile Top Bar */}
-      <div className="fixed top-0 left-0 right-0 z-30 h-16 glass border-b border-white/8 flex items-center justify-between px-4 lg:hidden">
-        <div className="flex items-center gap-3">
-          <AppBrandIcon className="w-9 h-9 rounded-2xl" />
-          <span className="font-bold text-white">{t('Common.adminPanel')}</span>
-        </div>
-        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 rounded-xl glass text-gray-400 hover:text-white transition-colors">
-          {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
-
       {/* Main Content */}
-      <main className="flex-1 lg:ml-0 pt-16 lg:pt-0 overflow-y-auto">
+      <main className="flex-1 lg:ml-0 overflow-y-auto">
+        {/* Mobile top bar — hidden on desktop */}
+        <div
+          className="sticky top-0 z-30 flex items-center justify-between px-4 h-14 lg:hidden"
+        >
+          <div className="flex items-center gap-2.5">
+            <AppBrandIcon className="w-8 h-8 rounded-xl flex-shrink-0" />
+            <div>
+              <p className="text-xs text-white/60 leading-none">{t('Home.welcomeBack', 'Welcome back,')}</p>
+              <p className="text-sm font-semibold text-white leading-tight mt-0.5">
+                {user?.firstName || user?.displayName?.split(' ')[0] || t('Common.admin', 'Admin')}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate('/admin/notifications')}
+              className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] hover:bg-white/[0.12] text-white transition-all"
+            >
+              <Bell size={18} />
+            </button>
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] hover:bg-white/[0.12] text-white transition-all"
+            >
+              <Menu size={18} />
+            </button>
+          </div>
+        </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-6 lg:py-10 w-full">
           {children}
         </div>

@@ -37,6 +37,7 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
   const dispatch = useDispatch();
   const { getStatus } = useAvailability();
   const isAvailable = useSelector((state: RootState) => (state.listener as any).isAvailable as boolean);
+  const user = useSelector((state: RootState) => state.user.user as any);
 
   useEffect(() => {
     getStatus()
@@ -108,7 +109,7 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
       <aside
         className={cn(
           'fixed top-0 left-0 bottom-0 z-50 flex flex-col w-72',
-          'glass border-r border-white/8',
+          'glass border-r border-white/8 [&::before]:hidden [&::after]:hidden',
           'transition-transform duration-300 ease-smooth',
           'lg:translate-x-0 lg:static lg:z-auto',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -171,20 +172,30 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
         {/* Mobile top bar — hidden on desktop */}
         <div
           className="sticky top-0 z-30 flex items-center justify-between px-4 h-14 lg:hidden"
-          style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', background: 'rgba(0,0,0,0.35)' }}
         >
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] hover:bg-white/[0.12] text-white transition-all"
-          >
-            <Menu size={18} />
-          </button>
-          <button
-            onClick={() => navigate('/listener/notifications')}
-            className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] hover:bg-white/[0.12] text-white transition-all"
-          >
-            <Bell size={18} />
-          </button>
+          <div className="flex items-center gap-2.5">
+            <AppBrandIcon className="w-8 h-8 rounded-xl flex-shrink-0" />
+            <div>
+              <p className="text-xs text-white/60 leading-none">{t('Home.welcomeBack', 'Welcome back,')}</p>
+              <p className="text-sm font-semibold text-white leading-tight mt-0.5">
+                {user?.firstName || user?.displayName?.split(' ')[0] || t('Common.listener', 'Listener')}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate('/listener/notifications')}
+              className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] hover:bg-white/[0.12] text-white transition-all"
+            >
+              <Bell size={18} />
+            </button>
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] hover:bg-white/[0.12] text-white transition-all"
+            >
+              <Menu size={18} />
+            </button>
+          </div>
         </div>
         <div className="max-w-6xl xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-6 lg:py-10 w-full">
           {children}

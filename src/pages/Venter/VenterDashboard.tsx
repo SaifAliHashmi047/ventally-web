@@ -57,7 +57,7 @@ export const VenterDashboard = () => {
           statsRes.value.mood_distribution.forEach((d: any) => {
             if (d.mood_type) moodMap[d.mood_type.toLowerCase()] = parseInt(d.count, 10);
           });
-          const mapped = allMoods.map(m => ({ value: moodMap[m] || 0, label: t(`VenterHome.moods.${m}`) }));
+          const mapped = allMoods.map(m => ({ value: moodMap[m] || 0, label: m }));
           setChartData(mapped);
           setHappyDays(moodMap['happy'] || 0);
         }
@@ -112,8 +112,8 @@ export const VenterDashboard = () => {
   return (
     <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <div className="w-full lg:max-w-5xl xl:max-w-6xl lg:mx-auto">
-        {/* Header — matches RN HomeHeader with logo + notification icon */}
-        <div className="flex items-center justify-between mb-4 lg:mb-6">
+        {/* Header — desktop only; mobile uses layout top bar */}
+        <div className="hidden lg:flex items-center justify-between mb-4 lg:mb-6">
           <div className="flex items-center gap-2 lg:gap-3">
             <AppBrandIcon className="w-9 h-9 rounded-[0.65rem] sm:w-10 sm:h-10 sm:rounded-2xl" />
             <span className="text-lg lg:text-xl font-bold text-white tracking-tight">
@@ -253,12 +253,10 @@ export const VenterDashboard = () => {
 
             {/* Mood Chart Section */}
             {chartData.length > 0 && (
-              <div>
-                <p className="text-sm font-semibold text-white mb-3 lg:mb-3.5">{t('VenterHome.moodOverTime')}</p>
-                <GlassCard>
-                  <MoodBarChart data={chartData} />
-                </GlassCard>
-              </div>
+              <GlassCard style={{ background: 'rgba(0,0,0,0.15)' }}>
+                <p className="text-sm font-medium text-white mb-6">{t('VenterHome.moodOverTime')}</p>
+                <MoodBarChart data={chartData} />
+              </GlassCard>
             )}
           </div>
         </div>

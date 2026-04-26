@@ -17,7 +17,20 @@ export const AdminResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const validatePassword = (pwd: string) => {
+    if (pwd.length < 8) return t('Common.passwordValidationError', 'Password must be at least 8 characters');
+    if (!/[A-Z]/.test(pwd)) return t('Common.passwordValidationError', 'Password must include an uppercase letter');
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(pwd)) return t('Common.passwordValidationError', 'Password must include a special character');
+    return null;
+  };
+
   const handleUpdate = async () => {
+    if (!oldPassword) {
+      toast.error(t('Common.fillRequiredFields', 'Please fill all required fields'));
+      return;
+    }
+    const pwdErr = validatePassword(newPassword);
+    if (pwdErr) { toast.error(pwdErr); return; }
     if (newPassword !== confirmPassword) {
       toast.error(t('Admin.security.resetPasswordScreen.passwordMismatch', 'Passwords do not match'));
       return;

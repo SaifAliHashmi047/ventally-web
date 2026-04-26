@@ -82,7 +82,7 @@
   },
   "OnBoarding": {
     "appName": "VENTALLY",
-    "quote": "Sometimes the most honest conversations happen when no one knows your name.",
+    "quote": "Sometimes the most honest \nconversations happen when \n no one knows your name.",
     "fetchingData": "Fetching Data...",
     "voiceRules": "Your voice. Your rules.",
     "voiceTitle": "Your Voice. Your Rules.",

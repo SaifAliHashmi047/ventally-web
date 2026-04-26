@@ -69,7 +69,7 @@ export const VenterReflectionDetail = () => {
             </button>
             <button
               onClick={() => setDeleteModal(true)}
-              className="p-2 rounded-xl glass text-gray-400 hover:text-error transition-colors"
+              className="p-2 rounded-xl glass text-white/50 hover:text-white transition-colors"
             >
               <Trash2 size={16} />
             </button>

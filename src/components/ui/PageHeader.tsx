@@ -35,9 +35,10 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   const hasBack = showBackButton !== false && (backPath !== undefined || onBack || showBackButton === true);
 
   return (
-    <div className={cn('relative flex items-center justify-center min-h-[3.5rem] sm:min-h-[4rem] mb-4 sm:mb-6 px-3 sm:px-4', className)}>
-      {hasBack && (
-        <div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2">
+    <div className={cn('flex items-center gap-2 min-h-[3.5rem] sm:min-h-[4rem] mb-4 sm:mb-6 px-3 sm:px-4', className)}>
+      {/* Left slot — back button or invisible spacer to keep title centered */}
+      <div className={cn('flex-shrink-0 flex items-center', !hasBack && rightContent ? 'invisible' : '')}>
+        {hasBack ? (
           <button
             onClick={handleBack}
             className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white/[0.03] hover:bg-white/[0.08] text-white transition-all"
@@ -45,19 +46,24 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             <ArrowLeft size={16} className="sm:hidden" />
             <ArrowLeft size={18} className="hidden sm:block" />
           </button>
-        </div>
-      )}
+        ) : rightContent ? (
+          /* phantom spacer matching right slot width so title stays truly centred */
+          <div className="w-8 h-8 sm:w-10 sm:h-10" />
+        ) : null}
+      </div>
 
-      <div className={cn('flex flex-col items-center text-center px-12 sm:px-14 w-full', centered ? 'mx-auto' : 'mr-auto')}>
-        <h1 className="text-base sm:text-lg md:text-xl font-semibold text-white text-center leading-tight">{title}</h1>
+      {/* Center — title */}
+      <div className={cn('flex-1 min-w-0 flex flex-col', centered ? 'items-center text-center' : 'items-start')}>
+        <h1 className="text-base sm:text-lg md:text-xl font-semibold text-white leading-tight truncate max-w-full">{title}</h1>
         {subtitle && (
-          <p className="text-xs sm:text-sm text-white/80 mt-0.5 text-center">{subtitle}</p>
+          <p className="text-xs sm:text-sm text-white/80 mt-0.5">{subtitle}</p>
         )}
       </div>
 
-      {rightContent && (
-        <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
-          {rightContent}
+      {/* Right slot — rightContent or nothing */}
+      {(rightContent || hasBack) && (
+        <div className="flex-shrink-0 flex items-center">
+          {rightContent ?? (hasBack ? <div className="w-8 h-8 sm:w-10 sm:h-10" /> : null)}
         </div>
       )}
     </div>

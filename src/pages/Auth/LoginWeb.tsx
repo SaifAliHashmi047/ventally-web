@@ -21,8 +21,10 @@ export const LoginWeb = () => {
 
   const validate = () => {
     const errs: any = {};
-    if (!form.email.includes('@')) errs.email = t('LogIn.error.validEmail', 'Enter a valid email');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email.trim())) errs.email = t('LogIn.error.validEmail', 'Enter a valid email');
     if (!form.password) errs.password = t('LogIn.error.passwordRequired', 'Password is required');
+    else if (form.password.length < 8) errs.password = t('Common.passwordValidationError', 'Password must be at least 8 characters');
     return errs;
   };
 

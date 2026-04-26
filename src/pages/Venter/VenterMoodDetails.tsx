@@ -133,7 +133,7 @@ export const VenterMoodDetails = () => {
             </button>
             <button
               onClick={() => setShowDeleteModal(true)}
-              className="w-10 h-10 glass rounded-xl flex items-center justify-center text-error hover:bg-error/20 transition-colors"
+              className="w-10 h-10 glass rounded-xl flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors"
             >
               <Trash2 size={18} />
             </button>
@@ -195,8 +195,8 @@ export const VenterMoodDetails = () => {
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
           <GlassCard className="w-full max-w-sm rounded-3xl p-6 text-center transform animate-scale-up">
-            <div className="w-16 h-16 bg-error/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <AlertTriangle size={28} className="text-error" />
+            <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertTriangle size={28} className="text-white/70" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2">
               {t('VenterMoodDetails.deleteConfirmTitle', 'Delete Mood Entry?')}
@@ -215,7 +215,7 @@ export const VenterMoodDetails = () => {
               <button
                 onClick={handleDelete}
                 disabled={deleteLoading}
-                className="py-3 rounded-2xl bg-error text-white font-medium hover:bg-error/90 transition-colors flex items-center justify-center gap-2"
+                className="py-3 rounded-2xl bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 transition-colors flex items-center justify-center gap-2"
               >
                 {deleteLoading ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

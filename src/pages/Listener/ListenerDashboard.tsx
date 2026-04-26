@@ -45,8 +45,8 @@ export const ListenerDashboard = () => {
   return (
     <div className="page-wrapper page-wrapper--wide animate-fade-in">
       <div className="w-full lg:max-w-3xl xl:max-w-4xl lg:mx-auto space-y-6 lg:space-y-8">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-4">
+        {/* Header — desktop only; mobile uses layout top bar */}
+        <div className="hidden lg:flex items-start justify-between gap-4">
           <div>
             <p className="text-sm text-white/80 mb-1">
               {t('ListenerHome.welcomeBack', 'Welcome back,')}
@@ -87,7 +87,7 @@ export const ListenerDashboard = () => {
           {isAvailable && (
             <div className="mt-3 flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-success animate-pulse-soft" />
-              <span className="text-xs text-success font-medium">
+              <span className="text-xs text-primary font-medium">
                 {t('ListenerHome.onlineReady', 'Online and ready')}
               </span>
             </div>
