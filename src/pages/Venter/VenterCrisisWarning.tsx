@@ -56,16 +56,13 @@ export const VenterCrisisWarning = () => {
       <PageHeader
         title=""
         onBack={() => {
-          // If coming from chat, navigate to dashboard instead of back
-          if (fromChat || isChatActive) {
-            navigate('/venter/dashboard', { replace: true });
-          } else {
-            navigate(-1);
-          }
+
+          navigate(-1);
+
         }}
       />
 
-      <div className="flex-1 flex flex-col items-center justify-center px-4">
+      <div className="flex-1 flex flex-col items-center justify-center px-4  ">
         {/* Disclaimer Text */}
         <div className="text-center mb-8">
           <p className="text-lg text-white font-medium leading-relaxed">
@@ -85,11 +82,10 @@ export const VenterCrisisWarning = () => {
           className="flex items-center gap-3 mb-8 w-full max-w-sm"
         >
           <div
-            className={`w-6 h-6 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-              understood
-                ? 'bg-magenta border-magenta'
-                : 'border-white/30'
-            }`}
+            className={`w-6 h-6 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${understood
+              ? 'bg-magenta border-magenta'
+              : 'border-white/30'
+              }`}
           >
             {understood && <Check size={16} className="text-white" />}
           </div>
@@ -97,20 +93,21 @@ export const VenterCrisisWarning = () => {
             {t('CrisisWarning.acknowledgment', 'I understand and agree to seek immediate professional help if needed')}
           </span>
         </button>
-      </div>
+        {/* Button at bottom */}
 
-      {/* Button at bottom */}
-      <div className="absolute bottom-6 left-4 right-4">
+      </div>
+      {!showEmergencyModal && (
+        // <div className="absolute bottom-6 left-4 right-4">
         <Button
           variant="primary"
-          size="lg"
           fullWidth
           onClick={handleAgreeContinue}
           disabled={!understood}
         >
           {t('CrisisWarning.agreeContinue', 'Agree & Continue')}
         </Button>
-      </div>
+        // </div>
+      )}
 
       {/* Emergency Protocol Modal */}
       {showEmergencyModal && (
@@ -125,8 +122,8 @@ export const VenterCrisisWarning = () => {
             </p>
             <Button
               variant="primary"
-              size="lg"
               fullWidth
+              className='!w-full'
               onClick={handleContact988}
             >
               {t('CrisisWarning.continue', 'Continue')}

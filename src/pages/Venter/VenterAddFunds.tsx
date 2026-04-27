@@ -71,6 +71,20 @@ export const VenterAddFunds = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stripeSessionId, checkoutStatus]);
 
+  const getPackDescription = (name: string): string => {
+    const lower = (name || '').toLowerCase().trim();
+    if (lower.includes('entend your call') || lower.includes('extend your call')) {
+      return t('VenterAddFunds.descVoice');
+    }
+    if (lower.includes('continue your conversation')) {
+      return t('VenterAddFunds.descChat');
+    }
+    if (lower.includes('extra time when you need it')) {
+      return t('VenterAddFunds.descBoost');
+    }
+    return name;
+  };
+
   const handleConfirm = async () => {
     if (!selectedPack) {
       toastError(t('VenterAddFunds.selectPlan'));
@@ -121,11 +135,27 @@ export const VenterAddFunds = () => {
                   )}
                 >
                   <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-semibold text-white">{pack.name}</p>
-                      <p className="text-sm text-gray-400">
-                        {pack.credits} {t('VenterAddFunds.minutes')}
-                      </p>
+                    <div className="flex-1 pr-4">
+                      <p className="font-semibold text-white mb-1">{pack.name}</p>
+                      
+                      {pack.included_minutes != null && pack.included_minutes > 0 && pack.included_messages != null && pack.included_messages > 0 ? (
+                        <p className="text-sm font-medium text-white/90">
+                          {pack.included_minutes} {t('VenterAddFunds.minutes')} + {pack.included_messages} {t('VenterAddFunds.messages')}
+                        </p>
+                      ) : (
+                        <>
+                          {pack.included_minutes != null && pack.included_minutes > 0 && (
+                            <p className="text-sm font-medium text-white/90">{pack.included_minutes} {t('VenterAddFunds.minutes')}</p>
+                          )}
+                          {pack.included_messages != null && pack.included_messages > 0 && (
+                            <p className="text-sm font-medium text-white/90">{pack.included_messages} {t('VenterAddFunds.messages')}</p>
+                          )}
+                        </>
+                      )}
+                      
+                      {pack.description && (
+                        <p className="text-xs text-gray-400 mt-1">{getPackDescription(pack.description)}</p>
+                      )}
                     </div>
                     <div className="flex items-center gap-3">
                       <p className="text-lg font-bold text-accent">${pack.price.toFixed(2)}</p>

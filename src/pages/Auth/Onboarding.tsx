@@ -54,7 +54,7 @@ export const Onboarding = () => {
 
       <main
         id="onboarding-main"
-        className="relative z-10 flex min-h-0 w-full flex-1 flex-col overflow-y-auto overscroll-y-contain"
+        className="relative z-10 flex w-full flex-1 flex-col"
         role="main"
       >
         <div

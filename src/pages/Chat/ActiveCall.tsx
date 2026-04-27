@@ -154,8 +154,12 @@ export const ActiveCall = () => {
 
   return (
     <div
-      className="h-[100dvh] min-h-0 w-full max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-stretch justify-between py-8 sm:py-12 px-4 sm:px-5 bg-bg-deep lg:border lg:border-white/10 lg:rounded-3xl lg:shadow-2xl lg:shadow-black/40 lg:overflow-hidden"
-      style={{ background: 'radial-gradient(ellipse at center, rgba(194,174,191,0.08) 0%, #000 60%)' }}
+      className="h-[100dvh] min-h-0 w-full max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-stretch justify-between px-4 sm:px-5 bg-bg-deep lg:border lg:border-white/10 lg:rounded-3xl lg:shadow-2xl lg:shadow-black/40 lg:overflow-hidden"
+      style={{ 
+        background: 'radial-gradient(ellipse at center, rgba(194,174,191,0.08) 0%, #000 60%)',
+        paddingTop: 'max(2rem, env(safe-area-inset-top))',
+        paddingBottom: 'max(2rem, env(safe-area-inset-bottom))'
+      }}
     >
       {/* Top Bar */}
       <div className="flex justify-between items-center w-full max-w-sm mx-auto shrink-0">

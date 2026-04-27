@@ -3,7 +3,10 @@ import apiInstance from '../apiInstance';
 export interface CreditPack {
   id: string;
   name: string;
-  credits: number;
+  credits?: number; // legacy
+  included_minutes?: number;
+  included_messages?: number;
+  description?: string;
   price: number;
   currency: string;
 }

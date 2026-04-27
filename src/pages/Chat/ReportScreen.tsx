@@ -8,6 +8,7 @@ import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
 import { useAdmin } from '../../api/hooks/useAdmin';
 import { toastSuccess, toastError } from '../../utils/toast';
+import { PageHeader } from '../../components/ui/PageHeader';
 
 // Match mobile app reason keys
 const REPORT_REASONS = [
@@ -101,7 +102,7 @@ export const ReportScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bg-deep animate-fade-in">
+    <div className="min-h-screen   animate-fade-in">
       {/* Header */}
       <div className="glass border-b border-white/8 px-4 py-3 flex items-center gap-3 sticky top-0 z-10">
         <button
@@ -111,7 +112,6 @@ export const ReportScreen = () => {
           <ChevronLeft size={20} />
         </button>
         <div className="flex items-center gap-2">
-          <Flag size={18} className="text-error" />
           <h1 className="text-lg font-semibold text-white">
             {t('Report.title', 'Report User')}
           </h1>
@@ -123,7 +123,6 @@ export const ReportScreen = () => {
         {/* Info Card */}
         <GlassCard className="rounded-2xl" padding="md">
           <div className="flex items-start gap-3">
-            <AlertTriangle size={20} className="text-warning flex-shrink-0 mt-0.5" />
             <p className="text-sm text-gray-400">
               {t(
                 'Report.info',
@@ -143,11 +142,10 @@ export const ReportScreen = () => {
               <button
                 key={reason.id}
                 onClick={() => setSelectedReason(reason.id)}
-                className={`w-full text-left p-4 rounded-2xl border transition-all ${
-                  selectedReason === reason.id
-                    ? 'border-primary bg-primary/10'
-                    : 'border-white/10 hover:border-white/20'
-                }`}
+                className={`w-full text-left p-4 rounded-2xl border transition-all ${selectedReason === reason.id
+                  ? 'border-primary bg-primary/10'
+                  : 'border-white/10 hover:border-white/20'
+                  }`}
               >
                 <p className="text-sm text-white">{reason.label}</p>
               </button>

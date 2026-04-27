@@ -141,7 +141,7 @@ export const ListenerCrisisEscalation = () => {
 
             <Button
               variant="glass"
-              size="lg"
+
               fullWidth
               className="min-h-[52px] rounded-2xl border border-white/10"
               leftIcon={<MessageSquare size={20} />}

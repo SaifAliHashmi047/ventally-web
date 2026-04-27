@@ -163,6 +163,8 @@ export const ListenerActiveCall = () => {
       style={{
         background:
           'radial-gradient(ellipse 120% 80% at 50% -10%, rgba(194,174,191,0.14) 0%, transparent 55%), radial-gradient(ellipse at 50% 100%, rgba(194,174,191,0.06) 0%, #000 65%)',
+        paddingTop: 'env(safe-area-inset-top)',
+        paddingBottom: 'env(safe-area-inset-bottom)'
       }}
     >
       <div className="relative z-10 flex flex-col flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 min-h-0">
