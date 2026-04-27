@@ -9,6 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { logout } from '../../store/slices/userSlice';
 import { setRequests, clearRequests, setAvailability } from '../../store/slices/listenerSlice';
 import { useAvailability } from '../../api/hooks/useAvailability';
+import { getUnreadNotificationCount } from '../../api/notificationsApi';
+import { useWebNotifications } from '../../api/hooks/useWebNotifications';
 import type { RootState } from '../../store/store';
 import { cn } from '../../utils/cn';
 import socketService from '../../api/socketService';
@@ -32,6 +34,7 @@ interface ListenerLayoutProps {
 export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
   const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -39,11 +42,26 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
   const isAvailable = useSelector((state: RootState) => (state.listener as any).isAvailable as boolean);
   const user = useSelector((state: RootState) => state.user.user as any);
 
+  useWebNotifications();
+
   useEffect(() => {
     getStatus()
       .then(res => dispatch(setAvailability(res?.status?.isOnline ?? false)))
       .catch(() => {});
   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        const res = await getUnreadNotificationCount();
+        const count = (res as any)?.data?.unreadCount ?? 0;
+        setUnreadCount(count);
+      } catch (err) {
+        console.error('Failed to fetch unread count:', err);
+      }
+    };
+    fetchUnreadCount();
   }, []);
 
   const handleLogout = () => {
@@ -185,9 +203,12 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigate('/listener/notifications')}
-              className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] hover:bg-white/[0.12] text-white transition-all"
+              className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] hover:bg-white/[0.12] text-white transition-all relative"
             >
               <Bell size={18} />
+              {unreadCount > 0 && (
+                <div className="absolute top-0.5 right-0.5 w-2.5 h-2.5 rounded-full bg-primary" />
+              )}
             </button>
             <button
               onClick={() => setSidebarOpen(true)}

@@ -78,7 +78,7 @@ export const VenterDashboard = () => {
         }
 
         if (unreadRes.status === 'fulfilled') {
-          const count = (unreadRes.value as any)?.unread_count ?? (unreadRes.value as any)?.count ?? 0;
+          const count = (unreadRes.value as any)?.data?.unreadCount ?? 0;
           setUnreadCount(count);
         }
       } catch (err) {
@@ -131,9 +131,12 @@ export const VenterDashboard = () => {
           <button
             type="button"
             onClick={() => navigate('/venter/notifications')}
-            className="w-10 h-10 glass rounded-2xl flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+            className="w-10 h-10 glass rounded-2xl flex items-center justify-center text-gray-400 hover:text-white transition-colors relative"
           >
             <Bell size={18} />
+            {unreadCount > 0 && (
+              <div className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-primary" />
+            )}
           </button>
         </div>
 

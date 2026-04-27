@@ -63,9 +63,18 @@ export const Notifications = () => {
 
   const markAllRead = async () => {
     try {
-      await apiInstance.put('notifications/read-all');
+      const unreadNotifications = notifications.filter(n => !n.read_at);
+
+      if (unreadNotifications.length === 0) return;
+
+      await Promise.allSettled(
+        unreadNotifications.map(n => apiInstance.put(`notifications/${n.id}/read`))
+      );
+
       setNotifications(prev => prev.map(n => ({ ...n, read_at: new Date().toISOString() })));
-    } catch { /* ignore */ }
+    } catch (err) {
+      console.error('Error marking all as read:', err);
+    }
   };
 
   const handleNotificationClick = async (notification: any) => {

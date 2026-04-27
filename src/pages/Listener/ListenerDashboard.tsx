@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,7 @@ import type { RootState } from '../../store/store';
 import { Phone, MessageSquare, ChevronRight, Bell, Sparkles, Wallet } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { toastError } from '../../utils/toast';
+import { getUnreadNotificationCount } from '../../api/notificationsApi';
 
 export const ListenerDashboard = () => {
   const { t } = useTranslation();
@@ -22,6 +23,7 @@ export const ListenerDashboard = () => {
   const { goOnline, goOffline } = useAvailability();
 
   const [loadingToggle, setLoadingToggle] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const handleAvailabilityToggle = async () => {
     setLoadingToggle(true);
@@ -39,6 +41,19 @@ export const ListenerDashboard = () => {
       setLoadingToggle(false);
     }
   };
+
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        const res = await getUnreadNotificationCount();
+        const count = (res as any)?.data?.unreadCount ?? 0;
+        setUnreadCount(count);
+      } catch (err) {
+        console.error('Failed to fetch unread count:', err);
+      }
+    };
+    fetchUnreadCount();
+  }, []);
 
   const firstName = user?.firstName || user?.displayName?.split(' ')[0] || t('ListenerHome.listener', 'Listener');
 
@@ -58,9 +73,12 @@ export const ListenerDashboard = () => {
           <button
             type="button"
             onClick={() => navigate('/listener/notifications')}
-            className="w-10 h-10 glass rounded-2xl flex items-center justify-center text-gray-400 hover:text-white transition-colors flex-shrink-0"
+            className="w-10 h-10 glass rounded-2xl flex items-center justify-center text-gray-400 hover:text-white transition-colors flex-shrink-0 relative"
           >
             <Bell size={18} />
+            {unreadCount > 0 && (
+              <div className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-primary" />
+            )}
           </button>
         </div>
 
