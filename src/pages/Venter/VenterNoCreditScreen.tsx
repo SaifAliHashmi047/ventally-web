@@ -11,7 +11,7 @@ export const VenterNoCreditScreen = () => {
   return (
     <div className="page-wrapper animate-fade-in flex flex-col items-center justify-center min-h-screen pb-20 px-4">
       <div className="w-full max-w-sm text-center">
-        <div className="w-24 h-24 rounded-full bg-error/20 flex flex-col items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(255,59,48,0.2)]">
+        <div className="w-24 h-24 rounded-full bg-white/20 flex flex-col items-center justify-center mx-auto mb-6  ">
           <AlertCircle size={40} className="text-white" />
         </div>
 

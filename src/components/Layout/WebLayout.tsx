@@ -22,11 +22,11 @@ export const WebLayout = ({ children }: LayoutProps) => {
   };
 
   const navItems = [
-    { path: '/', label: 'Dashboard', icon: Home },
-    { path: '/test', label: 'Safety Hub', icon: Beaker },
-    { path: '/chat', label: 'Messages', icon: MessageSquare },
-    { path: '/notifications', label: 'Alerts', icon: Bell },
-    { path: '/settings', label: 'Preferences', icon: Settings },
+    { path: '/', label: t('WebLayout.nav.dashboard', 'Dashboard'), icon: Home },
+    { path: '/test', label: t('WebLayout.nav.safetyHub', 'Safety Hub'), icon: Beaker },
+    { path: '/chat', label: t('WebLayout.nav.messages', 'Messages'), icon: MessageSquare },
+    { path: '/notifications', label: t('WebLayout.nav.alerts', 'Alerts'), icon: Bell },
+    { path: '/settings', label: t('WebLayout.nav.preferences', 'Preferences'), icon: Settings },
   ];
   
   return (
@@ -128,7 +128,7 @@ export const WebLayout = ({ children }: LayoutProps) => {
                transition: 'var(--transition-normal)'
              }}
            >
-             <LogOut size={18} /> {t('WebLayout.logoutSession', 'Logout Session')}
+             <LogOut size={18} /> {t('WebLayout.logoutSession', 'Log Out')}
            </button>
         </div>
       </aside>

@@ -9,7 +9,22 @@
     "voiceRules": "Votre voix. Vos règles.",
     "stayAnonymous": "restez anonyme, restez connecté",
     "getStarted": "Commencer",
-    "enterSafeSpace": "Enter Safe Space"
+    "enterSafeSpace": "Enter Safe Space",
+    "orDownload": "Ou télécharger l'application",
+    "actionsLabel": "Get started or sign in",
+    "byContinuing": "By continuing, you agree to our",
+    "featuresLabel": "What we offer",
+    "guidedSupport": "Guided Support",
+    "playStoreCta": "Get it on Google Play",
+    "safeSpace": "A Safe Space",
+    "voiceTitle": "Your Voice. Your Rules.",
+    "anonymousDesc": "Your identity is always protected. No names, no profiles, just support.",
+    "voiceDesc": "Connect on your terms. Voice or text, whenever you need it.",
+    "playStoreAria": "Open Ventally on Google Play in a new tab",
+    "getItOn": "GET IT ON",
+    "safeDesc": "Built on privacy, respect, and community guidelines.",
+    "googlePlayBrand": "Google Play",
+    "guidedDesc": "Trained listeners ready to provide compassionate, moderated support."
   },
   "SignUp": {
     "title": "S'inscrire",
@@ -27,7 +42,13 @@
       "venter": "Venter",
       "wantToListen": "Je veux écouter",
       "wantToVent": "Je veux me confier"
-    }
+    },
+    "error": {
+      "general": "Erreur d'enregistrement",
+      "passwordMatch": "Les mots de passe ne correspondent pas",
+      "validEmail": "Email valide requis"
+    },
+    "subtitle": "Commencez votre parcours de bien-être aujourd'hui"
   },
   "LogIn": {
     "title": "Connexion",
@@ -39,13 +60,20 @@
     "dontHaveAccount": "Vous n'avez pas de compte ?",
     "signUp": "S'inscrire",
     "continueWith": "Ou continuer avec",
-    "biometric": "Or "
+    "biometric": "Or ",
+    "error": {
+      "general": "Erreur de connexion",
+      "passwordRequired": "Le mot de passe est requis",
+      "validEmail": "Email valide requis"
+    },
+    "subtitle": "Bienvenue"
   },
   "Nickname": {
     "title": "Add Your Nickname",
     "placeholder": "What would you like to be called......",
     "save": "Save",
-    "nicknameRequired": "Nickname is required"
+    "nicknameRequired": "Nickname is required",
+    "minimumLengthError": "Minimum 3 caractères requis"
   },
   "MicrophoneRequest": {
     "title": "Accès au microphone requis",
@@ -86,7 +114,8 @@
       "portuguese": "Português",
       "french": "Français",
       "spanish": "Espagnol"
-    }
+    },
+    "title": "Sélectionner la Langue"
   },
   "TermsAndConditions": {
     "title": "Terms and Conditions",
@@ -399,7 +428,8 @@
     "seeBasicPlans": "Voir les plans de base",
     "includedMessagesMonthly": "Message Texte",
     "includedMessagesAnnual": "textes par mois",
-    "savePercent": "Économisez 20%"
+    "savePercent": "Économisez 20%",
+    "fetchError": "Erreur lors du chargement des plans"
   },
   "BasicPlanDetails": {
     "title": "Détails du Forfait",
@@ -909,7 +939,8 @@
   "ResetSuccessful": {
     "title": "Réinitialisation réussie",
     "description": "Votre mot de passe a été réinitialisé",
-    "continue": "Continuer"
+    "continue": "Continuer",
+    "redirecting": "Redirection vers la connexion…"
   },
   "AdminLogin": {
     "title": "Admin Login",
@@ -980,7 +1011,8 @@
     "reflectionSuccess": {
       "title": "Réflexion enregistrée !",
       "message": "Votre réflexion a été enregistrée avec succès"
-    }
+    },
+    "findListener": "Trouver un Écoutant"
   },
   "VenterMessages": {
     "title": "Messages",
@@ -1161,7 +1193,8 @@
     },
     "allCallsTitle": "Toutes les Sessions",
     "noRecentCalls": "Aucune session récente",
-    "noRecentCallsDescription": "Aucune session pour l'instant\nDémarrez un appel vocal pour commencer votre parcours"
+    "noRecentCallsDescription": "Aucune session pour l'instant\nDémarrez un appel vocal pour commencer votre parcours",
+    "allCallsSubtitle": "Voir tous vos appels"
   },
   "ActiveCall": {
     "subtitle": "Session de soutien guidée et modérée",
@@ -1177,10 +1210,14 @@
     "decline": "Ignorer",
     "incoming": "Demande de soutien",
     "outgoing": "Demande de soutien",
-    "sessionCall": "Session Call",
+    "sessionCall": "Appel de Session",
     "connected": "Connected",
     "connectingStatus": "Connecting...",
-    "yourListener": "Your Listener"
+    "yourListener": "Votre Écoutant",
+    "status": {
+      "connected": "Connecté",
+      "connecting": "Connexion..."
+    }
   },
   "VenterPaymentCheck": {
     "title": "Session Payment",
@@ -1483,7 +1520,9 @@
       "stats": {
         "totalSessions": "Total Sessions",
         "totalMinutes": "Total Minutes",
-        "totalPayout": "Total Payout"
+        "totalPayout": "Total Payout",
+        "totalEarnings": "Total Earnings",
+        "joined": "Joined"
       },
       "exportCsv": "Export CSV",
       "exportPdf": "Export PDF",
@@ -1491,7 +1530,10 @@
       "exportSuccess": {
         "title": "Export Completed",
         "subtitle": "Your user data has been exported successfully."
-      }
+      },
+      "venterInfo": "Venter info",
+      "ageGroup": "Age Group",
+      "gender": "Gender"
     },
     "listenerRequests": {
       "title": "Support Guide Requests",
@@ -1530,7 +1572,12 @@
       "emptyStateMessage": "Create your first sub admin to delegate responsibilities",
       "card": {
         "permissions": "Permissions"
-      }
+      },
+      "add": "Add Sub-Admin",
+      "subtitle": "Manage platform administrators",
+      "addFirst": "Add First Sub-Admin",
+      "noResultsDesc": "Add sub-admins to help manage the platform.",
+      "noResults": "No sub-admins yet"
     },
     "subAdminProfile": {
       "title": "Sub Admin Profile",
@@ -1556,7 +1603,10 @@
       "passwordPlaceholder": "Set password",
       "selectPermissions": "Select Permissions",
       "create": "Create",
-      "permissionsSelected": "{{count}} permissions selected"
+      "permissionsSelected": "{{count}} permissions selected",
+      "emptyFields": "Please fill in all fields",
+      "permissions": "Permissions",
+      "successMsg": "Sub Admin account has been created successfully."
     },
     "permissions": {
       "title": "Select Permissions",
@@ -1593,7 +1643,8 @@
         "exportsIntegrations": "Exports & Integrations",
         "rolesPermissions": "Roles & Permissions",
         "language": "Language",
-        "logout": "Logout"
+        "logout": "Logout",
+        "aiSettings": "AI Settings"
       }
     },
     "moderation": {
@@ -1642,7 +1693,11 @@
         "update": "Update",
         "seeAnalytics": "See analytics",
         "netRevenue": "Net Revenue",
-        "revenueIncrease": "Sales revenue increased {{percentage}}% in {{period}}"
+        "revenueIncrease": "Sales revenue increased {{percentage}}% in {{period}}",
+        "lastWeeks": "Last {{weeks}} weeks",
+        "nextExpected": "Next Expected Revenue",
+        "weeklySales": "Weekly Sales",
+        "inNextDays": "📊 In next {{days}} days"
       },
       "taskProgress": {
         "title": "Task Progress",
@@ -1650,10 +1705,16 @@
       },
       "revenueSources": {
         "title": "Top Revenue Sources",
-        "revenue": "Revenue"
+        "revenue": "Revenue",
+        "addOns": "Add-ons",
+        "basic": "Basic",
+        "premium": "Premium",
+        "standard": "Standard"
       },
       "paymentHistory": {
-        "title": "Payment History"
+        "title": "Payment History",
+        "noHistory": "No payment history found.",
+        "loadMore": "Load More"
       }
     },
     "rolesPermissions": {
@@ -1720,7 +1781,8 @@
       "crisisCall": "Crisis Session",
       "crisisChat": "Crisis Chat",
       "callBy": "Session by: {{email}}",
-      "id": "Id: {{id}}"
+      "id": "Id: {{id}}",
+      "chatBy": "Chat by: "
     },
     "exportsIntegrations": {
       "title": "Exports & Integrations",
@@ -1730,7 +1792,98 @@
       "totalSessions": "Total Sessions",
       "totalMinutes": "Total Minutes",
       "totalPayout": "Total Payout",
-      "exported": "Exported"
+      "exported": "Exported",
+      "export": "Export",
+      "exportError": "Export failed",
+      "exportSuccess": "Marked as exported",
+      "pdfSuccess": "PDF generated successfully",
+      "id": "ID: {{id}}"
+    },
+    "crisisConfig": "Configuration de Crise",
+    "exportChat": "Exporter",
+    "noMessages": "Aucun message trouvé",
+    "security": {
+      "resetPasswordScreen": {
+        "passwordMismatch": "Les mots de passe ne correspondent pas"
+      },
+      "success": {
+        "emailChanged": "Email Changé",
+        "emailSubtitle": "Votre email a été changé avec succès",
+        "passwordReset": "Mot de Passe Réinitialisé",
+        "passwordSubtitle": "Votre mot de passe a été réinitialisé avec succès"
+      },
+      "verification": {
+        "button": "Vérifier",
+        "didntReceive": "Vous n'avez pas reçu le code?",
+        "emailSubtitle": "Entrez le code de vérification envoyé à votre email",
+        "emailTitle": "Vérifier l'Email",
+        "phoneSubtitle": "Entrez le code de vérification envoyé à votre téléphone",
+        "phoneTitle": "Vérifier le Téléphone",
+        "resend": "Renvoyer",
+        "resendSuccess": "Code renvoyé avec succès"
+      },
+      "enableBiometrics": "Enable Biometrics",
+      "twoFactorAuth": "Two Factor Authentication",
+      "title": "Security",
+      "resetPassword": "Reset Password",
+      "changeEmailPhone": "Change Email or Phone"
+    },
+    "roles": {
+      "subAdmin": "Sub Admin",
+      "title": "Roles & Permissions",
+      "noResults": "No sub-admins found",
+      "permissionsEnabled": "permissions enabled",
+      "changeRole": "Change Role",
+      "permissions": "Permissions",
+      "remove": "Remove",
+      "saveChanges": "Save Changes",
+      "searchPlaceholder": "Search sub-admins..."
+    },
+    "aiSettings": {
+      "title": "AI Settings",
+      "oversight": "AI Oversight & Policy",
+      "description": "Configure how the platform uses artificial intelligence for moderation, risk detection, and automated user support.",
+      "coreConfig": "Core Configuration",
+      "enableAI": "Enable AI Systems",
+      "enableAIDesc": "Global toggle for all AI-driven features",
+      "autoModeration": "Auto-Moderation",
+      "autoModerationDesc": "Automatically flag or hide extreme content",
+      "languageFilter": "Inappropriate Language Filter",
+      "languageFilterDesc": "Real-time filtering of prohibited keywords",
+      "riskManagement": "Risk Management",
+      "riskThreshold": "Risk Threshold",
+      "cautious": "Cautious",
+      "aggressive": "Aggressive",
+      "riskWarning": "Lowering the threshold will cause the AI to be more aggressive in flagging users, which may increase false positives.",
+      "reset": "Reset",
+      "saveChanges": "Save Changes",
+      "success": "AI settings updated successfully",
+      "error": "Failed to update AI settings"
+    },
+    "changeEmail": {
+      "title": "Change Email",
+      "subtitle": "Enter your current and new email address.",
+      "currentEmail": "Current Email",
+      "newEmail": "New Email",
+      "button": "Send Code"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Keep your account secure by updating your password periodically.",
+      "oldPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "passwordMismatch": "Passwords do not match",
+      "button": "Update Password"
+    },
+    "reports": {
+      "title": "Reports",
+      "noReports": "No reports found.",
+      "id": "ID: {{id}}",
+      "tabs": {
+        "pending": "Pending",
+        "resolved": "Resolved"
+      }
     }
   },
   "Listener": {
@@ -1920,7 +2073,18 @@
     "saveError": "Failed to save crisis configuration"
   },
   "WebLayout": {
-    "logoutSession": "Logout Session"
+    "logoutSession": "Déconnexion",
+    "nav": {
+      "dashboard": "Tableau de Bord",
+      "safetyHub": "Centre de Sécurité",
+      "messages": "Messages",
+      "alerts": "Alertes",
+      "preferences": "Préférences"
+    },
+    "messages": "Messages",
+    "noConversations": "Vous n'avez pas de conversations actives pour le moment.",
+    "notifications": "Notifications",
+    "noCaughtUp": "Vous êtes à jour ! Aucune notification nouvelle."
   },
   "Wallet": {
     "title": "Portefeuille",
@@ -1944,7 +2108,8 @@
     "changePaymentMethod": "Changer de Méthode de Paiement"
   },
   "Home": {
-    "title": "VENTALLY"
+    "title": "VENTALLY",
+    "welcomeBack": "Welcome back,"
   },
   "Common": {
     "search": "Rechercher",
@@ -1973,7 +2138,10 @@
     "invalidEmail": "Veuillez saisir une adresse e-mail valide",
     "fillRequiredFields": "Veuillez remplir tous les champs obligatoires",
     "somethingWentWrong": "Quelque chose s'est mal passé",
-    "error": "Erreur",
+    "error": {
+      "somethingWentWrong": "Quelque chose s'est mal passé",
+      "default": "Erreur"
+    },
     "passwordValidationError": "Le mot de passe doit contenir au moins 8 caractères, avec majuscules, minuscules, chiffres et symboles",
     "confirmAction": "Confirmer l'action",
     "areYouSure": "Êtes-vous sûr de vouloir continuer ?",
@@ -2027,7 +2195,25 @@
     "confirmPassword": "Confirm Password",
     "viewAll": "View All",
     "save": "Save",
-    "backToHome": "Back to Home"
+    "backToHome": "Back to Home",
+    "anonymous": "Anonyme",
+    "month": "Mois",
+    "noResults": "Aucun résultat trouvé",
+    "notFound": "Non trouvé",
+    "redirecting": "Redirection...",
+    "retry": "Réessayer",
+    "sending": "Envoi...",
+    "successMessage": "Opération terminée avec succès",
+    "week": "Semaine",
+    "Available": "Available",
+    "LogOut": "Logout",
+    "Unavailable": "Unavailable",
+    "admin": "Admin",
+    "listener": "Listener",
+    "venter": "Venter",
+    "pending": "Pending",
+    "SupportGuide": "Support Guide",
+    "subAdmin": "Sub-Admin"
   },
   "Security": {
     "title": "Sécurité",
@@ -2235,7 +2421,8 @@
             "status": "Tough day, but stayed sober"
           }
         ]
-      }
+      },
+      "journeyCalendar": "Votre Parcours de Récupération"
     },
     "logProgress": {
       "question": "How was your recovery \n today?",
@@ -2279,7 +2466,9 @@
     "progressSummary": {
       "title": "Progress Summary",
       "viewDetails": "View Details"
-    }
+    },
+    "relapse": "Rechute",
+    "success": "Succès"
   },
   "VenterJourney": {
     "title": "Your Journey",
@@ -2369,7 +2558,8 @@
     "title": "Session Feedback",
     "subtitle": "How was your session?",
     "rating": "Rating",
-    "ratingHelpful": "Helpful"
+    "ratingHelpful": "Helpful",
+    "moodPrompt": "Comment vous sentez-vous?"
   },
   "ListenerRating": {
     "title": "Évaluez Votre Session",
@@ -2424,5 +2614,72 @@
   },
   "VenterMoods": {
     "history": "Votre journal d'humeur complet"
+  },
+  "SettingsPage": {
+    "pushNotifications": "Notifications Push",
+    "pushNotificationsDesc": "Recevez des alertes sur les mises à jour de session",
+    "twoFactorAuth": "Authentification à Deux Facteurs",
+    "twoFactorAuthDesc": "Sécurisez votre compte avec 2FA",
+    "enable": "Activer"
+  },
+  "DummyPage": {
+    "safetyHub": "Centre de Sécurité",
+    "description": "C'est là où vous pouvez gérer vos paramètres de sécurité et vos rapports.",
+    "verifyIdentity": "Vérifier l'Identité",
+    "verifyIdentityDesc": "Assurez-vous que votre compte est sécurisé en vérifiant votre numéro de téléphone mobile.",
+    "emergencyContacts": "Contacts d'Urgence",
+    "emergencyContactsDesc": "Gérez les personnes à notifier en cas d'urgence pendant une session.",
+    "comingSoon": "Fonction à venir !",
+    "launchSecurityAudit": "Lancer l'Audit de Sécurité"
+  },
+  "Chat": {
+    "endSession": "Terminer la Séance",
+    "report": "Signaler",
+    "startConversation": "Démarrer la Conversation"
+  },
+  "ForgotPasswordWeb": {
+    "emailOnlyHint": "Entrez votre adresse email"
+  },
+  "ListenerRequests": {
+    "subtitle": "Gérez vos demandes de séance"
+  },
+  "Report": {
+    "description": "Détails du Rapport",
+    "descriptionPlaceholder": "Décrivez le problème",
+    "selectReason": "Sélectionnez une raison",
+    "submit": "Soumettre le Rapport",
+    "submitting": "Envoi...",
+    "title": "Signaler un Problème"
+  },
+  "VenterPayment": {
+    "checking": "Vérification du statut du paiement",
+    "chooseOption": "Choisissez une option de paiement",
+    "insufficientFunds": "Fonds insuffisants",
+    "unsuccessfulDesc": "Le paiement a échoué"
+  },
+  "VenterSubscription": {
+    "title": "Abonnement"
+  },
+  "ListenerSessionFlow": {
+    "sessionTypeCall": "Voice session",
+    "sessionTypeChat": "Chat session"
+  },
+  "Plans": {
+    "basic": {
+      "features": [
+        "150 mensagens",
+        "30 minutos de voz",
+        "Ferramentas de bem-estar emocional incluídas"
+      ],
+      "description": "Para necessidades de apoio ocasionais"
+    },
+    "standard": {
+      "description": "Para apoio regular e uso contínuo",
+      "features": [
+        "300 mensagens",
+        "60 minutos de voz",
+        "Ferramentas de bem-estar emocional incluídas"
+      ]
+    }
   }
 }

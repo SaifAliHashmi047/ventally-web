@@ -71,9 +71,10 @@ export const RecentChats = () => {
         ) : (
           <GlassCard padding="none" rounded="2xl" className="overflow-hidden">
             {chats.map((chat: any, index: number) => {
-              const other = chat.venter || chat.listener;
+              const other = chat.otherParticipant || chat.listener || chat.venter;
               const hasUnread = (chat.unreadCount ?? 0) > 0;
               const isLast = index === chats.length - 1;
+              const lastMessageContent = chat.lastMessage?.content || chat.last_message;
               return (
                 <button
                   type="button"
@@ -85,7 +86,7 @@ export const RecentChats = () => {
                 >
                   <div className="relative flex-shrink-0">
                     <div className="w-12 h-12 rounded-xl glass border border-white/10 flex items-center justify-center text-base font-bold text-white">
-                      {(other?.firstName?.[0] || 'U').toUpperCase()}
+                      {(other?.firstName?.[0] || other?.displayName?.[0] || 'U').toUpperCase()}
                     </div>
                     {other?.isOnline && (
                       <div className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-success border-2 border-[var(--bg-deep)]" />
@@ -98,7 +99,7 @@ export const RecentChats = () => {
                           hasUnread ? 'text-white' : 'text-gray-300'
                         }`}
                       >
-                        {other?.displayName || other?.firstName || 'User'}
+                        {other?.anonymousName || other?.displayName || other?.firstName || 'User'}
                       </p>
                       <p className="text-xs text-white/80 flex-shrink-0 tabular-nums">
                         {chat.lastMessage?.createdAt
@@ -109,19 +110,27 @@ export const RecentChats = () => {
                           : ''}
                       </p>
                     </div>
-                    <div className="flex items-center justify-between gap-2 mt-0.5">
-                      <p
-                        className={`text-xs truncate ${hasUnread ? 'text-gray-300' : 'text-white/80'}`}
-                      >
-                        {chat.lastMessage?.content ||
-                          t('VenterMessages.chatEntry.noMessages', 'No messages yet')}
-                      </p>
-                      {hasUnread && (
+                    {lastMessageContent && (
+                      <div className="flex items-center justify-between gap-2 mt-0.5">
+                        <p
+                          className={`text-xs truncate ${hasUnread ? 'text-gray-300' : 'text-white/80'}`}
+                        >
+                          {lastMessageContent}
+                        </p>
+                        {hasUnread && (
+                          <span className="w-5 h-5 rounded-full bg-primary/90 flex items-center justify-center text-[10px] text-white font-bold flex-shrink-0">
+                            {chat.unreadCount}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    {!lastMessageContent && hasUnread && (
+                      <div className="flex justify-end mt-0.5">
                         <span className="w-5 h-5 rounded-full bg-primary/90 flex items-center justify-center text-[10px] text-white font-bold flex-shrink-0">
                           {chat.unreadCount}
                         </span>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
                   <ChevronRight size={16} className="text-white flex-shrink-0" />
                 </button>

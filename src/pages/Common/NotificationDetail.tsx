@@ -18,25 +18,15 @@ export const NotificationDetail = () => {
 
   return (
     <div className="page-wrapper animate-fade-in">
-      <PageHeader title={t('Notifications.notificationDetail')} onBack={() => navigate(-1)} />
+      <PageHeader title={t('Notifications.title')} onBack={() => navigate(-1)} />
 
-      <GlassCard bordered>
-        <div className="flex items-start gap-3 mb-4">
-          <div className="w-11 h-11 rounded-2xl bg-primary/15 flex items-center justify-center flex-shrink-0">
-            <Bell size={18} className="text-primary" />
-          </div>
-          <div>
-            <h2 className="text-lg font-bold text-white">{notification.title}</h2>
-            <p className="text-xs text-white/80 flex items-center gap-1 mt-1">
-              <Calendar size={11} />
-              {new Date(notification.createdAt).toLocaleDateString(i18n.language, { dateStyle: 'full', timeStyle: 'short' })}
-            </p>
-          </div>
+      <div className="flex-1 overflow-y-auto">
+        <div className="space-y-4 pb-6">
+          {notification.body && (
+            <p className="text-sm text-white leading-relaxed whitespace-pre-wrap">{notification.body}</p>
+          )}
         </div>
-        {notification.body && (
-          <p className="text-sm text-gray-300 leading-relaxed">{notification.body}</p>
-        )}
-      </GlassCard>
+      </div>
     </div>
   );
 };

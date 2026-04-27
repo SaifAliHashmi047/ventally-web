@@ -74,20 +74,23 @@ export const MoodSelector: React.FC<MoodSelectorProps> = ({
               borderColor: config.bg,
             } : {}}
           >
-            {/* PNG icon — same as RN app */}
-            <img
-              src={config.icon}
-              alt={config.label}
-              className="w-7 h-7 mb-1 object-contain transition-all"
+            {/* PNG icon with colored background — match app style */}
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center mb-1 transition-all"
               style={{
-                // When unselected: white (like RN tintColor: theme.white)
-                // When selected: mood text color (like RN tintColor: moodStyles.text)
-                filter: isSelected
-                  ? `brightness(0) saturate(100%) ${getMoodFilter(id)}`
-                  : 'brightness(0) invert(1)',
-                opacity: isSelected ? 1 : 0.85,
+                backgroundColor: isSelected ? config.text : 'transparent',
               }}
-            />
+            >
+              <img
+                src={config.icon}
+                alt={config.label}
+                className="w-5 h-5 object-contain"
+                style={{
+                  filter: isSelected ? 'brightness(0) invert(1)' : 'brightness(0) invert(1)',
+                  opacity: isSelected ? 1 : 0.85,
+                }}
+              />
+            </div>
             <span
               className="text-xs font-medium"
               style={isSelected ? { color: config.text } : { color: 'rgba(255,255,255,0.7)' }}

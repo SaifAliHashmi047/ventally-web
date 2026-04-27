@@ -13,6 +13,7 @@ import { useReflections } from '../../api/hooks/useReflections';
 import { MoodBarChart } from '../../components/charts/MoodBarChart';
 import happyIcon from '../../assets/icons/happy.png';
 import { AppBrandIcon } from '../../components/ui/AppBrandIcon';
+import { getUnreadNotificationCount } from '../../api/notificationsApi';
 import i18n from '../../locales/i18n';
 
 export const VenterDashboard = () => {
@@ -29,17 +30,19 @@ export const VenterDashboard = () => {
   const [reflection, setReflection] = useState<any>(null);
   const [reflections, setReflections] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         const daysInMonth = new Date().getDate();
-        const [moodRes, statsRes, reflectionRes, historyRes] = await Promise.allSettled([
+        const [moodRes, statsRes, reflectionRes, historyRes, unreadRes] = await Promise.allSettled([
           getTodayMood(),
           getMoodStats(daysInMonth),
           getTodayReflection(),
           getReflectionHistory(3, 0),
+          getUnreadNotificationCount(),
         ]);
 
         if (moodRes.status === 'fulfilled' && moodRes.value?.mood) {
@@ -72,6 +75,11 @@ export const VenterDashboard = () => {
 
         if (historyRes.status === 'fulfilled' && historyRes.value?.reflections) {
           setReflections(historyRes.value.reflections);
+        }
+
+        if (unreadRes.status === 'fulfilled') {
+          const count = (unreadRes.value as any)?.unread_count ?? (unreadRes.value as any)?.count ?? 0;
+          setUnreadCount(count);
         }
       } catch (err) {
         console.error('Dashboard fetch error:', err);
@@ -155,12 +163,10 @@ export const VenterDashboard = () => {
               <div className="grid grid-cols-2 gap-3 lg:gap-4">
                 <Button
                   variant="glass"
-                
                   fullWidth
                   leftIcon={<Phone size={18} />}
                   onClick={handleCall}
-                               className="justify-center !w-full  "
-
+                  className="justify-center !w-full text-xs sm:text-sm"
                 >
                   {t('VenterHome.call')}
                 </Button>
@@ -169,7 +175,7 @@ export const VenterDashboard = () => {
                   fullWidth
                   leftIcon={<MessageSquare size={18} />}
                   onClick={handleChat}
-                  className="justify-center !w-full"
+                  className="justify-center !w-full text-xs sm:text-sm"
                 >
                   {t('VenterHome.chat')}
                 </Button>

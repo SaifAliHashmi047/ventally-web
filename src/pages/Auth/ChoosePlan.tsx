@@ -182,25 +182,23 @@ export const ChoosePlan = () => {
         <h1 className="text-2xl font-bold text-white">{t('ChoosePlan.title')}</h1>
       </div>
 
-      {/* Toggle Monthly / Annual */}
-      <div className="flex justify-center mb-8">
-        <div className="flex p-1 bg-black/20 rounded-xl border border-white/10" style={{ width: '100%', maxWidth: '320px' }}>
-          <button 
-            onClick={() => setPlanType('monthly')}
-            className={`flex-1 py-3 px-4 rounded-lg font-medium text-sm transition-all text-center ${planType === 'monthly' ? 'bg-white text-black' : 'text-white/60 hover:text-white'}`}
-          >
-            {t('ChoosePlan.monthly')}
-          </button>
-          <button 
-            onClick={() => setPlanType('annual')}
-            className={`flex-1 py-3 px-4 rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2 ${planType === 'annual' ? 'bg-white text-black' : 'text-white/60 hover:text-white'}`}
-          >
-            {t('ChoosePlan.annual')}
-            <span className="bg-[#C2AEBF] text-black text-[10px] font-bold px-1.5 py-0.5 rounded">
-              {t('ChoosePlan.savePercent')}
-            </span>
-          </button>
-        </div>
+      {/* Toggle Monthly / Annual - Underline tabs */}
+      <div className="flex mb-8 border-b border-white/10">
+        <button
+          onClick={() => setPlanType('monthly')}
+          className={`pb-3 px-4 font-medium text-sm transition-all ${planType === 'monthly' ? 'text-white border-b-2 border-white -mb-px' : 'text-white/60 hover:text-white'}`}
+        >
+          {t('ChoosePlan.monthly')}
+        </button>
+        <button
+          onClick={() => setPlanType('annual')}
+          className={`pb-3 px-4 font-medium text-sm transition-all flex items-center gap-2 ${planType === 'annual' ? 'text-white border-b-2 border-white -mb-px' : 'text-white/60 hover:text-white'}`}
+        >
+          {t('ChoosePlan.annual')}
+          <span className="bg-[#C2AEBF] text-black text-[10px] font-bold px-2 py-0.5 rounded">
+            {t('ChoosePlan.savePercent')}
+          </span>
+        </button>
       </div>
 
       {/* Plan List */}
@@ -226,7 +224,7 @@ export const ChoosePlan = () => {
                 : `$${price.toFixed(2)}`;
             
             return (
-              <GlassCard 
+              <GlassCard
                 key={plan.id}
                 onClick={() => setSelectedPlan(plan.id)}
                 className={`p-5 cursor-pointer transition-all border-2 ${isSelected ? 'border-white bg-white/10' : 'border-transparent'}`}
@@ -234,22 +232,27 @@ export const ChoosePlan = () => {
                 rounded="2xl"
               >
                 {plan.isMostPopular && (
-                  <div className="flex items-center gap-1.5 mb-3">
+                  <div className="flex items-center gap-1.5 mb-2">
                     <Star size={14} className="text-white fill-[#C2AEBF]" />
                     <span className="bg-[#C2AEBF] px-2 py-0.5 rounded text-black font-medium text-xs">
                       {t('ChoosePlan.mostPopular')}
                     </span>
                   </div>
                 )}
-                
-                <div className="flex justify-between items-start mb-2">
-                  <div className="flex-1 pr-4">
-                    <h3 className="text-[16px] font-semibold text-white mb-1">
+
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <h3 className="text-base font-medium text-white mb-2">
                       {plan.nameKey ? t(plan.nameKey) : plan.name}
                     </h3>
-                    
-                    {/* Native Description Lines */}
-                    <div className="space-y-0.5 opacity-80 text-white text-sm">
+
+                    {/* Price below name */}
+                    {price > 0 && (
+                      <p className="text-xl font-bold text-white mb-2">{priceText}</p>
+                    )}
+
+                    {/* Description Lines */}
+                    <div className="space-y-0.5 text-white text-sm opacity-80">
                       {!!(plan.descriptionKey ? t(plan.descriptionKey) : plan.description) && (
                         <p>{plan.descriptionKey ? t(plan.descriptionKey) : plan.description}</p>
                       )}
@@ -261,17 +264,10 @@ export const ChoosePlan = () => {
                       )}
                     </div>
                   </div>
-                  
-                  {/* Price Block & Radio */}
-                  <div className="flex flex-col items-end gap-2">
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${isSelected ? 'border-white' : 'border-white/30'}`}>
-                      {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-white" />}
-                    </div>
-                    {price > 0 && (
-                      <div className="text-right mt-1">
-                        <p className="text-[20px] font-bold text-white">{priceText}</p>
-                      </div>
-                    )}
+
+                  {/* Radio Button */}
+                  <div className={`w-6 h-6 rounded-full border-2 flex flex-shrink-0 items-center justify-center transition-all ml-3 mt-1 ${isSelected ? 'border-white' : 'border-white/30'}`}>
+                    {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-white" />}
                   </div>
                 </div>
               </GlassCard>

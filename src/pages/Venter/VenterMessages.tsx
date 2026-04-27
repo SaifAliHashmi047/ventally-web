@@ -93,7 +93,7 @@ const ChatEntry = ({
         </span>
       </div>
       <div className="flex items-center justify-between gap-2">
-        <p className="text-xs text-white/70 truncate">{lastMessage || '--'}</p>
+        <p className="text-xs text-white/70 truncate">{lastMessage}</p>
         <ChevronRight size={16} className="text-white flex-shrink-0" />
       </div>
     </div>
@@ -196,24 +196,23 @@ export const VenterMessages = () => {
               </GlassCard>
             ) : (
               <GlassCard padding="none" rounded="2xl" className="overflow-hidden">
-                {recentChats.map((chat: any, index: number) => (
-                  <ChatEntry
-                    key={chat.id}
-                    name={chat.otherParticipant?.anonymousName || t('VenterMessages.chatEntry.name')}
-                    lastMessage={
-                      chat.lastMessage?.content ||
-                      chat.last_message ||
-                      t('VenterMessages.chatEntry.lastMessage')
-                    }
-                    timeAgo={formatTimeAgo(
-                      chat.lastMessage?.createdAt || chat.updatedAt || chat.createdAt,
-                      t
-                    )}
-                    isActive={chat.status === 'active'}
-                    isLast={index === recentChats.length - 1}
-                    onPress={() => navigate(`/venter/chat/${chat.id}`, { state: { chat } })}
-                  />
-                ))}
+                {recentChats.map((chat: any, index: number) => {
+                  const other = chat.otherParticipant || chat.listener;
+                  return (
+                    <ChatEntry
+                      key={chat.id}
+                      name={other?.anonymousName || other?.displayName || other?.firstName || 'User'}
+                      lastMessage={chat.lastMessage?.content || chat.last_message}
+                      timeAgo={formatTimeAgo(
+                        chat.lastMessage?.createdAt || chat.updatedAt || chat.createdAt,
+                        t
+                      )}
+                      isActive={chat.status === 'active'}
+                      isLast={index === recentChats.length - 1}
+                      onPress={() => navigate(`/venter/chat/${chat.id}`, { state: { chat } })}
+                    />
+                  );
+                })}
               </GlassCard>
             )}
           </section>

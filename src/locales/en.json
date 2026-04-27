@@ -30,7 +30,10 @@
     "invalidEmail": "Please enter a valid email address",
     "fillRequiredFields": "Please fill out all required fields",
     "somethingWentWrong": "Something went wrong",
-    "error": "Error",
+    "error": {
+      "somethingWentWrong": "Something went wrong",
+      "default": "Error"
+    },
     "passwordValidationError": "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character",
     "confirmAction": "Confirm Action",
     "areYouSure": "Are you sure you want to proceed?",
@@ -83,7 +86,22 @@
     "confirmPassword": "Confirm Password",
     "viewAll": "View All",
     "save": "Save",
-    "backToHome": "Back to Home"
+    "backToHome": "Back to Home",
+    "Available": "Available",
+    "LogOut": "Logout",
+    "Unavailable": "Unavailable",
+    "anonymous": "Anonymous",
+    "listener": "Listener",
+    "month": "Month",
+    "noResults": "No users found.",
+    "notFound": "Not Found",
+    "redirecting": "Redirecting...",
+    "retry": "Retry",
+    "sending": "Sending...",
+    "successMessage": "Your action has been completed successfully.",
+    "venter": "Venter",
+    "week": "Week",
+    "subAdmin": "Sub-Admin"
   },
   "Errors": {
     "adminUnavailableOnMobile": "Administrator access isn’t available in this app. Please use the web dashboard."
@@ -109,7 +127,8 @@
     "playStoreCta": "Get it on Google Play",
     "playStoreAria": "Open Ventally on Google Play in a new tab",
     "featuresLabel": "What we offer",
-    "actionsLabel": "Get started or sign in"
+    "actionsLabel": "Get started or sign in",
+    "orDownload": "OR DOWNLOAD THE APP"
   },
   "SignUp": {
     "title": "Sign Up",
@@ -127,7 +146,13 @@
       "venter": "Venter",
       "wantToListen": "I am giving support",
       "wantToVent": "I am seeking support"
-    }
+    },
+    "error": {
+      "general": "Registration failed. Please try again.",
+      "passwordMatch": "Passwords do not match",
+      "validEmail": "Valid email required"
+    },
+    "subtitle": "Start your wellness journey today"
   },
   "LogIn": {
     "title": "Log In",
@@ -139,13 +164,20 @@
     "dontHaveAccount": "Don't have an account?",
     "signUp": "Sign Up",
     "continueWith": "Continue with",
-    "biometric": "Or "
+    "biometric": "Or ",
+    "error": {
+      "general": "Invalid credentials. Please try again.",
+      "passwordRequired": "Password is required",
+      "validEmail": "Enter a valid email"
+    },
+    "subtitle": "Sign in to continue your journey"
   },
   "Nickname": {
     "title": "Add Your Nickname",
     "placeholder": "What would you like to be called......",
     "save": "Save",
-    "nicknameRequired": "Nickname is required"
+    "nicknameRequired": "Nickname is required",
+    "minimumLengthError": "Nickname must be at least 3 characters long"
   },
   "MicrophoneRequest": {
     "title": "Microphone Access \n Needed",
@@ -186,7 +218,8 @@
       "portuguese": "Português",
       "french": "Français",
       "spanish": "Español"
-    }
+    },
+    "title": "Language"
   },
   "TermsAndConditions": {
     "title": "Terms and Conditions",
@@ -499,7 +532,8 @@
     "seeBasicPlans": "See basic plans",
     "includedMessagesMonthly": "messages included",
     "includedMessagesAnnual": "messages included",
-    "savePercent": "Save 20%"
+    "savePercent": "Save 20%",
+    "fetchError": "Failed to fetch plans"
   },
   "BasicPlanDetails": {
     "title": "Plan Details",
@@ -856,7 +890,10 @@
       "text": "By signing below, the Support Guide affirms that they have reviewed and understood the foregoing Payment Terms Acknowledgment, and agrees to be legally bound by its terms as a condition of continued participation on the Ventally platform."
     },
     "introText2": "By executing this Waiver, the Support Guide affirms that they have carefully read, understood, and voluntarily agreed to the terms and conditions contained herein, which govern the Support Guide's access to and participation in the Ventally platform and the provision of non-clinical, peer-based support session services.",
-    "continue": "Continue"
+    "continue": "Continue",
+    "bulletPoint1": "• The Listener affirms that their participation on the Ventally platform is entirely voluntary and may involve exposure to emotionally sensitive, distressing, or triggering subject matter shared by users.",
+    "sectionTitle": "1. VOLUNTARY PARTICIPATION AND ASSUMPTION OF RISK",
+    "bulletPoint2": "• The Listener expressly assumes full responsibility for all risks associated with their engagement, including but not limited to emotional fatigue, secondary trauma, reputational exposure, and any psychological discomfort resulting from user interactions."
   },
   "ListenerAgreement": {
     "title": "Support Guide Agreement",
@@ -1059,7 +1096,15 @@
       "title": "SIGNATURES",
       "text": "By signing below, the Parties acknowledge that they have read, understood, and agree to be legally bound by the terms of this Agreement."
     },
-    "continue": "Continue"
+    "continue": "Continue",
+    "noEmploymentText": "You acknowledge and agree that your",
+    "noEmploymentTitle": "• No Employment Relationship",
+    "nonClinicalTitle": "• Non-Clinical Support Role",
+    "prohibitedText": "You expressly agree not to provide any form of diagnosis, treatment, therapeutic intervention, medical, legal, financial, or relationship advice under any circumstances. Any such behavior shall constitute a material breach of this Agreement.",
+    "section1Title": "1. ROLE & SCOPE OF ENGAGEMENT",
+    "prohibitedTitle": "• Prohibited Conduct",
+    "nonClinicalText": "You acknowledge and agree that your role as a Listener on the Ventally platform is limited exclusively to providing empathetic, non-clinical emotional support. You are not a licensed therapist, counselor, crisis responder, or medical or legal professional, and shall not purport to be one.",
+    "section2Title": "2. INDEPENDENT CONTRACTOR STATUS"
   },
   "PaymentTermsAcknowledgment": {
     "title": "Payment Terms Acknowledgment",
@@ -1146,7 +1191,10 @@
       "text": "By signing below, the Support Guide affirms that they have read and understood this Payment Terms Acknowledgment and agree to be bound by its terms."
     },
     "introText2": "By executing this Acknowledgment, the Support Guide expressly affirms that they have thoroughly reviewed, fully understood, and voluntarily accepted the terms, policies, and procedures governing compensation and financial obligations applicable to their engagement as an independent contractor on the Ventally platform.",
-    "continue": "Continue"
+    "continue": "Continue",
+    "section1Title": "1. INDEPENDENT CONTRACTOR STATUS",
+    "bulletPoint1": "• The Listener acknowledges and agrees that their engagement with Ventally is that of an independent contractor. Nothing in this Acknowledgment shall be construed to establish an employment, agency, fiduciary, or partnership relationship between the Parties.",
+    "bulletPoint2": "• The Listener is solely and exclusively responsible for the reporting and payment of all applicable taxes, withholdings, levies, and other government-imposed charges related to the compensation received from Ventally."
   },
   "ListenerNDA": {
     "title": "Non-Disclosure Agreement",
@@ -1296,7 +1344,11 @@
       "text": "the Parties have executed this Non-Disclosure Agreement as of the Effective Date written above."
     },
     "introText1": "This Non-Disclosure Agreement (\"NDA\") is entered into by and between Ventally Limited Liability Company (\"Ventally,\" \"we,\" \"us,\"), and the undersigned individual (\"Support Guide\"), in connection with the Support Guide's access to proprietary, confidential, and sensitive information on the Ventally platform.",
-    "continue": "Continue"
+    "continue": "Continue",
+    "section2Title": "2. DEFINITION OF CONFIDENTIAL INFORMATION",
+    "bulletPoint1": "This Agreement establishes the legal obligations of the Listener to maintain the confidentiality of proprietary, sensitive, and confidential information disclosed by users and other participants on the Ventally platform. The Parties acknowledge that maintaining the confidentiality of such information is essential to protect the integrity and trust of the platform. Listeners are expected to maintain the highest level of discretion.",
+    "section1Title": "1. PURPOSE",
+    "bulletPoint2": "\"Confidential Information\" shall mean all non-public, proprietary, sensitive, and confidential valuable information disclosed by Ventally to the Listener, whether orally, in writing, electronically, or in any other form."
   },
   "ListenerCodeOfConduct": {
     "title": "Code of Conduct",
@@ -1405,7 +1457,11 @@
       "title": "ACKNOWLEDGMENT & SIGNATURE",
       "text": "By signing below, the undersigned Support Guide affirms that they have read, understood, and agree to adhere to the terms set forth in this Code of Conduct in its entirety."
     },
-    "continue": "Continue"
+    "continue": "Continue",
+    "section1Title": "1. PROFESSIONALISM & INTEGRITY",
+    "bulletPoint2": "• Listeners must not misrepresent their role, qualifications, credentials, or authority to provide professional mental health or medical advice.",
+    "bulletPoint3": "• Listeners shall conduct themselves in a manner that upholds the dignity, trust, and reputation of Ventally at all times. Such conduct includes, but is not limited to, respectful communication, maintaining professional boundaries, and adhering to all platform policies and procedures.",
+    "bulletPoint1": "• Listeners shall maintain the highest levels of professional demeanor, integrity, and ethical conduct. Listeners are expected to act with empathy, patience, and active listening skills during all interactions."
   },
   "ListenerVerification": {
     "title": "Verification",
@@ -1476,7 +1532,8 @@
   "ResetSuccessful": {
     "title": "Reset Successful",
     "description": "Your password has been reset",
-    "continue": "Continue"
+    "continue": "Continue",
+    "redirecting": "Redirecting to log in…"
   },
   "AdminLogin": {
     "title": "Admin Login",
@@ -1547,7 +1604,8 @@
     "reflectionSuccess": {
       "title": "Reflection Saved!",
       "message": "Your reflection has been saved successfully"
-    }
+    },
+    "findListener": "Find a Listener"
   },
   "VenterMessages": {
     "title": "Messages",
@@ -1728,7 +1786,8 @@
     },
     "allCallsTitle": "All Sessions",
     "noRecentCalls": "No recent sessions",
-    "noRecentCallsDescription": "No sessions yet\n Start a voice session to begin your support journey"
+    "noRecentCallsDescription": "No sessions yet\n Start a voice session to begin your support journey",
+    "allCallsSubtitle": "Your call history"
   },
   "ActiveCall": {
     "subtitle": "Guided, moderated support session",
@@ -1747,7 +1806,11 @@
     "sessionCall": "Session Call",
     "connected": "Connected",
     "connectingStatus": "Connecting...",
-    "yourListener": "Your Listener"
+    "yourListener": "Your Listener",
+    "status": {
+      "connected": "Connected",
+      "connecting": "Connecting..."
+    }
   },
   "VenterPaymentCheck": {
     "title": "Session Payment",
@@ -1906,6 +1969,30 @@
       },
       "profile": {
         "title": "Your Profile"
+      },
+      "refer": {
+        "title": "Referir a un Amigo",
+        "subtitle": "Invita a otros a unirse a Ventally"
+      },
+      "moodHistory": {
+        "subtitle": "Ver tu historial de seguimiento de ánimo",
+        "title": "Historial de Ánimo"
+      },
+      "wellness": {
+        "title": "Recursos de Bienestar",
+        "subtitle": "Accede a recursos de salud mental"
+      },
+      "feedback": {
+        "title": "Comentarios",
+        "subtitle": "Comparte tus pensamientos con nosotros"
+      },
+      "guidelines": {
+        "subtitle": "Lee nuestros estándares comunitarios",
+        "title": "Guías de la Comunidad"
+      },
+      "sessionHistory": {
+        "title": "Historial de Sesiones",
+        "subtitle": "Revisa tus conversaciones pasadas"
       }
     }
   },
@@ -1935,7 +2022,8 @@
       "title": "Mood Updated",
       "message": "You've successfully updated your mood.",
       "logged": "Mood logged successfully",
-      "updated": "Mood updated successfully"
+      "updated": "Mood updated successfully",
+      "done": "Hecho"
     },
     "errors": {
       "selectMoodAndCategory": "Please select both a mood and a category"
@@ -2030,8 +2118,15 @@
         "totalSessions": "Total Sessions",
         "totalMinutes": "Total Minutes",
         "totalEarnings": "Total Earnings",
-        "joined": "Joined"
-      }
+        "joined": "Joined",
+        "totalPayout": "Payout"
+      },
+      "exportPdf": "Export PDF",
+      "exportSuccess": {
+        "subtitle": "Your user data has been exported successfully.",
+        "title": "Export Completed"
+      },
+      "exportCsv": "Export CSV"
     },
     "listenerRequests": {
       "title": "Support Guide Requests",
@@ -2069,7 +2164,13 @@
       "searchPlaceholder": "Search by email or ID...",
       "noResults": "No sub-admins yet",
       "noResultsDesc": "Add sub-admins to help manage the platform.",
-      "addFirst": "Add First Sub-Admin"
+      "addFirst": "Add First Sub-Admin",
+      "emptyStateMessage": "Create your first sub admin to delegate responsibilities",
+      "card": {
+        "permissions": "Permissions"
+      },
+      "emptyState": "No sub admins found",
+      "addSubAdmin": "Add Sub Admin"
     },
     "subAdminProfile": {
       "title": "Sub Admin Profile",
@@ -2096,7 +2197,9 @@
       "permissions": "Permissions",
       "create": "Create",
       "emptyFields": "Please fill in all fields",
-      "successMsg": "Sub Admin account has been created successfully."
+      "successMsg": "Sub Admin account has been created successfully.",
+      "selectPermissions": "Select Permissions",
+      "permissionsSelected": "{{count}} permissions selected"
     },
     "permissions": {
       "title": "Select Permissions",
@@ -2185,7 +2288,9 @@
         "nextExpected": "Next Expected Revenue",
         "weeklySales": "Weekly Sales",
         "inNextDays": "📊 In next {{days}} days",
-        "lastWeeks": "Last {{weeks}} weeks"
+        "lastWeeks": "Last {{weeks}} weeks",
+        "seeAnalytics": "See analytics",
+        "netRevenue": "Net Revenue"
       },
       "taskProgress": {
         "title": "Task Progress",
@@ -2253,7 +2358,26 @@
       "enableBiometrics": "Enable Biometrics",
       "resetPassword": "Reset Password",
       "changeEmailPhone": "Change Email or Phone",
-      "twoFactorAuth": "Two Factor Authentication"
+      "twoFactorAuth": "Two Factor Authentication",
+      "resetPasswordScreen": {
+        "passwordMismatch": "Passwords do not match"
+      },
+      "success": {
+        "emailChanged": "Email Changed Successfully",
+        "emailSubtitle": "Your account email has been updated. You can now use your new email to log in.",
+        "passwordSubtitle": "Tu contraseña ha sido restablecida exitosamente",
+        "passwordReset": "Contraseña Restablecida"
+      },
+      "verification": {
+        "button": "Verify",
+        "emailSubtitle": "Check your inbox for a 4-digit code.",
+        "emailTitle": "Verify Email",
+        "phoneSubtitle": "Check your messages for a 4-digit code.",
+        "phoneTitle": "Verify Phone",
+        "resend": "Resend",
+        "resendSuccess": "Code resent successfully!",
+        "didntReceive": "¿No recibiste el código?"
+      }
     },
     "resetPassword": {
       "title": "Reset Password",
@@ -2314,6 +2438,45 @@
         "pending": "Pending",
         "resolved": "Resolved"
       }
+    },
+    "crisisConfig": "Crisis Configuration",
+    "exportChat": "Export",
+    "noMessages": "No messages found",
+    "Security": {
+      "changeEmail": {
+        "subtitle": "Change your email address",
+        "newEmail": "New Email",
+        "title": "Change Your Email",
+        "button": "Get code",
+        "currentEmail": "Current Email"
+      },
+      "verification": {
+        "button": "Verify Account",
+        "didntReceive": "Didn't receive the code?",
+        "resend": "Resend",
+        "phoneTitle": "Phone Verification",
+        "phoneSubtitle": "We've sent a code to your phone",
+        "emailTitle": "Email Verification",
+        "emailSubtitle": "We've sent a code to your email"
+      },
+      "title": "Security",
+      "success": {
+        "passwordReset": "Password Reset",
+        "passwordSubtitle": "Your email has been Reset",
+        "emailSubtitle": "Your email has been changed",
+        "emailChanged": "Email Changed"
+      },
+      "resetPasswordScreen": {
+        "confirmPassword": "Confirm New Password",
+        "button": "Update Password",
+        "newPassword": "New Password",
+        "title": "Reset Password",
+        "oldPassword": "Old Password"
+      },
+      "resetPassword": "Reset Password",
+      "changeEmailPhone": "Change email or Phone",
+      "enableBiometrics": "Enable Biometrics",
+      "twoFactorAuth": "Two Factor Authentication"
     }
   },
   "Listener": {
@@ -2369,6 +2532,15 @@
     "linkBank": {
       "title": "Connect Bank",
       "footer": "Secure bank connection via Plaid.\nYour information is encrypted and processed securely by Stripe."
+    },
+    "profile": {
+      "payout": "Pago",
+      "yourSessions": "Tus Sesiones",
+      "deleteConfirm": "Esta acción es permanente. ¿Estás seguro de que quieres eliminar tu cuenta?",
+      "personalInfo": "Perfil",
+      "title": "Perfil",
+      "subtitle": "Gestiona tu perfil y preferencias.",
+      "deleteAccount": "Eliminar cuenta"
     }
   },
   "Crisis": {
@@ -2494,7 +2666,18 @@
     "saveError": "Failed to save crisis configuration"
   },
   "WebLayout": {
-    "logoutSession": "Logout Session"
+    "logoutSession": "Log Out",
+    "nav": {
+      "dashboard": "Dashboard",
+      "safetyHub": "Safety Hub",
+      "messages": "Messages",
+      "alerts": "Alerts",
+      "preferences": "Preferences"
+    },
+    "messages": "Messages",
+    "noConversations": "You have no active conversations at the moment.",
+    "notifications": "Notifications",
+    "noCaughtUp": "You're all caught up! No new notifications."
   },
   "Wallet": {
     "title": "Balance",
@@ -2518,7 +2701,8 @@
     "changePaymentMethod": "Change Payment Method"
   },
   "Home": {
-    "title": "VENTALLY"
+    "title": "VENTALLY",
+    "welcomeBack": "Welcome back,"
   },
   "Security": {
     "title": "Security",
@@ -2726,7 +2910,8 @@
             "status": "Tough day, but stayed sober"
           }
         ]
-      }
+      },
+      "journeyCalendar": "Journey Calendar"
     },
     "logProgress": {
       "question": "How was your recovery \n today?",
@@ -2770,7 +2955,9 @@
     "progressSummary": {
       "title": "Progress Summary",
       "viewDetails": "View Details"
-    }
+    },
+    "relapse": "Slip",
+    "success": "Success"
   },
   "VenterJourney": {
     "title": "Your Journey",
@@ -2860,7 +3047,8 @@
     "title": "Session Feedback",
     "subtitle": "How was your session?",
     "rating": "Rating",
-    "ratingHelpful": "Helpful"
+    "ratingHelpful": "Helpful",
+    "moodPrompt": "How are you feeling after this session?"
   },
   "ListenerRating": {
     "title": "Rate Your Session",
@@ -2915,5 +3103,72 @@
   },
   "VenterMoods": {
     "history": "Your complete mood log"
+  },
+  "SettingsPage": {
+    "pushNotifications": "Push Notifications",
+    "pushNotificationsDesc": "Receive alerts about session updates",
+    "twoFactorAuth": "Two-Factor Authentication",
+    "twoFactorAuthDesc": "Secure your account with 2FA",
+    "enable": "Enable"
+  },
+  "DummyPage": {
+    "safetyHub": "Safety Hub",
+    "description": "This is where you can manage your safety settings and reports.",
+    "verifyIdentity": "Verify Identity",
+    "verifyIdentityDesc": "Ensure your account is secure by verifying your mobile number.",
+    "emergencyContacts": "Emergency Contacts",
+    "emergencyContactsDesc": "Manage people to notify in case of an emergency during a session.",
+    "comingSoon": "Feature coming soon!",
+    "launchSecurityAudit": "Launch Security Audit"
+  },
+  "Chat": {
+    "endSession": "End Session",
+    "report": "Report Chat",
+    "startConversation": "Start the conversation!"
+  },
+  "ListenerRequests": {
+    "subtitle": "Accept or decline venter connection requests"
+  },
+  "ListenerSessionFlow": {
+    "sessionTypeCall": "Voice session",
+    "sessionTypeChat": "Chat session"
+  },
+  "Report": {
+    "description": "Description",
+    "descriptionPlaceholder": "Please provide more details...",
+    "selectReason": "Select a reason",
+    "submit": "Submit Report",
+    "submitting": "Submitting...",
+    "title": "Report User"
+  },
+  "VenterPayment": {
+    "checking": "Checking your account balances.",
+    "chooseOption": "Choose an option to continue:",
+    "insufficientFunds": "Insufficient Funds",
+    "unsuccessfulDesc": "You do not have enough credits or an active subscription to start this session."
+  },
+  "VenterSubscription": {
+    "title": "My Subscription"
+  },
+  "Plans": {
+    "basic": {
+      "features": [
+        "150 mensagens",
+        "30 minutos de voz",
+        "Ferramentas de bem-estar emocional incluídas"
+      ],
+      "description": "Para necessidades de apoio ocasionais"
+    },
+    "standard": {
+      "description": "Para apoio regular e uso contínuo",
+      "features": [
+        "300 mensagens",
+        "60 minutos de voz",
+        "Ferramentas de bem-estar emocional incluídas"
+      ]
+    }
+  },
+  "ForgotPasswordWeb": {
+    "emailOnlyHint": "Ingresa tu dirección de correo"
   }
 }

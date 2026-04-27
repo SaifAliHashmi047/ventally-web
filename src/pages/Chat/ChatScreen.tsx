@@ -233,12 +233,12 @@ export const ChatScreen = () => {
   const title = getOtherName();
 
   return (
-    <div 
-      className="flex flex-col h-[100dvh] min-h-0 w-full max-w-4xl lg:max-w-5xl mx-auto animate-fade-in bg-transparent border border-white/10 lg:border lg:rounded-3xl lg:shadow-2xl lg:shadow-black/40 lg:overflow-hidden"
+    <div
+      className="flex flex-col min-h-[100dvh] w-full lg:max-w-4xl lg:max-w-5xl lg:mx-auto animate-fade-in bg-transparent lg:border lg:border-white/10 lg:rounded-3xl lg:shadow-2xl lg:shadow-black/40 lg:overflow-hidden"
       style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       {/* Chat Header - matching mobile ChatHeader */}
-      <div className="glass overflow-visible border-b border-white/8 px-4 sm:px-5 py-3.5 flex items-center gap-3 flex-shrink-0 z-10 lg:rounded-t-3xl">
+      <div className="glass overflow-visible border-b border-white/8 px-4 sm:px-5 py-3.5 pt-[max(0.875rem,env(safe-area-inset-top))] flex items-center gap-3 flex-shrink-0 z-10">
         <button
           onClick={() => navigate(-1)}
           className="p-2 rounded-xl glass text-gray-400 hover:text-white transition-colors flex-shrink-0"
@@ -353,7 +353,7 @@ export const ChatScreen = () => {
 
       {/* Input - only shown when chat is active, matching mobile */}
       {isChatActive && (
-        <div className="glass border-t border-white/8 px-4 sm:px-5 py-3.5 flex items-end gap-3 flex-shrink-0 lg:rounded-b-3xl">
+        <div className="glass border-t border-white/8 px-4 sm:px-5 py-3.5 pb-[max(0.875rem,env(safe-area-inset-bottom))] flex items-end gap-3 flex-shrink-0 lg:rounded-b-3xl">
           <GlassCard
             className="flex-1"
             padding="none"

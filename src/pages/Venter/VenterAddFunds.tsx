@@ -35,7 +35,8 @@ export const VenterAddFunds = () => {
       setLoading(true);
       try {
         const res = await getCreditPacks();
-        setPacks(res?.packs || []);
+        const sortedPacks = (res?.packs || []).sort((a: CreditPack, b: CreditPack) => a.price - b.price);
+        setPacks(sortedPacks);
       } catch {
         toastError(t('Common.errors.fetchingData'));
       } finally {
@@ -195,7 +196,6 @@ export const VenterAddFunds = () => {
 
           <Button
             variant="primary"
-            size="lg"
             fullWidth
             loading={loading}
             disabled={!selectedPack || loading}

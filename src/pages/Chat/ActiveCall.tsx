@@ -166,7 +166,7 @@ export const ActiveCall = () => {
         <p className="text-sm text-white/80">{t('ActiveCall.sessionCall', 'Session Call')}</p>
         <div className="badge badge-success">
           <div className="w-1.5 h-1.5 rounded-full bg-success" />
-          {callStatus === 'connected' ? t('ActiveCall.connected', 'Connected') : t('ActiveCall.connectingStatus', 'Connecting...')}
+          {callStatus === 'connected' ? t('ActiveCall.status.connected', 'Connected') : t('ActiveCall.status.connecting', 'Connecting...')}
         </div>
       </div>
 
@@ -183,7 +183,7 @@ export const ActiveCall = () => {
         <div className="text-center">
           <h2 className="text-xl font-bold text-white">{t('ActiveCall.yourListener', 'Your Listener')}</h2>
           <p className="text-sm text-white/80 mt-1">
-            {callStatus === 'connecting' ? t('ActiveCall.connectingStatus', 'Connecting...') : formatDuration(duration)}
+            {callStatus === 'connecting' ? t('ActiveCall.status.connecting', 'Connecting...') : formatDuration(duration)}
           </p>
         </div>
       </div>
