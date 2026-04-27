@@ -44,6 +44,7 @@ import { AgeGroupSelect } from '../pages/Common/AgeGroupSelect';
 import { LGBTQSelect } from '../pages/Common/LGBTQSelect';
 import { FaithOrBeliefSelect } from '../pages/Common/FaithOrBeliefSelect';
 import { SpecialTopicsSelect } from '../pages/Common/SpecialTopicsSelect';
+import { VenterQuestionsFlow } from '../pages/Auth/VenterQuestionsFlow';
 import { LanguageSelection } from '../pages/Auth/LanguageSelection';
 
 // Change-account flow screens (listener → venter)
@@ -87,7 +88,9 @@ export const ListenerRouter = () => {
         <Route path="session/:id/report" element={<ReportScreen />} />
         <Route path="report" element={<ReportScreen />} />
         <Route path="payout" element={<PayoutSettings />} />
-        {/* Profile Selector Sub-pages */}
+        {/* Profile Preference Edit pages — same component as signup, auto-detected editMode */}
+        <Route path="profile/preferences/:stepId" element={<VenterQuestionsFlow />} />
+        {/* Profile Selector Sub-pages (legacy) */}
         <Route path="profile/gender" element={<GenderIdentitySelect />} />
         <Route path="profile/racial-identity" element={<RacialIdentitySelect />} />
         <Route path="profile/ethnicity" element={<EthnicitySelect />} />

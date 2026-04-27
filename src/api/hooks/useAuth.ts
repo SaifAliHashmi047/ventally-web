@@ -7,16 +7,46 @@ export const useAuth = () => {
 
   const getProfile = async () => {
     const res = await apiInstance.get('auth/profile');
-    if (res.data?.user) {
-      dispatch(setUser(res.data.user));
+    const { user, preferences, wallet } = res.data || {};
+    if (user) {
+      dispatch(setUser({
+        ...user,
+        // Map API field names to Redux User field names (matches native app's EditProfileScreen.fetchProfile)
+        gender:            preferences?.genderIdentity      || '',
+        culturalBackground:preferences?.culturalBackground  || '',
+        ethnicity:         preferences?.ethnicity           || '',
+        ageGroup:          preferences?.ageGroup            || '',
+        lgbtqIdentity:     preferences?.lgbtqIdentity       || '',
+        faithOrBelief:     preferences?.faithOrBelief       || '',
+        specialTopics:     preferences?.specialTopics       || [],
+        preferredLanguage: preferences?.preferredLanguage   || '',
+        balance: wallet?.balanceCurrency ?? wallet?.balanceMinutes ?? 0,
+        // Normalise naming
+        role: user.userType || user.role || '',
+        image: user.profilePictureUrl || user.image || '',
+      }));
     }
     return res.data;
   };
 
   const updateProfile = async (data: any) => {
     const res = await apiInstance.put('auth/profile', data);
-    if (res.data?.user) {
-      dispatch(setUser(res.data.user));
+    const { user, preferences, wallet } = res.data || {};
+    if (user) {
+      dispatch(setUser({
+        ...user,
+        gender:            preferences?.genderIdentity      || '',
+        culturalBackground:preferences?.culturalBackground  || '',
+        ethnicity:         preferences?.ethnicity           || '',
+        ageGroup:          preferences?.ageGroup            || '',
+        lgbtqIdentity:     preferences?.lgbtqIdentity       || '',
+        faithOrBelief:     preferences?.faithOrBelief       || '',
+        specialTopics:     preferences?.specialTopics       || [],
+        preferredLanguage: preferences?.preferredLanguage   || '',
+        balance: wallet?.balanceCurrency ?? wallet?.balanceMinutes ?? 0,
+        role: user.userType || user.role || '',
+        image: user.profilePictureUrl || user.image || '',
+      }));
     }
     return res.data;
   };

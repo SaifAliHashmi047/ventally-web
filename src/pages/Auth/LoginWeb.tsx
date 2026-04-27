@@ -113,7 +113,7 @@ export const LoginWeb = () => {
         {/* Logo */}
         <div className="flex items-center gap-3 mb-8">
           <AppBrandIcon className="w-11 h-11 rounded-2xl" />
-          <h1 className="text-xl font-bold text-white tracking-tight">Ventally</h1>
+          <h1 className="text-xl font-bold text-white tracking-tight">{t('Common.appName', 'Ventally')}</h1>
         </div>
 
         <h2 className="text-xl font-bold text-white mb-1">{t('LogIn.title')}</h2>

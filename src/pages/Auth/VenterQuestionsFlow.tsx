@@ -61,9 +61,9 @@ const STEPS_CONFIG: Record<string, {
       { id: 'Asian',             labelKey: 'Ethnicity.asian' },
       { id: 'Indigenous',        labelKey: 'Ethnicity.indigenous' },
       { id: 'European',          labelKey: 'Ethnicity.european' },
-      { id: 'Multiple',          labelKey: 'Ethnicity.multiple' },
       { id: 'Other',             labelKey: 'Ethnicity.other' },
       { id: 'Prefer not to say', labelKey: 'Ethnicity.preferNotToSay' },
+      { id: 'Multiple',          labelKey: 'Ethnicity.multiple' },
     ],
   },
   age: {
@@ -111,16 +111,15 @@ const STEPS_CONFIG: Record<string, {
     step: 7, titleKey: 'FaithOrBelief.title', userKey: 'faithOrBelief', apiField: 'faithOrBelief',
     next: 'finish',
     options: [
-      { id: 'Christian',        labelKey: 'FaithOrBelief.christian' },
-      { id: 'Muslim',           labelKey: 'FaithOrBelief.muslim' },
-      { id: 'Jewish',           labelKey: 'FaithOrBelief.jewish' },
-      { id: 'Hindu',            labelKey: 'FaithOrBelief.hindu' },
-      { id: 'Buddhist',         labelKey: 'FaithOrBelief.buddhist' },
-      { id: 'Atheist',          labelKey: 'FaithOrBelief.atheist' },
-      { id: 'Agnostic',         labelKey: 'FaithOrBelief.agnostic' },
-      { id: 'Spiritual',        labelKey: 'FaithOrBelief.spiritual' },
-      { id: 'Other',            labelKey: 'FaithOrBelief.other' },
-      { id: 'Prefer not to say', labelKey: 'FaithOrBelief.preferNotToSay' },
+      { id: 'Christian',                 labelKey: 'FaithOrBelief.christian',           isPrimary: true },
+      { id: 'Muslim',                    labelKey: 'FaithOrBelief.muslim',              isPrimary: true },
+      { id: 'Sikh',                      labelKey: 'FaithOrBelief.sikh' },
+      { id: 'Hindu',                     labelKey: 'FaithOrBelief.hindu',               isPrimary: true },
+      { id: 'Buddhist',                  labelKey: 'FaithOrBelief.buddhist',            isPrimary: true },
+      { id: 'Jewish',                    labelKey: 'FaithOrBelief.jewish' },
+      { id: 'No religion',               labelKey: 'FaithOrBelief.noReligion' },
+      { id: 'Spiritual (not religious)', labelKey: 'FaithOrBelief.spiritualNotReligious', isPrimary: true },
+      { id: 'Other',                     labelKey: 'FaithOrBelief.other' },
     ],
   },
 };
@@ -133,8 +132,9 @@ export const VenterQuestionsFlow = () => {
   const { t } = useTranslation();
 
   const user = useSelector((state: RootState) => state.user.user);
-  // edit mode: comes from profile settings page
-  const editMode = !!(location.state as any)?.editMode;
+  // edit mode: comes via role-specific route (/venter/profile/preferences/:stepId)
+  // OR from profile settings page passing state
+  const editMode = location.pathname.includes('/preferences/') || !!(location.state as any)?.editMode;
 
   const config = STEPS_CONFIG[stepId || 'gender'];
 
@@ -147,12 +147,12 @@ export const VenterQuestionsFlow = () => {
   );
   const [loading, setLoading] = useState(false);
 
-  // Re-seed when stepId changes (navigate between steps)
+  // Re-seed when stepId changes OR when user Redux state updates (e.g. after profile API fetch)
   useEffect(() => {
     if (!config) return;
     const v = (user as any)[config.userKey];
     setSelected(config.multiSelect ? (Array.isArray(v) ? v : []) : (v || ''));
-  }, [stepId]);
+  }, [stepId, user]);
 
   if (!config) return null;
 
@@ -238,10 +238,10 @@ export const VenterQuestionsFlow = () => {
       selectedValues={selectedValues}
       onSelect={handleSelect}
       onBack={() => navigate(-1)}
-      onSkip={handleSkip}
-      onContinue={config.multiSelect || editMode ? () => saveAndAdvance() : undefined}
+      onSkip={editMode ? undefined : handleSkip}
+      onContinue={config.multiSelect ? () => saveAndAdvance() : (editMode && hasSelection ? () => saveAndAdvance() : undefined)}
       continueText={editMode ? t('Common.update', 'Update') : undefined}
-      skipText={editMode ? t('Common.cancel', 'Cancel') : undefined}
+      skipText={undefined}
       loading={loading}
       useBubblePattern={config.useBubblePattern}
     />
@@ -250,7 +250,15 @@ export const VenterQuestionsFlow = () => {
   // In edit mode, render within the app layout (no auth background)
   if (editMode) {
     return (
-      <div className="page-wrapper animate-fade-in" style={{ minHeight: '100vh' }}>
+      <div
+        className="animate-fade-in"
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '16px 20px 32px',
+        }}
+      >
         {content}
       </div>
     );

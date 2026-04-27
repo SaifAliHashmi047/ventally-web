@@ -18,7 +18,7 @@ interface QuestionStepProps {
   selectedValues?: string[];
   onSelect: (value: string) => void;
   onBack: () => void;
-  onSkip: () => void;
+  onSkip?: () => void;
   onContinue?: () => void;
   continueText?: string;
   skipText?: string;
@@ -54,13 +54,17 @@ export const QuestionStep = ({
     : !!selectedValue;
 
   const showContinue = hasSelection && onContinue;
+  const showSkip = !!onSkip;
+  const showBottomBtn = showContinue || showSkip;
 
   const btnLabel = showContinue
     ? (continueText || t('QuestionStep.continue', 'Continue'))
     : (skipText || t('QuestionStep.skip', 'Skip'));
 
+  const handleBottomAction = showContinue ? onContinue : onSkip;
+
   return (
-    <div className="flex flex-col h-full relative">
+    <div className="flex flex-col flex-1 min-h-[calc(100vh-48px)] relative">
       {/* ── Absolute Header — keeps headers top-aligned while content centers ── */}
       <div className="absolute top-0 left-0 right-0 py-2">
         <div className="flex items-center justify-between">
@@ -141,9 +145,10 @@ export const QuestionStep = ({
       </div>
 
       {/* ── Bottom action button ── */}
+      {showBottomBtn && (
       <div className="mt-auto pb-4">
         <button
-          onClick={showContinue ? onContinue : onSkip}
+          onClick={handleBottomAction}
           disabled={loading}
           className="btn w-full py-4 text-sm font-semibold transition-all"
           style={
@@ -166,6 +171,7 @@ export const QuestionStep = ({
           {loading ? <Loader2 size={16} className="animate-spin mx-auto" /> : btnLabel}
         </button>
       </div>
+      )}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { AuthLayout } from '../../components/Layout/AuthLayout';
 import { TermsAndConditionsContent } from '../../components/Shared/TermsAndConditionsContent';
 import { useSelector } from 'react-redux';
 import { ArrowLeft } from 'lucide-react';
+import { Button } from '../../components/ui/Button';
 
 export const TermsAndConditions = () => {
   const { t } = useTranslation();
@@ -21,7 +22,7 @@ export const TermsAndConditions = () => {
 
   return (
     <AuthLayout>
-      <button 
+      <button
         onClick={() => navigate(-1)}
         style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}
       >
@@ -34,13 +35,12 @@ export const TermsAndConditions = () => {
 
       <TermsAndConditionsContent />
 
-      <button 
+      <Button
         onClick={handleAccept}
-        className="btn-primary" 
-        style={{ height: '56px', justifyContent: 'center', fontSize: '17px', borderRadius: '16px', width: '100%' }}
+        fullWidth
       >
         {t('Common.accept')}
-      </button>
+      </Button>
     </AuthLayout>
   );
 };
