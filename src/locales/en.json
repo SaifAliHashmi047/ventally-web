@@ -105,7 +105,9 @@
     "getItOn": "GET IT ON",
     "googlePlayBrand": "Google Play",
     "playStoreCta": "Get it on Google Play",
-    "playStoreAria": "Open Ventally on Google Play in a new tab"
+    "playStoreAria": "Open Ventally on Google Play in a new tab",
+    "featuresLabel": "What we offer",
+    "actionsLabel": "Get started or sign in"
   },
   "SignUp": {
     "title": "Sign Up",

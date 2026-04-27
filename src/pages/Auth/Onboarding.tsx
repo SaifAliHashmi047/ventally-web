@@ -1,188 +1,178 @@
-import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../../components/ui/Button';
+import { GlassCard } from '../../components/ui/GlassCard';
 import { MainBackground } from '../../components/ui/MainBackground';
 import { AppBrandIcon } from '../../components/ui/AppBrandIcon';
 import { PlayStoreIcon } from '../../components/ui/PlayStoreIcon';
-import mouseIcon from '../../assets/icons/mouse.png';
-import { cn } from '../../utils/cn';
+import { Sparkles, Shield, Heart, MessageCircle } from 'lucide-react';
 
 const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.ventally';
 
 export const Onboarding = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const slides = [
-    // Slide 1 — app icon + name
-    <div key={1} className="flex flex-col items-center justify-center w-full h-full px-8">
-      <div
-        className="mb-4 p-4 rounded-3xl"
-        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.2)' }}
-      >
-        <AppBrandIcon className="w-24 h-24 rounded-2xl" />
-      </div>
-      <span
-        className="text-4xl font-bold text-center"
-        style={{ color: 'rgba(255,255,255,0.6)' }}
-      >
-        {t('OnBoarding.appName')}
-      </span>
-    </div>,
-
-    // Slide 2 — dots pattern + quote
-    <div key={2} className="flex flex-col justify-center w-full h-full px-8">
-      {/* Interconnected dots pattern */}
-      <div className="relative mb-6" style={{ width: 32, height: 32 }}>
-        {[
-          { top: 0,    left: '50%', transform: 'translateX(-50%)' },
-          { top: '50%', left: 0,   transform: 'translateY(-50%)' },
-          { top: '50%', right: 0,  transform: 'translateY(-50%)' },
-          { bottom: 0,  left: '50%', transform: 'translateX(-50%)' },
-        ].map((style, i) => (
-          <div
-            key={i}
-            className="absolute w-3 h-3 rounded-full"
-            style={{ ...style, background: 'rgba(255,255,255,0.9)' }}
-          />
-        ))}
-      </div>
-      <p className="text-3xl font-medium text-white leading-snug">
-        {t('OnBoarding.quote')}
-      </p>
-    </div>,
-
-    // Slide 3 — fetching + mouse icon + rules
-    <div key={3} className="flex flex-col justify-center w-full h-full px-8">
-      <p className="text-3xl font-medium text-white mb-6">
-        {t('OnBoarding.fetchingData')}
-      </p>
-      <div className="flex flex-row items-center gap-3">
-        <img src={mouseIcon} alt="" className="w-10 h-10 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
-        <p className="text-base font-medium text-white leading-relaxed flex-1">
-          {t('OnBoarding.voiceRules')}{'\n'}{t('OnBoarding.stayAnonymous')}
-        </p>
-      </div>
-    </div>,
+  const features = [
+    {
+      icon: Shield,
+      title: t('OnBoarding.stayAnonymous', 'Stay Anonymous'),
+      description: t(
+        'OnBoarding.anonymousDesc',
+        'Your identity is always protected. No names, no profiles, just support.',
+      ),
+    },
+    {
+      icon: Heart,
+      title: t('OnBoarding.voiceTitle', 'Your Voice. Your Rules.'),
+      description: t(
+        'OnBoarding.voiceDesc',
+        'Connect on your terms. Voice or text, whenever you need it.',
+      ),
+    },
+    {
+      icon: MessageCircle,
+      title: t('OnBoarding.guidedSupport', 'Guided Support'),
+      description: t(
+        'OnBoarding.guidedDesc',
+        'Trained listeners ready to provide compassionate, moderated support.',
+      ),
+    },
+    {
+      icon: Sparkles,
+      title: t('OnBoarding.safeSpace', 'A Safe Space'),
+      description: t(
+        'OnBoarding.safeDesc',
+        'Built on privacy, respect, and community guidelines.',
+      ),
+    },
   ];
 
-  const handleScroll = () => {
-    if (!scrollRef.current) return;
-    const idx = Math.round(scrollRef.current.scrollLeft / scrollRef.current.clientWidth);
-    setCurrentIndex(idx);
-  };
-
-  const handleNext = () => {
-    navigate('/signup');
-  };
-
   return (
-    <div className="relative min-h-[100dvh] flex flex-col w-full">
+    <div className="relative flex min-h-[100dvh] w-full max-w-full flex-col overflow-x-hidden supports-[min-height:100svh]:min-h-[100svh]">
       <MainBackground />
-      <div className="relative z-10 flex flex-col w-full min-h-[100dvh] overflow-y-auto">
 
-        {/* Swipeable slides — fixed height so buttons are always reachable by scrolling */}
+      <main
+        id="onboarding-main"
+        className="relative z-10 flex min-h-0 w-full flex-1 flex-col overflow-y-auto overscroll-y-contain"
+        role="main"
+      >
         <div
-          ref={scrollRef}
-          onScroll={handleScroll}
-          className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide flex-shrink-0"
-          style={{ scrollBehavior: 'smooth', height: '48vh', minHeight: 280 }}
+          className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center px-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pb-6 pt-[max(1rem,env(safe-area-inset-top))] motion-safe:animate-fade-in motion-reduce:animate-none sm:px-6 sm:pb-8 sm:pt-6 md:max-w-3xl md:px-8 md:pb-10 md:pt-10 lg:max-w-3xl lg:px-10 lg:pb-12 lg:pt-12 xl:max-w-[56rem] xl:pt-16 2xl:pb-16 2xl:pt-20"
         >
-          {slides.map((slide, i) => (
-            <div
-              key={i}
-              className="flex-shrink-0 snap-center w-full flex items-center"
-              style={{ minWidth: '100%' }}
-            >
-              {slide}
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom section — flows naturally, page scrolls to reveal on small screens */}
-        <div className="px-5 pb-8 pt-4 flex flex-col items-center">
-
-          {/* 1 — Get Started (most prominent) */}
-          <Button
-            variant="primary"
-            onClick={handleNext}
-            className="font-semibold w-full lg:w-[70%] xl:w-1/2"
-            style={{ boxShadow: '0 0 18px rgba(194,174,191,0.35)' }}
-          >
-            {currentIndex === slides.length - 1
-              ? t('OnBoarding.enterSafeSpace', 'Enter Safe Space')
-              : t('OnBoarding.getStarted', 'Get Started')}
-          </Button>
-
-          {/* Pagination dots */}
-          <div className="flex items-center justify-center gap-2 mt-4 mb-4">
-            {slides.map((_, i) => (
-              <div
-                key={i}
-                className="rounded-full transition-all duration-200"
-                style={{
-                  width:  i === currentIndex ? 9 : 7,
-                  height: i === currentIndex ? 9 : 7,
-                  background: i === currentIndex ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
-                }}
+          {/* Brand */}
+          <header className="mb-4 flex w-full flex-col items-center sm:mb-5 md:mb-6">
+            <div className="mb-4 sm:mb-5">
+              <AppBrandIcon
+                className="mx-auto h-16 w-16 rounded-[1.1rem] shadow-2xl ring-1 ring-white/15 sm:h-20 sm:w-20 sm:rounded-[1.2rem] md:h-[5.5rem] md:w-[5.5rem] md:rounded-[1.35rem] lg:h-24 lg:w-24 lg:rounded-[1.4rem]"
+                aria-hidden
               />
-            ))}
-          </div>
-
-          {/* 2 — OR DOWNLOAD THE APP label */}
-          <p className="text-center mb-2" style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.06em' }}>
-            OR DOWNLOAD THE APP
-          </p>
-
-          {/* 3 — Play Store (secondary) */}
-          <a
-            href={PLAY_STORE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(
-              'btn btn-md w-full lg:w-[70%] xl:w-1/2',
-              'flex items-center justify-center gap-2.5 rounded-2xl text-white no-underline transition-all hover:opacity-80'
-            )}
-            style={{
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              opacity: 0.85,
-            }}
-          >
-            <PlayStoreIcon className="h-4 w-4 shrink-0" />
-            <div className="text-left leading-none">
-              <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                {t('OnBoarding.getItOn', 'GET IT ON')}
-              </p>
-              <p className="text-sm font-semibold text-white">{t('OnBoarding.googlePlayBrand', 'Google Play')}</p>
             </div>
-          </a>
+            <h1 className="mb-2 text-center text-2xl font-bold leading-tight tracking-tight text-white sm:mb-2.5 sm:text-3xl lg:text-4xl">
+              {t('OnBoarding.appName', 'VENTALLY')}
+            </h1>
+            <p className="max-w-md text-balance text-center text-sm leading-relaxed text-gray-400 sm:max-w-lg sm:text-base md:max-w-xl md:leading-7 md:text-gray-300/90 lg:max-w-2xl lg:text-lg">
+              {t(
+                'OnBoarding.quote',
+                'Sometimes the most honest conversations happen when no one knows your name.',
+              )}
+            </p>
+          </header>
 
-          {/* 4 — Log In (lowest priority, ghost) */}
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/login')}
-            className="mt-2 border border-white/10 text-white/45 w-full lg:w-[70%] xl:w-1/2"
+          {/* Feature grid */}
+          <section
+            className="mb-6 w-full sm:mb-8 md:mb-10"
+            aria-label={t('OnBoarding.featuresLabel', 'What we offer')}
           >
-            {t('LogIn.logIn', 'Log In')}
-          </Button>
+            <div className="grid w-full auto-rows-fr grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 md:gap-3.5 lg:gap-4">
+              {features.map((feature, index) => (
+                <GlassCard
+                  key={index}
+                  bordered
+                  padding="md"
+                  rounded="2xl"
+                  className="flex h-full min-h-[5rem] items-start gap-3 sm:min-h-[5.5rem] sm:gap-4"
+                >
+                  <div
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl glass-accent sm:h-10 sm:w-10 sm:rounded-2xl"
+                    aria-hidden
+                  >
+                    <feature.icon size={20} className="text-accent" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h2 className="mb-0.5 text-xs font-semibold leading-snug text-white sm:text-sm">
+                      {feature.title}
+                    </h2>
+                    <p className="text-pretty text-[11px] leading-relaxed text-gray-500 sm:text-xs">
+                      {feature.description}
+                    </p>
+                  </div>
+                </GlassCard>
+              ))}
+            </div>
+          </section>
 
-          {/* Terms */}
-          <p className="text-center mt-4" style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', lineHeight: 1.5 }}>
-            {t('OnBoarding.byContinuing', 'By continuing, you agree to our')}{' '}
-            <button
-              type="button"
-              onClick={() => navigate('/signup/terms')}
-              className="text-accent hover:underline"
-            >
-              {t('TermsAndConditions.title', 'Terms & Conditions')}
-            </button>
-          </p>
+          {/* Primary actions — width capped like auth flows */}
+          <section
+            className="w-full max-w-sm sm:max-w-md"
+            aria-label={t('OnBoarding.actionsLabel', 'Get started or sign in')}
+          >
+            <div className="flex w-full flex-col gap-2.5 sm:gap-3">
+              <Button
+                variant="primary"
+                size="lg"
+                fullWidth
+                contained
+                onClick={() => navigate('/signup')}
+              >
+                {t('OnBoarding.getStarted', 'Get Started')}
+              </Button>
+
+              <a
+                href={PLAY_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-glass btn-lg w-full no-underline text-white transition-[transform,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+                aria-label={t(
+                  'OnBoarding.playStoreAria',
+                  'Open Ventally on Google Play in a new tab',
+                )}
+              >
+                <PlayStoreIcon className="h-5 w-5 shrink-0 opacity-90" aria-hidden />
+                {t('OnBoarding.playStoreCta', 'Get it on Google Play')}
+              </a>
+
+              <Button
+                variant="glass"
+                size="lg"
+                fullWidth
+                contained
+                onClick={() => navigate('/login')}
+              >
+                {t('LogIn.logIn', 'Log In')}
+              </Button>
+            </div>
+          </section>
+
+          <footer className="mt-6 w-full max-w-md px-0.5 sm:mt-8 sm:px-0 md:mt-10">
+            <p className="text-balance text-center text-[11px] leading-relaxed text-gray-600 sm:max-w-none sm:text-xs">
+              {t('OnBoarding.byContinuing', 'By continuing, you agree to our')}{' '}
+              <button
+                type="button"
+                onClick={() => navigate('/signup/terms')}
+                className="inline rounded-sm font-medium text-accent underline-offset-2 transition-colors hover:text-accent/90 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]"
+              >
+                {t('TermsAndConditions.title', 'Terms & Conditions')}
+              </button>
+            </p>
+          </footer>
+
+          <div
+            className="h-[max(0.75rem,env(safe-area-inset-bottom))] w-full shrink-0"
+            aria-hidden
+          />
         </div>
-      </div>
+      </main>
     </div>
   );
 };
