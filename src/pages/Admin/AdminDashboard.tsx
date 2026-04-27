@@ -61,7 +61,7 @@ const FALLBACK_CARDS = [
 ];
 
 const STAT_ICONS = [Users, BarChart3, UserPlus, Clock];
-const STAT_COLORS = ['var(--primary)', '#C2AEBF', '#32D74B', '#FFD746'];
+const STAT_COLORS = ['var(--primary)', '#FFFFFF', 'var(--primary)', '#FFFFFF'];
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload?.length) {

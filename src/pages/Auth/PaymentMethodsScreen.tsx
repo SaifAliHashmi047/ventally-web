@@ -51,12 +51,12 @@ export const PaymentMethodsScreen = () => {
                   <p className="text-xs text-gray-400 uppercase">{method.brand} - {t('Payment.expires', 'Expires')} {method.expMonth}/{method.expYear}</p>
                 </div>
               </div>
-              <ChevronRight size={16} className="text-white/80" />
+              <ChevronRight size={16} className="text-white" />
             </GlassCard>
           ))
         ) : (
           <GlassCard className="flex flex-col items-center justify-center py-8 text-center border border-dashed border-white/20">
-            <CreditCard size={32} className="text-white/80 mb-3" />
+            <CreditCard size={32} className="text-white mb-3" />
             <p className="text-sm text-gray-400">{t('Payment.noMethods', 'No payment methods added yet.')}</p>
           </GlassCard>
         )}

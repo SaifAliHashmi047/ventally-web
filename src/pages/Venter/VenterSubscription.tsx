@@ -84,7 +84,7 @@ export const VenterSubscription = () => {
                 <span className="text-sm font-medium text-white group-hover:text-accent transition-colors">
                   {t('VenterMySubscription.subscription')}
                 </span>
-                <ChevronRight size={16} className="text-white/80 group-hover:text-accent transition-colors" />
+                <ChevronRight size={16} className="text-white group-hover:text-accent transition-colors" />
               </div>
             </div>
           </GlassCard>

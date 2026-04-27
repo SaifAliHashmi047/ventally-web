@@ -34,22 +34,15 @@ export const ListenerSettings = () => {
             onClick={() => navigate('/listener/notifications-settings')}
           >
             <div className="flex items-center gap-3">
-              <Bell size={16} className="text-white/80" />
+              <Bell size={16} className="text-white" />
               <p className="text-sm font-medium text-white">
                 {t('VenterSettings.options.notifications.title', 'Notifications')}
               </p>
             </div>
-            <ChevronRight size={16} className="text-white/80" />
+            <ChevronRight size={16} className="text-white" />
           </div>
 
-          {/* Dark Theme Toggle */}
-          <div className="settings-item flex justify-between items-center px-4 py-3 border-b border-white/5">
-            <div className="flex items-center gap-3">
-              <Moon size={16} className="text-white/80" />
-              <p className="text-sm font-medium text-white">{t('VenterSettings.options.darkTheme.title', 'Dark Theme')}</p>
-            </div>
-            <Toggle checked={isDark} onChange={() => dispatch(toggleDarkMode())} size="sm" />
-          </div>
+
 
           {/* Change Account Type */}
           <div
@@ -57,12 +50,12 @@ export const ListenerSettings = () => {
             onClick={() => navigate('/listener/change-account-type')}
           >
             <div className="flex items-center gap-3">
-              <UserCog size={16} className="text-white/80" />
+              <UserCog size={16} className="text-white" />
               <p className="text-sm font-medium text-white">
                 {t('VenterSettings.options.changeAccountType.title', 'Change Account Type')}
               </p>
             </div>
-            <ChevronRight size={16} className="text-white/80" />
+            <ChevronRight size={16} className="text-white" />
           </div>
 
           {/* Security */}
@@ -71,10 +64,10 @@ export const ListenerSettings = () => {
             onClick={() => navigate('/listener/security')}
           >
             <div className="flex items-center gap-3">
-              <Shield size={16} className="text-white/80" />
+              <Shield size={16} className="text-white" />
               <p className="text-sm font-medium text-white">{t('Security.title', 'Security')}</p>
             </div>
-            <ChevronRight size={16} className="text-white/80" />
+            <ChevronRight size={16} className="text-white" />
           </div>
 
           {/* Legal & Policies */}
@@ -83,10 +76,10 @@ export const ListenerSettings = () => {
             onClick={() => navigate('/listener/legal')}
           >
             <div className="flex items-center gap-3">
-              <ChevronRight size={16} className="text-white/80 opacity-0" />
+              <ChevronRight size={16} className="text-white opacity-0" />
               <p className="text-sm font-medium text-white">{t('Legal.title', 'Legal & Policies')}</p>
             </div>
-            <ChevronRight size={16} className="text-white/80" />
+            <ChevronRight size={16} className="text-white" />
           </div>
 
           {/* Contact Us */}
@@ -96,10 +89,10 @@ export const ListenerSettings = () => {
             style={{ borderBottomWidth: 0 }}
           >
             <div className="flex items-center gap-3">
-              <ChevronRight size={16} className="text-white/80 opacity-0" />
+              <ChevronRight size={16} className="text-white opacity-0" />
               <p className="text-sm font-medium text-white">{t('Contact.title', 'Contact Us')}</p>
             </div>
-            <ChevronRight size={16} className="text-white/80" />
+            <ChevronRight size={16} className="text-white" />
           </div>
         </GlassCard>
       </div>

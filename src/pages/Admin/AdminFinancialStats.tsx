@@ -84,7 +84,7 @@ export const AdminFinancialStats = () => {
                   <span className="text-sm font-bold text-white underline decoration-white/20 underline-offset-4">
                     ${paymentStats?.weeklyRevenueIncrease?.currentRevenue?.toLocaleString() || '0.00'}
                   </span>
-                  <ChevronRight size={16} className="text-white/40 group-hover:translate-x-1 transition-transform" />
+                  <ChevronRight size={16} className="text-white group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             )}

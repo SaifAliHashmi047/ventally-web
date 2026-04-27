@@ -48,7 +48,7 @@ export const OptionalQuestionsHero = () => {
                 className="flex items-center justify-center flex-shrink-0 bg-white rounded-full mt-0.5" 
                 style={{ width: '20px', height: '20px' }}
               >
-                <Check size={13} className="text-black" strokeWidth={3} />
+                <Check size={13} className="text-white" strokeWidth={3} />
               </div>
               <p style={{ color: 'var(--text-dim)', fontSize: '14px', lineHeight: '1.4' }}>
                 {t(`OptionalQuestions.bullet${num}`)}

@@ -142,7 +142,7 @@ export const ListenerSessionRating = () => {
             className="w-full max-w-md rounded-3xl p-8 sm:p-10 text-center border-white/10 bg-black/50 shadow-2xl animate-scale-up"
           >
             <div className="w-16 h-16 rounded-2xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center mx-auto mb-5">
-              <CircleCheck size={36} className="text-emerald-400" strokeWidth={2} />
+              <CircleCheck size={36} className="text-white" strokeWidth={2} />
             </div>
             <h3 className="text-lg sm:text-xl font-bold text-white mb-2">{t('ListenerRating.earningsLogged')}</h3>
             <p className="text-sm text-white/55 leading-relaxed">{t('ListenerRating.earningsLoggedSub')}</p>

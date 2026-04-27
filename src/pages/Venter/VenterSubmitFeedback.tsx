@@ -34,7 +34,7 @@ export const VenterSubmitFeedback = () => {
 
       <GlassCard className="mb-4">
         <div className="flex items-start gap-3">
-          <MessageSquarePlus size={18} className="text-accent flex-shrink-0 mt-0.5" />
+          <MessageSquarePlus size={18} className="text-primary flex-shrink-0 mt-0.5" />
           <p className="text-xs text-gray-400 leading-relaxed">
             {t('Feedback.description')}
           </p>

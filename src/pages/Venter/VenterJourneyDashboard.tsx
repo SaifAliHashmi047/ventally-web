@@ -135,7 +135,7 @@ export const VenterJourneyDashboard = () => {
               {t('VenterJourney.moodVariation.moderate')}
             </p>
           </div>
-          <ChevronRight size={18} className="text-white/60 flex-shrink-0" />
+          <ChevronRight size={18} className="text-white flex-shrink-0" />
         </div>
       </GlassCard>
     </div>

@@ -233,7 +233,7 @@ export const ListenerActiveCall = () => {
                   className="flex flex-col items-center gap-2 group min-w-[4.5rem]"
                 >
                   <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/10 flex items-center justify-center transition-all group-hover:bg-white/15 ring-1 ring-white/10">
-                    {isMuted ? <MicOff size={22} className="text-red-400" /> : <Mic size={22} className="text-white" />}
+                    {isMuted ? <MicOff size={22} className="text-white" /> : <Mic size={22} className="text-white" />}
                   </div>
                   <span className="text-[11px] sm:text-xs font-medium text-white/90 text-center leading-tight">
                     {isMuted ? t('ListenerCall.unmute', 'Unmute') : t('ListenerCall.mute', 'Mute')}
@@ -267,7 +267,7 @@ export const ListenerActiveCall = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in">
           <GlassCard bordered className="w-full max-w-md rounded-3xl p-6 sm:p-8 text-center transform animate-scale-up border-white/10">
             <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4">
-              <PhoneOff size={26} className="text-white/80" />
+              <PhoneOff size={26} className="text-white" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2">{t('ListenerCall.endSession', 'End session?')}</h3>
             <p className="text-sm text-gray-400 mb-8 max-w-sm mx-auto">

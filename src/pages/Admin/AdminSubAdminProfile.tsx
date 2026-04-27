@@ -172,7 +172,7 @@ export const AdminSubAdminProfile = () => {
       <GlassModal
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
-        icon={<CheckCircle className="text-accent" />}
+        icon={<CheckCircle className="text-primary" />}
         title={t('Admin.success.permissionsUpdated', 'Permissions Updated')}
         message={t('Admin.success.permissionsUpdatedMessage', 'The sub-admin permissions have been successfully updated.')}
         primaryButtonText={t('Common.done', 'Done')}

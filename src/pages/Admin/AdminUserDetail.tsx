@@ -134,7 +134,7 @@ export const AdminUserDetail = () => {
               <span className="text-sm font-bold text-white uppercase tracking-wider">
                 {user.role === 'listener' ? t('Admin.userDetail.listenerInfo') : t('Admin.userDetail.venterInfo', 'Venter info')}
               </span>
-              {expandedSection === 'support' ? <ChevronDown size={18} className="text-white/40" /> : <ChevronRight size={18} className="text-white/40" />}
+              {expandedSection === 'support' ? <ChevronDown size={18} className="text-white" /> : <ChevronRight size={18} className="text-white" />}
             </button>
             
             {expandedSection === 'support' && (
@@ -210,7 +210,7 @@ export const AdminUserDetail = () => {
       <GlassModal
         isOpen={showExportSuccess}
         onClose={() => setShowExportSuccess(false)}
-        icon={<CheckCircle className="text-accent" />}
+        icon={<CheckCircle className="text-primary" />}
         title={t('Admin.userDetail.exportSuccess.title', 'Export Completed')}
         message={t('Admin.userDetail.exportSuccess.subtitle', 'Your user data has been exported successfully.')}
         showButtons={false}

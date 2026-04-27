@@ -142,7 +142,7 @@ export const AdminAddSubAdmin = () => {
       <GlassModal 
         isOpen={showSuccess} 
         onClose={() => {}}
-        icon={<Check className="text-success" size={32} />}
+        icon={<Check className="text-white" size={32} />}
         title={t('Common.success', 'Success')}
         message={t('Admin.addSubAdmin.successMsg', 'Sub Admin account has been created successfully.')}
         showButtons={false}

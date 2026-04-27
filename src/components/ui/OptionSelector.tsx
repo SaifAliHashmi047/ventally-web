@@ -77,7 +77,7 @@ export const OptionSelector = ({ title, options, storeKey, multiSelect = false }
               <span className={`text-sm font-medium ${active ? 'text-accent' : 'text-white'}`}>{opt}</span>
               {active && (
                 <div className="w-6 h-6 rounded-full bg-accent/15 flex items-center justify-center">
-                  <Check size={13} className="text-accent" />
+                  <Check size={13} className="text-primary" />
                 </div>
               )}
             </div>

@@ -95,7 +95,7 @@ export const VenterCrisis988Support = () => {
               className="flex items-center justify-between p-3 rounded-xl glass hover:bg-white/5 transition-colors"
             >
               <span className="text-sm text-gray-300">{resource.title}</span>
-              <ExternalLink size={16} className="text-white/80" />
+              <ExternalLink size={16} className="text-white" />
             </a>
           ))}
         </div>

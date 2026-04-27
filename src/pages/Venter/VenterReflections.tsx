@@ -80,7 +80,7 @@ export const VenterReflections = () => {
                     {new Date(r.reflection_date).toLocaleDateString(i18n.language, { weekday: 'long', month: 'long', day: 'numeric' })}
                   </p>
                 </div>
-                <ChevronRight size={16} className="text-white/80 flex-shrink-0 mt-1" />
+                <ChevronRight size={16} className="text-white flex-shrink-0 mt-1" />
               </div>
             </GlassCard>
           ))}

@@ -145,7 +145,7 @@ export const ListenerDashboard = () => {
                       <p className="text-xs text-white/80 mt-0.5 truncate">{item.title}</p>
                     </div>
                   </div>
-                  <ChevronRight size={16} className="text-white/80 flex-shrink-0" />
+                  <ChevronRight size={16} className="text-white flex-shrink-0" />
                 </div>
               ))}
             </GlassCard>

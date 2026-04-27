@@ -123,7 +123,7 @@ export const RecentChats = () => {
                       )}
                     </div>
                   </div>
-                  <ChevronRight size={16} className="text-white/35 flex-shrink-0" />
+                  <ChevronRight size={16} className="text-white flex-shrink-0" />
                 </button>
               );
             })}

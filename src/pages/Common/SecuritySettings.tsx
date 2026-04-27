@@ -99,7 +99,7 @@ export const SecuritySettings = () => {
               {t('Security.resetPassword')}
             </span>
           </div>
-          <ChevronRight size={16} className="text-white/80" />
+          <ChevronRight size={16} className="text-white" />
         </button>
 
         {/* Change Email */}
@@ -115,7 +115,7 @@ export const SecuritySettings = () => {
               {t('Security.changeEmail')}
             </span>
           </div>
-          <ChevronRight size={16} className="text-white/80" />
+          <ChevronRight size={16} className="text-white" />
         </button>
 
         {/* Two-Factor Authentication */}

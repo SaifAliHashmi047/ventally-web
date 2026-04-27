@@ -90,7 +90,7 @@ export const AdminExports = () => {
           placeholder={t('Admin.exportsIntegrations.searchPlaceholder', 'Search integrations...')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          leftIcon={<Search size={18} className="text-white/40" />}
+          leftIcon={<Search size={18} className="text-white" />}
           className="mb-6 h-12"
         />
 

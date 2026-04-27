@@ -118,7 +118,7 @@ export const VenterAllCallsScreen = () => {
             >
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full glass flex items-center justify-center flex-shrink-0">
-                  <User size={20} className="text-gray-400" />
+                  <User size={20} className="text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">

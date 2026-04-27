@@ -28,7 +28,7 @@ export const ProfileScreen = () => {
   const [logoutModal, setLogoutModal] = useState(false);
 
   useEffect(() => {
-    getProfile().catch(() => {}).finally(() => setLoading(false));
+    getProfile().catch(() => { }).finally(() => setLoading(false));
   }, []);
 
   const handleLogout = () => {
@@ -114,7 +114,7 @@ export const ProfileScreen = () => {
                 </div>
                 <span className="text-sm font-medium text-white">{label}</span>
               </div>
-              <ChevronRight size={16} className="text-white/80" />
+              <ChevronRight size={16} className="text-white" />
             </div>
           );
           return el;
@@ -129,11 +129,11 @@ export const ProfileScreen = () => {
         >
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-error/10 flex items-center justify-center flex-shrink-0">
-              <LogOut size={15} className="text-error" />
+              <LogOut size={15} className="text-white" />
             </div>
             <span className="text-sm font-medium text-white">{t('Profile.logout', 'Logout')}</span>
           </div>
-          <ChevronRight size={16} className="text-white/80" />
+          <ChevronRight size={16} className="text-white" />
         </div>
         <div
           className="settings-item flex justify-between items-center px-4 py-3 cursor-pointer"
@@ -142,11 +142,11 @@ export const ProfileScreen = () => {
         >
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-error/10 flex items-center justify-center flex-shrink-0">
-              <Trash2 size={15} className="text-error" />
+              <Trash2 size={15} className="text-white" />
             </div>
             <span className="text-sm font-medium text-error">{t('Profile.deleteAccount', 'Delete account')}</span>
           </div>
-          <ChevronRight size={16} className="text-error/50" />
+          <ChevronRight size={16} className="text-white" />
         </div>
       </GlassCard>
 
@@ -159,7 +159,7 @@ export const ProfileScreen = () => {
       >
         <div className="flex flex-col items-center text-center">
           <div className="w-14 h-14 rounded-full bg-error/10 flex items-center justify-center mb-4">
-            <LogOut size={24} className="text-error" />
+            <LogOut size={24} className="text-white" />
           </div>
           <p className="text-sm text-gray-400 mb-6 leading-relaxed">
             {t('Profile.logoutConfirmMessage', 'Are you sure you want to logout?')}

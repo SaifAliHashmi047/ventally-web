@@ -103,7 +103,7 @@ export const Onboarding = () => {
                     <h2 className="mb-0.5 text-xs font-semibold leading-snug text-white sm:text-sm">
                       {feature.title}
                     </h2>
-                    <p className="text-pretty text-[11px] leading-relaxed text-gray-500 sm:text-xs">
+                    <p className="text-pretty text-[11px] leading-relaxed text-white sm:text-xs">
                       {feature.description}
                     </p>
                   </div>
@@ -117,36 +117,43 @@ export const Onboarding = () => {
             className="w-full max-w-sm sm:max-w-md"
             aria-label={t('OnBoarding.actionsLabel', 'Get started or sign in')}
           >
-            <div className="flex w-full flex-col gap-2.5 sm:gap-3">
+            <div className="flex w-full flex-col items-center">
               <Button
                 variant="primary"
                 size="lg"
                 fullWidth
                 contained
+                className="mb-8 font-bold"
                 onClick={() => navigate('/signup')}
               >
                 {t('OnBoarding.getStarted', 'Get Started')}
               </Button>
 
+              <p className="text-[12px] font-medium text-gray-500 uppercase tracking-wider mb-4 text-center">
+                {t('OnBoarding.orDownload', 'OR DOWNLOAD THE APP')}
+              </p>
+
               <a
                 href={PLAY_STORE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-glass btn-lg w-full no-underline text-white transition-[transform,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+                className="btn btn-glass w-full flex items-center justify-center gap-2.5 no-underline text-white/70 transition-all hover:bg-white/10 hover:text-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 mb-3"
+                style={{ minHeight: '46px', height: '46px' }}
                 aria-label={t(
                   'OnBoarding.playStoreAria',
                   'Open Ventally on Google Play in a new tab',
                 )}
               >
-                <PlayStoreIcon className="h-5 w-5 shrink-0 opacity-90" aria-hidden />
-                {t('OnBoarding.playStoreCta', 'Get it on Google Play')}
+                <PlayStoreIcon className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
+                <span className="font-medium text-[13px]">{t('OnBoarding.playStoreCta', 'Get it on Google Play')}</span>
               </a>
 
               <Button
-                variant="glass"
+                variant="ghost"
                 size="lg"
                 fullWidth
                 contained
+                className="border border-white/10 text-white/50 hover:bg-white/5 hover:text-white/80 font-medium"
                 onClick={() => navigate('/login')}
               >
                 {t('LogIn.logIn', 'Log In')}

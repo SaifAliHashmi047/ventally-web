@@ -128,7 +128,7 @@ export const ListenerWallet = () => {
                   }`}
                 >
                   <div className="w-9 h-9 rounded-xl bg-success/15 flex items-center justify-center flex-shrink-0">
-                    <ArrowUpRight size={16} className="text-success" />
+                    <ArrowUpRight size={16} className="text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-white">

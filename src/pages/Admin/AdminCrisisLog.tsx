@@ -36,7 +36,7 @@ export const AdminCrisisLog = () => {
             placeholder={t('Admin.crisisManagement.searchPlaceholder', 'Search...')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            leftIcon={<Search size={20} className="text-white/40" />}
+            leftIcon={<Search size={20} className="text-white" />}
             className="h-14 rounded-full bg-white/[0.05] border-white/15 pl-14 focus:bg-white/[0.08] transition-all"
             containerClassName="shadow-sm"
           />

@@ -176,7 +176,7 @@ export const FindingListener = () => {
     navigate('/venter/wallet');
   }, [navigate]);
 
-  const icon = isCall ? <Phone size={32} className="text-accent" /> : <MessageSquare size={32} className="text-accent" />;
+  const icon = isCall ? <Phone size={32} className="text-primary" /> : <MessageSquare size={32} className="text-primary" />;
   const title = isCall
     ? t('VenterFindingListener.title', 'Finding a Listener')
     : t('VenterFindingListener.chatTitle', 'Finding a Chat Listener');
@@ -231,7 +231,7 @@ export const FindingListener = () => {
         {status === 'lowBalance' && (
           <>
             <div className="w-20 h-20 rounded-full glass-accent flex items-center justify-center mx-auto mb-6">
-              <Wallet size={32} className="text-warning" />
+              <Wallet size={32} className="text-white" />
             </div>
             <h1 className="text-xl font-bold text-white mb-2">
               {t('VenterPaymentCheck.insufficientTitle', 'Insufficient Balance')}

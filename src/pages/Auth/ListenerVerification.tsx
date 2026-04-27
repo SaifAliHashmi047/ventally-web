@@ -229,7 +229,7 @@ export const ListenerVerification = () => {
               className="w-full flex items-center gap-4 py-4 px-6 hover:bg-white/5 transition-colors"
               onClick={() => triggerFileInput('application/pdf')}
             >
-              <File size={20} className="text-white/80" />
+              <File size={20} className="text-white" />
               <span className="text-base font-medium text-white">
                 {t('ListenerVerification.pickDocument')}
               </span>

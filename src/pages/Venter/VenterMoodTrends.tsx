@@ -177,7 +177,7 @@ export const VenterMoodTrends = () => {
               </p>
               <p className="text-xs text-white/60 mt-0.5">{variation}</p>
             </div>
-            <ChevronRight size={18} className="text-white/60 flex-shrink-0 ml-3" />
+            <ChevronRight size={18} className="text-white flex-shrink-0 ml-3" />
           </div>
         </GlassCard>
       </button>

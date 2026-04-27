@@ -34,7 +34,7 @@ export const VenterCrisisDisclaimer = () => {
 
       <div className="flex flex-col items-center text-center mb-8">
         <div className="w-20 h-20 rounded-full bg-accent/10 flex items-center justify-center mb-6">
-          <Info size={40} className="text-accent" />
+          <Info size={40} className="text-primary" />
         </div>
 
         <h2 className="text-2xl font-bold text-white mb-4">
@@ -47,7 +47,7 @@ export const VenterCrisisDisclaimer = () => {
           {points.map((point, index) => (
             <div key={index} className="flex items-start gap-3">
               <div className="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <Check size={12} className="text-accent" />
+                <Check size={12} className="text-primary" />
               </div>
               <p className="text-sm text-gray-300">{point}</p>
             </div>

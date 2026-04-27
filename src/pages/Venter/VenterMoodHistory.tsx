@@ -123,7 +123,7 @@ export const VenterMoodHistory = () => {
                             <p className="text-xs text-gray-400 truncate mt-1">{m.notes}</p>
                           )}
                         </div>
-                        <ChevronRight size={14} className="text-white/30 flex-shrink-0" />
+                        <ChevronRight size={14} className="text-white flex-shrink-0" />
                       </div>
                     </GlassCard>
                   );

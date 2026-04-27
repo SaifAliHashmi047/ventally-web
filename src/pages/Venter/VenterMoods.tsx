@@ -67,7 +67,7 @@ export const VenterMoods = () => {
       >
         <div className="flex items-center justify-between py-1">
           <p className="text-sm font-medium text-white">{t('VenterYourMood.todaysMood')}</p>
-          <ChevronRight size={16} className="text-white/60" />
+          <ChevronRight size={16} className="text-white" />
         </div>
       </GlassCard>
 

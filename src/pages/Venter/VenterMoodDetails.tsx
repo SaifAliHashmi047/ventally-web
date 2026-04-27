@@ -111,7 +111,7 @@ export const VenterMoodDetails = () => {
       <div className="page-wrapper page-wrapper--wide animate-fade-in">
         <PageHeader title={t('VenterMoodDetails.title', 'Mood Details')} onBack={() => navigate(-1)} />
         <GlassCard className="mt-8 text-center py-12">
-          <AlertTriangle size={48} className="text-error mx-auto mb-4" />
+          <AlertTriangle size={48} className="text-white mx-auto mb-4" />
           <p className="text-white text-lg">{t('VenterMoodDetails.notFound', 'Mood entry not found')}</p>
         </GlassCard>
       </div>
@@ -196,7 +196,7 @@ export const VenterMoodDetails = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
           <GlassCard className="w-full max-w-sm rounded-3xl p-6 text-center transform animate-scale-up">
             <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <AlertTriangle size={28} className="text-white/70" />
+              <AlertTriangle size={28} className="text-white" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2">
               {t('VenterMoodDetails.deleteConfirmTitle', 'Delete Mood Entry?')}

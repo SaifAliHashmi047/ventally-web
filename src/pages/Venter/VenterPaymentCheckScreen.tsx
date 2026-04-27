@@ -42,7 +42,7 @@ export const VenterPaymentCheckScreen = () => {
   return (
     <div className="page-wrapper animate-fade-in flex flex-col items-center justify-center min-h-screen pb-20">
       <div className="w-24 h-24 rounded-full bg-success/20 flex flex-col items-center justify-center mb-6 shadow-[0_0_40px_rgba(50,215,75,0.2)]">
-        <Shield size={40} className="text-success animate-pulse" />
+        <Shield size={40} className="text-white animate-pulse" />
       </div>
       <h2 className="text-2xl font-bold text-white mb-2">{t('Common.loading', 'Loading...')}</h2>
       <p className="text-sm text-white/80 text-center max-w-xs leading-relaxed">

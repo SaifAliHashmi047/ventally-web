@@ -68,7 +68,7 @@ export const EditProfile = () => {
                   <p className="text-sm font-medium text-white">{t(item.label, item.label)}</p>
                   <div className="flex items-center gap-2 ml-3 flex-shrink-0">
                     {value && <span className="text-xs text-white/50 max-w-[120px] truncate">{value}</span>}
-                    <ChevronRight size={16} className="text-white/40" />
+                    <ChevronRight size={16} className="text-white" />
                   </div>
                 </div>
               );

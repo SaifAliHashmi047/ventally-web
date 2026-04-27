@@ -217,7 +217,7 @@ export const VenterDashboard = () => {
                         {new Date(r.reflection_date).toLocaleDateString(i18n.language, { month: 'long', day: 'numeric' })}
                       </p>
                       <div className="flex justify-end mt-1">
-                        <ChevronRight size={14} className="text-white/80" />
+                        <ChevronRight size={14} className="text-white" />
                       </div>
                     </GlassCard>
                   ))}

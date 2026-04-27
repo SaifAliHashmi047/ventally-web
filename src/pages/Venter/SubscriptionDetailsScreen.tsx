@@ -205,7 +205,7 @@ export const SubscriptionDetailsScreen = () => {
         onClose={() => setShowCancelledModal(false)}
         title={t('SubscriptionDetails.cancelled')}
         message={t('SubscriptionDetails.cancelledMessage')}
-        icon={<CheckCircle className="text-success" size={48} />}
+        icon={<CheckCircle className="text-white" size={48} />}
         primaryButtonText={t('Common.continue')}
         onPrimaryPress={() => {
           setShowCancelledModal(false);

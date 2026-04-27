@@ -6,7 +6,7 @@ import { GlassCard } from './GlassCard';
 interface GlassModalProps {
   isOpen: boolean;
   onClose: () => void;
-  
+
   // Icon props
   icon?: React.ReactNode;
   showIcon?: boolean;
@@ -15,7 +15,7 @@ interface GlassModalProps {
   title?: string;
   subtitle?: string;
   message?: string;
-  
+
   // Custom content
   children?: React.ReactNode;
 
@@ -86,10 +86,10 @@ export const GlassModal: React.FC<GlassModalProps> = ({
       className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade-in bg-black/70 backdrop-blur-md"
       onClick={(e) => e.target === overlayRef.current && onClose()}
     >
-      <GlassCard 
-        bordered 
+      <GlassCard
+        bordered
         className={cn(
-          'w-full flex flex-col items-center rounded-[32px] p-8 text-center animate-slide-up relative overflow-hidden', 
+          'w-full flex flex-col items-center rounded-[32px] p-8 text-center animate-slide-up relative overflow-hidden',
           maxWidth,
           className
         )}
@@ -139,9 +139,9 @@ export const GlassModal: React.FC<GlassModalProps> = ({
           )}>
             {secondaryButtonText && (
               <Button
-                variant="glass"
+                variant="secondary"
                 onClick={handleSecondaryPress}
-                className="rounded-2xl h-[56px] text-white/60 font-bold border-white/5"
+              // className="rounded-2xl h-[56px] text-white/60 font-bold border-white/5"
               >
                 {secondaryButtonText}
               </Button>
@@ -151,7 +151,7 @@ export const GlassModal: React.FC<GlassModalProps> = ({
                 variant="primary"
                 onClick={handlePrimaryPress}
                 loading={loading}
-                className="rounded-2xl h-[56px] font-bold shadow-lg shadow-primary/20"
+              // className="rounded-2xl h-[56px] font-bold shadow-lg shadow-primary/20"
               >
                 {primaryButtonText}
               </Button>

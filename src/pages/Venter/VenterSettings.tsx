@@ -40,14 +40,7 @@ export const VenterSettings = () => {
       onPress: () => navigate('/venter/notifications-settings'),
       type: 'nav' as const,
     },
-    {
-      key: 'darkTheme',
-      title: t('VenterSettings.options.darkTheme.title', 'Dark Theme'),
-      icon: Moon,
-      onPress: handleDarkToggle,
-      type: 'toggle' as const,
-      value: isDark,
-    },
+
     {
       key: 'changeAccountType',
       title: t('VenterSettings.options.changeAccountType.title'),
@@ -108,7 +101,7 @@ export const VenterSettings = () => {
                   size="sm"
                 />
               ) : (
-                <ChevronRight size={16} className="text-white/80" />
+                <ChevronRight size={16} className="text-white" />
               )}
             </div>
           );

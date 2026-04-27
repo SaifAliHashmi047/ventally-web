@@ -104,7 +104,7 @@ export const ContactUs = () => {
       {/* Email Us — prominent card */}
       <GlassCard bordered className="flex flex-col items-center justify-center py-6 cursor-pointer hover:bg-white/5 transition-colors"
         onClick={() => window.open('mailto:info@ventally.co', '_blank')}>
-        <Mail size={24} className="text-accent mb-2" />
+        <Mail size={24} className="text-primary mb-2" />
         <p className="text-sm font-medium text-white">{t('Contact.email')}</p>
       </GlassCard>
 

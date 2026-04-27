@@ -117,7 +117,7 @@ export const VenterAddFunds = () => {
 
       {loading && packs.length === 0 ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 size={32} className="animate-spin text-accent" />
+          <Loader2 size={32} className="animate-spin text-primary" />
         </div>
       ) : (
         <>

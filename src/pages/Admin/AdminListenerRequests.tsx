@@ -120,7 +120,7 @@ export const AdminListenerRequests = () => {
                       </div>
                     </div>
 
-                    <ChevronRight size={18} className="text-white/20" />
+                    <ChevronRight size={18} className="text-white" />
                   </div>
 
                   <div className="flex gap-3 mt-4">
@@ -156,7 +156,7 @@ export const AdminListenerRequests = () => {
             ))
           ) : (
             <div className="text-center py-20">
-               <FileText className="mx-auto text-white/10 mb-4" size={48} />
+               <FileText className="mx-auto text-white mb-4" size={48} />
                <p className="text-white/40 font-medium">{t('Admin.listenerRequests.noRequests')}</p>
             </div>
           )}
@@ -166,7 +166,7 @@ export const AdminListenerRequests = () => {
       <GlassModal
         isOpen={showApprovedModal}
         onClose={() => setShowApprovedModal(false)}
-        icon={<CheckCircle className="text-accent" />}
+        icon={<CheckCircle className="text-primary" />}
         title={t('Admin.review.approved')}
         message={t('Admin.review.approvedMessage')}
         showButtons={false}
@@ -175,7 +175,7 @@ export const AdminListenerRequests = () => {
       <GlassModal
         isOpen={showRejectedModal}
         onClose={() => setShowRejectedModal(false)}
-        icon={<XCircle className="text-error" />}
+        icon={<XCircle className="text-white" />}
         title={t('Admin.review.reject', 'Rejected')}
         message={t('Admin.review.rejectionDescription')}
         showButtons={false}

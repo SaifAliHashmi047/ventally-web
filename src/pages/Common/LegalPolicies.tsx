@@ -120,7 +120,7 @@ export const LegalPolicies = () => {
               </div>
               <span className="text-sm font-medium text-white leading-snug">{label}</span>
             </div>
-            <ChevronRight size={16} className="text-white/80 flex-shrink-0" />
+            <ChevronRight size={16} className="text-white flex-shrink-0" />
           </button>
         ))}
       </GlassCard>

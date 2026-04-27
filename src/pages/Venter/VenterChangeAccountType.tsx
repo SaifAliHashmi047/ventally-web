@@ -104,7 +104,7 @@ export const VenterChangeAccountType = () => {
   if (loading) {
     return (
       <div className="page-wrapper animate-fade-in flex items-center justify-center min-h-[60vh]">
-        <Loader2 size={32} className="animate-spin text-accent" />
+        <Loader2 size={32} className="animate-spin text-primary" />
       </div>
     );
   }

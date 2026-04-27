@@ -129,9 +129,9 @@ export const VenterWallet = () => {
                           }`}
                         >
                           {credit ? (
-                            <ArrowDownLeft size={16} className="text-success" />
+                            <ArrowDownLeft size={16} className="text-white" />
                           ) : (
-                            <ArrowUpRight size={16} className="text-error" />
+                            <ArrowUpRight size={16} className="text-white" />
                           )}
                         </div>
                         <div className="flex-1 min-w-0">

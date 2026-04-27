@@ -50,7 +50,7 @@ export const VenterTransactions = () => {
               return (
                 <div key={tx.id} className={`flex items-center gap-4 px-4 py-3 ${i < transactions.length - 1 ? 'border-b border-white/5' : ''}`}>
                   <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${isCredit ? 'bg-success/15' : 'bg-error/10'}`}>
-                    {isCredit ? <ArrowDownLeft size={16} className="text-success" /> : <ArrowUpRight size={16} className="text-error" />}
+                    {isCredit ? <ArrowDownLeft size={16} className="text-white" /> : <ArrowUpRight size={16} className="text-white" />}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-white capitalize">{tx.type?.replace(/_/g, ' ')}</p>

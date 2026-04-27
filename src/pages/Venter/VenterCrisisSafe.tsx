@@ -18,7 +18,7 @@ export const VenterCrisisSafe = () => {
 
       <div className="flex flex-col items-center text-center mb-8">
         <div className="w-20 h-20 rounded-full bg-success/15 flex items-center justify-center mb-6">
-          <Shield size={40} className="text-success" />
+          <Shield size={40} className="text-white" />
         </div>
 
         <h2 className="text-2xl font-bold text-white mb-4">
@@ -33,7 +33,7 @@ export const VenterCrisisSafe = () => {
       <GlassCard className="mb-6">
         <div className="flex items-start gap-4">
           <div className="w-10 h-10 rounded-xl glass-accent flex items-center justify-center flex-shrink-0">
-            <Heart size={20} className="text-accent" />
+            <Heart size={20} className="text-primary" />
           </div>
           <div>
             <h3 className="text-sm font-semibold text-white mb-2">

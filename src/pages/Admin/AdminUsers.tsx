@@ -74,7 +74,7 @@ export const AdminUsers = () => {
               onChange={(e) => setSearch(e.target.value)}
               className="flex-1 bg-transparent border-none outline-none text-white text-sm placeholder:text-white/40"
             />
-            <Search size={18} className="text-white/40" />
+            <Search size={18} className="text-white" />
           </GlassCard>
         </div>
 

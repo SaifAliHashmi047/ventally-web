@@ -72,7 +72,7 @@ export const VenterOthers = () => {
               <p className="flex-1 text-sm font-medium text-white">
                 {t(opt.titleKey)}
               </p>
-              <ChevronRight size={18} className="text-white/60 flex-shrink-0" />
+              <ChevronRight size={18} className="text-white flex-shrink-0" />
             </div>
           </GlassCard>
         ))}

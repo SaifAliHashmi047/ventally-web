@@ -34,7 +34,7 @@ export const VenterAddReflection = () => {
 
       <div className="flex items-center gap-3 mb-2">
         <div className="w-10 h-10 rounded-2xl glass-accent flex items-center justify-center">
-          <PenLine size={16} className="text-accent" />
+          <PenLine size={16} className="text-primary" />
         </div>
         <div>
           <p className="text-base font-semibold text-white">{t('VenterHome.addReflectionSubtitle')}</p>

@@ -2,7 +2,8 @@
   "Common": {
     "appName": "VENTALLY",
     "search": "Search",
-    "SupportGuide":"Support Guide",
+    "admin": "Admin",
+    "SupportGuide": "Support Guide",
     "accept": "Begin Session",
     "cancel": "Cancel",
     "decline": "Cancel",
@@ -22,6 +23,7 @@
     "ok": "OK",
     "no": "No",
     "success": "Success",
+    "pending": "Pending",
     "emailRequired": "Email/Phone is required",
     "permissionsRequired": "At least 1 Permission is required",
     "summaryRequired": "Summary is required",

@@ -44,7 +44,7 @@ export const DeleteAccount = () => {
       <GlassCard bordered className="border-error/30">
         <div className="flex items-start gap-4 mb-6">
           <div className="w-12 h-12 rounded-2xl bg-error/15 flex items-center justify-center flex-shrink-0">
-            <AlertTriangle className="text-error" size={24} />
+            <AlertTriangle className="text-white" size={24} />
           </div>
           <div>
             <h3 className="text-lg font-bold text-white mb-2">{t('DeleteAccount.warning')}</h3>

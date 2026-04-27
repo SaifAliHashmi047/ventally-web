@@ -23,7 +23,7 @@ export const AdminSubAdmins = () => {
 
   const fetchSubAdmins = useCallback(async () => {
     if (loading && subAdmins.length > 0) return; // Guard against redundant calls if already loading
-    
+
     try {
       setLoading(true);
       const res = await getSubAdmins();
@@ -107,7 +107,7 @@ export const AdminSubAdmins = () => {
                           {sa.user?.displayName || sa.email}
                         </p>
                         <Badge variant={statusVariant(sa.status || 'active')} dot className="capitalize flex-shrink-0">
-                          {t(`Common.status.${sa.status || 'active'}`)}
+                          {t(`Common.${sa.status}`)}
                         </Badge>
                       </div>
                       <p className="text-xs text-white/80">
@@ -115,7 +115,7 @@ export const AdminSubAdmins = () => {
                       </p>
                     </div>
 
-                    <ChevronRight size={16} className="text-white/80 flex-shrink-0" />
+                    <ChevronRight size={16} className="text-white flex-shrink-0" />
                   </div>
                 </GlassCard>
               );

@@ -73,10 +73,29 @@ export const SessionFeedback = () => {
       return;
     }
 
+    // Determine revieweeId (the other party) based on role and available state
+    let resolvedRevieweeId = session?.listenerId || session?.venterId;
+    
+    if (!resolvedRevieweeId && chat) {
+      if (role === 'venter') {
+        resolvedRevieweeId = chat.listenerId || chat.listener?.id;
+      } else {
+        resolvedRevieweeId = chat.venterId || chat.venter?.id;
+      }
+    }
+    
+    if (!resolvedRevieweeId && session?.data) {
+      if (role === 'venter') {
+        resolvedRevieweeId = session.data.listenerId || session.data.listener?.id;
+      } else {
+        resolvedRevieweeId = session.data.venterId || session.data.venter?.id;
+      }
+    }
+
     const payload = {
       sessionType: type,
-      sessionId: session?.sessionId || id,
-      revieweeId: session?.listenerId,
+      sessionId: session?.sessionId || session?.requestId || chat?.id || id,
+      revieweeId: resolvedRevieweeId,
       rating: starRating,
       comment: feedback.trim(),
     };

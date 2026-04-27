@@ -330,7 +330,7 @@ export const VenterNotificationsSettings = () => {
               {t('NotificationsSettings.quietHours')}
             </span>
           </div>
-          <ChevronRight size={16} className="text-white/80" />
+          <ChevronRight size={16} className="text-white" />
         </button>
       </GlassCard>
 

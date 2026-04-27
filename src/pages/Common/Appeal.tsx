@@ -115,7 +115,7 @@ export const Appeal = () => {
               onClick={() => fileInputRef.current?.click()}
             >
               <div className="w-10 h-10 rounded-full glass flex items-center justify-center mb-3">
-                <Upload size={18} className="text-gray-400" />
+                <Upload size={18} className="text-white" />
               </div>
               <p className="text-sm text-gray-400 text-center whitespace-pre-line">
                 {t('Appeal.uploadHint')}

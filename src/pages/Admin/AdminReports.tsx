@@ -62,7 +62,7 @@ export const AdminReports = () => {
           </div>
         ) : reports.length === 0 ? (
           <div className="text-center py-20">
-             <Flag className="mx-auto text-white/10 mb-4" size={48} />
+             <Flag className="mx-auto text-white mb-4" size={48} />
              <p className="text-white/40 font-medium">{t('Admin.reports.noReports')}</p>
           </div>
         ) : (
@@ -92,7 +92,7 @@ export const AdminReports = () => {
                       <p className="text-[11px] text-white/40 uppercase tracking-wider font-medium">
                         {new Date(report.createdAt).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </p>
-                      <ChevronRight size={18} className="text-white/20" />
+                      <ChevronRight size={18} className="text-white" />
                     </div>
                   </div>
                 </div>

@@ -13,7 +13,7 @@ export const PaymentMethodSavedScreen = () => {
   const content = (
     <div className="flex flex-col items-center justify-center text-center py-12">
       <div className="w-20 h-20 rounded-full bg-success/20 flex flex-col items-center justify-center mb-6 shadow-[0_0_40px_rgba(50,215,75,0.2)]">
-        <CheckCircle2 size={40} className="text-success" />
+        <CheckCircle2 size={40} className="text-white" />
       </div>
 
       <h1 className="text-2xl font-bold text-white mb-4">

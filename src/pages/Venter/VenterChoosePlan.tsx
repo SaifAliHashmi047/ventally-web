@@ -196,7 +196,7 @@ export const VenterChoosePlan = () => {
                 >
                   {plan.isMostPopular && (
                     <div className="flex items-center gap-1.5 mb-3">
-                      <Star size={14} className="text-[#C2AEBF] fill-[#C2AEBF]" />
+                      <Star size={14} className="text-white fill-[#C2AEBF]" />
                       <span className="bg-[#C2AEBF] px-2 py-0.5 rounded text-black font-medium text-xs">
                         {t('ChoosePlan.mostPopular')}
                       </span>

@@ -72,9 +72,13 @@ export const AdminReviewRequest = () => {
     </div>
   );
 
+  const dateStr = request.createdAt || request.created_at;
+  const genderVal = request.user?.preferences?.genderIdentity || request.user?.gender || 'N/A';
+
   const listenerInfo = [
+    { label: t('EditProfile.gender', 'Gender'), value: genderVal },
     { label: t('Admin.subAdminProfile.email', 'Email'), value: request.user?.email || request.listener_email || 'N/A' },
-    { label: t('Common.createdAt', 'Joined'), value: new Date(request.createdAt).toLocaleDateString() },
+    { label: t('Common.createdAt', 'Joined'), value: dateStr ? new Date(dateStr).toLocaleDateString() : 'N/A' },
   ];
 
   return (
@@ -176,7 +180,7 @@ export const AdminReviewRequest = () => {
       <GlassModal
         isOpen={showApprovedModal}
         onClose={() => setShowApprovedModal(false)}
-        icon={<CheckCircle className="text-accent" />}
+        icon={<CheckCircle className="text-primary" />}
         title={t('Admin.review.approved', 'Approved')}
         message={t('Admin.review.approvedMessage', 'You approved the Support Guide verification request')}
         showButtons={false}
@@ -185,7 +189,7 @@ export const AdminReviewRequest = () => {
       <GlassModal
         isOpen={showRejectedModal}
         onClose={() => setShowRejectedModal(false)}
-        icon={<XCircle className="text-error" />}
+        icon={<XCircle className="text-white" />}
         title={t('Admin.listenerRequests.reject', 'Rejected')}
         message={t('Admin.review.rejectionDescription', 'You rejected the Support Guide verification request')}
         showButtons={false}

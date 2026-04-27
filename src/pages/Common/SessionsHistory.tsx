@@ -145,9 +145,12 @@ export const SessionsHistory = () => {
               </Badge>
             )}
           </div>
-          <p className="text-xs text-white/80">{item.duration}</p>
-          {item.preview && (
-            <p className="text-xs text-gray-600 truncate mt-0.5">{item.preview}</p>
+          {type === 'voice' ? (
+            <p className="text-xs text-white/80">{item.duration}</p>
+          ) : (
+            <p className="text-xs text-gray-400 truncate mt-0.5">
+              {item.preview || t('VenterMessages.chatEntry.noMessages', 'No messages yet')}
+            </p>
           )}
         </div>
 

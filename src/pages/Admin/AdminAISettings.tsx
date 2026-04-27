@@ -15,11 +15,10 @@ export const AdminAISettings = () => {
   const { getAdminAISettings, updateAdminAISettings } = useAdmin();
 
   const [settings, setSettings] = useState<any>({
-    enabled: true,
-    autoModeration: true,
-    riskThreshold: 85,
-    languageFilter: true,
-    aiSupportEnabled: false,
+    ai_enabled: true,
+    ai_crisis_detection_enabled: true,
+    ai_crisis_sensitivity: 0.85,
+    ai_auto_escalation_enabled: true,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -55,9 +54,9 @@ export const AdminAISettings = () => {
 
   return (
     <div className="page-wrapper animate-fade-in max-w-2xl mx-auto">
-      <PageHeader 
-        title={t('Admin.aiSettings.title')} 
-        onBack={() => navigate('/admin/settings')} 
+      <PageHeader
+        title={t('Admin.aiSettings.title')}
+        onBack={() => navigate('/admin/settings')}
       />
 
       <div className="space-y-6 pb-4 px-1">
@@ -78,15 +77,15 @@ export const AdminAISettings = () => {
         {/* Core Configuration */}
         <div className="space-y-4">
           <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-widest px-2">{t('Admin.aiSettings.coreConfig')}</h4>
-          
+
           <GlassCard className="flex items-center justify-between py-5 border-white/5">
             <div>
               <p className="text-sm font-bold text-white">{t('Admin.aiSettings.enableAI')}</p>
               <p className="text-xs text-white/40">{t('Admin.aiSettings.enableAIDesc')}</p>
             </div>
-            <Toggle 
-              checked={settings.enabled} 
-              onChange={(v) => setSettings({...settings, enabled: v})} 
+            <Toggle
+              checked={settings.ai_enabled}
+              onChange={(v) => setSettings({ ...settings, ai_enabled: v })}
             />
           </GlassCard>
 
@@ -95,9 +94,9 @@ export const AdminAISettings = () => {
               <p className="text-sm font-bold text-white">{t('Admin.aiSettings.autoModeration')}</p>
               <p className="text-xs text-white/40">{t('Admin.aiSettings.autoModerationDesc')}</p>
             </div>
-            <Toggle 
-              checked={settings.autoModeration} 
-              onChange={(v) => setSettings({...settings, autoModeration: v})} 
+            <Toggle
+              checked={settings.ai_crisis_detection_enabled}
+              onChange={(v) => setSettings({ ...settings, ai_crisis_detection_enabled: v })}
             />
           </GlassCard>
 
@@ -106,9 +105,9 @@ export const AdminAISettings = () => {
               <p className="text-sm font-bold text-white">{t('Admin.aiSettings.languageFilter')}</p>
               <p className="text-xs text-white/40">{t('Admin.aiSettings.languageFilterDesc')}</p>
             </div>
-            <Toggle 
-              checked={settings.languageFilter} 
-              onChange={(v) => setSettings({...settings, languageFilter: v})} 
+            <Toggle
+              checked={settings.ai_auto_escalation_enabled}
+              onChange={(v) => setSettings({ ...settings, ai_auto_escalation_enabled: v })}
             />
           </GlassCard>
         </div>
@@ -116,18 +115,18 @@ export const AdminAISettings = () => {
         {/* Risk Management */}
         <div className="space-y-4">
           <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-widest px-2">{t('Admin.aiSettings.riskManagement')}</h4>
-          
+
           <GlassCard className="bg-white/[0.02] border border-white/5">
             <div className="flex justify-between mb-4">
               <span className="text-sm font-bold text-white">{t('Admin.aiSettings.riskThreshold')}</span>
-              <span className="text-sm font-bold text-primary">{settings.riskThreshold}%</span>
+              <span className="text-sm font-bold text-primary">{Math.round((settings.ai_crisis_sensitivity || 0.85) * 100)}%</span>
             </div>
-            <input 
-              type="range" 
-              min="50" 
-              max="99" 
-              value={settings.riskThreshold}
-              onChange={(e) => setSettings({...settings, riskThreshold: parseInt(e.target.value)})}
+            <input
+              type="range"
+              min="50"
+              max="99"
+              value={Math.round((settings.ai_crisis_sensitivity || 0.85) * 100)}
+              onChange={(e) => setSettings({ ...settings, ai_crisis_sensitivity: parseInt(e.target.value) / 100 })}
               className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-primary"
             />
             <div className="flex justify-between mt-3">
@@ -136,12 +135,6 @@ export const AdminAISettings = () => {
             </div>
           </GlassCard>
 
-          <div className="flex gap-2 p-3 bg-error/10 rounded-2xl border border-error/10">
-            <AlertCircle size={16} className="text-error mt-0.5 flex-shrink-0" />
-            <p className="text-[10px] text-error/80 leading-normal">
-              {t('Admin.aiSettings.riskWarning')}
-            </p>
-          </div>
         </div>
       </div>
 

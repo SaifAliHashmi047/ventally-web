@@ -94,7 +94,7 @@ const ChatEntry = ({
       </div>
       <div className="flex items-center justify-between gap-2">
         <p className="text-xs text-white/70 truncate">{lastMessage || '--'}</p>
-        <ChevronRight size={16} className="text-white/40 flex-shrink-0" />
+        <ChevronRight size={16} className="text-white flex-shrink-0" />
       </div>
     </div>
   </button>

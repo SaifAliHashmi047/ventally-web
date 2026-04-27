@@ -39,7 +39,7 @@ export const VenterGeneralSettings = () => {
               </div>
               <span className="text-sm font-medium text-white">{label}</span>
             </div>
-            <ChevronRight size={16} className="text-white/80" />
+            <ChevronRight size={16} className="text-white" />
           </div>
         ))}
       </GlassCard>
