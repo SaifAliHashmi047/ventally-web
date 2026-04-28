@@ -120,7 +120,7 @@ export const Onboarding = () => {
             <div className="flex w-full flex-col items-center">
               <Button
                 variant="primary"
-                size="lg"
+                size="md"
                 fullWidth
                 contained
                 className="mb-8 font-bold"
@@ -150,10 +150,10 @@ export const Onboarding = () => {
 
               <Button
                 variant="ghost"
-                size="lg"
+                size="md"
                 fullWidth
                 contained
-                className="border border-white/10 text-white/50 hover:bg-white/5 hover:text-white/80 font-medium"
+                className="!h-[46px] !min-h-[46px] !rounded-full !py-0 text-[13px] font-medium border border-white/10 text-white/50 hover:bg-white/5 hover:text-white/80"
                 onClick={() => navigate('/login')}
               >
                 {t('LogIn.logIn', 'Log In')}
