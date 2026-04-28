@@ -12,6 +12,12 @@ export const useWebNotifications = () => {
 
   const initializeNotifications = async () => {
     try {
+      // Require secure context — messaging is null on plain HTTP (LAN IPs in dev)
+      if (!messaging) {
+        console.log('[Notifications] Skipped — not a secure context or Firebase unavailable.');
+        return;
+      }
+
       // Skip if VAPID key is not configured
       if (!VAPID_KEY) {
         console.log('[Notifications] VAPID_KEY not configured - push notifications disabled');
@@ -153,6 +159,7 @@ export const useWebNotifications = () => {
   };
 
   const listenToForegroundMessages = () => {
+    if (!messaging) return;
     onMessage(messaging, (payload) => {
       console.log('📬 Foreground FCM Message:', payload);
 

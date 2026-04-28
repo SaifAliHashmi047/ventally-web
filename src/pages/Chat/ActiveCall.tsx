@@ -129,7 +129,8 @@ export const ActiveCall = () => {
         await apiInstance.post(`calls/${resolvedCallId}/end`);
       }
     } catch { /* ignore */ }
-    navigate(`/${role}/session/${feedbackSessionId}/feedback`, { replace: true, state: { type: 'call' } });
+    const firstStep = role === 'listener' ? 'feedback' : 'rating';
+    navigate(`/${role}/session/${feedbackSessionId}/${firstStep}`, { replace: true, state: { type: 'call' } });
   };
 
   // Listen for remote end via socket (when other party ends the call)
@@ -143,7 +144,8 @@ export const ActiveCall = () => {
       }
       console.log('[ActiveCall] call:ended from socket:', data);
       await leaveChannel();
-      navigate(`/${role}/session/${feedbackSessionId}/feedback`, { replace: true, state: { type: 'call' } });
+      const firstStep = role === 'listener' ? 'feedback' : 'rating';
+      navigate(`/${role}/session/${feedbackSessionId}/${firstStep}`, { replace: true, state: { type: 'call' } });
     };
 
     socketService.on('call:ended', handleCallEnded);
@@ -154,12 +156,7 @@ export const ActiveCall = () => {
 
   return (
     <div
-      className="h-[100dvh] min-h-0 w-full max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-stretch justify-between px-4 sm:px-5 bg-bg-deep lg:border lg:border-white/10 lg:rounded-3xl lg:shadow-2xl lg:shadow-black/40 lg:overflow-hidden"
-      style={{ 
-        background: 'radial-gradient(ellipse at center, rgba(194,174,191,0.08) 0%, #000 60%)',
-        paddingTop: 'max(2rem, env(safe-area-inset-top))',
-        paddingBottom: 'max(2rem, env(safe-area-inset-bottom))'
-      }}
+
     >
       {/* Top Bar */}
       <div className="flex justify-between items-center w-full max-w-sm mx-auto shrink-0">
@@ -193,9 +190,8 @@ export const ActiveCall = () => {
         <div className="flex justify-center gap-6">
           <button
             onClick={() => setMuted(!muted)}
-            className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${
-              muted ? 'bg-error/20 border border-error/40 text-error' : 'glass text-white hover:bg-white/8'
-            }`}
+            className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${muted ? 'bg-error/20 border border-error/40 text-error' : 'glass text-white hover:bg-white/8'
+              }`}
           >
             {muted ? <MicOff size={22} /> : <Mic size={22} />}
           </button>
@@ -209,9 +205,8 @@ export const ActiveCall = () => {
 
           <button
             onClick={() => setSpeakerOff(!speakerOff)}
-            className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${
-              speakerOff ? 'bg-error/20 border border-error/40 text-error' : 'glass text-white hover:bg-white/8'
-            }`}
+            className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${speakerOff ? 'bg-error/20 border border-error/40 text-error' : 'glass text-white hover:bg-white/8'
+              }`}
           >
             {speakerOff ? <VolumeX size={22} /> : <Volume2 size={22} />}
           </button>

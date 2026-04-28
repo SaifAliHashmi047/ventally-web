@@ -28,7 +28,7 @@ export const FindingListener = () => {
 
   // Animated dots
   useEffect(() => {
-    const interval = setInterval(() => setDots(d => d.length >= 3 ? '' : d + '.'), 500);
+    const interval = setInterval(() => setDots(d => d.length >= 2 ? '' : d + '.'), 500);
     return () => clearInterval(interval);
   }, []);
 
@@ -226,7 +226,7 @@ export const FindingListener = () => {
             <p className="text-white/80 mb-8">
               {t('VenterFindingListener.description', "We're connecting you with an available listener for your {{type}} session.", { type })}
             </p>
-            <Button variant="glass"   onClick={handleCancel} leftIcon={<X size={16} />}>
+            <Button variant="glass" onClick={handleCancel} leftIcon={<X size={16} />}>
               {t('VenterFindingListener.buttonText', 'Cancel')}
             </Button>
           </div>

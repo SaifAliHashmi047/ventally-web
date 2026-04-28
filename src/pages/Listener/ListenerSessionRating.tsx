@@ -110,11 +110,10 @@ export const ListenerSessionRating = () => {
                 aria-label={`${n} stars`}
               >
                 <Star
-                  className={`w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 transition-all duration-150 ${
-                    n <= starRating
-                      ? 'text-amber-400 fill-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.35)]'
+                  className={`w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 transition-all duration-150 ${n <= starRating
+                      ? 'text-white fill-white drop-shadow-[0_0_12px_rgba(251,191,36,0.35)]'
                       : 'text-white/20 hover:text-white/35'
-                  }`}
+                    }`}
                 />
               </button>
             ))}
@@ -136,10 +135,10 @@ export const ListenerSessionRating = () => {
       </GlassCard>
 
       {showSuccessOverlay && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
           <GlassCard
             bordered
-            className="w-full max-w-md rounded-3xl p-8 sm:p-10 text-center border-white/10 bg-black/50 shadow-2xl animate-scale-up"
+            className="w-full max-w-md rounded-3xl p-8 sm:p-10 text-center border-white/10 bg-black/80 backdrop-blur-xl shadow-2xl animate-scale-up"
           >
             <div className="w-16 h-16 rounded-2xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center mx-auto mb-5">
               <CircleCheck size={36} className="text-white" strokeWidth={2} />

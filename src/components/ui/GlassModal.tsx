@@ -83,7 +83,7 @@ export const GlassModal: React.FC<GlassModalProps> = ({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade-in bg-black/70 backdrop-blur-md"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade-in bg-black/80 backdrop-blur-md"
       onClick={(e) => e.target === overlayRef.current && onClose()}
     >
       <GlassCard

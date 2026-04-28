@@ -90,11 +90,10 @@ export const ListenerSessionFeedback = () => {
                   key={mood.key}
                   type="button"
                   onClick={() => setSelectedMood(mood.key)}
-                  className={`w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all ring-1 ${
-                    selectedMood === mood.key
-                      ? 'bg-white/20 scale-105 ring-white/30 shadow-lg'
-                      : 'bg-black/30 hover:bg-white/10 ring-white/5'
-                  }`}
+                  className={`w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all ring-1 ${selectedMood === mood.key
+                    ? 'bg-white/20 scale-105 ring-white/30 shadow-lg'
+                    : 'bg-black/30 hover:bg-white/10 ring-white/5'
+                    }`}
                 >
                   <img
                     src={mood.icon}

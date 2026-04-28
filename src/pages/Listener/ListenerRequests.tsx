@@ -118,7 +118,6 @@ export const ListenerRequests = () => {
                     <span className="capitalize">{req.type === 'call' ? t('ListenerHome.callSession', 'Call Session') : t('ListenerHome.chatSession', 'Chat Session')}</span>
                   </div>
                 </div>
-                <Badge variant="warning" dot>{t('Admin.status.pending', 'Pending')}</Badge>
               </div>
 
 

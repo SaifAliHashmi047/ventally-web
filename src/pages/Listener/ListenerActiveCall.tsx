@@ -12,6 +12,7 @@ import {
   joinParamsFromCallPayload,
   type AgoraCallPayload,
 } from '../../hooks/useAgoraWeb';
+import { Button } from '../../components/ui/Button';
 
 const formatDuration = (seconds: number): string => {
   const mins = Math.floor(seconds / 60);
@@ -160,12 +161,7 @@ export const ListenerActiveCall = () => {
   return (
     <div
       className="min-h-[100dvh] flex flex-col text-white relative overflow-hidden"
-      style={{
-        background:
-          'radial-gradient(ellipse 120% 80% at 50% -10%, rgba(194,174,191,0.14) 0%, transparent 55%), radial-gradient(ellipse at 50% 100%, rgba(194,174,191,0.06) 0%, #000 65%)',
-        paddingTop: 'env(safe-area-inset-top)',
-        paddingBottom: 'env(safe-area-inset-bottom)'
-      }}
+
     >
       <div className="relative z-10 flex flex-col flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 min-h-0">
         <div className="pt-4 sm:pt-6 shrink-0">
@@ -204,11 +200,10 @@ export const ListenerActiveCall = () => {
               </h2>
               <div className="flex items-center justify-center gap-2 pt-2">
                 <span
-                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${
-                    isJoined
-                      ? 'bg-emerald-500/15 text-emerald-400/95 border border-emerald-500/25'
-                      : 'bg-white/5 text-white/55 border border-white/10'
-                  }`}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${isJoined
+                    ? 'bg-emerald-500/15 text-emerald-400/95 border border-emerald-500/25'
+                    : 'bg-white/5 text-white/55 border border-white/10'
+                    }`}
                 >
                   <span
                     className={`w-1.5 h-1.5 rounded-full ${isJoined ? 'bg-emerald-400 animate-pulse' : 'bg-white/40'}`}
@@ -240,16 +235,17 @@ export const ListenerActiveCall = () => {
                   </span>
                 </button>
 
-                <button
+                <Button
                   type="button"
+                  variant='danger'
                   onClick={() => void handleCrisisNavigation()}
-                  className="flex flex-col items-center gap-2 group -translate-y-2 sm:-translate-y-3 min-w-[4.5rem]"
+                  className="flex rounded-full  bg-red/80 items-center gap-2 group -translate-y-2 sm:-translate-y-3 min-w-[4.5rem]"
                 >
-                  <div className="w-[68px] h-[68px] sm:w-[72px] sm:h-[72px] rounded-full bg-red-600 flex items-center justify-center shadow-[0_0_32px_rgba(220,38,38,0.35)] transition-transform group-hover:scale-[1.02] ring-2 ring-red-500/30">
-                    <Plus size={32} className="text-white sm:w-9 sm:h-9" />
-                  </div>
+                  {/* <div className="w-[68px] h-[68px] sm:w-[72px] sm:h-[72px] rounded-full bg-red-600 flex items-center justify-center shadow-[0_0_32px_rgba(220,38,38,0.35)] transition-transform group-hover:scale-[1.02] ring-2 ring-red-500/30"> */}
+                  {/* <Plus size={32} className="text-white sm:w-9 sm:h-9" /> */}
+                  {/* </div> */}
                   <span className="text-[11px] sm:text-xs font-semibold text-white">{t('ListenerCall.crisis', 'Crisis')}</span>
-                </button>
+                </Button>
 
                 <button type="button" onClick={handleEndCall} className="flex flex-col items-center gap-2 group min-w-[4.5rem]">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/10 flex items-center justify-center transition-all group-hover:bg-white/15 ring-1 ring-white/10">
@@ -277,20 +273,18 @@ export const ListenerActiveCall = () => {
               )}
             </p>
             <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto">
-              <button
-                type="button"
+              <Button
+                variant="secondary"
                 onClick={() => setShowEndModal(false)}
-                className="py-3.5 rounded-2xl bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 transition-colors"
               >
                 {t('Common.no', 'No')}
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="primary"
                 onClick={() => void confirmEndCall()}
-                className="py-3.5 rounded-2xl bg-red-600 text-white font-medium hover:bg-red-500 transition-colors shadow-[0_0_24px_rgba(220,38,38,0.25)]"
               >
                 {t('Common.yes', 'Yes, end')}
-              </button>
+              </Button>
             </div>
           </GlassCard>
         </div>

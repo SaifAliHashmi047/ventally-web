@@ -99,7 +99,6 @@ export const ListenerCrisisEscalation = () => {
   return (
     <div
       className="min-h-[100dvh] flex flex-col text-white animate-fade-in"
-      style={LISTENER_SESSION_FLOW_BG_STYLE}
     >
       <div className="relative z-10 flex flex-col flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 pt-6 sm:pt-8 pb-10">
         <PageHeader
@@ -154,8 +153,8 @@ export const ListenerCrisisEscalation = () => {
       </div>
 
       {showSessionEndedModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in">
-          <GlassCard bordered className="w-full max-w-md rounded-3xl p-8 sm:p-10 text-center border-white/10 bg-white/[0.02] shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
+          <GlassCard bordered className="w-full max-w-md rounded-3xl p-8 sm:p-10 text-center border-white/10 bg-black/80 backdrop-blur-xl shadow-2xl">
             <div className="w-16 h-16 rounded-2xl bg-primary/15 border border-primary/25 flex items-center justify-center mx-auto mb-5">
               <ShieldAlert size={32} className="text-primary" />
             </div>

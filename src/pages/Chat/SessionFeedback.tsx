@@ -20,18 +20,18 @@ import { toastError } from '../../utils/toast';
 import heartIcon from '../../assets/icons/heart.png';
 
 // Same PNG icons as RN app
-import happyIcon   from '../../assets/icons/happy.png';
+import happyIcon from '../../assets/icons/happy.png';
 import neutralIcon from '../../assets/icons/neutral.png';
-import sadIcon     from '../../assets/icons/sad.png';
+import sadIcon from '../../assets/icons/sad.png';
 import anxiousIcon from '../../assets/icons/anxious.png';
 
 // Mood emojis — same as RN MOOD_EMOJIS (uses happy icon for veryHappy too, matching RN)
 const MOOD_EMOJIS = [
-  { key: 'veryHappy', icon: happyIcon,   label: 'Very Happy' },
-  { key: 'happy',     icon: happyIcon,   label: 'Happy'      },
-  { key: 'neutral',   icon: neutralIcon, label: 'Neutral'    },
-  { key: 'sad',       icon: sadIcon,     label: 'Sad'        },
-  { key: 'verySad',   icon: anxiousIcon, label: 'Very Sad'   },
+  { key: 'veryHappy', icon: happyIcon, label: 'Very Happy' },
+  { key: 'happy', icon: happyIcon, label: 'Happy' },
+  { key: 'neutral', icon: neutralIcon, label: 'Neutral' },
+  { key: 'sad', icon: sadIcon, label: 'Sad' },
+  { key: 'verySad', icon: anxiousIcon, label: 'Very Sad' },
 ] as const;
 
 export const SessionFeedback = () => {
@@ -75,7 +75,7 @@ export const SessionFeedback = () => {
 
     // Determine revieweeId (the other party) based on role and available state
     let resolvedRevieweeId = session?.listenerId || session?.venterId;
-    
+
     if (!resolvedRevieweeId && chat) {
       if (role === 'venter') {
         resolvedRevieweeId = chat.listenerId || chat.listener?.id;
@@ -83,7 +83,7 @@ export const SessionFeedback = () => {
         resolvedRevieweeId = chat.venterId || chat.venter?.id;
       }
     }
-    
+
     if (!resolvedRevieweeId && session?.data) {
       if (role === 'venter') {
         resolvedRevieweeId = session.data.listenerId || session.data.listener?.id;
@@ -163,11 +163,10 @@ export const SessionFeedback = () => {
               <button
                 key={mood.key}
                 onClick={() => setSelectedMood(mood.key)}
-                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-                  selectedMood === mood.key
-                    ? 'bg-white/20 scale-110'
-                    : 'bg-black/40 hover:bg-white/10'
-                }`}
+                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${selectedMood === mood.key
+                  ? 'bg-white/20 scale-110'
+                  : 'bg-black/40 hover:bg-white/10'
+                  }`}
               >
                 <img
                   src={mood.icon}
@@ -211,11 +210,10 @@ export const SessionFeedback = () => {
               <button key={n} onClick={() => setStarRating(n)}>
                 <Star
                   size={28}
-                  className={`transition-all ${
-                    n <= starRating
-                      ? 'text-yellow-400 fill-yellow-400 scale-110'
-                      : 'text-gray-600 hover:text-gray-400'
-                  }`}
+                  className={`transition-all ${n <= starRating
+                    ? 'text-white fill-white  scale-110'
+                    : 'text-gray-600 hover:text-gray-400'
+                    }`}
                 />
               </button>
             ))}

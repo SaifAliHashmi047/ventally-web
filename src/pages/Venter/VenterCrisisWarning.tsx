@@ -111,7 +111,7 @@ export const VenterCrisisWarning = () => {
 
       {/* Emergency Protocol Modal */}
       {showEmergencyModal && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
           <GlassCard className="w-full sm:w-full sm:max-w-sm rounded-t-3xl sm:rounded-3xl p-6 text-center">
             <div className="w-12 h-1 bg-white/20 rounded-full mx-auto mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">

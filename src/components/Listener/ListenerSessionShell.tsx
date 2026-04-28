@@ -56,12 +56,12 @@ export function ListenerSessionShell({
   return (
     <div
       className="min-h-[100dvh] flex flex-col text-white relative overflow-hidden animate-fade-in"
-      style={LISTENER_SESSION_FLOW_BG_STYLE}
+    // style={LISTENER_SESSION_FLOW_BG_STYLE}
     >
       <div className="relative z-10 flex flex-col flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 pt-6 sm:pt-8 pb-8 sm:pb-12 min-h-0">
         <div className="shrink-0 mb-6 sm:mb-8">
           <PageHeader title={title} subtitle={subtitle} onBack={onBack} className="mb-0" />
-          {badge ? <div className="flex justify-center sm:justify-start mt-4">{badge}</div> : null}
+          {/* {badge ? <div className="flex justify-center sm:justify-start mt-4">{badge}</div> : null} */}
         </div>
 
         <div

@@ -60,12 +60,9 @@ export const VenterCrisisImmediateHelp = () => {
       <PageHeader
         title={t('Crisis.title', 'Crisis Support')}
         onBack={() => {
-          // If coming from chat, navigate to dashboard instead of back to chat
-          if (fromChat || isChatActive) {
-            navigate('/venter/dashboard', { replace: true });
-          } else {
-            navigate(-1);
-          }
+
+          navigate(-1);
+
         }}
       />
 
@@ -92,9 +89,8 @@ export const VenterCrisisImmediateHelp = () => {
             className="cursor-pointer"
           >
             <div className="flex items-center gap-4">
-              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${
-                resource.variant === 'primary' ? 'bg-primary/15' : 'glass'
-              }`}>
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${resource.variant === 'primary' ? 'bg-primary/15' : 'glass'
+                }`}>
                 <resource.icon size={24} className={resource.variant === 'primary' ? 'text-primary' : 'text-accent'} />
               </div>
               <div className="flex-1">

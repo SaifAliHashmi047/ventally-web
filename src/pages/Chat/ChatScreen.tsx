@@ -411,13 +411,13 @@ export const ChatScreen = () => {
             </p>
             <div className="grid grid-cols-2 gap-3">
               <Button
-                variant="ghost"
+                // variant="ghost"
                 onClick={handleEndSessionNo}
               >
                 {t('Common.no', 'No')}
               </Button>
               <Button
-                variant="danger"
+                variant="glass"
                 onClick={handleEndSessionYes}
               >
                 {t('Common.yes', 'Yes')}

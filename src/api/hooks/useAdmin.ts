@@ -258,12 +258,19 @@ export const useAdmin = () => {
     return res.data;
   };
 
+  /** Block a user — POST users/:userId/block */
+  const blockUser = async (userId: string) => {
+    const res = await apiInstance.post(`users/${userId}/block`);
+    return res.data;
+  };
+
   return useMemo(() => ({
     getReportStats,
     adminListUsers, getUsers, getUserDetail, adminGetUserDetail, adminSuspendUser, adminDeleteUser, adminBulkDeleteUsers, adminBulkUpdateUserRoles, toggleUserStatus,
     getSubAdmins, createSubAdmin, addSubAdmin, getSubAdminDetail, updateSubAdminPermissions, updateSubAdmin, deleteSubAdmin, removeSubAdmin,
     getListenerRequests, getListenerVerifications, getListenerVerificationDetail, reviewListenerVerification, reviewListenerRequest,
     getReports, getReportDetail, getReportDetails, updateReportStatus, takeAction, submitReport,
+    blockUser,
     getFinancialStats, getPaymentHistory, getAdminPaymentStats, exportPaymentHistoryPDF,
     exportData, getIntegrations, updateExportStatus, exportIntegrationsPDF,
     getCrisisConfig, updateCrisisConfig, getCrisisLog,
