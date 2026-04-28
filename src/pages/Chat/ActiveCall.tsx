@@ -3,7 +3,8 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import type { RootState } from '../../store/store';
-import { Mic, MicOff, Volume2, VolumeX, Phone } from 'lucide-react';
+import { Mic, MicOff, Phone, AlertTriangle } from 'lucide-react';
+import { GlassCard } from '../../components/ui/GlassCard';
 import apiInstance from '../../api/apiInstance';
 import socketService from '../../api/socketService';
 import {
@@ -61,13 +62,12 @@ export const ActiveCall = () => {
     joinChannel,
     leaveChannel,
     toggleMute,
-    setSpeakerMuted,
     isJoined,
   } = useAgoraWeb();
 
   const [muted, setMuted] = useState(false);
-  const [speakerOff, setSpeakerOff] = useState(false);
   const [duration, setDuration] = useState(0);
+  const [showEndModal, setShowEndModal] = useState(false);
   const callStatus: 'connecting' | 'connected' | 'ended' = isJoined ? 'connected' : 'connecting';
 
   // Call duration (starts when Agora reports joined + publishing)
@@ -93,9 +93,6 @@ export const ActiveCall = () => {
     toggleMute(muted);
   }, [muted, toggleMute]);
 
-  useEffect(() => {
-    setSpeakerMuted(speakerOff);
-  }, [speakerOff, setSpeakerMuted]);
 
   // Socket: connect + server call room (signaling / presence)
   useEffect(() => {
@@ -123,6 +120,7 @@ export const ActiveCall = () => {
   };
 
   const handleEndCall = async () => {
+    setShowEndModal(false);
     await leaveChannel();
     try {
       if (resolvedCallId) {
@@ -131,6 +129,16 @@ export const ActiveCall = () => {
     } catch { /* ignore */ }
     const firstStep = role === 'listener' ? 'feedback' : 'rating';
     navigate(`/${role}/session/${feedbackSessionId}/${firstStep}`, { replace: true, state: { type: 'call' } });
+  };
+
+  const handleCrisisPress = () => {
+    navigate('/venter/crisis-warning', {
+      state: {
+        fromCall: true,
+        callId: resolvedCallId,
+        feedbackSessionId,
+      },
+    });
   };
 
   // Listen for remote end via socket (when other party ends the call)
@@ -155,63 +163,103 @@ export const ActiveCall = () => {
   }, [feedbackSessionId, resolvedCallId, navigate, role, leaveChannel]);
 
   return (
-    <div
+    <div className="min-h-[100dvh] flex flex-col items-center justify-between px-5 pt-12 pb-10 relative">
 
-    >
-      {/* Top Bar */}
-      <div className="flex justify-between items-center w-full max-w-sm mx-auto shrink-0">
-        <p className="text-sm text-white/80">{t('ActiveCall.sessionCall', 'Session Call')}</p>
-        <div className="badge badge-success">
-          <div className="w-1.5 h-1.5 rounded-full bg-success" />
-          {callStatus === 'connected' ? t('ActiveCall.status.connected', 'Connected') : t('ActiveCall.status.connecting', 'Connecting...')}
-        </div>
-      </div>
-
-      {/* Avatar */}
-      <div className="flex flex-col items-center gap-4 flex-1 justify-center min-h-0">
+      {/* Center — icon + title + status */}
+      <div className="flex-1 flex flex-col items-center justify-center gap-4 w-full border-b border-white/10 pb-8">
         <div className="relative">
-          <div className="w-28 h-28 rounded-full glass-accent flex items-center justify-center text-4xl font-bold text-white">
-            L
+          <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center">
+            <Phone size={36} className="text-white" />
           </div>
           {callStatus === 'connected' && (
-            <div className="absolute inset-0 rounded-full border-2 border-accent/40 animate-ping" />
+            <div className="absolute inset-0 rounded-full border-2 border-white/30 animate-ping" />
           )}
         </div>
+
         <div className="text-center">
-          <h2 className="text-xl font-bold text-white">{t('ActiveCall.yourListener', 'Your Listener')}</h2>
-          <p className="text-sm text-white/80 mt-1">
-            {callStatus === 'connecting' ? t('ActiveCall.status.connecting', 'Connecting...') : formatDuration(duration)}
+          <h2 className="text-xl font-semibold text-white mb-1">
+            {callStatus === 'connecting'
+              ? t('ActiveCall.connecting', 'Connecting...')
+              : t('ActiveCall.outgoingCall', 'Outgoing Call')}
+          </h2>
+          <p className="text-sm text-white/60">
+            {t('ActiveCall.subtitle', 'You are on a call with a listener')}
           </p>
+          {callStatus === 'connected' && (
+            <p className="text-base text-white/80 mt-2 font-medium tabular-nums">
+              {formatDuration(duration)}
+            </p>
+          )}
         </div>
       </div>
 
-      {/* Controls */}
-      <div className="space-y-6 w-full max-w-sm mx-auto shrink-0 pb-safe">
-        <div className="flex justify-center gap-6">
-          <button
-            onClick={() => setMuted(!muted)}
-            className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${muted ? 'bg-error/20 border border-error/40 text-error' : 'glass text-white hover:bg-white/8'
-              }`}
-          >
-            {muted ? <MicOff size={22} /> : <Mic size={22} />}
-          </button>
+      {/* Bottom controls card */}
+      <GlassCard className="w-full max-w-sm mt-8" rounded="2xl" padding="lg">
+        {/* Mute + End row */}
+        <div className="flex justify-around items-center mb-6">
+          {/* Mute */}
+          <div className="flex flex-col items-center gap-2">
+            <button
+              onClick={() => setMuted(!muted)}
+              className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center transition-all hover:bg-white/20"
+            >
+              {muted ? <MicOff size={22} className="text-white" /> : <Mic size={22} className="text-white" />}
+            </button>
+            <span className="text-xs text-white font-medium">
+              {muted ? t('ActiveCall.muted', 'Muted') : t('ActiveCall.mute', 'Mute')}
+            </span>
+          </div>
 
-          <button
-            onClick={handleEndCall}
-            className="w-20 h-20 rounded-full bg-error flex items-center justify-center text-white hover:bg-red-600 transition-colors shadow-lg"
-          >
-            <Phone size={26} className="rotate-[135deg]" />
-          </button>
-
-          <button
-            onClick={() => setSpeakerOff(!speakerOff)}
-            className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${speakerOff ? 'bg-error/20 border border-error/40 text-error' : 'glass text-white hover:bg-white/8'
-              }`}
-          >
-            {speakerOff ? <VolumeX size={22} /> : <Volume2 size={22} />}
-          </button>
+          {/* End */}
+          <div className="flex flex-col items-center gap-2">
+            <button
+              onClick={() => setShowEndModal(true)}
+              className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center transition-all hover:bg-white/20"
+            >
+              <Phone size={22} className="text-white rotate-[135deg]" />
+            </button>
+            <span className="text-xs text-white font-medium">{t('ActiveCall.end', 'End')}</span>
+          </div>
         </div>
-      </div>
+
+        {/* Crisis button — venter only */}
+        {role === 'venter' && (
+          <div className="flex flex-col items-center gap-2">
+            <button
+              onClick={handleCrisisPress}
+              className="w-14 h-14 rounded-full bg-error flex items-center justify-center transition-all hover:opacity-90"
+            >
+              <AlertTriangle size={22} className="text-white" />
+            </button>
+            <span className="text-xs text-white font-medium">{t('ActiveCall.crisis', 'Crisis')}</span>
+          </div>
+        )}
+      </GlassCard>
+
+      {/* End session confirmation modal */}
+      {showEndModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70 backdrop-blur-sm">
+          <GlassCard className="w-full sm:max-w-sm rounded-t-3xl sm:rounded-3xl p-6 text-center">
+            <div className="w-12 h-1 bg-white/20 rounded-full mx-auto mb-6 sm:hidden" />
+            <h3 className="text-lg font-bold text-white mb-2">{t('VenterChat.endSessionTitle', 'End Session?')}</h3>
+            <p className="text-sm text-white/70 mb-8">{t('VenterChat.endSessionMessage', 'Are you sure you want to end this session?')}</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowEndModal(false)}
+                className="flex-1 py-3 rounded-2xl glass text-white font-medium text-sm hover:bg-white/10 transition-colors"
+              >
+                {t('VenterChat.endSessionNo', 'No')}
+              </button>
+              <button
+                onClick={handleEndCall}
+                className="flex-1 py-3 rounded-2xl bg-primary text-white font-medium text-sm hover:opacity-90 transition-colors"
+              >
+                {t('VenterChat.endSessionYes', 'Yes, End')}
+              </button>
+            </div>
+          </GlassCard>
+        </div>
+      )}
     </div>
   );
 };

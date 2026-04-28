@@ -10,6 +10,8 @@ export const VenterCrisisDisclaimer = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const fromChat = location.state?.fromChat || false;
+  const fromCall = location.state?.fromCall || false;
+  const feedbackSessionId = location.state?.feedbackSessionId;
 
   const points = [
     t('Crisis.disclaimer1', 'Ventally is not a substitute for professional mental health services.'),
@@ -58,7 +60,7 @@ export const VenterCrisisDisclaimer = () => {
           size="lg"
           fullWidth
           rightIcon={<ArrowRight size={20} />}
-          onClick={() => navigate('/venter/crisis-immediate-help', { state: { fromChat } })}
+          onClick={() => navigate('/venter/crisis-immediate-help', { state: { fromChat, fromCall, feedbackSessionId } })}
         >
           {t('Common.continue', 'Continue')}
         </Button>

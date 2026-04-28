@@ -3,16 +3,15 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store';
-import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
-import { Mic, MicOff, PhoneOff, Plus } from 'lucide-react';
+import { Mic, MicOff, Phone, AlertTriangle } from 'lucide-react';
 import socketService from '../../api/socketService';
+import apiInstance from '../../api/apiInstance';
 import {
   useAgoraWeb,
   joinParamsFromCallPayload,
   type AgoraCallPayload,
 } from '../../hooks/useAgoraWeb';
-import { Button } from '../../components/ui/Button';
 
 const formatDuration = (seconds: number): string => {
   const mins = Math.floor(seconds / 60);
@@ -52,6 +51,8 @@ export const ListenerActiveCall = () => {
   const [showEndModal, setShowEndModal] = useState(false);
   const exitedRef = useRef(false);
 
+  const callStatus: 'connecting' | 'connected' = isJoined ? 'connected' : 'connecting';
+
   useEffect(() => {
     if (!agoraJoinParams) {
       console.warn('[ListenerActiveCall] Missing channel/token for Agora.');
@@ -69,9 +70,7 @@ export const ListenerActiveCall = () => {
 
   useEffect(() => {
     if (!isJoined) return;
-    const timer = setInterval(() => {
-      setSeconds((prev) => prev + 1);
-    }, 1000);
+    const timer = setInterval(() => setSeconds((prev) => prev + 1), 1000);
     return () => clearInterval(timer);
   }, [isJoined]);
 
@@ -98,10 +97,6 @@ export const ListenerActiveCall = () => {
     };
   }, [session.sessionId, session.requestId, session.data]);
 
-  /**
-   * Ends Agora + replaces call route so the user cannot go "back" into the live call.
-   * Flow: feedback (mood) → rating → home (handled by those screens).
-   */
   const goToPostCallFlow = useCallback(async () => {
     if (exitedRef.current) return;
     exitedRef.current = true;
@@ -120,27 +115,30 @@ export const ListenerActiveCall = () => {
     });
   }, [leaveChannel, navigate, sessionId]);
 
-  const handleEndCall = () => {
-    setShowEndModal(true);
-  };
-
-  const confirmEndCall = async () => {
+  const handleEndCall = async () => {
     setShowEndModal(false);
+    try {
+      if (sessionId) {
+        socketService.emit('call:end', { callId: sessionId });
+        await apiInstance.post(`calls/${sessionId}/end`);
+      }
+    } catch { /* ignore */ }
     await goToPostCallFlow();
   };
 
-  const handleCrisisNavigation = useCallback(async () => {
+  const handleCrisisPress = useCallback(async () => {
+    try {
+      if (sessionId) {
+        socketService.emit('call:end', { callId: sessionId });
+        await apiInstance.post(`calls/${sessionId}/end`);
+      }
+    } catch { /* ignore */ }
     try {
       await leaveChannel();
-    } catch {
-      /* ignore */
-    }
+    } catch { /* ignore */ }
     navigate('/listener/crisis-escalation', {
       replace: true,
-      state: {
-        fromCall: true,
-        sessionId: sessionId ?? undefined,
-      },
+      state: { fromCall: true, sessionId: sessionId ?? undefined },
     });
   }, [leaveChannel, navigate, sessionId]);
 
@@ -159,132 +157,99 @@ export const ListenerActiveCall = () => {
   }, [roomId, sessionId, goToPostCallFlow]);
 
   return (
-    <div
-      className="min-h-[100dvh] flex flex-col text-white relative overflow-hidden"
+    <div className="min-h-[100dvh] flex flex-col items-center justify-between px-5 pt-12 pb-10 relative">
 
-    >
-      <div className="relative z-10 flex flex-col flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 min-h-0">
-        <div className="pt-4 sm:pt-6 shrink-0">
-          <PageHeader
-            title={t('ListenerCall.voiceSession', 'Voice session')}
-            subtitle={
-              isJoined
-                ? t('ListenerCall.statusLive', 'Connected — you’re live')
-                : t('ListenerCall.connecting', 'Connecting…')
-            }
-            onBack={() => setShowEndModal(true)}
-            className="mb-0"
-          />
+      {/* Center — icon + title + status */}
+      <div className="flex-1 flex flex-col items-center justify-center gap-4 w-full border-b border-white/10 pb-8">
+        <div className="relative">
+          <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center">
+            <Phone size={36} className="text-white" />
+          </div>
+          {callStatus === 'connected' && (
+            <div className="absolute inset-0 rounded-full border-2 border-white/30 animate-ping" />
+          )}
         </div>
 
-        <div className="flex-1 flex flex-col min-h-0 py-4 sm:py-8">
-          <div className="flex-1 flex flex-col items-center justify-center gap-4 sm:gap-6 w-full max-w-xl mx-auto">
-            <div className="relative">
-              <div
-                className="w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 rounded-full flex items-center justify-center text-4xl sm:text-5xl font-bold text-white border border-white/10 shadow-[0_0_60px_rgba(194,174,191,0.12)]"
-                style={{ background: 'rgba(255,255,255,0.06)' }}
-              >
-                V
-              </div>
-              {isJoined && (
-                <div className="absolute inset-0 rounded-full border-2 border-[#C2AEBF]/50 animate-ping pointer-events-none" />
-              )}
-            </div>
-
-            <div className="text-center space-y-1">
-              <p className="text-xs sm:text-sm font-medium uppercase tracking-widest text-white/45">
-                {t('ListenerCall.duration', 'Duration')}
-              </p>
-              <h2 className="text-4xl sm:text-5xl md:text-6xl font-light tabular-nums tracking-wider text-white">
-                {formatDuration(seconds)}
-              </h2>
-              <div className="flex items-center justify-center gap-2 pt-2">
-                <span
-                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${isJoined
-                    ? 'bg-emerald-500/15 text-emerald-400/95 border border-emerald-500/25'
-                    : 'bg-white/5 text-white/55 border border-white/10'
-                    }`}
-                >
-                  <span
-                    className={`w-1.5 h-1.5 rounded-full ${isJoined ? 'bg-emerald-400 animate-pulse' : 'bg-white/40'}`}
-                  />
-                  {isJoined
-                    ? t('ListenerCall.badgeLive', 'Live')
-                    : t('ListenerCall.badgeConnecting', 'Connecting')}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="w-full max-w-xl lg:max-w-2xl mx-auto mt-auto pt-6 sm:pt-10 pb-6 sm:pb-8">
-            <GlassCard
-              bordered
-              className="w-full rounded-3xl py-5 sm:py-7 px-3 sm:px-6 bg-black/35 border-white/10 backdrop-blur-xl"
-            >
-              <div className="flex flex-row items-center justify-around sm:justify-evenly gap-2 sm:gap-4 max-w-md mx-auto">
-                <button
-                  type="button"
-                  onClick={() => setIsMuted(!isMuted)}
-                  className="flex flex-col items-center gap-2 group min-w-[4.5rem]"
-                >
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/10 flex items-center justify-center transition-all group-hover:bg-white/15 ring-1 ring-white/10">
-                    {isMuted ? <MicOff size={22} className="text-white" /> : <Mic size={22} className="text-white" />}
-                  </div>
-                  <span className="text-[11px] sm:text-xs font-medium text-white/90 text-center leading-tight">
-                    {isMuted ? t('ListenerCall.unmute', 'Unmute') : t('ListenerCall.mute', 'Mute')}
-                  </span>
-                </button>
-
-                <Button
-                  type="button"
-                  variant='danger'
-                  onClick={() => void handleCrisisNavigation()}
-                  className="flex rounded-full  bg-red/80 items-center gap-2 group -translate-y-2 sm:-translate-y-3 min-w-[4.5rem]"
-                >
-                  {/* <div className="w-[68px] h-[68px] sm:w-[72px] sm:h-[72px] rounded-full bg-red-600 flex items-center justify-center shadow-[0_0_32px_rgba(220,38,38,0.35)] transition-transform group-hover:scale-[1.02] ring-2 ring-red-500/30"> */}
-                  {/* <Plus size={32} className="text-white sm:w-9 sm:h-9" /> */}
-                  {/* </div> */}
-                  <span className="text-[11px] sm:text-xs font-semibold text-white">{t('ListenerCall.crisis', 'Crisis')}</span>
-                </Button>
-
-                <button type="button" onClick={handleEndCall} className="flex flex-col items-center gap-2 group min-w-[4.5rem]">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/10 flex items-center justify-center transition-all group-hover:bg-white/15 ring-1 ring-white/10">
-                    <PhoneOff size={22} className="text-white" />
-                  </div>
-                  <span className="text-[11px] sm:text-xs font-medium text-white/90">{t('ListenerCall.end', 'End')}</span>
-                </button>
-              </div>
-            </GlassCard>
-          </div>
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-white mb-1">
+            {callStatus === 'connecting'
+              ? t('ListenerCall.connecting', 'Connecting...')
+              : t('ListenerCall.voiceSession', 'Voice Session')}
+          </h2>
+          <p className="text-sm text-white/60">
+            {t('ListenerCall.subtitle', 'You are on a call with a venter')}
+          </p>
+          {callStatus === 'connected' && (
+            <p className="text-base text-white/80 mt-2 font-medium tabular-nums">
+              {formatDuration(seconds)}
+            </p>
+          )}
         </div>
       </div>
 
+      {/* Bottom controls card */}
+      <GlassCard className="w-full max-w-sm mt-8" rounded="2xl" padding="lg">
+        {/* Mute + End row */}
+        <div className="flex justify-around items-center mb-6">
+          {/* Mute */}
+          <div className="flex flex-col items-center gap-2">
+            <button
+              onClick={() => setIsMuted(!isMuted)}
+              className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center transition-all hover:bg-white/20"
+            >
+              {isMuted ? <MicOff size={22} className="text-white" /> : <Mic size={22} className="text-white" />}
+            </button>
+            <span className="text-xs text-white font-medium">
+              {isMuted ? t('ListenerCall.unmute', 'Unmute') : t('ListenerCall.mute', 'Mute')}
+            </span>
+          </div>
+
+          {/* End */}
+          <div className="flex flex-col items-center gap-2">
+            <button
+              onClick={() => setShowEndModal(true)}
+              className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center transition-all hover:bg-white/20"
+            >
+              <Phone size={22} className="text-white rotate-[135deg]" />
+            </button>
+            <span className="text-xs text-white font-medium">{t('ListenerCall.end', 'End')}</span>
+          </div>
+        </div>
+
+        {/* Crisis button */}
+        <div className="flex flex-col items-center gap-2">
+          <button
+            onClick={() => void handleCrisisPress()}
+            className="w-14 h-14 rounded-full bg-error flex items-center justify-center transition-all hover:opacity-90"
+          >
+            <AlertTriangle size={22} className="text-white" />
+          </button>
+          <span className="text-xs text-white font-medium">{t('ListenerCall.crisis', 'Crisis')}</span>
+        </div>
+      </GlassCard>
+
+      {/* End session confirmation modal */}
       {showEndModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in">
-          <GlassCard bordered className="w-full max-w-md rounded-3xl p-6 sm:p-8 text-center transform animate-scale-up border-white/10">
-            <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4">
-              <PhoneOff size={26} className="text-white" />
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">{t('ListenerCall.endSession', 'End session?')}</h3>
-            <p className="text-sm text-gray-400 mb-8 max-w-sm mx-auto">
-              {t(
-                'ListenerCall.endSessionConfirm',
-                'You’ll leave this call and go to rate the session. You won’t return to this call screen.',
-              )}
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70 backdrop-blur-sm">
+          <GlassCard className="w-full sm:max-w-sm rounded-t-3xl sm:rounded-3xl p-6 text-center">
+            <div className="w-12 h-1 bg-white/20 rounded-full mx-auto mb-6 sm:hidden" />
+            <h3 className="text-lg font-bold text-white mb-2">{t('ListenerCall.endSession', 'End Session?')}</h3>
+            <p className="text-sm text-white/70 mb-8">
+              {t('ListenerCall.endSessionConfirm', 'Are you sure you want to end this session?')}
             </p>
-            <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto">
-              <Button
-                variant="secondary"
+            <div className="flex gap-3">
+              <button
                 onClick={() => setShowEndModal(false)}
+                className="flex-1 py-3 rounded-2xl glass text-white font-medium text-sm hover:bg-white/10 transition-colors"
               >
                 {t('Common.no', 'No')}
-              </Button>
-              <Button
-                variant="primary"
-                onClick={() => void confirmEndCall()}
+              </button>
+              <button
+                onClick={() => void handleEndCall()}
+                className="flex-1 py-3 rounded-2xl bg-primary text-white font-medium text-sm hover:opacity-90 transition-colors"
               >
-                {t('Common.yes', 'Yes, end')}
-              </Button>
+                {t('Common.yes', 'Yes, End')}
+              </button>
             </div>
           </GlassCard>
         </div>

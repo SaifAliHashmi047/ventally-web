@@ -9,6 +9,7 @@ import { PageHeader } from '../../components/ui/PageHeader';
 import { AlertTriangle, Check } from 'lucide-react';
 import { endChatSession, endCall } from '../../store/slices/callSlice';
 import { useChat } from '../../api/hooks/useChat';
+import apiInstance from '../../api/apiInstance';
 import socketService from '../../api/socketService';
 
 export const VenterCrisisWarning = () => {
@@ -17,7 +18,11 @@ export const VenterCrisisWarning = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { endConversation } = useChat();
+
   const fromChat = location.state?.fromChat || false;
+  const fromCall = location.state?.fromCall || false;
+  const callId = location.state?.callId;
+  const feedbackSessionId = location.state?.feedbackSessionId;
 
   const [understood, setUnderstood] = useState(false);
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
@@ -27,28 +32,41 @@ export const VenterCrisisWarning = () => {
   const isCallActive = useSelector((state: RootState) => state.call.isActive);
 
   const handleAgreeContinue = async () => {
-    // End active chat/call if exists
+    // End active chat session if coming from chat
     if (isChatActive && activeConversationId) {
       try {
-        // Emit socket event to notify other party
         await socketService.connect();
         socketService.emit('chat:end', { conversationId: activeConversationId });
-        // Call API to end
         await endConversation(activeConversationId);
       } catch (e) {
         console.log('[Crisis] End conversation error (non-blocking):', e);
       }
       dispatch(endChatSession());
     }
-    if (isCallActive) {
+
+    // End active call if coming from call
+    if (fromCall || isCallActive) {
+      try {
+        const id = callId;
+        if (id) {
+          await socketService.connect();
+          socketService.emit('call:end', { callId: id });
+          await apiInstance.post(`calls/${id}/end`);
+        }
+      } catch (e) {
+        console.log('[Crisis] End call error (non-blocking):', e);
+      }
       dispatch(endCall());
     }
+
     setShowEmergencyModal(true);
   };
 
   const handleContact988 = () => {
     setShowEmergencyModal(false);
-    navigate('/venter/crisis-disclaimer', { state: { fromChat } });
+    navigate('/venter/crisis-disclaimer', {
+      state: { fromChat, fromCall, feedbackSessionId },
+    });
   };
 
   return (

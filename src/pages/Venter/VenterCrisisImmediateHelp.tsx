@@ -1,23 +1,28 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../store/store';
 import { Button } from '../../components/ui/Button';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Phone, MessageSquare, ArrowRight, Clock } from 'lucide-react';
+import { endChatSession, endCall } from '../../store/slices/callSlice';
+import apiInstance from '../../api/apiInstance';
 import socketService from '../../api/socketService';
 
 export const VenterCrisisImmediateHelp = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const activeConversationId = useSelector((state: RootState) => state.call.activeConversationId);
   const isChatActive = useSelector((state: RootState) => state.call.isChatActive);
   const fromChat = location.state?.fromChat || false;
+  const fromCall = location.state?.fromCall || false;
+  const feedbackSessionId = location.state?.feedbackSessionId;
 
-  // End chat via socket if coming from chat
-  const endChatIfActive = async () => {
+  const endSessionIfActive = async () => {
+    // End chat via socket if coming from chat
     if (isChatActive && activeConversationId) {
       try {
         await socketService.connect();
@@ -25,17 +30,45 @@ export const VenterCrisisImmediateHelp = () => {
       } catch (e) {
         console.log('[Crisis] End chat socket error (non-blocking):', e);
       }
+      dispatch(endChatSession());
+    }
+    // End call if coming from call
+    if (fromCall && feedbackSessionId) {
+      try {
+        await socketService.connect();
+        socketService.emit('call:end', { callId: feedbackSessionId });
+        await apiInstance.post(`calls/${feedbackSessionId}/end`);
+      } catch (e) {
+        console.log('[Crisis] End call error (non-blocking):', e);
+      }
+      dispatch(endCall());
+    }
+  };
+
+  const navigateAfterCrisis = () => {
+    if (fromCall && feedbackSessionId) {
+      navigate(`/venter/session/${feedbackSessionId}/rating`, {
+        replace: true,
+        state: { type: 'call' },
+      });
+    } else if (fromChat) {
+      navigate('/venter/home', { replace: true });
+    } else {
+      navigate('/venter/home', { replace: true });
     }
   };
 
   const handleCall988 = async () => {
-    await endChatIfActive();
+    await endSessionIfActive();
     window.location.href = 'tel:988';
+    // Give a short delay to allow the phone call to initiate then navigate
+    setTimeout(() => navigateAfterCrisis(), 1000);
   };
 
   const handleText988 = async () => {
-    await endChatIfActive();
+    await endSessionIfActive();
     window.location.href = 'sms:988';
+    setTimeout(() => navigateAfterCrisis(), 1000);
   };
 
   const resources = [
