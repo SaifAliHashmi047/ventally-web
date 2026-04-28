@@ -98,7 +98,7 @@ export const VenterCall = () => {
   const callsHook = useCalls();
   const walletHook = useWallet();
   const getCallsRef = useRef(callsHook.getCalls);
-  const getMySubscriptionRef = useRef(walletHook.getMySubscription);
+  const getWalletRef = useRef(walletHook.getWallet);
 
   const [recentCalls, setRecentCalls] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -110,16 +110,16 @@ export const VenterCall = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [callsRes, subRes] = await Promise.allSettled([
+        const [callsRes, walletRes] = await Promise.allSettled([
           getCallsRef.current(3, 0),
-          getMySubscriptionRef.current(),
+          getWalletRef.current(),
         ]);
         if (cancelled) return;
         if (callsRes.status === 'fulfilled') {
           setRecentCalls(callsRes.value?.calls ?? []);
         }
-        if (subRes.status === 'fulfilled') {
-          setWalletDetails(subRes.value);
+        if (walletRes.status === 'fulfilled') {
+          setWalletDetails(walletRes.value);
         }
       } catch {
         if (!cancelled) toastError(t('Common.errors.fetchingData'));
@@ -138,8 +138,12 @@ export const VenterCall = () => {
 
   const handleStartCall = () => {
     dispatch(setSessionType('call'));
-    const remaining = walletDetails?.subscription?.remainingMinutes ?? 999;
-    if (remaining < 1) {
+    const minutes = walletDetails?.balance?.minutes ?? 0;
+    const currency = walletDetails?.balance?.currency ?? 0;
+    const SESSION_COST = 10;
+    
+    // Check if they have enough minutes OR enough generic currency
+    if (minutes < SESSION_COST && currency < SESSION_COST) {
       dispatch(setReturnToSession(true));
       navigate('/venter/no-credit');
     } else {

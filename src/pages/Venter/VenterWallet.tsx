@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { useWallet } from '../../api/hooks/useWallet';
@@ -11,6 +11,7 @@ import { toastError } from '../../utils/toast';
 export const VenterWallet = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const { getWallet, getTransactions, getMySubscription } = useWallet();
 
   const [balance, setBalance] = useState<any>(null);
@@ -37,7 +38,7 @@ export const VenterWallet = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [location.key]);
 
   const formatAmount = (amount: number) => amount?.toFixed(2) ?? '0.00';
 
@@ -53,12 +54,11 @@ export const VenterWallet = () => {
   };
 
   const isCredit = (tx: any) => {
-    const type = tx.type?.toLowerCase() ?? '';
-    return type === 'deposit' || type === 'top_up' || type === 'refund';
+    return ['subscription_payment', 'credit_purchase', 'tip_received'].includes(tx.type);
   };
 
-  // `balance` state is the numeric value from API `data.balance` (see fetch above)
-  const balanceAmount = typeof balance === 'number' ? balance : Number(balance?.balance ?? 0);
+  // `balance` state contains { minutes, currency, currencyCode } from API `data.balance`
+  const balanceAmount = typeof balance === 'number' ? balance : Number(balance?.currency ?? 0);
 
   return (
     <div className="page-wrapper page-wrapper--wide animate-fade-in">

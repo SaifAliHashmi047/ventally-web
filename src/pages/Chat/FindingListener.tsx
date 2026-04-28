@@ -36,7 +36,8 @@ export const FindingListener = () => {
     const init = async () => {
       try {
         const balanceRes = await getWallet();
-        const hasBalance = balanceRes?.balance?.currency > 0 || balanceRes?.balance?.minutes > 0;
+        const hasBalance = balanceRes?.balance?.currency > 0 || 
+                           (isCall ? balanceRes?.balance?.minutes > 0 : balanceRes?.balance?.messages > 0);
 
         if (!hasBalance) {
           setStatus('lowBalance');

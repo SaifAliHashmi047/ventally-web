@@ -46,7 +46,7 @@ export const VenterTransactions = () => {
         <>
           <GlassCard padding="none" rounded="2xl">
             {transactions.map((tx: any, i: number) => {
-              const isCredit = tx.type === 'credit' || tx.type === 'top_up';
+              const isCredit = ['subscription_payment', 'credit_purchase', 'tip_received'].includes(tx.type);
               return (
                 <div key={tx.id} className={`flex items-center gap-4 px-4 py-3 ${i < transactions.length - 1 ? 'border-b border-white/5' : ''}`}>
                   <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${isCredit ? 'bg-success/15' : 'bg-error/10'}`}>

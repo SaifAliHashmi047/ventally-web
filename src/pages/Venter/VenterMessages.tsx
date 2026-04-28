@@ -110,7 +110,7 @@ export const VenterMessages = () => {
   const chatHook = useChat();
   const walletHook = useWallet();
   const getConversationsRef = useRef(chatHook.getConversations);
-  const getMySubscriptionRef = useRef(walletHook.getMySubscription);
+  const getWalletRef = useRef(walletHook.getWallet);
 
   const [recentChats, setRecentChats] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -123,16 +123,16 @@ export const VenterMessages = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [chatsRes, subRes] = await Promise.allSettled([
+        const [chatsRes, walletRes] = await Promise.allSettled([
           getConversationsRef.current(undefined, 5, 0),
-          getMySubscriptionRef.current(),
+          getWalletRef.current(),
         ]);
         if (cancelled) return;
         if (chatsRes.status === 'fulfilled') {
           setRecentChats(chatsRes.value?.conversations ?? []);
         }
-        if (subRes.status === 'fulfilled') {
-          setWalletDetails(subRes.value);
+        if (walletRes.status === 'fulfilled') {
+          setWalletDetails(walletRes.value);
         }
       } catch {
         if (!cancelled) toastError(t('Common.errors.fetchingData'));
@@ -149,8 +149,12 @@ export const VenterMessages = () => {
 
   const handleStartChat = () => {
     dispatch(setSessionType('chat'));
-    const remaining = walletDetails?.subscription?.remainingMinutes ?? 999;
-    if (remaining < 1) {
+    const messages = walletDetails?.balance?.messages ?? 0;
+    const currency = walletDetails?.balance?.currency ?? 0;
+    const SESSION_COST = 10;
+    
+    // Check if they have enough messages OR enough generic currency
+    if (messages < SESSION_COST && currency < SESSION_COST) {
       dispatch(setReturnToSession(true));
       navigate('/venter/no-credit');
     } else {
