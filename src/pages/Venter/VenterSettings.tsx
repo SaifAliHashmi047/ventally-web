@@ -1,6 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ChevronRight, Bell, Shield, Lock, UserCog, Moon, Settings } from 'lucide-react';
+import {
+  ChevronRight,
+  Bell,
+  Shield,
+  Lock,
+  UserCog,
+  Moon,
+  Settings,
+  LogOut,
+  type LucideIcon,
+} from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/slices/userSlice';
 import { toggleDarkMode } from '../../store/slices/appSlice';
@@ -8,7 +18,24 @@ import type { RootState } from '../../store/store';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Toggle } from '../../components/ui/Toggle';
 import { Button } from '../../components/ui/Button';
-import { LogOut } from 'lucide-react';
+type SettingsNavItem = {
+  key: string;
+  title: string;
+  icon: LucideIcon;
+  type: 'nav';
+  onPress: () => void | Promise<void>;
+};
+
+type SettingsToggleItem = {
+  key: string;
+  title: string;
+  icon: LucideIcon;
+  type: 'toggle';
+  value: boolean;
+  onChange: (value: boolean) => void;
+};
+
+type SettingsItem = SettingsNavItem | SettingsToggleItem;
 
 export const VenterSettings = () => {
   const { t } = useTranslation();
@@ -21,53 +48,58 @@ export const VenterSettings = () => {
     navigate('/login');
   };
 
-  const handleDarkToggle = () => {
-    dispatch(toggleDarkMode());
-  };
-
-  const SETTINGS_ITEMS = [
+  const SETTINGS_ITEMS: SettingsItem[] = [
     {
       key: 'general',
       title: t('VenterSettings.options.generalSettings.title'),
       icon: Settings,
       onPress: () => navigate('/venter/general-settings'),
-      type: 'nav' as const,
+      type: 'nav',
     },
     {
       key: 'notifications',
       title: t('VenterSettings.options.notifications.title'),
       icon: Bell,
       onPress: () => navigate('/venter/notifications-settings'),
-      type: 'nav' as const,
+      type: 'nav',
     },
-
+    {
+      key: 'darkTheme',
+      title: t('VenterSettings.options.darkTheme.title'),
+      icon: Moon,
+      type: 'toggle',
+      value: isDark,
+      onChange: (next) => {
+        if (next !== isDark) dispatch(toggleDarkMode());
+      },
+    },
     {
       key: 'changeAccountType',
       title: t('VenterSettings.options.changeAccountType.title'),
       icon: UserCog,
       onPress: () => navigate('/venter/change-account-type'),
-      type: 'nav' as const,
+      type: 'nav',
     },
     {
       key: 'security',
       title: t('Security.title'),
       icon: Shield,
       onPress: () => navigate('/venter/security'),
-      type: 'nav' as const,
+      type: 'nav',
     },
     {
       key: 'legal',
       title: t('Legal.title'),
       icon: Lock,
       onPress: () => navigate('/venter/legal'),
-      type: 'nav' as const,
+      type: 'nav',
     },
     {
       key: 'contact',
       title: t('Contact.title'),
       icon: ChevronRight,
       onPress: () => navigate('/venter/contact'),
-      type: 'nav' as const,
+      type: 'nav',
     },
   ];
 
@@ -96,8 +128,8 @@ export const VenterSettings = () => {
               </div>
               {item.type === 'toggle' ? (
                 <Toggle
-                  checked={item.value ?? false}
-                  onChange={item.onPress}
+                  checked={item.value}
+                  onChange={item.onChange}
                   size="sm"
                 />
               ) : (
