@@ -133,16 +133,21 @@ export const useWebNotifications = () => {
         console.error('❌ No FCM token returned');
       }
     } catch (error: any) {
-      // Silently fail if push service is not properly configured
-      // Push notifications are optional - the app will still work without them
-      console.warn('[FCM] Push notifications not available - this is optional');
+      console.error('[FCM] Full error details:', {
+        message: error?.message,
+        code: error?.code,
+        name: error?.name,
+        stack: error?.stack
+      });
 
       if (error?.code === 'messaging/unsupported-browser') {
-        console.warn('⚠️  Browser does not support web notifications');
+        console.error('⚠️  Browser does not support web notifications');
       } else if (error?.code === 'messaging/failed-service-worker-registration') {
-        console.warn('⚠️  Service Worker registration failed');
+        console.error('⚠️  Service Worker registration failed');
       } else if (error?.message?.includes('applicationServerKey')) {
-        console.warn('⚠️  VAPID key may be invalid or push service is not available');
+        console.error('⚠️  VAPID key may be invalid or doesn\'t match Firebase project');
+      } else {
+        console.error('⚠️  Push service error - check if VAPID key matches your Firebase project');
       }
     }
   };
