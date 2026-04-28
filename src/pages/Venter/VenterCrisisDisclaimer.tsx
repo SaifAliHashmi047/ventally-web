@@ -23,12 +23,9 @@ export const VenterCrisisDisclaimer = () => {
       <PageHeader
         title={t('Crisis.title', 'Crisis Support')}
         onBack={() => {
-          // If coming from chat, navigate to dashboard instead of back to chat
-          if (fromChat) {
-            navigate('/venter/dashboard', { replace: true });
-          } else {
-            navigate(-1);
-          }
+
+          navigate(-1);
+
         }}
       />
 

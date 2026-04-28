@@ -111,10 +111,12 @@ export const VenterMessages = () => {
   const walletHook = useWallet();
   const getConversationsRef = useRef(chatHook.getConversations);
   const getWalletRef = useRef(walletHook.getWallet);
+  const getSubscriptionRef = useRef(walletHook.getMySubscription);
 
   const [recentChats, setRecentChats] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [walletDetails, setWalletDetails] = useState<any>(null);
+  const [walletBalance, setWalletBalance] = useState<any>(null);
+  const [subscription, setSubscription] = useState<any>(null);
 
   // Fetch ONCE on mount — empty deps, no loop
   useEffect(() => {
@@ -123,16 +125,20 @@ export const VenterMessages = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [chatsRes, walletRes] = await Promise.allSettled([
+        const [chatsRes, walletRes, subRes] = await Promise.allSettled([
           getConversationsRef.current(undefined, 5, 0),
           getWalletRef.current(),
+          getSubscriptionRef.current(),
         ]);
         if (cancelled) return;
         if (chatsRes.status === 'fulfilled') {
           setRecentChats(chatsRes.value?.conversations ?? []);
         }
         if (walletRes.status === 'fulfilled') {
-          setWalletDetails(walletRes.value);
+          setWalletBalance(walletRes.value?.balance ?? null);
+        }
+        if (subRes.status === 'fulfilled') {
+          setSubscription(subRes.value?.subscription ?? null);
         }
       } catch {
         if (!cancelled) toastError(t('Common.errors.fetchingData'));
@@ -149,16 +155,22 @@ export const VenterMessages = () => {
 
   const handleStartChat = () => {
     dispatch(setSessionType('chat'));
-    const messages = walletDetails?.balance?.messages ?? 0;
-    const currency = walletDetails?.balance?.currency ?? 0;
     const SESSION_COST = 10;
-    
-    // Check if they have enough messages OR enough generic currency
-    if (messages < SESSION_COST && currency < SESSION_COST) {
+
+    // Step 1: check subscription remaining messages
+    const remainingMessages = subscription?.remainingMessages ?? 0;
+    if (remainingMessages > 0) {
+      navigate('/venter/finding-listener', { state: { type: 'chat' } });
+      return;
+    }
+
+    // Step 2: fallback — check wallet currency balance
+    const currency = walletBalance?.currency ?? 0;
+    if (currency > SESSION_COST) {
+      navigate('/venter/finding-listener', { state: { type: 'chat' } });
+    } else {
       dispatch(setReturnToSession(true));
       navigate('/venter/no-credit');
-    } else {
-      navigate('/venter/finding-listener', { state: { type: 'chat' } });
     }
   };
 

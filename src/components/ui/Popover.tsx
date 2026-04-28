@@ -82,7 +82,7 @@ export const Popover: React.FC<PopoverProps> = ({
             className
           )}
         >
-          <GlassCard padding="none" rounded="2xl" className="py-2">
+          <GlassCard padding="none" rounded="2xl" className="py-2 !bg-[#121118]/95 !backdrop-blur-3xl shadow-[0_8px_32px_rgba(0,0,0,0.8)] border border-white/10">
             {children}
           </GlassCard>
         </div>

@@ -10,6 +10,9 @@ export const MainBackground: React.FC = () => {
   const customBackgrounds = useSelector(
     (state: RootState) => (state.app as any)?.customBackgrounds ?? []
   );
+  const isDarkMode = useSelector(
+    (state: RootState) => (state.app as any)?.isDarkMode ?? true
+  );
 
   // Compute background style from Redux state
   const bgStyle = getBackgroundStyle(selectedBackgroundId, customBackgrounds);
@@ -27,11 +30,11 @@ export const MainBackground: React.FC = () => {
           transform: 'translate3d(0, 0, 0)',
         }}
       />
-      {/* ── Dark overlay — keeps theme colors consistent regardless of bg image ── */}
+      {/* ── Dark overlay — only applied in dark mode ── */}
       <div
-        className="fixed inset-0 z-0 pointer-events-none"
+        className="fixed inset-0 z-0 pointer-events-none transition-all duration-500"
         style={{
-          background: 'rgba(0, 0, 0, 0.30)',
+          background: isDarkMode ? 'rgba(0, 0, 0, 0.45)' : 'transparent',
           willChange: 'transform',
           transform: 'translate3d(0, 0, 0)',
         }}

@@ -15,7 +15,8 @@ export const FindingListener = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const type = (location.state?.type || 'call') as 'call' | 'chat';
-  const { getWallet } = useWallet();
+  const { getWallet, getMySubscription } = useWallet();
+  const SESSION_COST = 10;
 
   const [status, setStatus] = useState<'searching' | 'found' | 'timeout' | 'lowBalance'>('searching');
   const [dots, setDots] = useState('');
@@ -35,11 +36,32 @@ export const FindingListener = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        const balanceRes = await getWallet();
-        const hasBalance = balanceRes?.balance?.currency > 0 || 
-                           (isCall ? balanceRes?.balance?.minutes > 0 : balanceRes?.balance?.messages > 0);
+        const SESSION_COST_LOCAL = SESSION_COST;
 
-        if (!hasBalance) {
+        // Step 1: Check subscription balance
+        const subRes = await getMySubscription();
+        const sub = subRes?.subscription;
+        const remainingMinutes = sub?.remainingMinutes ?? 0;
+        const remainingMessages = sub?.remainingMessages ?? 0;
+
+        const hasSubBalance = isCall
+          ? remainingMinutes > 0
+          : remainingMessages > 0;
+
+        if (hasSubBalance) {
+          // Good to go from subscription
+          dispatch(setSessionType(type));
+          await socketService.connect();
+          socketService.emit('requests:broadcast', { type });
+          console.log('[FindingListener] Broadcasted request (sub):', type);
+          return;
+        }
+
+        // Step 2: Fallback — check wallet currency
+        const balanceRes = await getWallet();
+        const currency = balanceRes?.balance?.currency ?? 0;
+
+        if (currency <= SESSION_COST_LOCAL) {
           setStatus('lowBalance');
           return;
         }

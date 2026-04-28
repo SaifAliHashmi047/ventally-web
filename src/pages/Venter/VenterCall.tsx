@@ -99,10 +99,12 @@ export const VenterCall = () => {
   const walletHook = useWallet();
   const getCallsRef = useRef(callsHook.getCalls);
   const getWalletRef = useRef(walletHook.getWallet);
+  const getSubscriptionRef = useRef(walletHook.getMySubscription);
 
   const [recentCalls, setRecentCalls] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [walletDetails, setWalletDetails] = useState<any>(null);
+  const [walletBalance, setWalletBalance] = useState<any>(null);
+  const [subscription, setSubscription] = useState<any>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -110,16 +112,20 @@ export const VenterCall = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [callsRes, walletRes] = await Promise.allSettled([
+        const [callsRes, walletRes, subRes] = await Promise.allSettled([
           getCallsRef.current(3, 0),
           getWalletRef.current(),
+          getSubscriptionRef.current(),
         ]);
         if (cancelled) return;
         if (callsRes.status === 'fulfilled') {
           setRecentCalls(callsRes.value?.calls ?? []);
         }
         if (walletRes.status === 'fulfilled') {
-          setWalletDetails(walletRes.value);
+          setWalletBalance(walletRes.value?.balance ?? null);
+        }
+        if (subRes.status === 'fulfilled') {
+          setSubscription(subRes.value?.subscription ?? null);
         }
       } catch {
         if (!cancelled) toastError(t('Common.errors.fetchingData'));
@@ -138,16 +144,22 @@ export const VenterCall = () => {
 
   const handleStartCall = () => {
     dispatch(setSessionType('call'));
-    const minutes = walletDetails?.balance?.minutes ?? 0;
-    const currency = walletDetails?.balance?.currency ?? 0;
     const SESSION_COST = 10;
-    
-    // Check if they have enough minutes OR enough generic currency
-    if (minutes < SESSION_COST && currency < SESSION_COST) {
+
+    // Step 1: check subscription remaining minutes
+    const remainingMinutes = subscription?.remainingMinutes ?? 0;
+    if (remainingMinutes > 0) {
+      navigate('/venter/finding-listener', { state: { type: 'call' } });
+      return;
+    }
+
+    // Step 2: fallback — check wallet currency balance
+    const currency = walletBalance?.currency ?? 0;
+    if (currency > SESSION_COST) {
+      navigate('/venter/finding-listener', { state: { type: 'call' } });
+    } else {
       dispatch(setReturnToSession(true));
       navigate('/venter/no-credit');
-    } else {
-      navigate('/venter/finding-listener', { state: { type: 'call' } });
     }
   };
 

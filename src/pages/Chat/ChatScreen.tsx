@@ -10,6 +10,7 @@ import { Send, Flag, MoreVertical, AlertTriangle, ChevronLeft, PhoneOff } from '
 import { cn } from '../../utils/cn';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
+import { MainBackground } from '../../components/ui/MainBackground';
 import { Popover, PopoverItem, PopoverSeparator } from '../../components/ui/Popover';
 import { endChatSession } from '../../store/slices/callSlice';
 
@@ -234,11 +235,16 @@ export const ChatScreen = () => {
 
   return (
     <div
-      className="flex flex-col min-h-[100dvh] w-full lg:max-w-4xl lg:max-w-5xl lg:mx-auto animate-fade-in bg-transparent lg:border lg:border-white/10 lg:rounded-3xl lg:shadow-2xl lg:shadow-black/40 lg:overflow-hidden"
+      className="fixed inset-0 z-[60] flex flex-col w-full lg:static lg:min-h-[100dvh] lg:max-w-4xl lg:max-w-5xl lg:mx-auto animate-fade-in bg-[#0E0C15] lg:bg-transparent lg:border lg:border-white/10 lg:rounded-3xl lg:shadow-2xl lg:shadow-black/40 lg:overflow-hidden"
       style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
+      {/* Mobile background layer so it matches the app */}
+      <div className="lg:hidden absolute inset-0 z-0 pointer-events-none">
+        <MainBackground />
+      </div>
+
       {/* Chat Header - matching mobile ChatHeader */}
-      <div className="glass overflow-visible border-b border-white/8 px-4 sm:px-5 py-3.5 pt-[max(0.875rem,env(safe-area-inset-top))] flex items-center gap-3 flex-shrink-0 z-10">
+      <div className="glass overflow-visible border-b border-white/8 px-4 sm:px-5 py-3.5 pt-[max(0.875rem,env(safe-area-inset-top))] flex items-center gap-3 flex-shrink-0 z-10 relative">
         <button
           onClick={() => navigate(-1)}
           className="p-2 rounded-xl glass text-gray-400 hover:text-white transition-colors flex-shrink-0"

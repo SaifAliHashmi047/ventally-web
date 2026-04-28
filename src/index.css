@@ -70,6 +70,11 @@
 }
 
 /* =============================================
+   LIGHT THEME — no variable overrides needed.
+   Visual difference is handled by MainBackground overlay only.
+   ============================================= */
+
+/* =============================================
    BASE STYLES
    ============================================= */
 * {
