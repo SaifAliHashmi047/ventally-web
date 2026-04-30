@@ -6,7 +6,7 @@ import i18n from '../../locales/i18n';
 import type { RootState, AppDispatch } from '../../store/store';
 import apiInstance from '../../api/apiInstance';
 import socketService from '../../api/socketService';
-import { Send, Flag, MoreVertical, AlertTriangle, ChevronLeft, PhoneOff } from 'lucide-react';
+import { Send, Flag, MoreVertical, AlertTriangle, ChevronLeft, PhoneOff, PhoneCall, MessageSquare } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
@@ -37,6 +37,8 @@ export const ChatScreen = () => {
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showEndModal, setShowEndModal] = useState(false);
+  const [showCrisisOverlay, setShowCrisisOverlay] = useState(false);
+  const [showListenerCrisisModal, setShowListenerCrisisModal] = useState(false);
   const [isChatActive, setIsChatActive] = useState(true);
 
   // Get other participant info
@@ -50,13 +52,34 @@ export const ChatScreen = () => {
   const handleCrisisPress = () => {
     const isVenter = currentUser?.userType === 'venter' || currentUser?.role === 'venter';
     if (isVenter) {
-      // Venter goes to warning screen with acknowledgment flow
-      navigate('/venter/crisis-warning', { state: { fromChat: true } });
+      setShowCrisisOverlay(true);
     } else {
-      navigate('/listener/crisis-escalation', {
-        state: { fromChat: true, sessionId: id },
-      });
+      setShowListenerCrisisModal(true);
     }
+  };
+
+  const handleListenerCrisisConfirm = () => {
+    setShowListenerCrisisModal(false);
+    dispatch(endChatSession());
+    try {
+      socketService.emit('chat:end', { conversationId: id });
+      apiInstance.post(`conversations/${id}/end`).catch(() => {});
+    } catch { /* ignore */ }
+    navigate('/listener/crisis-warning', {
+      replace: true,
+      state: { fromChat: true, sessionId: id },
+    });
+  };
+
+  const handleVenterCrisis988 = async (mode: 'call' | 'text') => {
+    setShowCrisisOverlay(false);
+    dispatch(endChatSession());
+    try {
+      socketService.emit('chat:end', { conversationId: id });
+      await apiInstance.post(`conversations/${id}/end`);
+    } catch { /* ignore */ }
+    window.location.href = mode === 'call' ? 'tel:988' : 'sms:988';
+    setTimeout(() => navigate('/venter/home', { replace: true }), 1000);
   };
 
   const handleReportPress = () => {
@@ -243,7 +266,7 @@ export const ChatScreen = () => {
         {/* Crisis Button - only when chat is active */}
         {isChatActive && (
           <button
-            onClick={handleCrisisPress}
+            onClick={() => void handleCrisisPress()}
             className="p-2 rounded-xl glass text-error hover:bg-error/20 transition-colors flex-shrink-0"
             title={t('VenterChat.crisisButton', 'Crisis Support')}
           >
@@ -379,6 +402,76 @@ export const ChatScreen = () => {
           >
             <Send size={18} className={input.trim() ? 'text-primary' : 'text-white/80'} />
           </button>
+        </div>
+      )}
+
+      {/* Venter crisis instant-help overlay */}
+      {showCrisisOverlay && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="glass w-full max-w-sm rounded-3xl p-8 text-center border border-white/10">
+            <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-6">
+              <AlertTriangle size={30} className="text-primary" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3">
+              {t('Crisis.safetyTitle', 'Your safety is our priority.')}
+            </h3>
+            <p className="text-sm text-white/70 leading-relaxed mb-8">
+              {t('Crisis.safetyMessage', 'Please contact emergency services right away.')}
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => void handleVenterCrisis988('call')}
+                className="w-full py-4 rounded-2xl bg-primary text-white font-bold text-base flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+              >
+                <PhoneCall size={20} />
+                {t('Crisis.call988Now', 'CALL 988 NOW')}
+              </button>
+              <button
+                onClick={() => void handleVenterCrisis988('text')}
+                className="w-full py-4 rounded-2xl border border-white/20 text-white font-semibold text-base flex items-center justify-center gap-2 hover:bg-white/10 transition-colors"
+              >
+                <MessageSquare size={20} />
+                {t('Crisis.text988', 'TEXT 988')}
+              </button>
+              <button
+                onClick={() => setShowCrisisOverlay(false)}
+                className="w-full py-3 text-white/50 text-sm hover:text-white/80 transition-colors"
+              >
+                {t('Crisis.backToChat', 'Back to Chat')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Listener crisis confirmation modal */}
+      {showListenerCrisisModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/70 backdrop-blur-sm animate-fade-in">
+          <GlassCard className="w-full max-w-sm rounded-3xl p-7 text-center">
+            <h3 className="text-xl font-bold text-white mb-4">
+              {t('ListenerCrisis.confirmTitle', 'Is The Venter In Crisis')}
+            </h3>
+            <p className="text-sm text-white/70 leading-relaxed mb-4">
+              {t('ListenerCrisis.confirmMessage1', 'If the venter mentions thoughts of self harm or suicide, please escalate this session for crisis services.')}
+            </p>
+            <p className="text-sm text-white/70 leading-relaxed mb-8">
+              {t('ListenerCrisis.confirmMessage2', 'If the venter is in crisis and you do not escalate this session you will be permanently barred from this platform.')}
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowListenerCrisisModal(false)}
+                className="flex-1 py-3 rounded-2xl glass text-white font-medium text-sm hover:bg-white/10 transition-colors"
+              >
+                {t('Common.no', 'No')}
+              </button>
+              <button
+                onClick={handleListenerCrisisConfirm}
+                className="flex-1 py-3 rounded-2xl glass text-white font-bold text-sm hover:bg-white/10 transition-colors"
+              >
+                {t('Common.yes', 'Yes')}
+              </button>
+            </div>
+          </GlassCard>
         </div>
       )}
 

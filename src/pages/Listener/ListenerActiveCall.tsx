@@ -51,6 +51,7 @@ export const ListenerActiveCall = () => {
   const [seconds, setSeconds] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [showEndModal, setShowEndModal] = useState(false);
+  const [showCrisisModal, setShowCrisisModal] = useState(false);
 
   const callStatus: 'connecting' | 'connected' = isJoined ? 'connected' : 'connecting';
 
@@ -127,7 +128,7 @@ export const ListenerActiveCall = () => {
       }
     } catch { /* ignore */ }
     try { await leaveChannel(); } catch { /* ignore */ }
-    navigate('/listener/crisis-escalation', {
+    navigate('/listener/crisis-warning', {
       replace: true,
       state: { fromCall: true, sessionId: sessionId ?? undefined },
     });
@@ -196,7 +197,7 @@ export const ListenerActiveCall = () => {
         {/* Crisis button */}
         <div className="flex flex-col items-center gap-2">
           <button
-            onClick={() => void handleCrisisPress()}
+            onClick={() => setShowCrisisModal(true)}
             className="w-14 h-14 rounded-full bg-error flex items-center justify-center transition-all hover:opacity-90"
           >
             <AlertTriangle size={22} className="text-white" />
@@ -204,6 +205,37 @@ export const ListenerActiveCall = () => {
           <span className="text-xs text-white font-medium">{t('ListenerCall.crisis', 'Crisis')}</span>
         </div>
       </GlassCard>
+
+      {/* Crisis confirmation modal */}
+      {showCrisisModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/70 backdrop-blur-sm">
+          <GlassCard className="w-full max-w-sm rounded-3xl p-7 text-center">
+            <h3 className="text-xl font-bold text-white mb-4">
+              {t('ListenerCrisis.confirmTitle', 'Is The Venter In Crisis')}
+            </h3>
+            <p className="text-sm text-white/70 leading-relaxed mb-4">
+              {t('ListenerCrisis.confirmMessage1', 'If the venter mentions thoughts of self harm or suicide, please escalate this session for crisis services.')}
+            </p>
+            <p className="text-sm text-white/70 leading-relaxed mb-8">
+              {t('ListenerCrisis.confirmMessage2', 'If the venter is in crisis and you do not escalate this session you will be permanently barred from this platform.')}
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowCrisisModal(false)}
+                className="flex-1 py-3 rounded-2xl glass text-white font-medium text-sm hover:bg-white/10 transition-colors"
+              >
+                {t('Common.no', 'No')}
+              </button>
+              <button
+                onClick={() => { setShowCrisisModal(false); void handleCrisisPress(); }}
+                className="flex-1 py-3 rounded-2xl glass text-white font-bold text-sm hover:bg-white/10 transition-colors"
+              >
+                {t('Common.yes', 'Yes')}
+              </button>
+            </div>
+          </GlassCard>
+        </div>
+      )}
 
       {/* End session confirmation modal */}
       {showEndModal && (

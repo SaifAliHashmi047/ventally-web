@@ -27,10 +27,12 @@ const StartChatCard = ({
   title,
   subtitle,
   onPress,
+  loading,
 }: {
   title: string;
   subtitle: string;
   onPress: () => void;
+  loading?: boolean;
 }) => (
   <GlassCard
     bordered
@@ -38,11 +40,15 @@ const StartChatCard = ({
     onClick={onPress}
     padding="lg"
     rounded="2xl"
-    className="w-full text-left cursor-pointer active:scale-[0.99] transition-transform shadow-lg shadow-black/10"
+    className={`w-full text-left transition-transform shadow-lg shadow-black/10 ${loading ? 'opacity-70 pointer-events-none' : 'cursor-pointer active:scale-[0.99]'}`}
   >
     <div className="flex items-center gap-4 lg:gap-5">
       <div className="w-14 h-14 rounded-2xl glass flex items-center justify-center flex-shrink-0 border border-white/10">
-        <MessageSquare size={24} className="text-white" />
+        {loading ? (
+          <div className="w-5 h-5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+        ) : (
+          <MessageSquare size={24} className="text-white" />
+        )}
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-base lg:text-lg font-semibold text-white mb-0.5">{title}</p>
@@ -115,8 +121,7 @@ export const VenterMessages = () => {
 
   const [recentChats, setRecentChats] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [walletBalance, setWalletBalance] = useState<any>(null);
-  const [subscription, setSubscription] = useState<any>(null);
+  const [loadingStart, setLoadingStart] = useState(false);
 
   // Fetch ONCE on mount — empty deps, no loop
   useEffect(() => {
@@ -125,20 +130,12 @@ export const VenterMessages = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [chatsRes, walletRes, subRes] = await Promise.allSettled([
+        const [chatsRes] = await Promise.allSettled([
           getConversationsRef.current(undefined, 5, 0),
-          getWalletRef.current(),
-          getSubscriptionRef.current(),
         ]);
         if (cancelled) return;
         if (chatsRes.status === 'fulfilled') {
           setRecentChats(chatsRes.value?.conversations ?? []);
-        }
-        if (walletRes.status === 'fulfilled') {
-          setWalletBalance(walletRes.value?.balance ?? null);
-        }
-        if (subRes.status === 'fulfilled') {
-          setSubscription(subRes.value?.subscription ?? null);
         }
       } catch {
         if (!cancelled) toastError(t('Common.errors.fetchingData'));
@@ -153,24 +150,35 @@ export const VenterMessages = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // ← empty: fetch once on mount only
 
-  const handleStartChat = () => {
+  const handleStartChat = async () => {
+    if (loadingStart) return;
     dispatch(setSessionType('chat'));
-    const SESSION_COST = 10;
+    setLoadingStart(true);
+    try {
+      const SESSION_COST = 10;
+      const [subRes, walletRes] = await Promise.allSettled([
+        getSubscriptionRef.current(),
+        getWalletRef.current(),
+      ]);
+      const freshSub = subRes.status === 'fulfilled' ? (subRes.value?.subscription ?? null) : null;
+      const freshWallet = walletRes.status === 'fulfilled' ? (walletRes.value?.balance ?? null) : null;
 
-    // Step 1: check subscription remaining messages
-    const remainingMessages = subscription?.remainingMessages ?? 0;
-    if (remainingMessages > 0) {
-      navigate('/venter/finding-listener', { state: { type: 'chat' } });
-      return;
-    }
-
-    // Step 2: fallback — check wallet currency balance
-    const currency = walletBalance?.currency ?? 0;
-    if (currency > SESSION_COST) {
-      navigate('/venter/finding-listener', { state: { type: 'chat' } });
-    } else {
-      dispatch(setReturnToSession(true));
-      navigate('/venter/no-credit');
+      const remainingMessages = freshSub?.remainingMessages ?? 0;
+      if (remainingMessages > 0) {
+        navigate('/venter/finding-listener', { state: { type: 'chat' } });
+        return;
+      }
+      const currency = freshWallet?.currency ?? 0;
+      if (currency > SESSION_COST) {
+        navigate('/venter/finding-listener', { state: { type: 'chat' } });
+      } else {
+        dispatch(setReturnToSession(true));
+        navigate('/venter/no-credit');
+      }
+    } catch {
+      toastError(t('Common.errors.fetchingData'));
+    } finally {
+      setLoadingStart(false);
     }
   };
 
@@ -190,7 +198,8 @@ export const VenterMessages = () => {
           <StartChatCard
             title={t('VenterMessages.startChat.title')}
             subtitle={t('VenterMessages.startChat.subtitle')}
-            onPress={handleStartChat}
+            onPress={() => void handleStartChat()}
+            loading={loadingStart}
           />
 
           <section>

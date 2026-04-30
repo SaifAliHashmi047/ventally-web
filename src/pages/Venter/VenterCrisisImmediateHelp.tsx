@@ -49,16 +49,7 @@ export const VenterCrisisImmediateHelp = () => {
   };
 
   const navigateAfterCrisis = () => {
-    if (fromCall && feedbackSessionId) {
-      navigate(`/venter/session/${feedbackSessionId}/rating`, {
-        replace: true,
-        state: { type: 'call' },
-      });
-    } else if (fromChat) {
-      navigate('/venter/home', { replace: true });
-    } else {
-      navigate('/venter/home', { replace: true });
-    }
+    navigate('/venter/home', { replace: true });
   };
 
   const handleCall988 = async () => {

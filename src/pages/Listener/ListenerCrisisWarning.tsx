@@ -1,17 +1,17 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../../components/ui/Button';
-import { GlassCard } from '../../components/ui/GlassCard';
 import { PageHeader } from '../../components/ui/PageHeader';
+import { GlassCard } from '../../components/ui/GlassCard';
+import { Button } from '../../components/ui/Button';
 import { Info, Check, ArrowRight } from 'lucide-react';
 
-export const VenterCrisisDisclaimer = () => {
+export const ListenerCrisisWarning = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const fromChat = location.state?.fromChat || false;
   const fromCall = location.state?.fromCall || false;
-  const feedbackSessionId = location.state?.feedbackSessionId;
+  const sessionId = location.state?.sessionId;
 
   const points = [
     t('Crisis.disclaimer1', 'Ventally is not a substitute for professional mental health services.'),
@@ -20,15 +20,18 @@ export const VenterCrisisDisclaimer = () => {
     t('Crisis.disclaimer4', 'Crisis resources are available 24/7 through the 988 Lifeline.'),
   ];
 
+  const handleContinue = () => {
+    navigate('/listener/crisis-escalation', {
+      replace: true,
+      state: { fromChat, fromCall, sessionId },
+    });
+  };
+
   return (
     <div className="page-wrapper animate-fade-in">
       <PageHeader
-        title={t('Crisis.title', 'Crisis Support')}
-        onBack={() => {
-
-          navigate(-1);
-
-        }}
+        title={t('ListenerCrisis.title', 'Is The Venter In Crisis')}
+        onBack={() => navigate(-1)}
       />
 
       <div className="flex flex-col items-center text-center mb-8">
@@ -60,7 +63,7 @@ export const VenterCrisisDisclaimer = () => {
           size="lg"
           fullWidth
           rightIcon={<ArrowRight size={20} />}
-          onClick={() => navigate('/venter/crisis-immediate-help', { replace: true, state: { fromChat, fromCall, feedbackSessionId } })}
+          onClick={handleContinue}
         >
           {t('Common.continue', 'Continue')}
         </Button>
@@ -69,9 +72,9 @@ export const VenterCrisisDisclaimer = () => {
           variant="glass"
           size="lg"
           fullWidth
-          onClick={() => navigate('/venter/home')}
+          onClick={() => navigate(-1)}
         >
-          {t('Common.back', 'Back to Home')}
+          {t('Common.back', 'Back')}
         </Button>
       </div>
     </div>

@@ -42,6 +42,7 @@ export const ListenerRequests = () => {
         );
 
         navigate(`/listener/call/${roomId}`, {
+          replace: true,
           state: {
             call: {
               ...call,
@@ -74,7 +75,7 @@ export const ListenerRequests = () => {
       );
       dispatch(removeRequest(req.id));
 
-      navigate(`/listener/chat/${conversationId}`, { state: { chat: chatData } });
+      navigate(`/listener/chat/${conversationId}`, { replace: true, state: { chat: chatData } });
     } catch (e: any) {
       toastError(e?.error || t('Common.somethingWentWrong'));
     }

@@ -40,10 +40,9 @@ export function AgoraProvider({ children }: { children: ReactNode }) {
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
-    clientRef.current = client;
-
+  // Attach the three RTC event listeners to a client instance.
+  // Uses refs so the handlers always read the latest clientRef.
+  const attachListeners = useCallback((client: IAgoraRTCClient) => {
     const onPublished = async (user: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => {
       if (mediaType !== 'audio' || !clientRef.current) return;
       try {
@@ -58,9 +57,9 @@ export function AgoraProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    const onUnpublished = (user: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => {
+    const onUnpublished = (_user: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => {
       if (mediaType !== 'audio') return;
-      const track = user.audioTrack;
+      const track = _user.audioTrack;
       if (track) {
         remoteTracksRef.current.delete(track);
         try { track.stop(); } catch { /* ignore */ }
@@ -75,35 +74,51 @@ export function AgoraProvider({ children }: { children: ReactNode }) {
     client.on('user-published', onPublished);
     client.on('user-unpublished', onUnpublished);
     client.on('user-left', onUserLeft);
+  }, []);
 
+  // Create a fresh client and wire up its listeners
+  const createFreshClient = useCallback(() => {
+    const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
+    attachListeners(client);
+    clientRef.current = client;
+    return client;
+  }, [attachListeners]);
+
+  useEffect(() => {
+    createFreshClient();
     return () => {
-      client.off('user-published', onPublished);
-      client.off('user-unpublished', onUnpublished);
-      client.off('user-left', onUserLeft);
+      const client = clientRef.current;
+      if (!client) return;
       void (async () => {
         try {
-          if (localTrackRef.current && client.connectionState !== 'DISCONNECTED') {
-            await client.unpublish();
+          if (localTrackRef.current) {
+            try { await client.unpublish(); } catch { /* ignore */ }
             localTrackRef.current.stop();
             localTrackRef.current.close();
             localTrackRef.current = null;
           }
           remoteTracksRef.current.forEach((t) => { try { t.stop(); } catch { /* ignore */ } });
           remoteTracksRef.current.clear();
-          if (client.connectionState !== 'DISCONNECTED') await client.leave();
+          if (client.connectionState !== 'DISCONNECTED') {
+            await client.leave();
+          }
         } catch { /* ignore */ }
         client.removeAllListeners();
         clientRef.current = null;
       })();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const joinChannel = useCallback(async (params: JoinChannelParams) => {
     const channel = params.channelName?.trim();
     if (!channel) { setError('Channel name is required'); return; }
-    const client = clientRef.current;
-    // Guard: don't join if already joined or joining
-    if (!client || joiningRef.current || isJoinedRef.current) return;
+
+    // Re-create client if it was destroyed after a previous leaveChannel
+    if (!clientRef.current) createFreshClient();
+    const client = clientRef.current!;
+
+    if (joiningRef.current || isJoinedRef.current) return;
 
     joiningRef.current = true;
     setError(null);
@@ -135,29 +150,41 @@ export function AgoraProvider({ children }: { children: ReactNode }) {
     } finally {
       joiningRef.current = false;
     }
-  }, [appId]);
+  }, [appId, createFreshClient]);
 
   const leaveChannel = useCallback(async () => {
     const client = clientRef.current;
     if (!client) return;
+
+    // Mark as not joined immediately so any concurrent checks see the correct state
+    isJoinedRef.current = false;
+    joiningRef.current = false;
+    setIsJoined(false);
+    setIsConnecting(false);
+
     try {
       if (localTrackRef.current) {
-        await client.unpublish();
+        try { await client.unpublish(); } catch { /* ignore */ }
         localTrackRef.current.stop();
         localTrackRef.current.close();
         localTrackRef.current = null;
       }
       remoteTracksRef.current.forEach((t) => { try { t.stop(); } catch { /* ignore */ } });
       remoteTracksRef.current.clear();
-      if (client.connectionState !== 'DISCONNECTED') await client.leave();
+      if (client.connectionState !== 'DISCONNECTED') {
+        await client.leave();
+      }
     } catch (e) {
       console.error('[AgoraContext] leave error:', e);
-    } finally {
-      isJoinedRef.current = false;
-      setIsJoined(false);
-      setIsConnecting(false);
     }
-  }, []);
+
+    // Fully destroy the old client so it stops all internal stats/heartbeat traffic
+    client.removeAllListeners();
+    clientRef.current = null;
+
+    // Spin up a fresh client ready for the next session
+    createFreshClient();
+  }, [createFreshClient]);
 
   const toggleMute = useCallback((mute: boolean) => {
     try { localTrackRef.current?.setMuted(mute); } catch (e) {

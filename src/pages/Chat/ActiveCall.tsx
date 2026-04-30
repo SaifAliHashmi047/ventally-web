@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import type { RootState } from '../../store/store';
 import { endCall } from '../../store/slices/callSlice';
-import { Mic, MicOff, Phone, AlertTriangle } from 'lucide-react';
+import { Mic, MicOff, Phone, AlertTriangle, PhoneCall, MessageSquare } from 'lucide-react';
 import { GlassCard } from '../../components/ui/GlassCard';
 import apiInstance from '../../api/apiInstance';
 import socketService from '../../api/socketService';
@@ -67,6 +67,7 @@ export const ActiveCall = () => {
   const [muted, setMuted] = useState(false);
   const [duration, setDuration] = useState(0);
   const [showEndModal, setShowEndModal] = useState(false);
+  const [showCrisisOverlay, setShowCrisisOverlay] = useState(false);
   const callStatus: 'connecting' | 'connected' | 'ended' = isJoined ? 'connected' : 'connecting';
 
   // Call duration timer
@@ -128,14 +129,15 @@ export const ActiveCall = () => {
     navigate(`/${role}/session/${feedbackSessionId}/${firstStep}`, { replace: true, state: { type: 'call' } });
   };
 
-  const handleCrisisPress = () => {
-    // Mobile app navigates directly to disclaimer (skips warning) when from a call
-    navigate('/venter/crisis-disclaimer', {
-      state: {
-        fromCall: true,
-        feedbackSessionId,
-      },
-    });
+  const handleCrisis988 = async (mode: 'call' | 'text') => {
+    setShowCrisisOverlay(false);
+    dispatch(endCall());
+    await leaveChannel();
+    try {
+      if (resolvedCallId) await apiInstance.post(`calls/${resolvedCallId}/end`);
+    } catch { /* ignore */ }
+    window.location.href = mode === 'call' ? 'tel:988' : 'sms:988';
+    setTimeout(() => navigate('/venter/home', { replace: true }), 1000);
   };
 
   return (
@@ -202,8 +204,8 @@ export const ActiveCall = () => {
         {role === 'venter' && (
           <div className="flex flex-col items-center gap-2">
             <button
-              onClick={handleCrisisPress}
-              className="w-14 h-14 rounded-full bg-error flex items-center justify-center transition-all hover:opacity-90"
+              onClick={() => setShowCrisisOverlay(true)}
+              className="w-14 h-14 rounded-full bg-primary flex items-center justify-center transition-all hover:opacity-90"
             >
               <AlertTriangle size={22} className="text-white" />
             </button>
@@ -211,6 +213,45 @@ export const ActiveCall = () => {
           </div>
         )}
       </GlassCard>
+
+      {/* Crisis instant-help overlay */}
+      {showCrisisOverlay && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="glass w-full max-w-sm rounded-3xl p-8 text-center border border-white/10">
+            <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-6">
+              <AlertTriangle size={30} className="text-primary" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3">
+              {t('Crisis.safetyTitle', 'Your safety is our priority.')}
+            </h3>
+            <p className="text-sm text-white/70 leading-relaxed mb-8">
+              {t('Crisis.safetyMessage', 'Please contact emergency services right away.')}
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => void handleCrisis988('call')}
+                className="w-full py-4 rounded-2xl bg-primary text-white font-bold text-base flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+              >
+                <PhoneCall size={20} />
+                {t('Crisis.call988Now', 'CALL 988 NOW')}
+              </button>
+              <button
+                onClick={() => void handleCrisis988('text')}
+                className="w-full py-4 rounded-2xl border border-white/20 text-white font-semibold text-base flex items-center justify-center gap-2 hover:bg-white/10 transition-colors"
+              >
+                <MessageSquare size={20} />
+                {t('Crisis.text988', 'TEXT 988')}
+              </button>
+              <button
+                onClick={() => setShowCrisisOverlay(false)}
+                className="w-full py-3 text-white/50 text-sm hover:text-white/80 transition-colors"
+              >
+                {t('Crisis.backToCall', 'Back to Call')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* End session confirmation modal */}
       {showEndModal && (

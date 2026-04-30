@@ -128,6 +128,7 @@ export const FindingListener = () => {
       hasNavigated.current = true;
       const callId = data.id || data.callId || 'active';
       navigate(`/venter/call/${callId}`, {
+        replace: true,
         state: {
           call: {
             ...data,

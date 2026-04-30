@@ -31,6 +31,7 @@ import { ListenerActiveCall } from '../pages/Listener/ListenerActiveCall';
 import { PayoutMethodScreen } from '../pages/Listener/PayoutMethodScreen';
 import { LinkBankAccountScreen } from '../pages/Listener/LinkBankAccountScreen';
 import { ListenerCrisisEscalation } from '../pages/Listener/ListenerCrisisEscalation';
+import { ListenerCrisisWarning } from '../pages/Listener/ListenerCrisisWarning';
 import { ListenerChangeAccountType } from '../pages/Listener/ListenerChangeAccountType';
 import { ListenerNotificationsSettings } from '../pages/Listener/ListenerNotificationsSettings';
 import { ListenerSessionFeedback } from '../pages/Listener/ListenerSessionFeedback';
@@ -100,6 +101,7 @@ export const ListenerRouter = () => {
         <Route path="profile/special-topics" element={<SpecialTopicsSelect />} />
         <Route path="payout-method" element={<PayoutMethodScreen />} />
         <Route path="bank-account" element={<LinkBankAccountScreen />} />
+        <Route path="crisis-warning" element={<ListenerCrisisWarning />} />
         <Route path="crisis-escalation" element={<ListenerCrisisEscalation />} />
         <Route path="change-account-type" element={<ListenerChangeAccountType />} />
 

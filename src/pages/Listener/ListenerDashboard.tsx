@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -56,22 +56,34 @@ export const ListenerDashboard = () => {
   }, []);
 
   // Silently refresh presence whenever the user focuses this screen (mount + window focus + tab visible)
+  const presenceRunningRef = useRef(false);
+  const presenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     const refreshPresence = async () => {
+      if (presenceRunningRef.current) return;
+      presenceRunningRef.current = true;
       try { await goOffline(); } catch { /* ignore — always proceed to online */ }
       try {
         await goOnline();
         dispatch(setAvailability(true));
       } catch { /* silent */ }
+      presenceRunningRef.current = false;
     };
 
-    const onFocus = () => refreshPresence();
-    const onVisible = () => { if (document.visibilityState === 'visible') refreshPresence(); };
+    const scheduleRefresh = () => {
+      if (presenceTimerRef.current) clearTimeout(presenceTimerRef.current);
+      presenceTimerRef.current = setTimeout(refreshPresence, 150);
+    };
 
-    refreshPresence();
+    const onFocus = () => scheduleRefresh();
+    const onVisible = () => { if (document.visibilityState === 'visible') scheduleRefresh(); };
+
+    scheduleRefresh();
     window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onVisible);
     return () => {
+      if (presenceTimerRef.current) clearTimeout(presenceTimerRef.current);
       window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onVisible);
     };

@@ -132,8 +132,9 @@ export const SessionFeedback = () => {
             <img
               src={heartIcon}
               alt="heart"
-              className="w-7 h-7 object-contain"
-              style={{ filter: 'brightness(0) saturate(100%) invert(40%) sepia(80%) saturate(600%) hue-rotate(320deg) brightness(110%)' }}
+              className="w-7 h-7 object-contain "
+              color='white'
+              // style={{ filter: 'brightness(0) saturate(100%) invert(40%) sepia(80%) saturate(600%) hue-rotate(320deg) brightness(110%)' }}
             />
           </div>
         </GlassCard>
