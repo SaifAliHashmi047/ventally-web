@@ -1,7 +1,7 @@
 
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
-import { BrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -9,6 +9,32 @@ import { store, persistor } from './store/store'
 import './locales/i18n'
 import './index.css'
 import App from './App.tsx'
+
+// createBrowserRouter (data router) is required for useBlocker to work.
+// All existing <Routes>/<Route> inside AppRouter continue to work unchanged.
+const router = createBrowserRouter([
+  {
+    path: '*',
+    element: (
+      <>
+        <App />
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+          style={{ zIndex: 99999 }}
+        />
+      </>
+    ),
+  },
+]);
 
 const rootElement = document.getElementById('root');
 if (rootElement) {
@@ -22,22 +48,7 @@ if (rootElement) {
           </div>
         }
       >
-        <BrowserRouter>
-          <App />
-          <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
-            style={{ zIndex: 99999 }}
-          />
-        </BrowserRouter>
+        <RouterProvider router={router} />
       </PersistGate>
     </Provider>
   );

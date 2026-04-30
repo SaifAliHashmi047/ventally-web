@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, useBlocker } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../locales/i18n';
@@ -40,6 +40,20 @@ export const ChatScreen = () => {
   const [showCrisisOverlay, setShowCrisisOverlay] = useState(false);
   const [showListenerCrisisModal, setShowListenerCrisisModal] = useState(false);
   const [isChatActive, setIsChatActive] = useState(true);
+
+  // Block ALL navigation (back button, tab nav, links) while the chat is active.
+  // useBlocker intercepts at the router level before any component unmounts,
+  // which fixes the mobile issue where history.forward() was unreliable.
+  const isChatActiveRedux = useSelector((state: RootState) => state.call.isChatActive);
+  const isChatActiveRef = useRef(isChatActiveRedux);
+  isChatActiveRef.current = isChatActiveRedux;
+  const blocker = useBlocker(() => isChatActiveRef.current);
+  useEffect(() => {
+    if (blocker.state === 'blocked') {
+      blocker.reset();
+      setShowEndModal(true);
+    }
+  }, [blocker.state]);
 
   // Get other participant info
   const getOtherName = () => {

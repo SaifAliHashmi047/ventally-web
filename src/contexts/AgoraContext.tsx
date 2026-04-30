@@ -35,13 +35,29 @@ export function AgoraProvider({ children }: { children: ReactNode }) {
   const remoteTracksRef = useRef<Set<IRemoteAudioTrack>>(new Set());
   const joiningRef = useRef(false);
   const isJoinedRef = useRef(false);
+  // Stores the last successful join params so we can auto-rejoin after mobile suspension
+  const lastJoinParamsRef = useRef<JoinChannelParams | null>(null);
 
   const [isJoined, setIsJoined] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Attach the three RTC event listeners to a client instance.
-  // Uses refs so the handlers always read the latest clientRef.
+  // iOS Safari locks the AudioContext until a user gesture. This unlocks it.
+  const unlockAudioContext = useCallback(() => {
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContextClass) return;
+    try {
+      const ctx = new AudioContextClass();
+      if (ctx.state === 'suspended') void ctx.resume();
+      const buf = ctx.createBuffer(1, 1, 22050);
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      src.connect(ctx.destination);
+      src.start(0);
+    } catch { /* ignore */ }
+  }, []);
+
+  // Attach RTC event listeners to a client instance.
   const attachListeners = useCallback((client: IAgoraRTCClient) => {
     const onPublished = async (user: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => {
       if (mediaType !== 'audio' || !clientRef.current) return;
@@ -50,7 +66,7 @@ export function AgoraProvider({ children }: { children: ReactNode }) {
         const track = user.audioTrack;
         if (track) {
           remoteTracksRef.current.add(track);
-          await track.play();
+          track.play();
         }
       } catch (e) {
         console.error('[AgoraContext] subscribe error:', e);
@@ -71,14 +87,34 @@ export function AgoraProvider({ children }: { children: ReactNode }) {
       if (track) remoteTracksRef.current.delete(track);
     };
 
+    // Sync our state with the real Agora connection state.
+    // On mobile, iOS/Android can drop the WebRTC connection when backgrounded —
+    // this ensures our isJoined state reflects reality, not stale refs.
+    const onConnectionStateChange = (curState: string) => {
+      console.log('[AgoraContext] connection state ->', curState);
+      if (curState === 'DISCONNECTED') {
+        isJoinedRef.current = false;
+        joiningRef.current = false;
+        setIsJoined(false);
+        setIsConnecting(false);
+      } else if (curState === 'CONNECTED') {
+        isJoinedRef.current = true;
+        setIsJoined(true);
+        setIsConnecting(false);
+      } else if (curState === 'CONNECTING' || curState === 'RECONNECTING') {
+        setIsConnecting(true);
+      }
+    };
+
     client.on('user-published', onPublished);
     client.on('user-unpublished', onUnpublished);
     client.on('user-left', onUserLeft);
+    client.on('connection-state-change', onConnectionStateChange);
   }, []);
 
-  // Create a fresh client and wire up its listeners
+  // h264 is required for iOS Safari — VP8 is not supported on iOS at all.
   const createFreshClient = useCallback(() => {
-    const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
+    const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'h264' });
     attachListeners(client);
     clientRef.current = client;
     return client;
@@ -99,9 +135,7 @@ export function AgoraProvider({ children }: { children: ReactNode }) {
           }
           remoteTracksRef.current.forEach((t) => { try { t.stop(); } catch { /* ignore */ } });
           remoteTracksRef.current.clear();
-          if (client.connectionState !== 'DISCONNECTED') {
-            await client.leave();
-          }
+          if (client.connectionState !== 'DISCONNECTED') await client.leave();
         } catch { /* ignore */ }
         client.removeAllListeners();
         clientRef.current = null;
@@ -114,23 +148,48 @@ export function AgoraProvider({ children }: { children: ReactNode }) {
     const channel = params.channelName?.trim();
     if (!channel) { setError('Channel name is required'); return; }
 
-    // Re-create client if it was destroyed after a previous leaveChannel
+    // Unlock AudioContext on iOS — must be inside a user-gesture call stack.
+    unlockAudioContext();
+
     if (!clientRef.current) createFreshClient();
     const client = clientRef.current!;
 
-    if (joiningRef.current || isJoinedRef.current) return;
+    // Guard: skip only if we are ACTUALLY connected — not just if the ref says so.
+    // On mobile, the OS can drop the WebRTC connection while our ref still says joined.
+    const actuallyConnected = isJoinedRef.current && client.connectionState === 'CONNECTED';
+    if (joiningRef.current || actuallyConnected) return;
+
+    // If we think we're joined but Agora says disconnected, clean up first
+    if (isJoinedRef.current && client.connectionState === 'DISCONNECTED') {
+      isJoinedRef.current = false;
+      joiningRef.current = false;
+      if (localTrackRef.current) {
+        try { localTrackRef.current.stop(); localTrackRef.current.close(); } catch { /* ignore */ }
+        localTrackRef.current = null;
+      }
+    }
 
     joiningRef.current = true;
     setError(null);
     setIsConnecting(true);
+    setIsJoined(false);
 
     try {
       const uidArg = params.uid === undefined || params.uid === null ? null : Number(params.uid);
       await client.join(appId, channel, params.token || null, uidArg);
-      const mic = await AgoraRTC.createMicrophoneAudioTrack();
+      // Mobile-friendly mic constraints: AEC/ANS/AGC help with earpiece feedback.
+      // Permission should already be granted from the button-click handler upstream,
+      // but createMicrophoneAudioTrack will surface a clear error if not.
+      const mic = await AgoraRTC.createMicrophoneAudioTrack({
+        encoderConfig: 'speech_standard',
+        AEC: true,
+        ANS: true,
+        AGC: true,
+      });
       localTrackRef.current = mic;
       await client.publish([mic]);
       isJoinedRef.current = true;
+      lastJoinParamsRef.current = params; // save for auto-rejoin on visibility restore
       setIsJoined(true);
       setIsConnecting(false);
     } catch (e) {
@@ -150,13 +209,43 @@ export function AgoraProvider({ children }: { children: ReactNode }) {
     } finally {
       joiningRef.current = false;
     }
-  }, [appId, createFreshClient]);
+  }, [appId, createFreshClient, unlockAudioContext]);
+
+  // Auto-rejoin when the page returns to the foreground after mobile suspension.
+  // iOS/Android kill WebRTC connections when the browser tab is backgrounded.
+  // When the user returns, we detect the dead connection and rejoin automatically.
+  useEffect(() => {
+    const onVisible = async () => {
+      if (document.visibilityState !== 'visible') return;
+      const params = lastJoinParamsRef.current;
+      if (!params || joiningRef.current) return;
+
+      // Small delay to let iOS restore the audio session before we try to join
+      await new Promise<void>((r) => setTimeout(r, 600));
+
+      const client = clientRef.current;
+      if (!client) return;
+
+      if (client.connectionState === 'DISCONNECTED') {
+        console.log('[AgoraContext] tab restored with dead connection — rejoining');
+        void joinChannel(params);
+      } else if (client.connectionState === 'CONNECTED' && !isJoinedRef.current) {
+        // Connection alive but state out of sync — re-sync
+        isJoinedRef.current = true;
+        setIsJoined(true);
+        setIsConnecting(false);
+      }
+    };
+
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
+  }, [joinChannel]);
 
   const leaveChannel = useCallback(async () => {
     const client = clientRef.current;
     if (!client) return;
 
-    // Mark as not joined immediately so any concurrent checks see the correct state
+    lastJoinParamsRef.current = null; // clear — no auto-rejoin after explicit leave
     isJoinedRef.current = false;
     joiningRef.current = false;
     setIsJoined(false);
@@ -171,18 +260,13 @@ export function AgoraProvider({ children }: { children: ReactNode }) {
       }
       remoteTracksRef.current.forEach((t) => { try { t.stop(); } catch { /* ignore */ } });
       remoteTracksRef.current.clear();
-      if (client.connectionState !== 'DISCONNECTED') {
-        await client.leave();
-      }
+      if (client.connectionState !== 'DISCONNECTED') await client.leave();
     } catch (e) {
       console.error('[AgoraContext] leave error:', e);
     }
 
-    // Fully destroy the old client so it stops all internal stats/heartbeat traffic
     client.removeAllListeners();
     clientRef.current = null;
-
-    // Spin up a fresh client ready for the next session
     createFreshClient();
   }, [createFreshClient]);
 

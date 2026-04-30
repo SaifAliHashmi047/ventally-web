@@ -2,13 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { Phone, ChevronRight } from 'lucide-react';
+import { Phone } from 'lucide-react';
 import { useCalls } from '../../api/hooks/useCalls';
 import { useWallet } from '../../api/hooks/useWallet';
 import { setSessionType, setReturnToSession } from '../../store/slices/callSlice';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { toastError } from '../../utils/toast';
+import { useMicPermission } from '../../hooks/useMicPermission';
 
 // ─── Helpers (aligned with VenterMessages / chat time strings) ───────────────
 const formatTimeAgo = (dateStr: string, t: (key: string, options?: any) => string) => {
@@ -58,24 +59,20 @@ const StartCallCard = ({
   </GlassCard>
 );
 
-// ─── Call entry row (matches ChatEntry list-row pattern) ─────────────────────
+// ─── Call entry row — display only, no navigation ────────────────────────────
 const CallEntry = ({
   name,
   timeAgo,
   secondaryLine,
   isLast,
-  onPress,
 }: {
   name: string;
   timeAgo: string;
   secondaryLine: string;
   isLast?: boolean;
-  onPress: () => void;
 }) => (
-  <button
-    type="button"
-    onClick={onPress}
-    className={`w-full text-left flex items-center gap-3 px-4 sm:px-5 py-4 transition-colors hover:bg-white/[0.04] ${
+  <div
+    className={`w-full flex items-center gap-3 px-4 sm:px-5 py-4 ${
       isLast !== true ? 'border-b border-white/8' : ''
     }`}
   >
@@ -87,12 +84,9 @@ const CallEntry = ({
         <p className="text-sm font-medium text-white truncate">{name}</p>
         <span className="text-xs text-white/60 flex-shrink-0 tabular-nums">{timeAgo}</span>
       </div>
-      <div className="flex items-center justify-between gap-2">
-        <p className="text-xs text-white/70 truncate">{secondaryLine}</p>
-        <ChevronRight size={16} className="text-white flex-shrink-0" />
-      </div>
+      <p className="text-xs text-white/70 truncate">{secondaryLine}</p>
     </div>
-  </button>
+  </div>
 );
 
 // ─── Main screen ─────────────────────────────────────────────────────────────
@@ -106,6 +100,8 @@ export const VenterCall = () => {
   const getCallsRef = useRef(callsHook.getCalls);
   const getWalletRef = useRef(walletHook.getWallet);
   const getSubscriptionRef = useRef(walletHook.getMySubscription);
+
+  const { ensureMicPermission, MicPermissionModal } = useMicPermission();
 
   const [recentCalls, setRecentCalls] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -142,6 +138,12 @@ export const VenterCall = () => {
   const handleStartCall = async () => {
     if (loadingStart) return;
     dispatch(setSessionType('call'));
+
+    // Show permission modal / trigger browser dialog while inside the button-click
+    // gesture — mobile browsers block getUserMedia if called outside a user action.
+    const micGranted = await ensureMicPermission();
+    if (!micGranted) return;
+
     setLoadingStart(true);
     try {
       const SESSION_COST = 10;
@@ -171,13 +173,6 @@ export const VenterCall = () => {
     }
   };
 
-  const handleCallRowPress = (call: any) => {
-    if (call?.id) {
-      navigate(`/venter/chat/${call.id}`, { state: { call } });
-    } else {
-      navigate('/venter/all-calls');
-    }
-  };
 
   return (
     <div className="page-wrapper page-wrapper--wide animate-fade-in">
@@ -227,7 +222,6 @@ export const VenterCall = () => {
                     timeAgo={formatTimeAgo(call.createdAt || call.startedAt, t)}
                     secondaryLine={t('VenterCall.callEntry.lastCall')}
                     isLast={index === recentCalls.length - 1}
-                    onPress={() => handleCallRowPress(call)}
                   />
                 ))}
               </GlassCard>
@@ -245,6 +239,7 @@ export const VenterCall = () => {
           )}
         </div>
       </div>
+      <MicPermissionModal />
     </div>
   );
 };

@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { useNavigate, useParams, useLocation, useBlocker } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../store/store';
@@ -27,6 +27,7 @@ export const ListenerActiveCall = () => {
   const dispatch = useDispatch();
   const { roomId } = useParams<{ roomId: string }>();
   const session = useSelector((s: RootState) => s.session);
+  const callStartTime = useSelector((s: RootState) => s.call.startTime);
 
   const sessionId = useMemo(() => {
     const d = session.data as { id?: string; callId?: string } | undefined;
@@ -47,13 +48,19 @@ export const ListenerActiveCall = () => {
   }, [location.state, session.data]);
 
   const { joinChannel, leaveChannel, toggleMute, isJoined } = useAgoraContext();
+  const isCallActive = useSelector((s: RootState) => s.call.isActive);
+  const isCallActiveRef = useRef(isCallActive);
+  isCallActiveRef.current = isCallActive;
 
-  const [seconds, setSeconds] = useState(0);
+  const [, setTick] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [showEndModal, setShowEndModal] = useState(false);
   const [showCrisisModal, setShowCrisisModal] = useState(false);
 
   const callStatus: 'connecting' | 'connected' = isJoined ? 'connected' : 'connecting';
+
+  // Elapsed computed from Redux startTime — survives navigation/remount
+  const seconds = callStartTime ? Math.floor((Date.now() - callStartTime) / 1000) : 0;
 
   // Join Agora — no cleanup leaveChannel so audio persists on navigation
   useEffect(() => {
@@ -70,11 +77,23 @@ export const ListenerActiveCall = () => {
     toggleMute(isMuted);
   }, [isMuted, toggleMute]);
 
+  // Tick every second to re-render the formatted time
   useEffect(() => {
     if (!isJoined) return;
-    const timer = setInterval(() => setSeconds((prev) => prev + 1), 1000);
+    const timer = setInterval(() => setTick((n) => n + 1), 1000);
     return () => clearInterval(timer);
   }, [isJoined]);
+
+  // Block ALL navigation (back button, tab nav, links) while the call is active.
+  // useBlocker intercepts at the router level before any component unmounts,
+  // which fixes the mobile issue where history.forward() was unreliable.
+  const blocker = useBlocker(() => isCallActiveRef.current);
+  useEffect(() => {
+    if (blocker.state === 'blocked') {
+      blocker.reset();
+      setShowEndModal(true);
+    }
+  }, [blocker.state]);
 
   useEffect(() => {
     let cancelled = false;

@@ -7,7 +7,6 @@ import { Button } from '../../components/ui/Button';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { useWallet } from '../../api/hooks/useWallet';
 import { ArrowUpRight, ArrowDownLeft, DollarSign } from 'lucide-react';
-import { Badge } from '../../components/ui/Badge';
 import i18n from '../../locales/i18n';
 
 export const VenterTransactions = () => {
@@ -60,7 +59,6 @@ export const VenterTransactions = () => {
                     <p className={`text-sm font-bold ${isCredit ? 'text-success' : 'text-error'}`}>
                       {isCredit ? '+' : '-'}${Math.abs(tx.amountCurrency ?? 0).toFixed(2)}
                     </p>
-                    <Badge variant={tx.status === 'success' ? 'success' : 'error'} size="sm" className="mt-1">{tx.status}</Badge>
                   </div>
                 </div>
               );

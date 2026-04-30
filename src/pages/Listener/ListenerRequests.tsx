@@ -12,6 +12,7 @@ import { setSessionInfo } from '../../store/slices/sessionSlice';
 import type { RootState } from '../../store/store';
 import apiInstance from '../../api/apiInstance';
 import { toastError } from '../../utils/toast';
+import { useMicPermission } from '../../hooks/useMicPermission';
 import { Phone, MessageSquare, User } from 'lucide-react';
 
 export const ListenerRequests = () => {
@@ -21,7 +22,16 @@ export const ListenerRequests = () => {
   // Get requests from Redux store (populated by socket)
   const requests = useSelector((state: RootState) => state.listener.requests);
 
+  const { ensureMicPermission, MicPermissionModal } = useMicPermission();
+
   const handleAccept = async (req: (typeof requests)[number]) => {
+    // For call requests, show the mic permission modal while still inside the
+    // button-click gesture so mobile browsers trigger the native dialog.
+    if (req.type === 'call') {
+      const micGranted = await ensureMicPermission();
+      if (!micGranted) return;
+    }
+
     try {
       if (req.type === 'call') {
         const res = await apiInstance.post(`calls/${req.id}/accept`);
@@ -144,6 +154,7 @@ export const ListenerRequests = () => {
           ))}
         </div>
       )}
+      <MicPermissionModal />
     </div>
   );
 };
