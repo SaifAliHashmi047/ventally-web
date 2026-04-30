@@ -22,6 +22,8 @@ export const ListenerDashboard = () => {
   const isAvailable = useSelector((state: RootState) => (state.listener as any).isAvailable as boolean);
   const { goOnline, goOffline } = useAvailability();
 
+  const AVAILABILITY_KEY = 'listener_availability_preference';
+
   const [loadingToggle, setLoadingToggle] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -31,9 +33,11 @@ export const ListenerDashboard = () => {
       if (isAvailable) {
         await goOffline();
         dispatch(setAvailability(false));
+        localStorage.setItem(AVAILABILITY_KEY, 'false');
       } else {
         await goOnline();
         dispatch(setAvailability(true));
+        localStorage.setItem(AVAILABILITY_KEY, 'true');
       }
     } catch (e: any) {
       toastError(e?.error || t('Common.somethingWentWrong'));
@@ -63,10 +67,17 @@ export const ListenerDashboard = () => {
     const refreshPresence = async () => {
       if (presenceRunningRef.current) return;
       presenceRunningRef.current = true;
-      try { await goOffline(); } catch { /* ignore — always proceed to online */ }
       try {
-        await goOnline();
-        dispatch(setAvailability(true));
+        // 1. Read the user's saved preference from localStorage (default online)
+        const stored = localStorage.getItem(AVAILABILITY_KEY);
+        const wantsOnline = stored === null ? true : stored === 'true';
+        // 2. Enforce that preference by calling the matching API
+        if (wantsOnline) {
+          await goOnline();
+        } else {
+          await goOffline();
+        }
+        dispatch(setAvailability(wantsOnline));
       } catch { /* silent */ }
       presenceRunningRef.current = false;
     };
