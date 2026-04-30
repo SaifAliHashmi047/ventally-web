@@ -96,7 +96,7 @@ export const ListenerCrisisEscalation = () => {
       {modal !== null && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
-          style={{ background: 'rgba(0,0,0,0.88)' }}
+          style={{ background: 'rgba(0,0,0,0.8)' }}
         >
           <GlassCard
           style={{
