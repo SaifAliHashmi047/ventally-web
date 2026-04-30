@@ -9,12 +9,14 @@ import { Phone, MessageSquare, ArrowRight, Clock } from 'lucide-react';
 import { endChatSession, endCall } from '../../store/slices/callSlice';
 import apiInstance from '../../api/apiInstance';
 import socketService from '../../api/socketService';
+import { useAgoraContext } from '../../contexts/AgoraContext';
 
 export const VenterCrisisImmediateHelp = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const { leaveChannel } = useAgoraContext();
   const activeConversationId = useSelector((state: RootState) => state.call.activeConversationId);
   const isChatActive = useSelector((state: RootState) => state.call.isChatActive);
   const fromChat = location.state?.fromChat || false;
@@ -34,6 +36,7 @@ export const VenterCrisisImmediateHelp = () => {
     }
     // End call if coming from call
     if (fromCall && feedbackSessionId) {
+      dispatch(endCall()); // dispatch first so global handler skips the echo
       try {
         await socketService.connect();
         socketService.emit('call:end', { callId: feedbackSessionId });
@@ -41,7 +44,7 @@ export const VenterCrisisImmediateHelp = () => {
       } catch (e) {
         console.log('[Crisis] End call error (non-blocking):', e);
       }
-      dispatch(endCall());
+      try { await leaveChannel(); } catch { /* ignore */ }
     }
   };
 

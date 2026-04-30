@@ -1,14 +1,15 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../store/store';
+import { endCall } from '../../store/slices/callSlice';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Mic, MicOff, Phone, AlertTriangle } from 'lucide-react';
 import socketService from '../../api/socketService';
 import apiInstance from '../../api/apiInstance';
+import { useAgoraContext } from '../../contexts/AgoraContext';
 import {
-  useAgoraWeb,
   joinParamsFromCallPayload,
   type AgoraCallPayload,
 } from '../../hooks/useAgoraWeb';
@@ -23,6 +24,7 @@ export const ListenerActiveCall = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const { roomId } = useParams<{ roomId: string }>();
   const session = useSelector((s: RootState) => s.session);
 
@@ -44,25 +46,24 @@ export const ListenerActiveCall = () => {
     return joinParamsFromCallPayload(fromNav ?? fromSession ?? undefined);
   }, [location.state, session.data]);
 
-  const { joinChannel, leaveChannel, toggleMute, isJoined } = useAgoraWeb();
+  const { joinChannel, leaveChannel, toggleMute, isJoined } = useAgoraContext();
 
   const [seconds, setSeconds] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [showEndModal, setShowEndModal] = useState(false);
-  const exitedRef = useRef(false);
 
   const callStatus: 'connecting' | 'connected' = isJoined ? 'connected' : 'connecting';
 
+  // Join Agora — no cleanup leaveChannel so audio persists on navigation
   useEffect(() => {
     if (!agoraJoinParams) {
       console.warn('[ListenerActiveCall] Missing channel/token for Agora.');
       return;
     }
     void joinChannel(agoraJoinParams);
-    return () => {
-      void leaveChannel();
-    };
-  }, [agoraJoinParams, joinChannel, leaveChannel]);
+    // intentionally no leaveChannel in cleanup
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     toggleMute(isMuted);
@@ -92,19 +93,20 @@ export const ListenerActiveCall = () => {
         console.error('[ListenerActiveCall] socket connect failed:', e);
       }
     })();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [session.sessionId, session.requestId, session.data]);
 
-  const goToPostCallFlow = useCallback(async () => {
-    if (exitedRef.current) return;
-    exitedRef.current = true;
+  const handleEndCall = async () => {
+    setShowEndModal(false);
+    // Dispatch immediately so the global call:ended handler skips this event
+    dispatch(endCall());
     try {
-      await leaveChannel();
-    } catch {
-      /* ignore */
-    }
+      if (sessionId) {
+        socketService.emit('call:end', { callId: sessionId });
+        await apiInstance.post(`calls/${sessionId}/end`);
+      }
+    } catch { /* ignore */ }
+    await leaveChannel();
     if (!sessionId) {
       navigate('/listener/home', { replace: true });
       return;
@@ -113,48 +115,23 @@ export const ListenerActiveCall = () => {
       replace: true,
       state: { type: 'call' },
     });
-  }, [leaveChannel, navigate, sessionId]);
-
-  const handleEndCall = async () => {
-    setShowEndModal(false);
-    try {
-      if (sessionId) {
-        socketService.emit('call:end', { callId: sessionId });
-        await apiInstance.post(`calls/${sessionId}/end`);
-      }
-    } catch { /* ignore */ }
-    await goToPostCallFlow();
   };
 
-  const handleCrisisPress = useCallback(async () => {
+  const handleCrisisPress = async () => {
+    // Dispatch immediately so global handler skips call:ended
+    dispatch(endCall());
     try {
       if (sessionId) {
         socketService.emit('call:end', { callId: sessionId });
         await apiInstance.post(`calls/${sessionId}/end`);
       }
     } catch { /* ignore */ }
-    try {
-      await leaveChannel();
-    } catch { /* ignore */ }
+    try { await leaveChannel(); } catch { /* ignore */ }
     navigate('/listener/crisis-escalation', {
       replace: true,
       state: { fromCall: true, sessionId: sessionId ?? undefined },
     });
-  }, [leaveChannel, navigate, sessionId]);
-
-  useEffect(() => {
-    if (!roomId && !sessionId) return;
-
-    const handleCallEnded = async () => {
-      console.log('[ListenerActiveCall] call:ended from socket');
-      await goToPostCallFlow();
-    };
-
-    socketService.on('call:ended', handleCallEnded);
-    return () => {
-      socketService.off('call:ended', handleCallEnded);
-    };
-  }, [roomId, sessionId, goToPostCallFlow]);
+  };
 
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-between px-5 pt-12 pb-10 relative">

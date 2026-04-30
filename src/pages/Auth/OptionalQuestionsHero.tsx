@@ -44,11 +44,11 @@ export const OptionalQuestionsHero = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {[1, 2, 3].map((num) => (
             <div key={num} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-              <div 
-                className="flex items-center justify-center flex-shrink-0 bg-white rounded-full mt-0.5" 
-                style={{ width: '20px', height: '20px' }}
+              <div
+                className="flex items-center justify-center flex-shrink-0 bg-primary rounded-full mt-0.5"
+                style={{ width: '24px', height: '24px' }}
               >
-                <Check size={13} className="text-white" strokeWidth={3} />
+                <Check size={14} className="text-white" strokeWidth={3} />
               </div>
               <p style={{ color: 'var(--text-dim)', fontSize: '14px', lineHeight: '1.4' }}>
                 {t(`OptionalQuestions.bullet${num}`)}

@@ -1,14 +1,17 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import type { RootState } from '../../store/store';
+import { endCall } from '../../store/slices/callSlice';
 import { Mic, MicOff, Phone, AlertTriangle } from 'lucide-react';
 import { GlassCard } from '../../components/ui/GlassCard';
 import apiInstance from '../../api/apiInstance';
 import socketService from '../../api/socketService';
 import {
-  useAgoraWeb,
+  useAgoraContext,
+} from '../../contexts/AgoraContext';
+import {
   joinParamsFromCallPayload,
   type AgoraCallPayload,
 } from '../../hooks/useAgoraWeb';
@@ -44,6 +47,7 @@ export const ActiveCall = () => {
   const { roomId } = useParams<{ roomId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.user as any);
   const session = useSelector((state: RootState) => state.session);
   const callSessionId = useSelector((state: RootState) => state.call.sessionId);
@@ -58,43 +62,36 @@ export const ActiveCall = () => {
     return joinParamsFromCallPayload(fromNav ?? fromSession ?? undefined);
   }, [location.state, session.data]);
 
-  const {
-    joinChannel,
-    leaveChannel,
-    toggleMute,
-    isJoined,
-  } = useAgoraWeb();
+  const { joinChannel, leaveChannel, toggleMute, isJoined } = useAgoraContext();
 
   const [muted, setMuted] = useState(false);
   const [duration, setDuration] = useState(0);
   const [showEndModal, setShowEndModal] = useState(false);
   const callStatus: 'connecting' | 'connected' | 'ended' = isJoined ? 'connected' : 'connecting';
 
-  // Call duration (starts when Agora reports joined + publishing)
+  // Call duration timer
   useEffect(() => {
     if (!isJoined) return;
     const interval = setInterval(() => setDuration((d) => d + 1), 1000);
     return () => clearInterval(interval);
   }, [isJoined]);
 
-  // Agora voice channel
+  // Join Agora — no cleanup leaveChannel so audio persists on navigation
   useEffect(() => {
     if (!agoraJoinParams) {
       console.warn('[ActiveCall] Missing channel/token for Agora — check call:accepted payload.');
       return;
     }
     void joinChannel(agoraJoinParams);
-    return () => {
-      void leaveChannel();
-    };
-  }, [agoraJoinParams, joinChannel, leaveChannel]);
+    // intentionally no leaveChannel in cleanup
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     toggleMute(muted);
   }, [muted, toggleMute]);
 
-
-  // Socket: connect + server call room (signaling / presence)
+  // Socket: join call room for signaling
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -108,9 +105,7 @@ export const ActiveCall = () => {
         console.error('[ActiveCall] socket connect failed:', e);
       }
     })();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [resolvedCallId]);
 
   const formatDuration = (secs: number) => {
@@ -121,6 +116,8 @@ export const ActiveCall = () => {
 
   const handleEndCall = async () => {
     setShowEndModal(false);
+    // Dispatch immediately so the global call:ended handler skips this event
+    dispatch(endCall());
     await leaveChannel();
     try {
       if (resolvedCallId) {
@@ -132,35 +129,14 @@ export const ActiveCall = () => {
   };
 
   const handleCrisisPress = () => {
-    navigate('/venter/crisis-warning', {
+    // Mobile app navigates directly to disclaimer (skips warning) when from a call
+    navigate('/venter/crisis-disclaimer', {
       state: {
         fromCall: true,
-        callId: resolvedCallId,
         feedbackSessionId,
       },
     });
   };
-
-  // Listen for remote end via socket (when other party ends the call)
-  useEffect(() => {
-    if (!feedbackSessionId) return;
-
-    const handleCallEnded = async (data: any) => {
-      const endedId = data?.callId ?? data?.id ?? data?.call?.id;
-      if (resolvedCallId && endedId != null && String(endedId) !== String(resolvedCallId)) {
-        return;
-      }
-      console.log('[ActiveCall] call:ended from socket:', data);
-      await leaveChannel();
-      const firstStep = role === 'listener' ? 'feedback' : 'rating';
-      navigate(`/${role}/session/${feedbackSessionId}/${firstStep}`, { replace: true, state: { type: 'call' } });
-    };
-
-    socketService.on('call:ended', handleCallEnded);
-    return () => {
-      socketService.off('call:ended', handleCallEnded);
-    };
-  }, [feedbackSessionId, resolvedCallId, navigate, role, leaveChannel]);
 
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-between px-5 pt-12 pb-10 relative">

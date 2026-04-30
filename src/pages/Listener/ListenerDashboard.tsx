@@ -55,6 +55,29 @@ export const ListenerDashboard = () => {
     fetchUnreadCount();
   }, []);
 
+  // Silently refresh presence whenever the user focuses this screen (mount + window focus + tab visible)
+  useEffect(() => {
+    const refreshPresence = async () => {
+      try { await goOffline(); } catch { /* ignore — always proceed to online */ }
+      try {
+        await goOnline();
+        dispatch(setAvailability(true));
+      } catch { /* silent */ }
+    };
+
+    const onFocus = () => refreshPresence();
+    const onVisible = () => { if (document.visibilityState === 'visible') refreshPresence(); };
+
+    refreshPresence();
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const firstName = user?.firstName || user?.displayName?.split(' ')[0] || t('ListenerHome.listener', 'Listener');
 
   return (

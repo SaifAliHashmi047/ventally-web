@@ -22,6 +22,8 @@ export const FindingListener = () => {
   const [dots, setDots] = useState('');
   const [timerKey, setTimerKey] = useState(0);
   const hasNavigated = useRef(false);
+  // True when subscription confirms sufficient balance — used to ignore stale server insufficient-balance events
+  const hasSubBalanceRef = useRef(false);
 
   const isCall = type === 'call';
   const isChat = type === 'chat';
@@ -49,7 +51,7 @@ export const FindingListener = () => {
           : remainingMessages > 0;
 
         if (hasSubBalance) {
-          // Good to go from subscription
+          hasSubBalanceRef.current = true;
           dispatch(setSessionType(type));
           await socketService.connect();
           socketService.emit('requests:broadcast', { type });
@@ -93,7 +95,9 @@ export const FindingListener = () => {
   useEffect(() => {
     // Insufficient balance event
     socketService.on('requests:broadcast:insufficient-balance', () => {
-      console.log('[FindingListener] Insufficient balance');
+      console.log('[FindingListener] Insufficient balance (hasSubBalance:', hasSubBalanceRef.current, ')');
+      // Ignore server event when we already confirmed a valid subscription balance client-side
+      if (hasSubBalanceRef.current) return;
       setStatus('lowBalance');
     });
 

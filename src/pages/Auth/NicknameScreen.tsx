@@ -3,8 +3,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../store/store';
-import { updateUser } from '../../store/slices/userSlice';
+import { updateUser, setUser, setIsVenter } from '../../store/slices/userSlice';
 import { updateProfile } from '../../api';
+import { setTokens } from '../../api/apiInstance';
+import { useRoles } from '../../api/hooks/useRoles';
 import { ArrowLeft } from 'lucide-react';
 import { AuthPageFrame } from '../../components/ui/AuthPageFrame';
 import { useAccountChangeFlow } from '../../hooks/useAccountChangeFlow';
@@ -24,6 +26,7 @@ export const NicknameScreen = () => {
   const reduxUser = useSelector((state: RootState) => state.user.user);
   const userType = stateUserType || reduxUser?.userType || reduxUser?.role || 'venter';
   const { isAccountChanging, resolve } = useAccountChangeFlow();
+  const { updateAvailableRoles, switchRole } = useRoles();
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,10 +44,21 @@ export const NicknameScreen = () => {
         const legacyAccountTypeChanging = (location.state as any)?.accountTypeChanging;
         const effectiveChanging = isAccountChanging || legacyAccountTypeChanging;
 
-        // ── Role-based branching — matches native NicknameScreen handleSave ──
+        // ── Role-based branching ──
         if (effectiveChanging) {
-          // When changing account type to Venter, skip optional questions and head straight to subscription
-          navigate(resolve('choose-plan'));
+          // Add venter role then switch to it — no subscription step needed
+          await updateAvailableRoles({ rolesToAdd: ['venter'] });
+          const switchRes = await switchRole({ targetRole: 'venter' });
+          if (switchRes?.tokens) {
+            await setTokens(switchRes.tokens.accessToken, switchRes.tokens.refreshToken);
+          }
+          if (switchRes?.user) {
+            const updatedUser = { ...switchRes.user, role: switchRes.user.activeRole?.toLowerCase() as any };
+            dispatch(setUser(updatedUser as Parameters<typeof setUser>[0]));
+          }
+          dispatch(setIsVenter(true));
+          window.location.replace('/venter/home');
+          return;
         } else if (userType === 'listener') {
           navigate('/signup/listener-training', { state: { userType } });
         } else {

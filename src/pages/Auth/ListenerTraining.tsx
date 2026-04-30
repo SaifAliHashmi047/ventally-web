@@ -56,7 +56,7 @@ export const ListenerTraining = () => {
         <ArrowLeft size={16} /> Back
       </button>
 
-      <div style={{ borderRadius: '16px', overflow: 'hidden', marginBottom: '24px', height: '220px' }}>
+      <div style={{ borderRadius: '16px', overflow: 'hidden', marginBottom: '24px', height: effectiveChanging ? '340px' : '220px' }}>
         <img src={listenerTopImage} alt="Training" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
       </div>
 

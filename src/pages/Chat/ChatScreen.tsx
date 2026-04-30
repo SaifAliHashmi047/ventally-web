@@ -80,13 +80,12 @@ export const ChatScreen = () => {
   const handleEndSessionYes = async () => {
     setShowEndModal(false);
     if (!id) return;
+    // Dispatch immediately so the global chat:ended handler skips the server echo
+    dispatch(endChatSession());
     try {
-      // Emit socket event to end chat for real-time notification to other party
       await socketService.connect();
       socketService.emit('chat:end', { conversationId: id });
-      // Also call REST API
       await apiInstance.post(`conversations/${id}/end`);
-      dispatch(endChatSession());
     } catch (error) {
       console.error('End chat error:', error);
     }
@@ -160,20 +159,6 @@ export const ChatScreen = () => {
       setMessages((prev) => [...prev, data]);
     };
 
-    const handleChatEnded = (data: any) => {
-      console.log('[Chat] Chat ended:', data);
-      setIsChatActive(false);
-      dispatch(endChatSession());
-      const isVenter = currentUser?.userType === 'venter' || currentUser?.role === 'venter';
-      if (isVenter) {
-        // Venter: Rating (tip) → Feedback (mood+stars+comment)
-        navigate(`/venter/session/${id}/rating`, { state: { chat, type: 'chat' } });
-      } else {
-        // Listener: ListenerSessionFeedback (mood) → ListenerSessionRating (stars)
-        navigate(`/listener/session/${id}/feedback`, { state: { chat, type: 'chat' } });
-      }
-    };
-
     const init = async () => {
       try {
         await socketService.connect();
@@ -185,14 +170,12 @@ export const ChatScreen = () => {
 
     socketService.on('chat:joined', handleJoined);
     socketService.on('chat:message', handleMessage);
-    socketService.on('chat:ended', handleChatEnded);
     init();
 
     return () => {
       mounted = false;
       socketService.off('chat:joined', handleJoined);
       socketService.off('chat:message', handleMessage);
-      socketService.off('chat:ended', handleChatEnded);
     };
   }, [id, dispatch]);
 

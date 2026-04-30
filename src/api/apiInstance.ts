@@ -154,6 +154,7 @@ apiInstance.interceptors.response.use(
           await clearTokens();
           processQueue(new Error('No refresh token available'), null);
           isRefreshing = false;
+          window.dispatchEvent(new CustomEvent('auth:session-expired'));
           return Promise.reject({
             success: false,
             statusCode: 401,
@@ -167,13 +168,14 @@ apiInstance.interceptors.response.use(
           { headers: { 'Content-Type': 'application/json' } }
         );
 
-        const { accessToken, refreshToken: newRefreshToken } = refreshResponse.data;
+        // Backend returns only a new accessToken (refresh token stays the same)
+        const { accessToken } = refreshResponse.data;
 
         if (!accessToken) {
           throw new Error('Invalid refresh token response');
         }
 
-        await setTokens(accessToken, newRefreshToken || refreshToken);
+        await setTokens(accessToken, refreshToken);
         processQueue(null, accessToken);
         isRefreshing = false;
 
@@ -182,6 +184,7 @@ apiInstance.interceptors.response.use(
         await clearTokens();
         processQueue(refreshError, null);
         isRefreshing = false;
+        window.dispatchEvent(new CustomEvent('auth:session-expired'));
         return Promise.reject({
           success: false,
           statusCode: 401,

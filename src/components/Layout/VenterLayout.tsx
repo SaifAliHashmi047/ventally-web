@@ -12,7 +12,8 @@ import type { RootState } from '../../store/store';
 import { cn } from '../../utils/cn';
 import { getUnreadNotificationCount } from '../../api/notificationsApi';
 import { useWebNotifications } from '../../api/hooks/useWebNotifications';
-
+import { useGlobalSessionEvents } from '../../api/hooks/useGlobalSessionEvents';
+import { ActiveSessionBar } from '../ui/ActiveSessionBar';
 import { MainBackground } from '../ui/MainBackground';
 import { AppBrandIcon } from '../ui/AppBrandIcon';
 
@@ -40,6 +41,7 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
   const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -47,6 +49,7 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
   const user = useSelector((state: RootState) => state.user.user as any);
 
   useWebNotifications();
+  useGlobalSessionEvents('venter');
 
   const handleLogout = () => {
     dispatch(logout() as any);
@@ -134,7 +137,7 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
         {/* Logout Footer */}
         <div className="px-3 pb-6 pt-4 border-t border-white/5">
           <button
-            onClick={handleLogout}
+            onClick={() => setShowLogoutModal(true)}
             className="nav-link w-full text-left text-red-400 hover:text-red-300 hover:bg-red-500/8"
           >
             <LogOut size={18} />
@@ -176,11 +179,40 @@ export const VenterLayout = ({ children }: VenterLayoutProps) => {
             </button>
           </div>
         </div>
+        <ActiveSessionBar role="venter" />
         <div className="max-w-6xl xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-6 lg:py-10 w-full">
           {children}
         </div>
       </main>
       </div>
+
+      {/* Logout confirmation modal */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70 backdrop-blur-sm">
+          <div className="glass w-full sm:max-w-sm rounded-t-3xl sm:rounded-3xl p-6 text-center border border-white/10">
+            <div className="w-12 h-1 bg-white/20 rounded-full mx-auto mb-6 sm:hidden" />
+            <div className="w-14 h-14 rounded-full bg-red-500/15 flex items-center justify-center mx-auto mb-4">
+              <LogOut size={24} className="text-red-400" />
+            </div>
+            <h3 className="text-lg font-bold text-white mb-2">{t('Profile.logoutConfirmTitle', 'Log Out?')}</h3>
+            <p className="text-sm text-white/70 mb-8">{t('Profile.logoutConfirmMessage', 'Are you sure you want to log out of your account?')}</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowLogoutModal(false)}
+                className="flex-1 py-3 rounded-2xl glass text-white font-medium text-sm hover:bg-white/10 transition-colors"
+              >
+                {t('Common.cancel', 'Cancel')}
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex-1 py-3 rounded-2xl bg-red-500 text-white font-medium text-sm hover:opacity-90 transition-colors"
+              >
+                {t('Profile.logout', 'Log Out')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
