@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate, useLocation, useBlocker } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, useStore } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../locales/i18n';
 import type { RootState, AppDispatch } from '../../store/store';
@@ -41,13 +41,13 @@ export const ChatScreen = () => {
   const [showListenerCrisisModal, setShowListenerCrisisModal] = useState(false);
   const [isChatActive, setIsChatActive] = useState(true);
 
-  // Block ALL navigation (back button, tab nav, links) while the chat is active.
-  // useBlocker intercepts at the router level before any component unmounts,
-  // which fixes the mobile issue where history.forward() was unreliable.
-  const isChatActiveRedux = useSelector((state: RootState) => state.call.isChatActive);
-  const isChatActiveRef = useRef(isChatActiveRedux);
-  isChatActiveRef.current = isChatActiveRedux;
-  const blocker = useBlocker(() => isChatActiveRef.current);
+  // Block navigation while the chat is active.
+  // Read directly from the store (not a render-cycle ref) so that a
+  // dispatch(endChatSession()) from useGlobalSessionEvents is visible
+  // synchronously — before React re-renders — and won't trigger the modal
+  // for the other participant when the first side ends via crisis/hang-up.
+  const store = useStore<RootState>();
+  const blocker = useBlocker(() => (store.getState() as RootState).call.isChatActive);
   useEffect(() => {
     if (blocker.state === 'blocked') {
       blocker.reset();

@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useLocation, useBlocker } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, useStore } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import type { RootState } from '../../store/store';
 import { endCall } from '../../store/slices/callSlice';
@@ -64,9 +64,7 @@ export const ActiveCall = () => {
   }, [location.state, session.data]);
 
   const { joinChannel, leaveChannel, toggleMute, isJoined } = useAgoraContext();
-  const isCallActive = useSelector((state: RootState) => state.call.isActive);
-  const isCallActiveRef = useRef(isCallActive);
-  isCallActiveRef.current = isCallActive;
+  const store = useStore<RootState>();
 
   const [muted, setMuted] = useState(false);
   const [, setTick] = useState(0);
@@ -85,13 +83,13 @@ export const ActiveCall = () => {
     return () => clearInterval(interval);
   }, [isJoined]);
 
-  // Block ALL navigation (back button, tab nav, links) while the call is active.
-  // useBlocker intercepts at the router level before any component unmounts,
-  // which fixes the mobile issue where history.forward() was unreliable.
-  const blocker = useBlocker(() => isCallActiveRef.current);
+  // Block navigation while the call is active.
+  // Read directly from the store so dispatch(endCall()) from useGlobalSessionEvents
+  // is visible synchronously and won't trigger the modal for the other participant.
+  const blocker = useBlocker(() => (store.getState() as RootState).call.isActive);
   useEffect(() => {
     if (blocker.state === 'blocked') {
-      blocker.reset(); // cancel navigation — user must end the call explicitly
+      blocker.reset();
       setShowEndModal(true);
     }
   }, [blocker.state]);
