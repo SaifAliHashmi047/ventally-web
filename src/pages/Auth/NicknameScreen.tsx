@@ -46,7 +46,7 @@ export const NicknameScreen = () => {
 
         // ── Role-based branching ──
         if (effectiveChanging) {
-          // Add venter role then switch to it — no subscription step needed
+          // Add venter role then switch to it, then go to subscription plans
           await updateAvailableRoles({ rolesToAdd: ['venter'] });
           const switchRes = await switchRole({ targetRole: 'venter' });
           if (switchRes?.tokens) {
@@ -57,7 +57,7 @@ export const NicknameScreen = () => {
             dispatch(setUser(updatedUser as Parameters<typeof setUser>[0]));
           }
           dispatch(setIsVenter(true));
-          window.location.replace('/venter/home');
+          window.location.replace('/venter/subscription/plans');
           return;
         } else if (userType === 'listener') {
           navigate('/signup/listener-training', { state: { userType } });

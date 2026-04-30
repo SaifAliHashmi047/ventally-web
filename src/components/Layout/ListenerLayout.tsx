@@ -242,13 +242,13 @@ export const ListenerLayout = ({ children }: ListenerLayoutProps) => {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowLogoutModal(false)}
-                className="flex-1 py-3 rounded-2xl glass text-white font-medium text-sm hover:bg-white/10 transition-colors"
+                className="flex-1 py-3 rounded-2xl btn-secondary text-white font-medium text-sm transition-colors"
               >
                 {t('Common.cancel', 'Cancel')}
               </button>
               <button
                 onClick={handleLogout}
-                className="flex-1 py-3 rounded-2xl bg-red-500 text-white font-medium text-sm hover:opacity-90 transition-colors"
+                className="flex-1 py-3 rounded-2xl glass border border-white/10 text-white font-medium text-sm hover:bg-white/10 transition-colors"
               >
                 {t('Common.LogOut', 'Log Out')}
               </button>

@@ -1,20 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
 import { useRoles } from '../../api/hooks/useRoles';
 import { setTokens } from '../../api/apiInstance';
-import { setUser, setIsVenter } from '../../store/slices/userSlice';
 import { toastSuccess, toastError } from '../../utils/toast';
 import { Loader2 } from 'lucide-react';
 
 export const VenterChangeAccountType = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   // Stable refs — no infinite loop
   const rolesHook = useRoles();
@@ -68,12 +65,9 @@ export const VenterChangeAccountType = () => {
         // Toast success — matches RN
         toastSuccess(res.message || t('ChangeAccount.roleSwitchedSuccess'));
 
-        // Update Redux — same as RN
-        const updatedUser = { ...res.user, role: res.user?.activeRole?.toLowerCase() };
-        dispatch(setUser(updatedUser as Parameters<typeof setUser>[0]));
-        dispatch(setIsVenter(selectedRole.toLowerCase() === 'venter'));
-
-        // Navigate to appropriate home — use replace to reset history stack (matches RN navigation.reset)
+        // Full page reload — BootLoader fetches fresh profile and sets Redux state.
+        // Do NOT dispatch setUser here; that would trigger StateGuard to flash
+        // the training screen before the reload completes.
         const target = selectedRole.toLowerCase() === 'listener' ? '/listener/home' : '/venter/home';
         window.location.replace(target);
       }
