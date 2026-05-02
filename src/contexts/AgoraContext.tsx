@@ -21,6 +21,7 @@ interface AgoraContextValue {
   joinChannel: (params: JoinChannelParams) => Promise<void>;
   leaveChannel: () => Promise<void>;
   toggleMute: (mute: boolean) => void;
+  setSpeakerEnabled: (enabled: boolean) => void;
   isJoined: boolean;
   isConnecting: boolean;
   error: string | null;
@@ -276,8 +277,62 @@ export function AgoraProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  // Switches audio output device (loudspeaker vs earpiece) on browsers that support setSinkId
+  // (Chrome/Android). On iOS Safari setSinkId is unsupported — we fall back to volume only.
+  const setSpeakerEnabled = useCallback((enabled: boolean) => {
+    const volume = enabled ? 100 : 0;
+
+    const applyVolume = () => {
+      remoteTracksRef.current.forEach((track) => {
+        try { track.setVolume(volume); } catch { /* ignore */ }
+      });
+    };
+
+    // enumerateDevices requires an existing media permission — we have mic, so labels are visible.
+    const canEnumerate =
+      typeof navigator !== 'undefined' &&
+      typeof navigator.mediaDevices?.enumerateDevices === 'function' &&
+      // setSinkId / setPlaybackDevice is not supported on Safari/iOS
+      typeof (document.createElement('audio') as any).setSinkId === 'function';
+
+    if (!canEnumerate) {
+      applyVolume();
+      return;
+    }
+
+    navigator.mediaDevices.enumerateDevices().then((devices) => {
+      const outputs = devices.filter((d) => d.kind === 'audiooutput');
+
+      let targetId: string;
+      if (enabled) {
+        // Prefer an explicit speakerphone/loudspeaker device; fall back to 'default'
+        const loud =
+          outputs.find((d) => /speaker/i.test(d.label)) ||
+          outputs.find((d) => d.deviceId !== 'default' && d.deviceId !== 'communications') ||
+          outputs[0];
+        targetId = loud?.deviceId ?? 'default';
+      } else {
+        // Prefer the 'communications' device (earpiece on Android) or default
+        const ear =
+          outputs.find((d) => d.deviceId === 'communications') ||
+          outputs.find((d) => /earpiece|ear/i.test(d.label)) ||
+          outputs.find((d) => d.deviceId === 'default') ||
+          outputs[0];
+        targetId = ear?.deviceId ?? 'communications';
+      }
+
+      applyVolume();
+      remoteTracksRef.current.forEach((track) => {
+        track.setPlaybackDevice(targetId).catch(() => { /* unsupported on this browser */ });
+      });
+    }).catch(() => {
+      // enumerateDevices failed — fall back to volume only
+      applyVolume();
+    });
+  }, []);
+
   return (
-    <AgoraContext.Provider value={{ joinChannel, leaveChannel, toggleMute, isJoined, isConnecting, error }}>
+    <AgoraContext.Provider value={{ joinChannel, leaveChannel, toggleMute, setSpeakerEnabled, isJoined, isConnecting, error }}>
       {children}
     </AgoraContext.Provider>
   );

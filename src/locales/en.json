@@ -1594,7 +1594,9 @@
     "editReflection": "Edit Reflection",
     "saveReflection": "Save Reflection",
     "yourReflection": "Your Reflection",
-    "addReflection": "Add Reflection",
+    "addReflection1": "+ Write",
+    "addReflection": "",
+
     "addReflectionSubtitle": "Take a moment to capture your thoughts",
     "reflectionPrompt": "What's on your mind?",
     "yourReflections": "Your Reflections",
@@ -2544,6 +2546,11 @@
     }
   },
   "Crisis": {
+    "venterOverlayTitle": "Ventally is not a crisis service.",
+    "venterOverlayMessage": "If you are thinking about self harm, suicide, or feel unsafe, please contact 988 or emergency services now.",
+    "call988Now": "CALL 988 NOW",
+    "text988": "TEXT 988",
+    "imSafeReturn": "I'm Safe - Return to Ventally",
     "title": "Is The Venter In Crisis",
     "message": "If the venter mentions thoughts of self harm or suicide, please escalate this session for crisis services.\n\nIf the venter is in crisis and you do not escalate this session you will be permanently barred from this platform.",
     "sessionEndedTitle": "Session Ended",
@@ -2575,7 +2582,7 @@
     "nami": "NAMI HelpLine",
     "call988": "Call 988",
     "call988Desc": "24/7 Suicide & Crisis Lifeline",
-    "text988": "Text 988",
+    "text988Label": "Text 988",
     "text988Desc": "Text HELLO to 988 for chat support",
     "notAlone": "You are not alone. Reach out for support — it is a sign of strength.",
     "moreResources": "More Crisis Resources",
@@ -2621,6 +2628,14 @@
     "chatSession": "Chat Session",
     "quickAccess": "Quick Access",
     "sessionHistory": "Session History"
+  },
+  "ListenerCrisis": {
+    "confirmTitle": "Is The Venter In Crisis",
+    "confirmMessage1": "If the venter mentions thoughts of self harm or suicide, please escalate this session for crisis services.",
+    "confirmMessage2": "If the venter is in crisis and you do not escalate this session you will be permanently barred from this platform.",
+    "activatedTitle": "Crisis Support Activated",
+    "activatedMessage": "The venter is being connected to 988 crisis support now.",
+    "okay": "Okay"
   },
   "ListenerCall": {
     "voiceSession": "Voice session",

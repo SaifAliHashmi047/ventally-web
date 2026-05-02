@@ -6,7 +6,7 @@ import { GlassCard } from '../../components/ui/GlassCard';
 import { Button } from '../../components/ui/Button';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { useReflections } from '../../api/hooks/useReflections';
-import { Plus, ChevronRight, BookOpen } from 'lucide-react';
+import { ChevronRight, BookOpen } from 'lucide-react';
 import i18n from '../../locales/i18n';
 
 export const VenterReflections = () => {
@@ -44,9 +44,12 @@ export const VenterReflections = () => {
       <PageHeader
         title={t('VenterHome.yourReflections')}
         rightContent={
-          <Button variant="primary" size="sm" leftIcon={<Plus size={16} />} onClick={() => navigate('/venter/reflections/add')}>
-            {t('VenterHome.addReflection')}
-          </Button>
+          <button
+            onClick={() => navigate('/venter/reflections/add')}
+            className="text-xs font-medium text-white/70 hover:text-white px-3 py-1.5 rounded-full border border-white/20 hover:border-white/40 hover:bg-white/[0.06] transition-all"
+          >
+            {t('VenterHome.addReflection1')}
+          </button>
         }
       />
 
@@ -57,8 +60,7 @@ export const VenterReflections = () => {
           title={t('VenterHome.noReflections')}
           description={t('VenterHome.noReflectionsDescription')}
           icon={<BookOpen size={22} />}
-          action={<Button variant="accent" size="sm" onClick={() => navigate('/venter/reflections/add')}>{t('VenterHome.addReflection')}</Button>}
-        />
+         />
       ) : (
         <div className="space-y-3">
           {reflections.map((r: any) => (

@@ -75,7 +75,7 @@ export const VenterCrisisImmediateHelp = () => {
     },
     {
       icon: MessageSquare,
-      title: t('Crisis.text988', 'Text 988'),
+      title: t('Crisis.text988Label', 'Text 988'),
       description: t('Crisis.text988Desc', 'Text HELLO to 988 for chat support'),
       action: handleText988,
       variant: 'glass' as const,

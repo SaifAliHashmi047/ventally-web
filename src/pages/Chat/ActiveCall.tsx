@@ -4,7 +4,7 @@ import { useSelector, useDispatch, useStore } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import type { RootState } from '../../store/store';
 import { endCall } from '../../store/slices/callSlice';
-import { Mic, MicOff, Phone, AlertTriangle, PhoneCall, MessageSquare } from 'lucide-react';
+import { Mic, MicOff, Phone, AlertTriangle, PhoneCall, MessageSquare, Volume2, VolumeX } from 'lucide-react';
 import { GlassCard } from '../../components/ui/GlassCard';
 import apiInstance from '../../api/apiInstance';
 import socketService from '../../api/socketService';
@@ -63,10 +63,11 @@ export const ActiveCall = () => {
     return joinParamsFromCallPayload(fromNav ?? fromSession ?? undefined);
   }, [location.state, session.data]);
 
-  const { joinChannel, leaveChannel, toggleMute, isJoined } = useAgoraContext();
+  const { joinChannel, leaveChannel, toggleMute, setSpeakerEnabled, isJoined } = useAgoraContext();
   const store = useStore<RootState>();
 
   const [muted, setMuted] = useState(false);
+  const [speakerOn, setSpeakerOn] = useState(true);
   const [, setTick] = useState(0);
   const [showEndModal, setShowEndModal] = useState(false);
   const [showCrisisOverlay, setShowCrisisOverlay] = useState(false);
@@ -86,7 +87,13 @@ export const ActiveCall = () => {
   // Block navigation while the call is active.
   // Read directly from the store so dispatch(endCall()) from useGlobalSessionEvents
   // is visible synchronously and won't trigger the modal for the other participant.
-  const blocker = useBlocker(() => (store.getState() as RootState).call.isActive);
+  // On desktop (≥1024px) the session lives on in the ActiveSessionBar — don't block navigation.
+  // On mobile we must ask, because navigating away would kill the session.
+  const blocker = useBlocker(() => {
+    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+    if (!isMobile) return false;
+    return (store.getState() as RootState).call.isActive;
+  });
   useEffect(() => {
     if (blocker.state === 'blocked') {
       blocker.reset();
@@ -108,6 +115,10 @@ export const ActiveCall = () => {
   useEffect(() => {
     toggleMute(muted);
   }, [muted, toggleMute]);
+
+  useEffect(() => {
+    setSpeakerEnabled(speakerOn);
+  }, [speakerOn, setSpeakerEnabled]);
 
   // Socket: join call room for signaling
   useEffect(() => {
@@ -190,7 +201,7 @@ export const ActiveCall = () => {
 
       {/* Bottom controls card */}
       <GlassCard className="w-full max-w-sm mt-8" rounded="2xl" padding="lg">
-        {/* Mute + End row */}
+        {/* Mute + Speaker + End row */}
         <div className="flex justify-around items-center mb-6">
           {/* Mute */}
           <div className="flex flex-col items-center gap-2">
@@ -202,6 +213,19 @@ export const ActiveCall = () => {
             </button>
             <span className="text-xs text-white font-medium">
               {muted ? t('ActiveCall.muted', 'Muted') : t('ActiveCall.mute', 'Mute')}
+            </span>
+          </div>
+
+          {/* Speaker */}
+          <div className="flex flex-col items-center gap-2">
+            <button
+              onClick={() => setSpeakerOn(!speakerOn)}
+              className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center transition-all hover:bg-white/20"
+            >
+              {speakerOn ? <Volume2 size={22} className="text-white" /> : <VolumeX size={22} className="text-white" />}
+            </button>
+            <span className="text-xs text-white font-medium">
+              {speakerOn ? t('ActiveCall.speaker', 'Speaker') : t('ActiveCall.speakerOff', 'Speaker Off')}
             </span>
           </div>
 
@@ -239,10 +263,10 @@ export const ActiveCall = () => {
               <AlertTriangle size={30} className="text-primary" />
             </div>
             <h3 className="text-xl font-bold text-white mb-3">
-              {t('Crisis.safetyTitle', 'Your safety is our priority.')}
+              {t('Crisis.venterOverlayTitle', 'Ventally is not a crisis service.')}
             </h3>
             <p className="text-sm text-white/70 leading-relaxed mb-8">
-              {t('Crisis.safetyMessage', 'Please contact emergency services right away.')}
+              {t('Crisis.venterOverlayMessage', 'If you are thinking about self harm, suicide, or feel unsafe, please contact 988 or emergency services now.')}
             </p>
             <div className="flex flex-col gap-3">
               <button
@@ -263,7 +287,7 @@ export const ActiveCall = () => {
                 onClick={() => setShowCrisisOverlay(false)}
                 className="w-full py-3 text-white/50 text-sm hover:text-white/80 transition-colors"
               >
-                {t('Crisis.backToCall', 'Back to Call')}
+                {t('Crisis.imSafeReturn', "I'm Safe - Return to Ventally")}
               </button>
             </div>
           </div>

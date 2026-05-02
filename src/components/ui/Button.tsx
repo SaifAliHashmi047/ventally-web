@@ -16,11 +16,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
-  size = 'md',
+  // size = 'md',
   fullWidth = false,
   contained = false,
   loading = false,
-  leftIcon,
+  // leftIcon,
   rightIcon,
   children,
   className,
@@ -36,13 +36,13 @@ export const Button: React.FC<ButtonProps> = ({
     danger:           'btn-danger',
     ghost:            'hover:bg-white/5 text-gray-400 hover:text-white',
   };
-
+const leftIcon=null
   const sizeMap = {
     sm: 'btn-sm',
     md: 'btn-md',
     lg: 'btn-lg',
   };
-
+const size ="md"
   return (
     <button
       className={cn(

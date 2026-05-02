@@ -5,7 +5,7 @@ import { useSelector, useDispatch, useStore } from 'react-redux';
 import type { RootState } from '../../store/store';
 import { endCall } from '../../store/slices/callSlice';
 import { GlassCard } from '../../components/ui/GlassCard';
-import { Mic, MicOff, Phone, AlertTriangle } from 'lucide-react';
+import { Mic, MicOff, Phone, AlertTriangle, Volume2, VolumeX } from 'lucide-react';
 import socketService from '../../api/socketService';
 import apiInstance from '../../api/apiInstance';
 import { useAgoraContext } from '../../contexts/AgoraContext';
@@ -47,13 +47,15 @@ export const ListenerActiveCall = () => {
     return joinParamsFromCallPayload(fromNav ?? fromSession ?? undefined);
   }, [location.state, session.data]);
 
-  const { joinChannel, leaveChannel, toggleMute, isJoined } = useAgoraContext();
+  const { joinChannel, leaveChannel, toggleMute, setSpeakerEnabled, isJoined } = useAgoraContext();
   const store = useStore<RootState>();
 
   const [, setTick] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
+  const [speakerOn, setSpeakerOn] = useState(true);
   const [showEndModal, setShowEndModal] = useState(false);
   const [showCrisisModal, setShowCrisisModal] = useState(false);
+  const [showCrisisActivated, setShowCrisisActivated] = useState(false);
 
   const callStatus: 'connecting' | 'connected' = isJoined ? 'connected' : 'connecting';
 
@@ -75,6 +77,10 @@ export const ListenerActiveCall = () => {
     toggleMute(isMuted);
   }, [isMuted, toggleMute]);
 
+  useEffect(() => {
+    setSpeakerEnabled(speakerOn);
+  }, [speakerOn, setSpeakerEnabled]);
+
   // Tick every second to re-render the formatted time
   useEffect(() => {
     if (!isJoined) return;
@@ -85,7 +91,13 @@ export const ListenerActiveCall = () => {
   // Block navigation while the call is active.
   // Read directly from the store so dispatch(endCall()) from useGlobalSessionEvents
   // is visible synchronously and won't trigger the modal for the other participant.
-  const blocker = useBlocker(() => (store.getState() as RootState).call.isActive);
+  // On desktop (≥1024px) the session lives on in the ActiveSessionBar — don't block navigation.
+  // On mobile we must ask, because navigating away would kill the session.
+  const blocker = useBlocker(() => {
+    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+    if (!isMobile) return false;
+    return (store.getState() as RootState).call.isActive;
+  });
   useEffect(() => {
     if (blocker.state === 'blocked') {
       blocker.reset();
@@ -136,7 +148,6 @@ export const ListenerActiveCall = () => {
   };
 
   const handleCrisisPress = async () => {
-    // Dispatch immediately so global handler skips call:ended
     dispatch(endCall());
     try {
       if (sessionId) {
@@ -145,10 +156,12 @@ export const ListenerActiveCall = () => {
       }
     } catch { /* ignore */ }
     try { await leaveChannel(); } catch { /* ignore */ }
-    navigate('/listener/crisis-warning', {
-      replace: true,
-      state: { fromCall: true, sessionId: sessionId ?? undefined },
-    });
+    setShowCrisisActivated(true);
+  };
+
+  const handleCrisisActivatedDismiss = () => {
+    setShowCrisisActivated(false);
+    navigate('/listener/home', { replace: true });
   };
 
   return (
@@ -184,7 +197,7 @@ export const ListenerActiveCall = () => {
 
       {/* Bottom controls card */}
       <GlassCard className="w-full max-w-sm mt-8" rounded="2xl" padding="lg">
-        {/* Mute + End row */}
+        {/* Mute + Speaker + End row */}
         <div className="flex justify-around items-center mb-6">
           {/* Mute */}
           <div className="flex flex-col items-center gap-2">
@@ -196,6 +209,19 @@ export const ListenerActiveCall = () => {
             </button>
             <span className="text-xs text-white font-medium">
               {isMuted ? t('ListenerCall.unmute', 'Unmute') : t('ListenerCall.mute', 'Mute')}
+            </span>
+          </div>
+
+          {/* Speaker */}
+          <div className="flex flex-col items-center gap-2">
+            <button
+              onClick={() => setSpeakerOn(!speakerOn)}
+              className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center transition-all hover:bg-white/20"
+            >
+              {speakerOn ? <Volume2 size={22} className="text-white" /> : <VolumeX size={22} className="text-white" />}
+            </button>
+            <span className="text-xs text-white font-medium">
+              {speakerOn ? t('ListenerCall.speaker', 'Speaker') : t('ListenerCall.speakerOff', 'Speaker Off')}
             </span>
           </div>
 
@@ -223,7 +249,7 @@ export const ListenerActiveCall = () => {
         </div>
       </GlassCard>
 
-      {/* Crisis confirmation modal */}
+      {/* Screen 1 — Is The Venter In Crisis? */}
       {showCrisisModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/70 backdrop-blur-sm">
           <GlassCard className="w-full max-w-sm rounded-3xl p-7 text-center">
@@ -245,11 +271,31 @@ export const ListenerActiveCall = () => {
               </button>
               <button
                 onClick={() => { setShowCrisisModal(false); void handleCrisisPress(); }}
-                className="flex-1 py-3 rounded-2xl glass text-white font-bold text-sm hover:bg-white/10 transition-colors"
+                className="flex-1 py-3 rounded-2xl bg-primary text-white font-bold text-sm hover:opacity-90 transition-colors"
               >
                 {t('Common.yes', 'Yes')}
               </button>
             </div>
+          </GlassCard>
+        </div>
+      )}
+
+      {/* Screen 2 — Crisis Support Activated */}
+      {showCrisisActivated && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
+          <GlassCard className="w-full max-w-sm rounded-3xl p-8 text-center">
+            <h3 className="text-xl font-bold text-white mb-4">
+              {t('ListenerCrisis.activatedTitle', 'Crisis Support Activated')}
+            </h3>
+            <p className="text-sm text-white/70 leading-relaxed mb-8">
+              {t('ListenerCrisis.activatedMessage', 'The venter is being connected to 988 crisis support now.')}
+            </p>
+            <button
+              onClick={handleCrisisActivatedDismiss}
+              className="w-full py-3 rounded-2xl bg-primary text-white font-medium text-sm hover:opacity-90 transition-colors"
+            >
+              {t('ListenerCrisis.okay', 'Okay')}
+            </button>
           </GlassCard>
         </div>
       )}

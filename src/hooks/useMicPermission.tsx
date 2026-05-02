@@ -96,7 +96,7 @@ export function useMicPermission() {
                 Allow microphone access
               </h3>
               <p className="text-sm text-white/50 leading-relaxed mb-6">
-                Your microphone is needed to connect the call. When your browser asks, tap <span className="text-white/75">Allow</span>.
+               Ventally needs your microphone access to connect the call. When your browser asks, tap <span className="text-white/75">Allow</span>.
               </p>
               <div className="flex flex-col gap-2">
                 <button

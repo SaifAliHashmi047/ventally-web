@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '../../components/ui/Button';
 import { X, Phone, MessageSquare, Wallet } from 'lucide-react';
 import socketService from '../../api/socketService';
-import { useWallet } from '../../api/hooks/useWallet';
 import { sessionStarted, chatSessionStarted, setSessionType } from '../../store/slices/callSlice';
 import { setSessionInfo } from '../../store/slices/sessionSlice';
 
@@ -15,15 +14,10 @@ export const FindingListener = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const type = (location.state?.type || 'call') as 'call' | 'chat';
-  const { getWallet, getMySubscription } = useWallet();
-  const SESSION_COST = 10;
-
   const [status, setStatus] = useState<'searching' | 'found' | 'timeout' | 'lowBalance'>('searching');
   const [dots, setDots] = useState('');
   const [timerKey, setTimerKey] = useState(0);
   const hasNavigated = useRef(false);
-  // True when subscription confirms sufficient balance — used to ignore stale server insufficient-balance events
-  const hasSubBalanceRef = useRef(false);
 
   const isCall = type === 'call';
   const isChat = type === 'chat';
@@ -34,44 +28,12 @@ export const FindingListener = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Check balance and broadcast request
+  // Balance was already verified at click time in VenterCall/VenterMessages.
+  // Just connect and broadcast — the server will send insufficient-balance if needed.
   useEffect(() => {
     const init = async () => {
       try {
-        const SESSION_COST_LOCAL = SESSION_COST;
-
-        // Step 1: Check subscription balance
-        const subRes = await getMySubscription();
-        const sub = subRes?.subscription;
-        const remainingMinutes = sub?.remainingMinutes ?? 0;
-        const remainingMessages = sub?.remainingMessages ?? 0;
-
-        const hasSubBalance = isCall
-          ? remainingMinutes > 0
-          : remainingMessages > 0;
-
-        if (hasSubBalance) {
-          hasSubBalanceRef.current = true;
-          dispatch(setSessionType(type));
-          await socketService.connect();
-          socketService.emit('requests:broadcast', { type });
-          console.log('[FindingListener] Broadcasted request (sub):', type);
-          return;
-        }
-
-        // Step 2: Fallback — check wallet currency
-        const balanceRes = await getWallet();
-        const currency = balanceRes?.balance?.currency ?? 0;
-
-        if (currency <= SESSION_COST_LOCAL) {
-          setStatus('lowBalance');
-          return;
-        }
-
-        // Store session type in Redux
         dispatch(setSessionType(type));
-
-        // Connect socket and broadcast request
         await socketService.connect();
         socketService.emit('requests:broadcast', { type });
         console.log('[FindingListener] Broadcasted request:', type);
@@ -82,7 +44,6 @@ export const FindingListener = () => {
 
     init();
 
-    // Cleanup: cancel request if unmounting without match
     return () => {
       if (!hasNavigated.current && status === 'searching') {
         socketService.emit('requests:cancel', { type });
@@ -95,9 +56,7 @@ export const FindingListener = () => {
   useEffect(() => {
     // Insufficient balance event
     socketService.on('requests:broadcast:insufficient-balance', () => {
-      console.log('[FindingListener] Insufficient balance (hasSubBalance:', hasSubBalanceRef.current, ')');
-      // Ignore server event when we already confirmed a valid subscription balance client-side
-      if (hasSubBalanceRef.current) return;
+      console.log('[FindingListener] Server: insufficient balance');
       setStatus('lowBalance');
     });
 
