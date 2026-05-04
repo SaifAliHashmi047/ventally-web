@@ -17,6 +17,12 @@ function resolveAppId(): string {
   return DEFAULT_APP_ID;
 }
 
+export interface AudioDeviceInfo {
+  deviceId: string;
+  label: string;
+  kind: 'audioinput' | 'audiooutput';
+}
+
 interface AgoraContextValue {
   joinChannel: (params: JoinChannelParams) => Promise<void>;
   leaveChannel: () => Promise<void>;
@@ -25,6 +31,16 @@ interface AgoraContextValue {
   isJoined: boolean;
   isConnecting: boolean;
   error: string | null;
+  /** Enumerate available audio input and output devices */
+  getAudioDevices: () => Promise<{ inputs: AudioDeviceInfo[]; outputs: AudioDeviceInfo[] }>;
+  /** Switch the microphone to a specific device */
+  setMicDevice: (deviceId: string) => Promise<void>;
+  /** Switch the audio output to a specific device */
+  setOutputDevice: (deviceId: string) => Promise<void>;
+  /** Currently selected mic device ID */
+  activeMicId: string | null;
+  /** Currently selected output device ID */
+  activeOutputId: string | null;
 }
 
 const AgoraContext = createContext<AgoraContextValue | null>(null);
@@ -42,6 +58,14 @@ export function AgoraProvider({ children }: { children: ReactNode }) {
   const [isJoined, setIsJoined] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeMicId, setActiveMicId] = useState<string | null>(null);
+  const [activeOutputId, setActiveOutputId] = useState<string | null>(null);
+
+  // Stable refs to avoid stale closures in the devicechange handler
+  const activeMicIdRef = useRef<string | null>(null);
+  const activeOutputIdRef = useRef<string | null>(null);
+  const prevInputIdsRef = useRef<Set<string>>(new Set());
+  const prevOutputIdsRef = useRef<Set<string>>(new Set());
 
   // iOS Safari locks the AudioContext until a user gesture. This unlocks it.
   const unlockAudioContext = useCallback(() => {
@@ -331,8 +355,176 @@ export function AgoraProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  /** Enumerate available audio devices */
+  const getAudioDevices = useCallback(async () => {
+    const inputs: AudioDeviceInfo[] = [];
+    const outputs: AudioDeviceInfo[] = [];
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      for (const d of devices) {
+        if (d.kind === 'audioinput') {
+          inputs.push({ deviceId: d.deviceId, label: d.label || `Microphone ${inputs.length + 1}`, kind: 'audioinput' });
+        } else if (d.kind === 'audiooutput') {
+          outputs.push({ deviceId: d.deviceId, label: d.label || `Speaker ${outputs.length + 1}`, kind: 'audiooutput' });
+        }
+      }
+    } catch (e) {
+      console.warn('[AgoraContext] enumerateDevices failed:', e);
+    }
+    return { inputs, outputs };
+  }, []);
+
+  /** Switch the microphone to a different device */
+  const setMicDevice = useCallback(async (deviceId: string) => {
+    const track = localTrackRef.current;
+    if (!track) return;
+    try {
+      await track.setDevice(deviceId);
+      activeMicIdRef.current = deviceId;
+      setActiveMicId(deviceId);
+    } catch (e) {
+      console.error('[AgoraContext] setMicDevice error:', e);
+    }
+  }, []);
+
+  /** Switch the audio output to a different device */
+  const setOutputDevice = useCallback(async (deviceId: string) => {
+    try {
+      remoteTracksRef.current.forEach((track) => {
+        track.setPlaybackDevice(deviceId).catch(() => { /* unsupported */ });
+        // Re-play so the audio element picks up the new output route
+        try { track.stop(); track.play(); } catch { /* ignore */ }
+      });
+      activeOutputIdRef.current = deviceId;
+      setActiveOutputId(deviceId);
+    } catch (e) {
+      console.error('[AgoraContext] setOutputDevice error:', e);
+    }
+  }, []);
+
+  /**
+   * Auto device-switching on connect / disconnect.
+   * - Headphones plug in  → route mic + output to the new device automatically.
+   * - Headphones unplug   → if the active device was removed, fall back to
+   *                          the next best available device (not 'default').
+   */
+  useEffect(() => {
+    const handleDeviceChange = async () => {
+      let devices: MediaDeviceInfo[];
+      try {
+        devices = await navigator.mediaDevices.enumerateDevices();
+      } catch {
+        return;
+      }
+
+      const inputs  = devices.filter((d) => d.kind === 'audioinput');
+      const outputs = devices.filter((d) => d.kind === 'audiooutput');
+
+      const newInputIds  = new Set(inputs.map((d) => d.deviceId));
+      const newOutputIds = new Set(outputs.map((d) => d.deviceId));
+
+      // ── Input (microphone) ──────────────────────────────────────────────
+      // Detect newly added inputs
+      const addedInputs = inputs.filter(
+        (d) => d.deviceId !== 'default' && d.deviceId !== 'communications' &&
+               !prevInputIdsRef.current.has(d.deviceId),
+      );
+      // Detect removed inputs
+      const removedInputId = activeMicIdRef.current &&
+        !newInputIds.has(activeMicIdRef.current) ? activeMicIdRef.current : null;
+
+      if (addedInputs.length > 0) {
+        // Prefer a device whose label indicates headphones/headset
+        const preferred =
+          addedInputs.find((d) => /headphone|headset|earphone|jabra|airpod|bose|sony|plantronics/i.test(d.label)) ||
+          addedInputs[0];
+        console.log('[AgoraContext] Auto-switching mic to:', preferred.label);
+        const track = localTrackRef.current;
+        if (track) {
+          try {
+            await track.setDevice(preferred.deviceId);
+            activeMicIdRef.current = preferred.deviceId;
+            setActiveMicId(preferred.deviceId);
+          } catch { /* ignore */ }
+        }
+      } else if (removedInputId) {
+        // Fall back to the first non-communications input
+        const fallback =
+          inputs.find((d) => d.deviceId !== 'default' && d.deviceId !== 'communications') ||
+          inputs.find((d) => d.deviceId === 'default') ||
+          inputs[0];
+        if (fallback) {
+          console.log('[AgoraContext] Active mic removed, falling back to:', fallback.label);
+          const track = localTrackRef.current;
+          if (track) {
+            try {
+              await track.setDevice(fallback.deviceId);
+              activeMicIdRef.current = fallback.deviceId;
+              setActiveMicId(fallback.deviceId);
+            } catch { /* ignore */ }
+          }
+        }
+      }
+
+      // ── Output (speaker) ────────────────────────────────────────────────
+      const addedOutputs = outputs.filter(
+        (d) => d.deviceId !== 'default' && d.deviceId !== 'communications' &&
+               !prevOutputIdsRef.current.has(d.deviceId),
+      );
+      const removedOutputId = activeOutputIdRef.current &&
+        !newOutputIds.has(activeOutputIdRef.current) ? activeOutputIdRef.current : null;
+
+      if (addedOutputs.length > 0) {
+        const preferred =
+          addedOutputs.find((d) => /headphone|headset|earphone|jabra|airpod|bose|sony|plantronics/i.test(d.label)) ||
+          addedOutputs[0];
+        console.log('[AgoraContext] Auto-switching output to:', preferred.label);
+        remoteTracksRef.current.forEach((track) => {
+          track.setPlaybackDevice(preferred.deviceId).catch(() => { /* unsupported */ });
+          // Re-play so the audio element picks up the new output route
+          try { track.stop(); track.play(); } catch { /* ignore */ }
+        });
+        activeOutputIdRef.current = preferred.deviceId;
+        setActiveOutputId(preferred.deviceId);
+      } else if (removedOutputId) {
+        const fallback =
+          outputs.find((d) => d.deviceId !== 'default' && d.deviceId !== 'communications') ||
+          outputs.find((d) => d.deviceId === 'default') ||
+          outputs[0];
+        if (fallback) {
+          console.log('[AgoraContext] Active output removed, falling back to:', fallback.label);
+          remoteTracksRef.current.forEach((track) => {
+            track.setPlaybackDevice(fallback.deviceId).catch(() => { /* unsupported */ });
+            try { track.stop(); track.play(); } catch { /* ignore */ }
+          });
+          activeOutputIdRef.current = fallback.deviceId;
+          setActiveOutputId(fallback.deviceId);
+        }
+      }
+
+      // Update prev lists for next diff
+      prevInputIdsRef.current  = newInputIds;
+      prevOutputIdsRef.current = newOutputIds;
+    };
+
+    // Seed the prev lists on mount so first connect is detected correctly
+    navigator.mediaDevices.enumerateDevices().then((devices) => {
+      prevInputIdsRef.current  = new Set(devices.filter((d) => d.kind === 'audioinput').map((d) => d.deviceId));
+      prevOutputIdsRef.current = new Set(devices.filter((d) => d.kind === 'audiooutput').map((d) => d.deviceId));
+    }).catch(() => { /* ignore */ });
+
+    navigator.mediaDevices.addEventListener('devicechange', handleDeviceChange);
+    return () => navigator.mediaDevices.removeEventListener('devicechange', handleDeviceChange);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <AgoraContext.Provider value={{ joinChannel, leaveChannel, toggleMute, setSpeakerEnabled, isJoined, isConnecting, error }}>
+    <AgoraContext.Provider value={{
+      joinChannel, leaveChannel, toggleMute, setSpeakerEnabled,
+      isJoined, isConnecting, error,
+      getAudioDevices, setMicDevice, setOutputDevice,
+      activeMicId, activeOutputId,
+    }}>
       {children}
     </AgoraContext.Provider>
   );

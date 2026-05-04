@@ -8,6 +8,7 @@ export interface CallState {
   isActive: boolean;
   startTime: number | null;
   isMuted: boolean;
+  isSpeakerOn: boolean;
   sessionId: string | null;
   /** Type of session when navigating to finding listener: call or chat */
   sessionType: SessionType | null;
@@ -27,6 +28,7 @@ const initialState: CallState = {
   isActive: false,
   startTime: null,
   isMuted: false,
+  isSpeakerOn: true,
   sessionId: null,
   sessionType: null,
   returnToSession: false,
@@ -55,6 +57,7 @@ const callSlice = createSlice({
       state.isActive = false;
       state.startTime = null;
       state.isMuted = false;
+      state.isSpeakerOn = true;
       state.sessionId = null;
     },
     sessionStarted: (state, action: PayloadAction<{ sessionId?: string } | undefined>) => {
@@ -68,6 +71,7 @@ const callSlice = createSlice({
       state.isActive = false;
       state.startTime = null;
       state.isMuted = false;
+      state.isSpeakerOn = true;
       state.sessionId = null;
       state.sessionType = null;
       state.returnToSession = false;
@@ -75,6 +79,9 @@ const callSlice = createSlice({
     },
     setMuted: (state, action: PayloadAction<boolean>) => {
       state.isMuted = action.payload;
+    },
+    setSpeakerRedux: (state, action: PayloadAction<boolean>) => {
+      state.isSpeakerOn = action.payload;
     },
     setCallSession: (state, action: PayloadAction<Partial<CallState>>) => {
       Object.assign(state, action.payload);
@@ -108,6 +115,7 @@ export const {
   sessionStarted,
   endCall,
   setMuted,
+  setSpeakerRedux,
   setCallSession,
   chatSessionStarted,
   endChatSession,

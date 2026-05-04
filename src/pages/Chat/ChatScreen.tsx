@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useParams, useNavigate, useLocation, useBlocker } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../locales/i18n';
@@ -42,25 +42,10 @@ export const ChatScreen = () => {
   const [showCrisisActivated, setShowCrisisActivated] = useState(false);
   const [isChatActive, setIsChatActive] = useState(true);
 
-  // Block navigation while the chat is active.
-  // Read directly from the store (not a render-cycle ref) so that a
-  // dispatch(endChatSession()) from useGlobalSessionEvents is visible
-  // synchronously — before React re-renders — and won't trigger the modal
-  // for the other participant when the first side ends via crisis/hang-up.
+  // Session persists across navigation on all screen sizes.
+  // The ActiveSessionBar (rendered in VenterLayout / ListenerLayout)
+  // shows a "return to session" banner when the user navigates away.
   const store = useStore<RootState>();
-  // On desktop (≥1024px) the session lives on in the ActiveSessionBar — don't block navigation.
-  // On mobile we must ask, because navigating away would kill the session.
-  const blocker = useBlocker(() => {
-    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
-    if (!isMobile) return false;
-    return (store.getState() as RootState).call.isChatActive;
-  });
-  useEffect(() => {
-    if (blocker.state === 'blocked') {
-      blocker.reset();
-      setShowEndModal(true);
-    }
-  }, [blocker.state]);
 
   // Get other participant info
   const getOtherName = () => {
@@ -474,11 +459,8 @@ export const ChatScreen = () => {
             <h3 className="text-xl font-bold text-white mb-4">
               {t('ListenerCrisis.confirmTitle', 'Is The Venter In Crisis')}
             </h3>
-            <p className="text-sm text-white/70 leading-relaxed mb-4">
-              {t('ListenerCrisis.confirmMessage1', 'If the venter mentions thoughts of self harm or suicide, please escalate this session for crisis services.')}
-            </p>
             <p className="text-sm text-white/70 leading-relaxed mb-8">
-              {t('ListenerCrisis.confirmMessage2', 'If the venter is in crisis and you do not escalate this session you will be permanently barred from this platform.')}
+              {t('ListenerCrisis.confirmMessage', 'If the venter mentions self-harm, suicide, or immediate danger, you must escalate immediately. Failure to report safety risks may result in suspension or permanent removal from Ventally.')}
             </p>
             <div className="flex gap-3">
               <button

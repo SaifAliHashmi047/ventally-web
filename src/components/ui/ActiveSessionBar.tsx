@@ -77,7 +77,7 @@ export const ActiveSessionBar = ({ role }: ActiveSessionBarProps) => {
           : t('SessionBar.chatActive', 'Chat in progress')}
       </span>
 
-      {startTime && (
+      {isCallActive && startTime && (
         <span className="text-xs text-white/60 tabular-nums flex-shrink-0">
           {formatElapsed(elapsed)}
         </span>

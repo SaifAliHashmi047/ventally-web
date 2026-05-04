@@ -1814,6 +1814,11 @@
       "connecting": "Connecting..."
     }
   },
+  "AudioDevices": {
+    "microphone": "Microphone",
+    "speaker": "Speaker",
+    "default": "Default"
+  },
   "VenterPaymentCheck": {
     "title": "Session Payment",
     "insufficientTitle": "Insufficient Balance",
@@ -2631,8 +2636,7 @@
   },
   "ListenerCrisis": {
     "confirmTitle": "Is The Venter In Crisis",
-    "confirmMessage1": "If the venter mentions thoughts of self harm or suicide, please escalate this session for crisis services.",
-    "confirmMessage2": "If the venter is in crisis and you do not escalate this session you will be permanently barred from this platform.",
+    "confirmMessage": "If the venter mentions self-harm, suicide, or immediate danger, you must escalate immediately. Failure to report safety risks may result in suspension or permanent removal from Ventally.",
     "activatedTitle": "Crisis Support Activated",
     "activatedMessage": "The venter is being connected to 988 crisis support now.",
     "okay": "Okay"

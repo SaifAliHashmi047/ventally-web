@@ -1,11 +1,13 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useParams, useLocation, useBlocker } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import type { RootState } from '../../store/store';
-import { endCall } from '../../store/slices/callSlice';
+import { endCall, setMuted, setSpeakerRedux } from '../../store/slices/callSlice';
 import { GlassCard } from '../../components/ui/GlassCard';
+import { DevicePickerButton } from '../../components/ui/DevicePickerButton';
 import { Mic, MicOff, Phone, AlertTriangle, Volume2, VolumeX } from 'lucide-react';
+import type { AudioDeviceInfo } from '../../contexts/AgoraContext';
 import socketService from '../../api/socketService';
 import apiInstance from '../../api/apiInstance';
 import { useAgoraContext } from '../../contexts/AgoraContext';
@@ -47,15 +49,18 @@ export const ListenerActiveCall = () => {
     return joinParamsFromCallPayload(fromNav ?? fromSession ?? undefined);
   }, [location.state, session.data]);
 
-  const { joinChannel, leaveChannel, toggleMute, setSpeakerEnabled, isJoined } = useAgoraContext();
+  const { joinChannel, leaveChannel, toggleMute, setSpeakerEnabled, getAudioDevices, setMicDevice, setOutputDevice, activeMicId, activeOutputId, isJoined } = useAgoraContext();
   const store = useStore<RootState>();
 
   const [, setTick] = useState(0);
-  const [isMuted, setIsMuted] = useState(false);
-  const [speakerOn, setSpeakerOn] = useState(true);
+  // Read mute/speaker from Redux so they survive navigation
+  const isMuted = useSelector((s: RootState) => s.call.isMuted);
+  const speakerOn = useSelector((s: RootState) => s.call.isSpeakerOn);
   const [showEndModal, setShowEndModal] = useState(false);
   const [showCrisisModal, setShowCrisisModal] = useState(false);
   const [showCrisisActivated, setShowCrisisActivated] = useState(false);
+  const [audioInputs, setAudioInputs] = useState<AudioDeviceInfo[]>([]);
+  const [audioOutputs, setAudioOutputs] = useState<AudioDeviceInfo[]>([]);
 
   const callStatus: 'connecting' | 'connected' = isJoined ? 'connected' : 'connecting';
 
@@ -81,6 +86,33 @@ export const ListenerActiveCall = () => {
     setSpeakerEnabled(speakerOn);
   }, [speakerOn, setSpeakerEnabled]);
 
+  // Load device lists on mount and whenever devices change (plug/unplug).
+  // Don't gate on isJoined — headphones may already be connected before the call starts.
+  // Re-run when isJoined flips to true so labels are available after mic permission is granted.
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const { inputs, outputs } = await getAudioDevices();
+        setAudioInputs(inputs);
+        setAudioOutputs(outputs);
+      } catch { /* ignore — device picker simply won't appear */ }
+    };
+    void load();
+    const handler = () => void load();
+    navigator.mediaDevices?.addEventListener?.('devicechange', handler);
+    return () => navigator.mediaDevices?.removeEventListener?.('devicechange', handler);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Re-load after joining so device labels (which require mic permission) are populated
+  useEffect(() => {
+    if (!isJoined) return;
+    getAudioDevices().then(({ inputs, outputs }) => {
+      setAudioInputs(inputs);
+      setAudioOutputs(outputs);
+    }).catch(() => { /* ignore */ });
+  }, [isJoined, getAudioDevices]);
+
   // Tick every second to re-render the formatted time
   useEffect(() => {
     if (!isJoined) return;
@@ -88,22 +120,9 @@ export const ListenerActiveCall = () => {
     return () => clearInterval(timer);
   }, [isJoined]);
 
-  // Block navigation while the call is active.
-  // Read directly from the store so dispatch(endCall()) from useGlobalSessionEvents
-  // is visible synchronously and won't trigger the modal for the other participant.
-  // On desktop (≥1024px) the session lives on in the ActiveSessionBar — don't block navigation.
-  // On mobile we must ask, because navigating away would kill the session.
-  const blocker = useBlocker(() => {
-    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
-    if (!isMobile) return false;
-    return (store.getState() as RootState).call.isActive;
-  });
-  useEffect(() => {
-    if (blocker.state === 'blocked') {
-      blocker.reset();
-      setShowEndModal(true);
-    }
-  }, [blocker.state]);
+  // Session persists across navigation on all screen sizes.
+  // The ActiveSessionBar (rendered in ListenerLayout)
+  // shows a "return to session" banner when the user navigates away.
 
   useEffect(() => {
     let cancelled = false;
@@ -201,12 +220,15 @@ export const ListenerActiveCall = () => {
         <div className="flex justify-around items-center mb-6">
           {/* Mute */}
           <div className="flex flex-col items-center gap-2">
-            <button
-              onClick={() => setIsMuted(!isMuted)}
-              className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center transition-all hover:bg-white/20"
-            >
-              {isMuted ? <MicOff size={22} className="text-white" /> : <Mic size={22} className="text-white" />}
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => dispatch(setMuted(!isMuted))}
+                className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center transition-all hover:bg-white/20"
+              >
+                {isMuted ? <MicOff size={22} className="text-white" /> : <Mic size={22} className="text-white" />}
+              </button>
+              <DevicePickerButton devices={audioInputs} onSelect={(id) => void setMicDevice(id)} label="Microphone" activeDeviceId={activeMicId} />
+            </div>
             <span className="text-xs text-white font-medium">
               {isMuted ? t('ListenerCall.unmute', 'Unmute') : t('ListenerCall.mute', 'Mute')}
             </span>
@@ -214,12 +236,15 @@ export const ListenerActiveCall = () => {
 
           {/* Speaker */}
           <div className="flex flex-col items-center gap-2">
-            <button
-              onClick={() => setSpeakerOn(!speakerOn)}
-              className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center transition-all hover:bg-white/20"
-            >
-              {speakerOn ? <Volume2 size={22} className="text-white" /> : <VolumeX size={22} className="text-white" />}
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => dispatch(setSpeakerRedux(!speakerOn))}
+                className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center transition-all hover:bg-white/20"
+              >
+                {speakerOn ? <Volume2 size={22} className="text-white" /> : <VolumeX size={22} className="text-white" />}
+              </button>
+              <DevicePickerButton devices={audioOutputs} onSelect={(id) => void setOutputDevice(id)} label="Speaker" activeDeviceId={activeOutputId} />
+            </div>
             <span className="text-xs text-white font-medium">
               {speakerOn ? t('ListenerCall.speaker', 'Speaker') : t('ListenerCall.speakerOff', 'Speaker Off')}
             </span>
@@ -256,11 +281,8 @@ export const ListenerActiveCall = () => {
             <h3 className="text-xl font-bold text-white mb-4">
               {t('ListenerCrisis.confirmTitle', 'Is The Venter In Crisis')}
             </h3>
-            <p className="text-sm text-white/70 leading-relaxed mb-4">
-              {t('ListenerCrisis.confirmMessage1', 'If the venter mentions thoughts of self harm or suicide, please escalate this session for crisis services.')}
-            </p>
             <p className="text-sm text-white/70 leading-relaxed mb-8">
-              {t('ListenerCrisis.confirmMessage2', 'If the venter is in crisis and you do not escalate this session you will be permanently barred from this platform.')}
+              {t('ListenerCrisis.confirmMessage', 'If the venter mentions self-harm, suicide, or immediate danger, you must escalate immediately. Failure to report safety risks may result in suspension or permanent removal from Ventally.')}
             </p>
             <div className="flex gap-3">
               <button
